@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CareGardenApiV1</name>
+    </assembly>
+    <members>
+        <member name="M:CareGardenApiV1.Controller.LoginController.GetConfirmationCode(System.String)">
+            <summary>
+            Get Confirmation Code
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.LoginController.Save(CareGardenApiV1.Model.User)">
+             <summary>
+             Create New User
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "fullName" : "Mert DEMİRKIRAN",
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "stms5581",
+                    "telephone": "05467335939"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.LoginController.UserLogin(CareGardenApiV1.Model.User)">
+             <summary>
+             User Login Control
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "stms5581"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.GetUserById(System.Int32)">
+            <summary>
+            Get User By Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.Delete(System.Int32)">
+            <summary>
+            Delete User
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.Update(CareGardenApiV1.Model.User)">
+             <summary>
+             Update User
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : 1,
+                    "fullName" : "Mert DEMİRKIRAN",
+                    "birthDate": "1998-08-01",
+                    "gender": 1,
+                    "city": "İstanbul",
+                    "services": "Make Up;Beauty Saloon",
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenMigration">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenMigration.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenMigration.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenMigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Resource.Resource">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.GecerliTelefonMesaji">
+            <summary>
+              Looks up a localized string similar to Lütfen geçerli bir telefon numarası giriniz..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.OnayMesaji">
+            <summary>
+              Looks up a localized string similar to CareGarden&apos; a hoşgeldin. Onay Kodu : {0}.
+            </summary>
+        </member>
+    </members>
+</doc>

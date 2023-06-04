@@ -6,6 +6,8 @@ using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Service.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace CareGardenApiV1.Controller
 {
@@ -33,14 +35,15 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetUserById([FromBody] int id)
         {
             ResponseModel<User> response = new ResponseModel<User>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
                 if (id == 0)
                 {
                     response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("id", "Id parametresi 0' dan büyük olmalı."));
-                    response.Message += "Id parametresi 0' dan büyük olmalı.";
+                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                    response.Message += Resource.Resource.IdParametreHatasi;
                 }
 
                 if (response.HasError)
@@ -51,9 +54,64 @@ namespace CareGardenApiV1.Controller
                 if (response.Data == null)
                 {
                     response.HasError = true;
-                    response.Message += id + " id' li kullanıcı bulunamadı.";
+                    response.Message += id + " id " + Resource.Resource.KullaniciBulunamadi;
                     return NotFound(response);
                 }
+
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
+                return Ok(response);
+            }
+
+        }
+
+        /// <summary>
+        /// Get User
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("user/get")]
+        public async Task<IActionResult> GetUser()
+        {
+            ResponseModel<User> response = new ResponseModel<User>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                var tokenString = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                var token = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
+
+                if (token == null)
+                { 
+                    response.HasError = true;
+                    response.Message = Resource.Resource.KullaniciBulunamadi;
+                    return NotFound(response);
+                }
+
+                var userId = token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.PrimarySid)?.Value?.ToString();
+
+                if (userId.IsNullOrEmpty()) 
+                {
+                    response.HasError = true;
+                    response.Message = Resource.Resource.KullaniciBulunamadi;
+                    return NotFound(response);
+                }
+
+                var user = await _userService.GetUserById(userId.ToInt());
+                
+                if (user == null)
+                {
+                    response.HasError = true;
+                    response.Message = Resource.Resource.KullaniciBulunamadi;
+                    return NotFound(response);
+                }
+
+                response.Data = user;
 
                 return Ok(response);
 
@@ -77,24 +135,27 @@ namespace CareGardenApiV1.Controller
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+            
             try
             {
                 if (id == 0)
                 {
                     response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("id", "Id parametresi 0' dan büyük olmalı."));
-                    response.Message += "Id parametresi 0' dan büyük olmalı.";
+                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
                 }
 
                 if (response.HasError)
+                {
+                    response.Message = Resource.Resource.KayitSilinemedi;
                     return BadRequest(response);
+                }
 
                 User user = await _userService.GetUserById(id);
 
                 if (user == null)
                 {
                     response.HasError = true;
-                    response.Message += id + " id' li kullanıcı bulunamadı.";
+                    response.Message = id + " id " + Resource.Resource.KullaniciBulunamadi;
                     return NotFound(response);
                 }
 
@@ -105,7 +166,7 @@ namespace CareGardenApiV1.Controller
             catch (Exception ex)
             {
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = Resource.Resource.KullaniciBulunamadi + " Exception => " + ex.Message;
                 return Ok(response);
             }
         }
@@ -123,7 +184,7 @@ namespace CareGardenApiV1.Controller
         ///        "birthDate": "1998-08-01",
         ///        "gender": 1,
         ///        "city": "İstanbul",
-        ///        "services": "Make Up;Beauty Saloon",
+        ///        "services": "Make Up;Beauty Saloon"
         ///     }
         ///
         /// </remarks>
@@ -140,26 +201,27 @@ namespace CareGardenApiV1.Controller
                 if (updateUser.fullName.IsNullOrEmpty())
                 {
                     response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("firstname", "İsim boş bırakılmamalı."));
-                    response.Message += "İsim boş bırakılmamalı.";
+                    response.ValidationErrors.Add(new ValidationError("firstname", Resource.Resource.BuAlaniBosBirakmayiniz));
                 }
 
                 if (!updateUser.birthDate.HasValue)
                 {
                     response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("birthDate", "Doğum günü boş bırakılmamalı."));
-                    response.Message += "Doğum günü boş bırakılmamalı.";
+                    response.ValidationErrors.Add(new ValidationError("birthDate", Resource.Resource.BuAlaniBosBirakmayiniz));
                 }
 
                 if (response.HasError)
+                {
+                    response.Message = Resource.Resource.GuncellemeYapilamadi;
                     return BadRequest(response);
+                }
 
                 User user = await _userService.GetUserById(updateUser.id);
 
                 if (user == null)
                 {
                     response.HasError = true;
-                    response.Message += updateUser.id + " id' li kullanıcı bulunamadı.";
+                    response.Message += updateUser.id + " id " + Resource.Resource.KullaniciBulunamadi;
                     return NotFound(response);
                 }
 
@@ -176,7 +238,7 @@ namespace CareGardenApiV1.Controller
             catch (Exception ex)
             {
                 response.HasError = true;
-                response.Message += " Exception => " + ex.Message;
+                response.Message = Resource.Resource.GuncellemeYapilamadi + " Exception => " + ex.Message;
                 return Ok(response);
             }
         }

@@ -42,5 +42,10 @@ namespace CareGardenApiV1.Service.Concrete
         {
             return await _userRepository.DeleteUserAsync(user);
         }
+
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            return await _userRepository.GetUserByEmailAsync(email);
+        }
     }
 }

@@ -69,5 +69,15 @@ namespace CareGardenApiV1.Repository.Concrete
                 return true;
             }
         }
+
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+
+            using (var context = new CareGardenApiDbContext())
+            {
+                return await context.Users
+                    .FirstOrDefaultAsync(x => x.email.Equals(email));
+            }
+        }
     }
 }

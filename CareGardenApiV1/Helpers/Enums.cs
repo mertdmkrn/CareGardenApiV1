@@ -7,5 +7,12 @@
             Beklemede,
             Onaylandi      
         }
+
+        public enum Gender
+        {
+            Belirtilmemis,
+            Erkek,
+            Kadin
+        }
     }
 }

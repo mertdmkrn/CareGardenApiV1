@@ -61,6 +61,33 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bu alanı boş bırakmayınız..
+        /// </summary>
+        public static string BuAlaniBosBirakmayiniz {
+            get {
+                return ResourceManager.GetString("BuAlaniBosBirakmayiniz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Doğrulama kodu, telefonunuza gönderildi..
+        /// </summary>
+        public static string DogrulamaKoduGonderildi {
+            get {
+                return ResourceManager.GetString("DogrulamaKoduGonderildi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lütfen geçerli bir mail giriniz..
+        /// </summary>
+        public static string GecerliMailMesaji {
+            get {
+                return ResourceManager.GetString("GecerliMailMesaji", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Lütfen geçerli bir telefon numarası giriniz..
         /// </summary>
         public static string GecerliTelefonMesaji {
@@ -70,11 +97,92 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Girdiğiniz maile ait kullanıcı sistemde kayıtlı..
+        /// </summary>
+        public static string GirdiginizMaileAitKullaniciKayitli {
+            get {
+                return ResourceManager.GetString("GirdiginizMaileAitKullaniciKayitli", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Girilen bilgilere ait kullanıcı bulunamadı..
+        /// </summary>
+        public static string GirilenBilgilereAitKullaniciBulunamadi {
+            get {
+                return ResourceManager.GetString("GirilenBilgilereAitKullaniciBulunamadi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Giriş yapılamadı..
+        /// </summary>
+        public static string GirisYapilamadi {
+            get {
+                return ResourceManager.GetString("GirisYapilamadi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Güncelleme yapılamadı..
+        /// </summary>
+        public static string GuncellemeYapilamadi {
+            get {
+                return ResourceManager.GetString("GuncellemeYapilamadi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Id parametresi 0&apos; dan büyük olmalı..
+        /// </summary>
+        public static string IdParametreHatasi {
+            get {
+                return ResourceManager.GetString("IdParametreHatasi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kayıt silinemedi..
+        /// </summary>
+        public static string KayitSilinemedi {
+            get {
+                return ResourceManager.GetString("KayitSilinemedi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kayıt yapılamadı..
+        /// </summary>
+        public static string KayitYapilamadi {
+            get {
+                return ResourceManager.GetString("KayitYapilamadi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kullanıcı bulunamadi..
+        /// </summary>
+        public static string KullaniciBulunamadi {
+            get {
+                return ResourceManager.GetString("KullaniciBulunamadi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CareGarden&apos; a hoşgeldin. Onay Kodu : {0}.
         /// </summary>
         public static string OnayMesaji {
             get {
                 return ResourceManager.GetString("OnayMesaji", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Şifre 8 karakter olmalı..
+        /// </summary>
+        public static string Sifre8KarakterOlmali {
+            get {
+                return ResourceManager.GetString("Sifre8KarakterOlmali", resourceCulture);
             }
         }
     }

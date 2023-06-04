@@ -7,7 +7,6 @@ using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Service.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Org.BouncyCastle.Asn1.X500;
 using System;
 using System.Security.Claims;
 
@@ -48,9 +47,8 @@ namespace CareGardenApiV1.Controller
                 response.Message = Resource.Resource.GecerliTelefonMesaji;
             }
 
-            response.Message = "Doğrulama Kodu, telefonunuza gönderildi.";
             //var sendSms = await _smsHandler.SendSmsAsync(smsMessage, telephoneNumber);
-
+            response.Message = Resource.Resource.DogrulamaKoduGonderildi;
             response.Data = confirmationCode;
 
             return Ok(response);
@@ -76,7 +74,7 @@ namespace CareGardenApiV1.Controller
         [Route("user/save")]
         public async Task<IActionResult> Save([FromBody] User user)
         {
-            ResponseModel<User> response = new ResponseModel<User>();
+            ResponseModel<Token> response = new ResponseModel<Token>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
@@ -84,49 +82,64 @@ namespace CareGardenApiV1.Controller
                 if (user.email.IsNullOrEmpty())
                 {
                     response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("email", "Email boş bırakılmamalı."));
-                    response.Message += "Email boş bırakılmamalı.";
+                    response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.BuAlaniBosBirakmayiniz));
                 }
 
                 if (!user.email.IsValidEmail())
                 {
                     response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("email", "Geçerli bir email adresi giriniz."));
-                    response.Message += "Geçerli bir email adresi giriniz.";
+                    response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.GecerliMailMesaji));
                 }
 
                 if (user.password.IsNullOrEmpty())
                 {
                     response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("password", "Şifre boş bırakılmamalı."));
-                    response.Message += "Şifre boş bırakılmamalı.";
+                    response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.BuAlaniBosBirakmayiniz));
                 }
 
                 if (user.password.IsNotNullOrEmpty() && user.password.Length != 8)
                 {
                     response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("password", "Şifre 8 haneli olmalıdır."));
-                    response.Message += "Şifre 8 haneli olmalıdır.";
+                    response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.Sifre8KarakterOlmali));
                 }
 
                 if (user.fullName.IsNullOrEmpty())
                 {
                     response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("firstname", "İsim boş bırakılmamalı."));
-                    response.Message += "İsim boş bırakılmamalı.";
+                    response.ValidationErrors.Add(new ValidationError("firstname", Resource.Resource.BuAlaniBosBirakmayiniz));
                 }
 
                 if (response.HasError)
+                {
+                    response.Message = Resource.Resource.KayitYapilamadi;
                     return BadRequest(response);
+                }
 
-                response.Data = await _userService.SaveUserAsync(user);
+                var systemUser = await _userService.GetUserByEmailAsync(user.email);
+
+                if (systemUser != null)
+                {
+                    response.HasError = true;
+                    response.Message += Resource.Resource.GirdiginizMaileAitKullaniciKayitli;
+                    return BadRequest(response);
+                }
+
+                user = await _userService.SaveUserAsync(user);
+
+                var claims = new List<Claim>() {
+                    new Claim(ClaimTypes.Name, user.fullName),
+                    new Claim(ClaimTypes.PrimarySid, user.id.ToString()),
+                    new Claim(ClaimTypes.Email, user.email)
+                };
+
+                response.Data = _tokenHandler.CreateAccessToken(DateTime.Now.AddDays(60), claims);
 
                 return Ok(response);
             }
             catch (Exception ex)
             {
                 response.HasError = true;
-                response.Message += " Exception => " + ex.Message;
+                response.Message = Resource.Resource.KayitYapilamadi + " Exception => " + ex.Message;
                 return Ok(response);
             }
         }
@@ -148,42 +161,43 @@ namespace CareGardenApiV1.Controller
         [Route("user/login")]
         public async Task<IActionResult> UserLogin([FromBody] User loginUser)
         {
-            ResponseModel<TokenInfo<User>> response = new ResponseModel<TokenInfo<User>>();
+            ResponseModel<Token> response = new ResponseModel<Token>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             if (loginUser.email.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("email", "Email boş bırakılmamalı."));
-                response.Message += "Email boş bırakılmamalı.";
+                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
 
             if (loginUser.password.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("password", "Şifre boş bırakılmamalı."));
-                response.Message += "Şifre boş bırakılmamalı.";
+                response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
 
             if (response.HasError)
+            {
+                response.Message = Resource.Resource.GirisYapilamadi;
                 return BadRequest(response);
+            }
 
             var user = await _userService.GetUserByEmailAndPasswordAsync(loginUser.email, loginUser.password);
 
             if (user == null)
             {
                 response.HasError = true;
-                response.Message = "Girdiğiniz bilgilere ait kullanıcı bulunamadı.";
+                response.Message = Resource.Resource.GirilenBilgilereAitKullaniciBulunamadi;
                 return NotFound(response);
             }
 
             var claims = new List<Claim>() {
                 new Claim(ClaimTypes.Name, user.fullName),
+                new Claim(ClaimTypes.PrimarySid, user.id.ToString()),
                 new Claim(ClaimTypes.Email, user.email)
             };
 
-            response.Data = new TokenInfo<User>();
-            response.Data.token = _tokenHandler.CreateAccessToken(DateTime.Now.AddDays(60), claims);
-            response.Data.userInfo = user;
+            response.Data = _tokenHandler.CreateAccessToken(DateTime.Now.AddDays(60), claims);
 
             return Ok(response);
         }

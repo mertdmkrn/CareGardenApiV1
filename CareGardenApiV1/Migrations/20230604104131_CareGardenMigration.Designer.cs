@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CareGardenApiV1.Migrations
 {
     [DbContext(typeof(CareGardenApiDbContext))]
-    [Migration("20230603230359_CareGardenMigration")]
+    [Migration("20230604104131_CareGardenMigration")]
     partial class CareGardenMigration
     {
         /// <inheritdoc />

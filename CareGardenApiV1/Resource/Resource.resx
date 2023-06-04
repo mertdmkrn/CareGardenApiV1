@@ -117,10 +117,46 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BuAlaniBosBirakmayiniz" xml:space="preserve">
+    <value>Bu alanı boş bırakmayınız.</value>
+  </data>
+  <data name="DogrulamaKoduGonderildi" xml:space="preserve">
+    <value>Doğrulama kodu, telefonunuza gönderildi.</value>
+  </data>
+  <data name="GecerliMailMesaji" xml:space="preserve">
+    <value>Lütfen geçerli bir mail giriniz.</value>
+  </data>
   <data name="GecerliTelefonMesaji" xml:space="preserve">
     <value>Lütfen geçerli bir telefon numarası giriniz.</value>
   </data>
+  <data name="GirdiginizMaileAitKullaniciKayitli" xml:space="preserve">
+    <value>Girdiğiniz maile ait kullanıcı sistemde kayıtlı.</value>
+  </data>
+  <data name="GirilenBilgilereAitKullaniciBulunamadi" xml:space="preserve">
+    <value>Girilen bilgilere ait kullanıcı bulunamadı.</value>
+  </data>
+  <data name="GirisYapilamadi" xml:space="preserve">
+    <value>Giriş yapılamadı.</value>
+  </data>
+  <data name="GuncellemeYapilamadi" xml:space="preserve">
+    <value>Güncelleme yapılamadı.</value>
+  </data>
+  <data name="IdParametreHatasi" xml:space="preserve">
+    <value>Id parametresi 0' dan büyük olmalı.</value>
+  </data>
+  <data name="KayitSilinemedi" xml:space="preserve">
+    <value>Kayıt silinemedi.</value>
+  </data>
+  <data name="KayitYapilamadi" xml:space="preserve">
+    <value>Kayıt yapılamadı.</value>
+  </data>
+  <data name="KullaniciBulunamadi" xml:space="preserve">
+    <value>Kullanıcı bulunamadi.</value>
+  </data>
   <data name="OnayMesaji" xml:space="preserve">
     <value>CareGarden' a hoşgeldin. Onay Kodu : {0}</value>
+  </data>
+  <data name="Sifre8KarakterOlmali" xml:space="preserve">
+    <value>Şifre 8 karakter olmalı.</value>
   </data>
 </root>

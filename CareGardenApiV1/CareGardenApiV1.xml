@@ -48,6 +48,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.GetUser">
+            <summary>
+            Get User
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.UserController.Delete(System.Int32)">
             <summary>
             Delete User
@@ -67,11 +73,17 @@
                     "birthDate": "1998-08-01",
                     "gender": 1,
                     "city": "İstanbul",
-                    "services": "Make Up;Beauty Saloon",
+                    "services": "Make Up;Beauty Saloon"
                  }
             
              </remarks>
              <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.VehiclesController.GetCities">
+            <summary>
+            Get Cities
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:CareGardenApiV1.Migrations.CareGardenMigration">
             <inheritdoc />
@@ -101,14 +113,74 @@
               resource lookups using this strongly typed resource class.
             </summary>
         </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.BuAlaniBosBirakmayiniz">
+            <summary>
+              Looks up a localized string similar to Bu alanı boş bırakmayınız..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.DogrulamaKoduGonderildi">
+            <summary>
+              Looks up a localized string similar to Doğrulama kodu, telefonunuza gönderildi..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.GecerliMailMesaji">
+            <summary>
+              Looks up a localized string similar to Lütfen geçerli bir mail giriniz..
+            </summary>
+        </member>
         <member name="P:CareGardenApiV1.Resource.Resource.GecerliTelefonMesaji">
             <summary>
               Looks up a localized string similar to Lütfen geçerli bir telefon numarası giriniz..
             </summary>
         </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.GirdiginizMaileAitKullaniciKayitli">
+            <summary>
+              Looks up a localized string similar to Girdiğiniz maile ait kullanıcı sistemde kayıtlı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.GirilenBilgilereAitKullaniciBulunamadi">
+            <summary>
+              Looks up a localized string similar to Girilen bilgilere ait kullanıcı bulunamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.GirisYapilamadi">
+            <summary>
+              Looks up a localized string similar to Giriş yapılamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.GuncellemeYapilamadi">
+            <summary>
+              Looks up a localized string similar to Güncelleme yapılamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.IdParametreHatasi">
+            <summary>
+              Looks up a localized string similar to Id parametresi 0&apos; dan büyük olmalı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.KayitSilinemedi">
+            <summary>
+              Looks up a localized string similar to Kayıt silinemedi..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.KayitYapilamadi">
+            <summary>
+              Looks up a localized string similar to Kayıt yapılamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.KullaniciBulunamadi">
+            <summary>
+              Looks up a localized string similar to Kullanıcı bulunamadi..
+            </summary>
+        </member>
         <member name="P:CareGardenApiV1.Resource.Resource.OnayMesaji">
             <summary>
               Looks up a localized string similar to CareGarden&apos; a hoşgeldin. Onay Kodu : {0}.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.Sifre8KarakterOlmali">
+            <summary>
+              Looks up a localized string similar to Şifre 8 karakter olmalı..
             </summary>
         </member>
     </members>

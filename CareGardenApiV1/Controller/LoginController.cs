@@ -18,42 +18,111 @@ namespace CareGardenApiV1.Controller
         private IUserService _userService;
         private ITokenHandler _tokenHandler;
         private ISmsHandler _smsHandler;
+        private readonly IMailHandler _mailHandler;
 
-        public LoginController()
+        public LoginController(IMailHandler mailHandler)
         {
             _userService = new UserService();
             _tokenHandler = new TokenHandler();
             _smsHandler = new SmsHandler();
+            _mailHandler = mailHandler;
         }
 
         /// <summary>
-        /// Get Confirmation Code
+        /// Send Telephone Confirmation Code
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [Route("user/getconfirmationcode")]
-        public async Task<IActionResult> GetConfirmationCode([FromBody] string telephoneNumber)
+        [Route("user/sendtelephoneconfirmationcode")]
+        public async Task<IActionResult> SendTelephoneConfirmationCode([FromBody] string telephoneNumber)
         {
             ResponseModel<int> response = new ResponseModel<int>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
             int confirmationCode = new Random().Next(1000, 10000);
 
-            string smsMessage = string.Format(Resource.Resource.OnayMesaji, confirmationCode);
-
-            if (telephoneNumber.IsNullOrEmpty() || !telephoneNumber.IsValidTelephoneNumber())
+            if (telephoneNumber.IsNullOrEmpty())
             {
-                response.ValidationErrors.Add(new ValidationError("telephoneNumber", Resource.Resource.GecerliTelefonMesaji));
                 response.HasError = true;
-                response.Message = Resource.Resource.GecerliTelefonMesaji;
+                response.ValidationErrors.Add(new ValidationError("telephoneNumber", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
 
+            if (!telephoneNumber.IsValidTelephoneNumber())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("telephoneNumber", Resource.Resource.GecerliTelefonMesaji));
+            }
+
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.OnayKoduGonderilemedi;
+                return BadRequest(response);
+            }
+
+            string smsMessage = string.Format(Resource.Resource.OnayMesaji, confirmationCode);
+
             //var sendSms = await _smsHandler.SendSmsAsync(smsMessage, telephoneNumber);
-            response.Message = Resource.Resource.DogrulamaKoduGonderildi;
+            response.Message = Resource.Resource.OnayKoduGonderildi;
             response.Data = confirmationCode;
 
             return Ok(response);
         }
 
+        /// <summary>
+        /// Send Email Confirmation Code
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("user/sendemailconfirmationcode")]
+        public async Task<IActionResult> SendEmailConfirmationCode([FromBody] string email)
+        {
+            ResponseModel<int> response = new ResponseModel<int>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+            int confirmationCode = new Random().Next(1000, 10000);
+
+            if (email.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (!email.IsValidEmail())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.GecerliMailMesaji));
+            }
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.OnayKoduGonderilemedi;
+                return BadRequest(response);
+            }
+
+            var user = await _userService.GetUserByEmailAsync(email);
+
+            if (user == null)
+            {
+                response.HasError = true;
+                response.Message += Resource.Resource.GirdiginizMaileAitKullaniciBulunamadi;
+                return NotFound(response);
+            }
+
+            string mailMessage = string.Format(Resource.Resource.SifreYenilemeMailMesaji, confirmationCode);
+
+            await _mailHandler.SendEmailAsync(
+                    new MailRequest()
+                    {
+                        ToEmail = email,
+                        Subject = "CareGarden " + Resource.Resource.SifreYenileme,
+                        Body = "<p>" + mailMessage + "</p>"
+                    }
+            );
+
+            response.Message = Resource.Resource.OnayKoduGonderildi;
+            response.Data = confirmationCode;
+
+            return Ok(response);
+        }
 
         /// <summary>
         /// Create New User
@@ -198,6 +267,61 @@ namespace CareGardenApiV1.Controller
             };
 
             response.Data = _tokenHandler.CreateAccessToken(DateTime.Now.AddDays(60), claims);
+
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// User Password Reset
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "email": "mertdmkrn37@gmail.com",
+        ///        "password": "mert1453"
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("user/passwordreset")]
+        public async Task<IActionResult> PasswordReset([FromBody] User updateUser)
+        {
+            ResponseModel<Token> response = new ResponseModel<Token>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            if (updateUser.email.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (updateUser.password.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.GirisYapilamadi;
+                return BadRequest(response);
+            }
+
+            var user = await _userService.GetUserByEmailAsync(updateUser.email);
+
+            if (user == null)
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.GirilenBilgilereAitKullaniciBulunamadi;
+                return NotFound(response);
+            }
+            
+            user.password = updateUser.password;
+            await _userService.UpdateUserAsync(user);
+
+            response.Message = Resource.Resource.SifreYenilemeBasarili;
 
             return Ok(response);
         }

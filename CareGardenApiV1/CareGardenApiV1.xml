@@ -4,9 +4,15 @@
         <name>CareGardenApiV1</name>
     </assembly>
     <members>
-        <member name="M:CareGardenApiV1.Controller.LoginController.GetConfirmationCode(System.String)">
+        <member name="M:CareGardenApiV1.Controller.LoginController.SendTelephoneConfirmationCode(System.String)">
             <summary>
-            Get Confirmation Code
+            Send Telephone Confirmation Code
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.LoginController.SendEmailConfirmationCode(System.String)">
+            <summary>
+            Send Email Confirmation Code
             </summary>
             <returns></returns>
         </member>
@@ -37,6 +43,21 @@
                  { 
                     "email": "mertdmkrn37@gmail.com",
                     "password": "stms5581"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.LoginController.PasswordReset(CareGardenApiV1.Model.User)">
+             <summary>
+             User Password Reset
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "mert1453"
                  }
             
              </remarks>
@@ -118,11 +139,6 @@
               Looks up a localized string similar to Bu alanı boş bırakmayınız..
             </summary>
         </member>
-        <member name="P:CareGardenApiV1.Resource.Resource.DogrulamaKoduGonderildi">
-            <summary>
-              Looks up a localized string similar to Doğrulama kodu, telefonunuza gönderildi..
-            </summary>
-        </member>
         <member name="P:CareGardenApiV1.Resource.Resource.GecerliMailMesaji">
             <summary>
               Looks up a localized string similar to Lütfen geçerli bir mail giriniz..
@@ -131,6 +147,11 @@
         <member name="P:CareGardenApiV1.Resource.Resource.GecerliTelefonMesaji">
             <summary>
               Looks up a localized string similar to Lütfen geçerli bir telefon numarası giriniz..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.GirdiginizMaileAitKullaniciBulunamadi">
+            <summary>
+              Looks up a localized string similar to Girdiğiniz maile ait kullanıcı bulunamadı..
             </summary>
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.GirdiginizMaileAitKullaniciKayitli">
@@ -173,6 +194,16 @@
               Looks up a localized string similar to Kullanıcı bulunamadi..
             </summary>
         </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.OnayKoduGonderildi">
+            <summary>
+              Looks up a localized string similar to Onay kodu gönderildi..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.OnayKoduGonderilemedi">
+            <summary>
+              Looks up a localized string similar to Onay kodu gönderilemedi..
+            </summary>
+        </member>
         <member name="P:CareGardenApiV1.Resource.Resource.OnayMesaji">
             <summary>
               Looks up a localized string similar to CareGarden&apos; a hoşgeldin. Onay Kodu : {0}.
@@ -181,6 +212,21 @@
         <member name="P:CareGardenApiV1.Resource.Resource.Sifre8KarakterOlmali">
             <summary>
               Looks up a localized string similar to Şifre 8 karakter olmalı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.SifreYenileme">
+            <summary>
+              Looks up a localized string similar to Şifre Yenileme.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.SifreYenilemeBasarili">
+            <summary>
+              Looks up a localized string similar to Şifre yenileme işlemi başarılı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.SifreYenilemeMailMesaji">
+            <summary>
+              Looks up a localized string similar to Şifre yenileme işlemi için onay kodu {0}..
             </summary>
         </member>
     </members>

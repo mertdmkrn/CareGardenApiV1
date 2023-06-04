@@ -70,15 +70,6 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Doğrulama kodu, telefonunuza gönderildi..
-        /// </summary>
-        public static string DogrulamaKoduGonderildi {
-            get {
-                return ResourceManager.GetString("DogrulamaKoduGonderildi", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Lütfen geçerli bir mail giriniz..
         /// </summary>
         public static string GecerliMailMesaji {
@@ -93,6 +84,15 @@ namespace CareGardenApiV1.Resource {
         public static string GecerliTelefonMesaji {
             get {
                 return ResourceManager.GetString("GecerliTelefonMesaji", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Girdiğiniz maile ait kullanıcı bulunamadı..
+        /// </summary>
+        public static string GirdiginizMaileAitKullaniciBulunamadi {
+            get {
+                return ResourceManager.GetString("GirdiginizMaileAitKullaniciBulunamadi", resourceCulture);
             }
         }
         
@@ -169,6 +169,24 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Onay kodu gönderildi..
+        /// </summary>
+        public static string OnayKoduGonderildi {
+            get {
+                return ResourceManager.GetString("OnayKoduGonderildi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Onay kodu gönderilemedi..
+        /// </summary>
+        public static string OnayKoduGonderilemedi {
+            get {
+                return ResourceManager.GetString("OnayKoduGonderilemedi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CareGarden&apos; a hoşgeldin. Onay Kodu : {0}.
         /// </summary>
         public static string OnayMesaji {
@@ -183,6 +201,33 @@ namespace CareGardenApiV1.Resource {
         public static string Sifre8KarakterOlmali {
             get {
                 return ResourceManager.GetString("Sifre8KarakterOlmali", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Şifre Yenileme.
+        /// </summary>
+        public static string SifreYenileme {
+            get {
+                return ResourceManager.GetString("SifreYenileme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Şifre yenileme işlemi başarılı..
+        /// </summary>
+        public static string SifreYenilemeBasarili {
+            get {
+                return ResourceManager.GetString("SifreYenilemeBasarili", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Şifre yenileme işlemi için onay kodu {0}..
+        /// </summary>
+        public static string SifreYenilemeMailMesaji {
+            get {
+                return ResourceManager.GetString("SifreYenilemeMailMesaji", resourceCulture);
             }
         }
     }

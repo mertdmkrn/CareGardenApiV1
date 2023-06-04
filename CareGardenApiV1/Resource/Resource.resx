@@ -120,14 +120,14 @@
   <data name="BuAlaniBosBirakmayiniz" xml:space="preserve">
     <value>Bu alanı boş bırakmayınız.</value>
   </data>
-  <data name="DogrulamaKoduGonderildi" xml:space="preserve">
-    <value>Doğrulama kodu, telefonunuza gönderildi.</value>
-  </data>
   <data name="GecerliMailMesaji" xml:space="preserve">
     <value>Lütfen geçerli bir mail giriniz.</value>
   </data>
   <data name="GecerliTelefonMesaji" xml:space="preserve">
     <value>Lütfen geçerli bir telefon numarası giriniz.</value>
+  </data>
+  <data name="GirdiginizMaileAitKullaniciBulunamadi" xml:space="preserve">
+    <value>Girdiğiniz maile ait kullanıcı bulunamadı.</value>
   </data>
   <data name="GirdiginizMaileAitKullaniciKayitli" xml:space="preserve">
     <value>Girdiğiniz maile ait kullanıcı sistemde kayıtlı.</value>
@@ -153,10 +153,25 @@
   <data name="KullaniciBulunamadi" xml:space="preserve">
     <value>Kullanıcı bulunamadi.</value>
   </data>
+  <data name="OnayKoduGonderildi" xml:space="preserve">
+    <value>Onay kodu gönderildi.</value>
+  </data>
+  <data name="OnayKoduGonderilemedi" xml:space="preserve">
+    <value>Onay kodu gönderilemedi.</value>
+  </data>
   <data name="OnayMesaji" xml:space="preserve">
     <value>CareGarden' a hoşgeldin. Onay Kodu : {0}</value>
   </data>
   <data name="Sifre8KarakterOlmali" xml:space="preserve">
     <value>Şifre 8 karakter olmalı.</value>
+  </data>
+  <data name="SifreYenileme" xml:space="preserve">
+    <value>Şifre Yenileme</value>
+  </data>
+  <data name="SifreYenilemeBasarili" xml:space="preserve">
+    <value>Şifre yenileme işlemi başarılı.</value>
+  </data>
+  <data name="SifreYenilemeMailMesaji" xml:space="preserve">
+    <value>Şifre yenileme işlemi için onay kodu {0}.</value>
   </data>
 </root>

@@ -9,6 +9,7 @@ namespace CareGardenApiV1.Repository.Concrete
     {
         public async Task<User> GetUserByEmailAndPasswordAsync(string email, string password)
         {
+
             using (var context = new CareGardenApiDbContext())
             {
                 return await context.Users
@@ -39,6 +40,11 @@ namespace CareGardenApiV1.Repository.Concrete
             using (var context = new CareGardenApiDbContext())
             {
                 user.updateDate = DateTime.Now;
+
+                if (user.password.IsNotNullOrEmpty() && user.password.Length <= 8)
+                {
+                    user.password = user.password.HashString();
+                }
 
                 context.Users.Update(user);
                 await context.SaveChangesAsync();

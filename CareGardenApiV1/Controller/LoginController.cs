@@ -269,6 +269,12 @@ namespace CareGardenApiV1.Controller
                     response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.GecerliMailMesaji));
                 }
 
+                if (!user.telephone.IsValidTelephoneNumber())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("telephoneNumber", Resource.Resource.GecerliTelefonMesaji));
+                }
+
                 if (user.password.IsNullOrEmpty())
                 {
                     response.HasError = true;

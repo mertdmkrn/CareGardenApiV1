@@ -4,6 +4,12 @@
         <name>CareGardenApiV1</name>
     </assembly>
     <members>
+        <member name="M:CareGardenApiV1.Controller.DefinitionController.GetCities">
+            <summary>
+            Get Cities
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.LoginController.SendTelephoneConfirmationCode(System.String)">
             <summary>
             Send Telephone Confirmation Code
@@ -15,6 +21,21 @@
             Send Email Confirmation Code
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.LoginController.VerifyConfirmationCode(CareGardenApiV1.Model.ConfirmationInfo)">
+             <summary>
+             Verify Confirmation Code
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "target": "05467335939",
+                    "code": "7391"
+                 }
+            
+             </remarks>
+             <returns></returns>
         </member>
         <member name="M:CareGardenApiV1.Controller.LoginController.Save(CareGardenApiV1.Model.User)">
              <summary>
@@ -100,12 +121,6 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.VehiclesController.GetCities">
-            <summary>
-            Get Cities
-            </summary>
-            <returns></returns>
-        </member>
         <member name="T:CareGardenApiV1.Migrations.CareGardenMigration">
             <inheritdoc />
         </member>
@@ -142,6 +157,11 @@
         <member name="P:CareGardenApiV1.Resource.Resource.GecerliMailMesaji">
             <summary>
               Looks up a localized string similar to Lütfen geçerli bir mail giriniz..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.GecerliMailTelefonMesaji">
+            <summary>
+              Looks up a localized string similar to Lütfen geçerli bir mail veya telefon numarası giriniz..
             </summary>
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.GecerliTelefonMesaji">
@@ -194,6 +214,16 @@
               Looks up a localized string similar to Kullanıcı bulunamadi..
             </summary>
         </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.OnayKoduDogrulanamadi">
+            <summary>
+              Looks up a localized string similar to Onay kodu doğrulanamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.OnayKoduDogrulandi">
+            <summary>
+              Looks up a localized string similar to Onay kodu doğrulandı..
+            </summary>
+        </member>
         <member name="P:CareGardenApiV1.Resource.Resource.OnayKoduGonderildi">
             <summary>
               Looks up a localized string similar to Onay kodu gönderildi..
@@ -202,6 +232,11 @@
         <member name="P:CareGardenApiV1.Resource.Resource.OnayKoduGonderilemedi">
             <summary>
               Looks up a localized string similar to Onay kodu gönderilemedi..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.OnayKoduZamanAsiminaUgradi">
+            <summary>
+              Looks up a localized string similar to Onay kodu zaman aşımına uğradı. Lütfen yeniden kod isteyin..
             </summary>
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.OnayMesaji">

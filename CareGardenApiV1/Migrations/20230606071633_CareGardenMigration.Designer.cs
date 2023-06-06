@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CareGardenApiV1.Migrations
 {
     [DbContext(typeof(CareGardenApiDbContext))]
-    [Migration("20230604104131_CareGardenMigration")]
+    [Migration("20230606071633_CareGardenMigration")]
     partial class CareGardenMigration
     {
         /// <inheritdoc />
@@ -25,6 +25,32 @@ namespace CareGardenApiV1.Migrations
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("CareGardenApiV1.Model.ConfirmationInfo", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("code")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("character varying(4)");
+
+                    b.Property<DateTime?>("createDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("target")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("ConfirmationInfo");
+                });
 
             modelBuilder.Entity("CareGardenApiV1.Model.User", b =>
                 {

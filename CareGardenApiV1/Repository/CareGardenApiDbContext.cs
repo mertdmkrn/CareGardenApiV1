@@ -18,5 +18,6 @@ namespace CareGardenApiV1.Repository
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<ConfirmationInfo> ConfirmationInfos { get; set; }
     }
 }

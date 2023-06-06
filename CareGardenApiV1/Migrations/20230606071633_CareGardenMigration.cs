@@ -18,6 +18,21 @@ namespace CareGardenApiV1.Migrations
             Down(migrationBuilder);
 
             migrationBuilder.CreateTable(
+                name: "ConfirmationInfo",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    target = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    code = table.Column<string>(type: "character varying(4)", maxLength: 4, nullable: false),
+                    createDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConfirmationInfo", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
@@ -45,6 +60,9 @@ namespace CareGardenApiV1.Migrations
         {
             migrationBuilder.DropTable(
                 name: "User");
+
+            migrationBuilder.DropTable(
+                name: "ConfirmationInfo");
         }
     }
 }

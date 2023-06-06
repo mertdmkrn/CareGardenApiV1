@@ -1,6 +1,7 @@
 ﻿using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
+using static CareGardenApiV1.Helpers.Enums;
 
 namespace CareGardenApiV1.Helpers
 {
@@ -52,6 +53,25 @@ namespace CareGardenApiV1.Helpers
             }
 
             return resultNum;
+        }
+
+        public static double DifferenceBetweenDates(this DateTime? startDate, DateTime? endDate, DateType dateType = DateType.Minute)
+        {
+            if (startDate == null || endDate == null) { return 0; }
+
+            TimeSpan timespan = endDate.Value.Subtract(startDate.Value);
+
+            switch (dateType)
+            {
+                case DateType.Second: return Math.Round(timespan.TotalSeconds, 2);
+                case DateType.Minute: return Math.Round(timespan.TotalMinutes, 2);
+                case DateType.Hour: return Math.Round(timespan.TotalHours, 2);
+                case DateType.Day: return Math.Round(timespan.TotalDays, 2);
+                case DateType.Month: return endDate.Value.Month - startDate.Value.Month;
+                case DateType.Year: return endDate.Value.Year - startDate.Value.Year;
+            }
+
+            return 0;
         }
     }
 }

@@ -38,7 +38,8 @@ namespace CareGardenApiV1.Helpers
         {
             try
             {
-                return true;
+                string regex = @"^(05(\d{9}))$";
+                return Regex.IsMatch(telephoneNumber, regex, RegexOptions.IgnoreCase);
             }
             catch (FormatException)
             {

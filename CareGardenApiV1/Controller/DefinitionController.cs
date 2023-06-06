@@ -14,7 +14,7 @@ using System.Security.Claims;
 namespace CareGardenApiV1.Controller
 {
     [ApiController]
-    public class VehiclesController : ControllerBase
+    public class DefinitionController : ControllerBase
     {
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [Route("vehicles/getcities")]
+        [Route("definition/getcities")]
         public async Task<IActionResult> GetCities()
         {
             ResponseModel<List<string>> response = new ResponseModel<List<string>>();

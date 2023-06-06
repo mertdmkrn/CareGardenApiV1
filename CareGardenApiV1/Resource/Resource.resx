@@ -123,6 +123,9 @@
   <data name="GecerliMailMesaji" xml:space="preserve">
     <value>Lütfen geçerli bir mail giriniz.</value>
   </data>
+  <data name="GecerliMailTelefonMesaji" xml:space="preserve">
+    <value>Lütfen geçerli bir mail veya telefon numarası giriniz.</value>
+  </data>
   <data name="GecerliTelefonMesaji" xml:space="preserve">
     <value>Lütfen geçerli bir telefon numarası giriniz.</value>
   </data>
@@ -153,11 +156,20 @@
   <data name="KullaniciBulunamadi" xml:space="preserve">
     <value>Kullanıcı bulunamadi.</value>
   </data>
+  <data name="OnayKoduDogrulanamadi" xml:space="preserve">
+    <value>Onay kodu doğrulanamadı.</value>
+  </data>
+  <data name="OnayKoduDogrulandi" xml:space="preserve">
+    <value>Onay kodu doğrulandı.</value>
+  </data>
   <data name="OnayKoduGonderildi" xml:space="preserve">
     <value>Onay kodu gönderildi.</value>
   </data>
   <data name="OnayKoduGonderilemedi" xml:space="preserve">
     <value>Onay kodu gönderilemedi.</value>
+  </data>
+  <data name="OnayKoduZamanAsiminaUgradi" xml:space="preserve">
+    <value>Onay kodu zaman aşımına uğradı. Lütfen yeniden kod isteyin.</value>
   </data>
   <data name="OnayMesaji" xml:space="preserve">
     <value>CareGarden' a hoşgeldin. Onay Kodu : {0}</value>

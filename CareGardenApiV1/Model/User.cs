@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static CareGardenApiV1.Helpers.Enums;
 
 namespace CareGardenApiV1.Model
 {
@@ -12,7 +14,7 @@ namespace CareGardenApiV1.Model
         [MaxLength(150)]
         public string? fullName { get; set; }
 
-        public int gender { get; set; }
+        public Gender gender { get; set; }
 
         [MaxLength(150)]
         public string? email { get; set; }
@@ -20,6 +22,7 @@ namespace CareGardenApiV1.Model
         [MaxLength(11)]
         public string? telephone { get; set; }
 
+        [JsonIgnore]
         [MaxLength(50)]
         public string? password { get; set; }
 

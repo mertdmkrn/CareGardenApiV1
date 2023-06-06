@@ -79,6 +79,15 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lütfen geçerli bir mail veya telefon numarası giriniz..
+        /// </summary>
+        public static string GecerliMailTelefonMesaji {
+            get {
+                return ResourceManager.GetString("GecerliMailTelefonMesaji", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Lütfen geçerli bir telefon numarası giriniz..
         /// </summary>
         public static string GecerliTelefonMesaji {
@@ -169,6 +178,24 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Onay kodu doğrulanamadı..
+        /// </summary>
+        public static string OnayKoduDogrulanamadi {
+            get {
+                return ResourceManager.GetString("OnayKoduDogrulanamadi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Onay kodu doğrulandı..
+        /// </summary>
+        public static string OnayKoduDogrulandi {
+            get {
+                return ResourceManager.GetString("OnayKoduDogrulandi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Onay kodu gönderildi..
         /// </summary>
         public static string OnayKoduGonderildi {
@@ -183,6 +210,15 @@ namespace CareGardenApiV1.Resource {
         public static string OnayKoduGonderilemedi {
             get {
                 return ResourceManager.GetString("OnayKoduGonderilemedi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Onay kodu zaman aşımına uğradı. Lütfen yeniden kod isteyin..
+        /// </summary>
+        public static string OnayKoduZamanAsiminaUgradi {
+            get {
+                return ResourceManager.GetString("OnayKoduZamanAsiminaUgradi", resourceCulture);
             }
         }
         

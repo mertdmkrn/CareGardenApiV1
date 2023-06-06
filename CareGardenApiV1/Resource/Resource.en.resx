@@ -121,7 +121,10 @@
     <value>Do not leave this field blank.</value>
   </data>
   <data name="GecerliMailMesaji" xml:space="preserve">
-    <value>Please enter mail.</value>
+    <value>Please enter valid mail.</value>
+  </data>
+  <data name="GecerliMailTelefonMesaji" xml:space="preserve">
+    <value>Please enter valid mail or phone number.</value>
   </data>
   <data name="GecerliTelefonMesaji" xml:space="preserve">
     <value>Please enter valid phone number.</value>
@@ -153,11 +156,20 @@
   <data name="KullaniciBulunamadi" xml:space="preserve">
     <value>User not found.</value>
   </data>
+  <data name="OnayKoduDogrulanamadi" xml:space="preserve">
+    <value>Confirmation code could not be verified.</value>
+  </data>
+  <data name="OnayKoduDogrulandi" xml:space="preserve">
+    <value>Confirmation code verified.</value>
+  </data>
   <data name="OnayKoduGonderildi" xml:space="preserve">
     <value>Confirmation code sent.</value>
   </data>
   <data name="OnayKoduGonderilemedi" xml:space="preserve">
     <value>The confirmation code could not be sent.</value>
+  </data>
+  <data name="OnayKoduZamanAsiminaUgradi" xml:space="preserve">
+    <value>Confirmation code has expired. Please request the code again.</value>
   </data>
   <data name="OnayMesaji" xml:space="preserve">
     <value>Welcome CareGarden. Confirmation Code : {0}</value>

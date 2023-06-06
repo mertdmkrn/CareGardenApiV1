@@ -90,6 +90,7 @@ internal class Program
         builder.Services.AddSingleton<ISmsHandler, SmsHandler>();
 
         builder.Services.AddSingleton<IUserRepository, UserRepository>();
+        builder.Services.AddSingleton<IConfirmationRepository, ConfirmationRepository>();
         //builder.Services.AddSingleton<IBusinessRepository, BusinessRepository>();
         //builder.Services.AddSingleton<IRatingRepository, RatingRepository>();
         //builder.Services.AddSingleton<ICategoryRepository, CategoryRepository>();
@@ -100,6 +101,7 @@ internal class Program
         //builder.Services.AddSingleton<IBusinessWorkingInfoRepository, BusinessWorkingInfoRepository>();
 
         builder.Services.AddSingleton<IUserService, UserService>();
+        builder.Services.AddSingleton<IConfirmationService, ConfirmationService>();
         //builder.Services.AddSingleton<IBusinessService, BusinessService>();
         //builder.Services.AddSingleton<IRatingService, RatingService>();
         //builder.Services.AddSingleton<ICategoryService, CategoryService>();

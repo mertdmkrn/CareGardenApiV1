@@ -177,7 +177,7 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
-        /// Save Service
+        /// Save Service (Role = 'Admin')
         /// </summary>
         /// <remarks>
         /// **Sample request body:**
@@ -191,6 +191,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("service/save")]
         public async Task<IActionResult> Save([FromBody] Services services)
@@ -251,7 +252,7 @@ namespace CareGardenApiV1.Controller
 
 
         /// <summary>
-        /// Update Service
+        /// Update Service (Role = 'Admin')
         /// </summary>
         /// <remarks>
         /// **Sample request body:**
@@ -266,6 +267,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("service/update")]
         public async Task<IActionResult> Update([FromBody] Services updateServices)
@@ -338,9 +340,10 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
-        /// Delete Service
+        /// Delete Service (Role = 'Admin')
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("service/delete")]
         public async Task<IActionResult> Delete([FromBody] int id)

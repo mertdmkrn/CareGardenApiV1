@@ -16,14 +16,10 @@ namespace CareGardenApiV1.Controller
     public class UserController : ControllerBase
     {
         private IUserService _userService;
-        private ITokenHandler _tokenHandler;
-        private ISmsHandler _smsHandler;
 
         public UserController()
         {
             _userService = new UserService();
-            _tokenHandler = new TokenHandler();
-            _smsHandler = new SmsHandler();
         }
 
         /// <summary>
@@ -50,6 +46,7 @@ namespace CareGardenApiV1.Controller
                     return BadRequest(response);
 
                 response.Data = await _userService.GetUserById(id);
+                response.Data.password = "********";
 
                 if (response.Data == null)
                 {
@@ -111,6 +108,7 @@ namespace CareGardenApiV1.Controller
                     return NotFound(response);
                 }
 
+                user.password = "********";
                 response.Data = user;
 
                 return Ok(response);

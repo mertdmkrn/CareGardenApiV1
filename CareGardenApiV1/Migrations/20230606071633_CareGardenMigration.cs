@@ -42,6 +42,7 @@ namespace CareGardenApiV1.Migrations
                     telephone = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: true),
                     password = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     city = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    role = table.Column<string>(type: "character varying(50)", maxLength: 30, nullable: true),
                     createDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     updateDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     birthDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),

@@ -59,6 +59,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 user.password = user.password.HashString();
                 user.createDate = DateTime.Now;
                 user.updateDate = user.createDate;
+                user.role = "User";
 
                 await context.Users.AddAsync(user);
                 await context.SaveChangesAsync();

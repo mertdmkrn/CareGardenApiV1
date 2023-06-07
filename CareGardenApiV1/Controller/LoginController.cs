@@ -313,7 +313,8 @@ namespace CareGardenApiV1.Controller
                 var claims = new List<Claim>() {
                     new Claim(ClaimTypes.Name, user.fullName),
                     new Claim(ClaimTypes.PrimarySid, user.id.ToString()),
-                    new Claim(ClaimTypes.Email, user.email)
+                    new Claim(ClaimTypes.Email, user.email),
+                    new Claim(ClaimTypes.Role, user.role)
                 };
 
                 response.Data = _tokenHandler.CreateAccessToken(DateTime.Now.AddDays(60), claims);
@@ -378,7 +379,8 @@ namespace CareGardenApiV1.Controller
             var claims = new List<Claim>() {
                 new Claim(ClaimTypes.Name, user.fullName),
                 new Claim(ClaimTypes.PrimarySid, user.id.ToString()),
-                new Claim(ClaimTypes.Email, user.email)
+                new Claim(ClaimTypes.Email, user.email),
+                new Claim(ClaimTypes.Role, user.role)
             };
 
             response.Data = _tokenHandler.CreateAccessToken(DateTime.Now.AddDays(60), claims);

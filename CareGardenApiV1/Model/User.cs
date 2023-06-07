@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using static CareGardenApiV1.Helpers.Enums;
 
 namespace CareGardenApiV1.Model
@@ -22,7 +22,7 @@ namespace CareGardenApiV1.Model
         [MaxLength(11)]
         public string? telephone { get; set; }
 
-        [JsonIgnore]
+
         [MaxLength(50)]
         public string? password { get; set; }
 
@@ -37,6 +37,10 @@ namespace CareGardenApiV1.Model
         public DateTime? birthDate { get; set; }
 
         public string? services { get; set; }
+
+        [JsonIgnore]
+        [MaxLength(30)]
+        public string? role { get; set; }
 
     }
 }

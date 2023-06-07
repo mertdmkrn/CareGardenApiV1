@@ -15,8 +15,6 @@ namespace CareGardenApiV1.Migrations
             migrationBuilder.AlterDatabase()
                 .Annotation("Npgsql:PostgresExtension:postgis", ",,");
 
-            Down(migrationBuilder);
-
             migrationBuilder.CreateTable(
                 name: "ConfirmationInfo",
                 columns: table => new

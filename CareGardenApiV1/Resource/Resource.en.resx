@@ -147,6 +147,9 @@
   <data name="IdParametreHatasi" xml:space="preserve">
     <value>Id parameter must be greater than 0.</value>
   </data>
+  <data name="KayitBulunamadi" xml:space="preserve">
+    <value>No records found.</value>
+  </data>
   <data name="KayitSilinemedi" xml:space="preserve">
     <value>The record could not be deleted.</value>
   </data>
@@ -173,6 +176,9 @@
   </data>
   <data name="OnayMesaji" xml:space="preserve">
     <value>Welcome CareGarden. Confirmation Code : {0}</value>
+  </data>
+  <data name="RenkKoduHatasi" xml:space="preserve">
+    <value>The color code must be 3 or 6 digits.</value>
   </data>
   <data name="Sifre8KarakterOlmali" xml:space="preserve">
     <value>Password must be 8 characters.</value>

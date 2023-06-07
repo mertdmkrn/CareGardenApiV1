@@ -151,6 +151,15 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kayıt bulunamadı..
+        /// </summary>
+        public static string KayitBulunamadi {
+            get {
+                return ResourceManager.GetString("KayitBulunamadi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Kayıt silinemedi..
         /// </summary>
         public static string KayitSilinemedi {
@@ -228,6 +237,15 @@ namespace CareGardenApiV1.Resource {
         public static string OnayMesaji {
             get {
                 return ResourceManager.GetString("OnayMesaji", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Renk kodu 3 veya 6 haneli olmalı..
+        /// </summary>
+        public static string RenkKoduHatasi {
+            get {
+                return ResourceManager.GetString("RenkKoduHatasi", resourceCulture);
             }
         }
         

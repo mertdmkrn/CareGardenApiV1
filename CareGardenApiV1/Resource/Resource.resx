@@ -147,6 +147,9 @@
   <data name="IdParametreHatasi" xml:space="preserve">
     <value>Id parametresi 0' dan büyük olmalı.</value>
   </data>
+  <data name="KayitBulunamadi" xml:space="preserve">
+    <value>Kayıt bulunamadı.</value>
+  </data>
   <data name="KayitSilinemedi" xml:space="preserve">
     <value>Kayıt silinemedi.</value>
   </data>
@@ -173,6 +176,9 @@
   </data>
   <data name="OnayMesaji" xml:space="preserve">
     <value>CareGarden' a hoşgeldin. Onay Kodu : {0}</value>
+  </data>
+  <data name="RenkKoduHatasi" xml:space="preserve">
+    <value>Renk kodu 3 veya 6 haneli olmalı.</value>
   </data>
   <data name="Sifre8KarakterOlmali" xml:space="preserve">
     <value>Şifre 8 karakter olmalı.</value>

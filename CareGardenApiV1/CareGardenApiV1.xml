@@ -84,6 +84,71 @@
              </remarks>
              <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.ServicesController.GetServices">
+            <summary>
+            Get Services
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.ServicesController.GetServicesById(System.Int32)">
+            <summary>
+            Get Service By Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.ServicesController.GetServicesByName(System.String)">
+            <summary>
+            Get Service By Name
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.ServicesController.GetServicesByNameEn(System.String)">
+            <summary>
+            Get Service By NameEn
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.ServicesController.Save(CareGardenApiV1.Model.Services)">
+             <summary>
+             Save Service
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "name" : "Makyaj",
+                    "nameEn": "Make Up",
+                    "className": "makeup",
+                    "colorCode": "358541"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.ServicesController.Update(CareGardenApiV1.Model.Services)">
+             <summary>
+             Update Service
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : 1,
+                    "name" : "Makyaj",
+                    "nameEn": "Make Up",
+                    "className": "makeup",
+                    "colorCode": "564564"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.ServicesController.Delete(System.Int32)">
+            <summary>
+            Delete Service
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.UserController.GetUserById(System.Int32)">
             <summary>
             Get User By Id
@@ -131,6 +196,18 @@
             <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.CareGardenMigration.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenMigration1">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenMigration1.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenMigration1.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenMigration1.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:CareGardenApiV1.Resource.Resource">
@@ -199,6 +276,11 @@
               Looks up a localized string similar to Id parametresi 0&apos; dan büyük olmalı..
             </summary>
         </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.KayitBulunamadi">
+            <summary>
+              Looks up a localized string similar to Kayıt bulunamadı..
+            </summary>
+        </member>
         <member name="P:CareGardenApiV1.Resource.Resource.KayitSilinemedi">
             <summary>
               Looks up a localized string similar to Kayıt silinemedi..
@@ -242,6 +324,11 @@
         <member name="P:CareGardenApiV1.Resource.Resource.OnayMesaji">
             <summary>
               Looks up a localized string similar to CareGarden&apos; a hoşgeldin. Onay Kodu : {0}.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.RenkKoduHatasi">
+            <summary>
+              Looks up a localized string similar to Renk kodu 3 veya 6 haneli olmalı..
             </summary>
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.Sifre8KarakterOlmali">

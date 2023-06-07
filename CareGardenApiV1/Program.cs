@@ -91,6 +91,7 @@ internal class Program
 
         builder.Services.AddSingleton<IUserRepository, UserRepository>();
         builder.Services.AddSingleton<IConfirmationRepository, ConfirmationRepository>();
+        builder.Services.AddSingleton<IServicesRepository, ServicesRepository>();
         //builder.Services.AddSingleton<IBusinessRepository, BusinessRepository>();
         //builder.Services.AddSingleton<IRatingRepository, RatingRepository>();
         //builder.Services.AddSingleton<ICategoryRepository, CategoryRepository>();
@@ -102,6 +103,7 @@ internal class Program
 
         builder.Services.AddSingleton<IUserService, UserService>();
         builder.Services.AddSingleton<IConfirmationService, ConfirmationService>();
+        builder.Services.AddSingleton<IServicesService, ServicesService>();
         //builder.Services.AddSingleton<IBusinessService, BusinessService>();
         //builder.Services.AddSingleton<IRatingService, RatingService>();
         //builder.Services.AddSingleton<ICategoryService, CategoryService>();

@@ -166,7 +166,7 @@ namespace CareGardenApiV1.Controller
             catch (Exception ex)
             {
                 response.HasError = true;
-                response.Message = Resource.Resource.KullaniciBulunamadi + " Exception => " + ex.Message;
+                response.Message = Resource.Resource.KayitSilinemedi + " Exception => " + ex.Message;
                 return Ok(response);
             }
         }

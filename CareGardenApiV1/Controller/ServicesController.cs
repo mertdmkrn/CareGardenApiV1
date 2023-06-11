@@ -6,13 +6,10 @@ using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Service.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace CareGardenApiV1.Controller
 {
     [ApiController]
-    [Authorize]
     public class ServicesController : ControllerBase
     {
         private IServicesService _servicesService;
@@ -53,14 +50,14 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("service/getbyid")]
-        public async Task<IActionResult> GetServicesById([FromBody] int id)
+        public async Task<IActionResult> GetServicesById([FromBody] string id)
         {
             ResponseModel<Services> response = new ResponseModel<Services>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
-                if (id == 0)
+                if (!id.IsGuid())
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
@@ -68,9 +65,9 @@ namespace CareGardenApiV1.Controller
                 }
 
                 if (response.HasError)
-                    return BadRequest(response);
+                    return Ok(response);
 
-                response.Data = await _servicesService.GetServiceByIdAsync(id);
+                response.Data = await _servicesService.GetServiceByIdAsync(id.ToGuid());
 
                 if (response.Data == null)
                 {
@@ -111,7 +108,7 @@ namespace CareGardenApiV1.Controller
                 }
 
                 if (response.HasError)
-                    return BadRequest(response);
+                    return Ok(response);
 
                 response.Data = await _servicesService.GetServiceByNameAsync(name);
 
@@ -154,7 +151,7 @@ namespace CareGardenApiV1.Controller
                 }
 
                 if (response.HasError)
-                    return BadRequest(response);
+                    return Ok(response);
 
                 response.Data = await _servicesService.GetServiceByNameEnAsync(nameEn);
 
@@ -186,7 +183,8 @@ namespace CareGardenApiV1.Controller
         ///        "name" : "Makyaj",
         ///        "nameEn": "Make Up",
         ///        "className": "makeup",
-        ///        "colorCode": "358541"
+        ///        "colorCode": "358541",
+        ///        "sortOrder": 1
         ///     }
         ///
         /// </remarks>
@@ -234,7 +232,7 @@ namespace CareGardenApiV1.Controller
                 if (response.HasError)
                 {
                     response.Message = Resource.Resource.KayitYapilamadi;
-                    return BadRequest(response);
+                    return Ok(response);
                 }
 
                 Services service = await _servicesService.SaveServiceAsync(services);
@@ -258,11 +256,12 @@ namespace CareGardenApiV1.Controller
         /// **Sample request body:**
         ///
         ///     { 
-        ///        "id" : 1,
+        ///        "id" : "00000000-0000-0000-0000-000000000000",
         ///        "name" : "Makyaj",
         ///        "nameEn": "Make Up",
         ///        "className": "makeup",
-        ///        "colorCode": "564564"
+        ///        "colorCode": "564564",
+        ///        "sortOrder": 1
         ///     }
         ///
         /// </remarks>
@@ -277,6 +276,7 @@ namespace CareGardenApiV1.Controller
 
             try
             {
+
                 if (updateServices.name.IsNullOrEmpty())
                 {
                     response.HasError = true;
@@ -309,7 +309,7 @@ namespace CareGardenApiV1.Controller
                 if (response.HasError)
                 {
                     response.Message = Resource.Resource.GuncellemeYapilamadi;
-                    return BadRequest(response);
+                    return Ok(response);
                 }
 
                 Services services = await _servicesService.GetServiceByIdAsync(updateServices.id);
@@ -325,6 +325,7 @@ namespace CareGardenApiV1.Controller
                 services.nameEn = updateServices.nameEn;
                 services.className = updateServices.className;
                 services.colorCode = updateServices.colorCode;
+                services.sortOrder = updateServices.sortOrder;
 
                 services = await _servicesService.UpdateServiceAsync(services);
                 response.Data = true;
@@ -346,14 +347,14 @@ namespace CareGardenApiV1.Controller
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("service/delete")]
-        public async Task<IActionResult> Delete([FromBody] int id)
+        public async Task<IActionResult> Delete([FromBody] string id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
-                if (id == 0)
+                if (!id.IsGuid())
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
@@ -362,10 +363,10 @@ namespace CareGardenApiV1.Controller
                 if (response.HasError)
                 {
                     response.Message = Resource.Resource.KayitSilinemedi;
-                    return BadRequest(response);
+                    return Ok(response);
                 }
 
-                Services services = await _servicesService.GetServiceByIdAsync(id);
+                Services services = await _servicesService.GetServiceByIdAsync(id.ToGuid());
 
                 if (services == null)
                 {

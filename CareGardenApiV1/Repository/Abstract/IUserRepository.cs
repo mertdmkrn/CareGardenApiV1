@@ -6,10 +6,11 @@ namespace CareGardenApiV1.Repository.Abstract
     {
         Task<User> GetUserByEmailAndPasswordAsync(string email, string password);
         Task<User> GetUserByEmailAsync(string email);
+        Task<User> GetUserByTelephoneNumberAsync(string telephoneNumber);
         Task<List<User>> GetUsersAsync();
         Task<User> SaveUserAsync(User user);
         Task<User> UpdateUserAsync(User user);
-        Task<User> GetUserById(int id);
+        Task<User> GetUserById(Guid id);
         Task<bool> DeleteUserAsync(User user);
     }
 }

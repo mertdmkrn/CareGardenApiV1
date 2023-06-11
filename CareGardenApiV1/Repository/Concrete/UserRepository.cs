@@ -17,7 +17,7 @@ namespace CareGardenApiV1.Repository.Concrete
             }
         }
 
-        public async Task<User> GetUserById(int id)
+        public async Task<User> GetUserById(Guid id)
         {
             using (var context = new CareGardenApiDbContext())
             {
@@ -59,6 +59,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 user.password = user.password.HashString();
                 user.createDate = DateTime.Now;
                 user.updateDate = user.createDate;
+                user.gender = Enums.Gender.Unspecified;
                 user.role = "User";
 
                 await context.Users.AddAsync(user);
@@ -84,6 +85,16 @@ namespace CareGardenApiV1.Repository.Concrete
             {
                 return await context.Users
                     .FirstOrDefaultAsync(x => x.email.Equals(email));
+            }
+        } 
+        
+        public async Task<User> GetUserByTelephoneNumberAsync(string telephoneNumber)
+        {
+
+            using (var context = new CareGardenApiDbContext())
+            {
+                return await context.Users
+                    .FirstOrDefaultAsync(x => x.telephone.Equals(telephoneNumber));
             }
         }
     }

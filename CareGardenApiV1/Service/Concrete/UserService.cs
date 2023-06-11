@@ -19,7 +19,7 @@ namespace CareGardenApiV1.Service.Concrete
             return await _userRepository.GetUserByEmailAndPasswordAsync(email, password);
         }
 
-        public async Task<User> GetUserById(int id)
+        public async Task<User> GetUserById(Guid id)
         {
             return await _userRepository.GetUserById(id);
         }
@@ -46,6 +46,11 @@ namespace CareGardenApiV1.Service.Concrete
         public async Task<User> GetUserByEmailAsync(string email)
         {
             return await _userRepository.GetUserByEmailAsync(email);
+        }        
+        
+        public async Task<User> GetUserByTelephoneNumberAsync(string telephoneNumber)
+        {
+            return await _userRepository.GetUserByTelephoneNumberAsync(telephoneNumber);
         }
     }
 }

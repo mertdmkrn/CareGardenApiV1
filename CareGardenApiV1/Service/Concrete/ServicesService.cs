@@ -22,7 +22,7 @@ namespace CareGardenApiV1.Service.Concrete
             return await _servicesRepository.GetServicesAsync();
         }
 
-        public async Task<Services> GetServiceByIdAsync(int id)
+        public async Task<Services> GetServiceByIdAsync(Guid id)
         {
             return await _servicesRepository.GetServiceByIdAsync(id);
         }

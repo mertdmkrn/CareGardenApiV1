@@ -1,12 +1,15 @@
 ﻿using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using static CareGardenApiV1.Helpers.Enums;
 
 namespace CareGardenApiV1.Helpers
 {
     public static class Extensions
     {
+        private static readonly Regex RegexGuid = new Regex(@"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$", RegexOptions.Compiled);
+
         public static bool IsNullOrEmpty(this string value)
         {
             return string.IsNullOrEmpty(value?.Trim());
@@ -73,5 +76,73 @@ namespace CareGardenApiV1.Helpers
 
             return 0;
         }
+
+        public static bool IsValidFullName(this string fullName)
+        {
+            if (fullName.IsNullOrEmpty()) return false;
+
+            var fullNameArr = fullName.Split(" ");
+
+            if(fullNameArr.Length < 2) return false;
+
+            for (int i = 0; i < fullNameArr.Length; i++)
+            {
+                if(i == 0 && fullNameArr[i].Length < 3) return false;
+
+                if(i > 0 && fullNameArr[i].Length < 2) return false;
+            }
+
+            return true;
+        }
+
+        public static Guid ToGuid(this string target, Guid? defaultValue = null)
+        {
+            if (string.IsNullOrEmpty(target)) return defaultValue.GetValueOrDefault(Guid.Empty);
+
+            return target.IsGuid() ? new Guid(target) : defaultValue.GetValueOrDefault(Guid.Empty);
+        }
+
+        public static Guid? ToGuidNullable(this string target, Guid? defaultValue = null)
+        {
+            if (string.IsNullOrEmpty(target)) return defaultValue;
+
+            return target.IsGuid() ? new Guid(target) : defaultValue;
+        }
+
+        public static bool IsGuid(this string value)
+        {
+            return !string.IsNullOrEmpty(value) && RegexGuid.IsMatch(value);
+        }
+        public static string TurkishChrToEnglishChr(this string text)
+        {
+            if (string.IsNullOrEmpty(text)) return text;
+
+            Dictionary<char, char> TurkishChToEnglishChDic = new Dictionary<char, char>()
+            {
+                {'ç','c'},
+                {'Ç','C'},
+                {'ğ','g'},
+                {'Ğ','G'},
+                {'ı','i'},
+                {'İ','I'},
+                {'ş','s'},
+                {'Ş','S'},
+                {'ö','o'},
+                {'Ö','O'},
+                {'ü','u'},
+                {'Ü','U'}
+            };
+
+            return text.Aggregate(new StringBuilder(), (sb, chr) =>
+            {
+                if (TurkishChToEnglishChDic.ContainsKey(chr))
+                    sb.Append(TurkishChToEnglishChDic[chr]);
+                else
+                    sb.Append(chr);
+
+                return sb;
+            }).ToString();
+        }
+
     }
 }

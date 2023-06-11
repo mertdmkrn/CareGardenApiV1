@@ -12,6 +12,8 @@ using CareGardenApiV1.Model;
 using Microsoft.Extensions.Configuration;
 using CareGardenApiV1.Handler.Model;
 using CareGardenApiV1.Handler.Concrete;
+using System.Text.Json.Serialization;
+using Microsoft.Extensions.FileProviders;
 
 internal class Program
 {
@@ -75,6 +77,13 @@ internal class Program
         app.UseSwagger();
         app.UseSwaggerUI();
 
+        app.UseStaticFiles();
+        app.UseStaticFiles(new StaticFileOptions()
+        {
+            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"UploadedFiles")),
+            RequestPath = new PathString("/UploadedFiles")
+        });
+
         app.UseAuthentication();
         app.UseAuthorization();
 
@@ -88,10 +97,12 @@ internal class Program
         builder.Services.AddSingleton<ITokenHandler, TokenHandler>();
         builder.Services.AddSingleton<IMailHandler, MailHandler>();
         builder.Services.AddSingleton<ISmsHandler, SmsHandler>();
+        builder.Services.AddSingleton<IFileHandler, FileHandler>();
 
         builder.Services.AddSingleton<IUserRepository, UserRepository>();
         builder.Services.AddSingleton<IConfirmationRepository, ConfirmationRepository>();
         builder.Services.AddSingleton<IServicesRepository, ServicesRepository>();
+        builder.Services.AddSingleton<ICampaignRepository, CampaignRepository>();
         //builder.Services.AddSingleton<IBusinessRepository, BusinessRepository>();
         //builder.Services.AddSingleton<IRatingRepository, RatingRepository>();
         //builder.Services.AddSingleton<ICategoryRepository, CategoryRepository>();
@@ -104,6 +115,7 @@ internal class Program
         builder.Services.AddSingleton<IUserService, UserService>();
         builder.Services.AddSingleton<IConfirmationService, ConfirmationService>();
         builder.Services.AddSingleton<IServicesService, ServicesService>();
+        builder.Services.AddSingleton<ICampaignService, CampaignService>();
         //builder.Services.AddSingleton<IBusinessService, BusinessService>();
         //builder.Services.AddSingleton<IRatingService, RatingService>();
         //builder.Services.AddSingleton<ICategoryService, CategoryService>();

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CareGardenApiV1.Migrations
 {
     [DbContext(typeof(CareGardenApiDbContext))]
-    [Migration("20230607073935_CareGardenMigration1")]
-    partial class CareGardenMigration1
+    [Migration("20230611173136_CareGarden")]
+    partial class CareGarden
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,13 +26,43 @@ namespace CareGardenApiV1.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("CareGardenApiV1.Model.ConfirmationInfo", b =>
+            modelBuilder.Entity("CareGardenApiV1.Model.Campaign", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("businessId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("createDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("isActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("path")
+                        .HasColumnType("text");
+
+                    b.Property<int>("sortOrder")
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+                    b.Property<DateTime?>("updateDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("url")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Campaign");
+                });
+
+            modelBuilder.Entity("CareGardenApiV1.Model.ConfirmationInfo", b =>
+                {
+                    b.Property<Guid>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("code")
                         .IsRequired()
@@ -54,11 +84,9 @@ namespace CareGardenApiV1.Migrations
 
             modelBuilder.Entity("CareGardenApiV1.Model.Services", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("className")
                         .IsRequired()
@@ -80,6 +108,9 @@ namespace CareGardenApiV1.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<int>("sortOrder")
+                        .HasColumnType("integer");
+
                     b.HasKey("id");
 
                     b.ToTable("Services");
@@ -87,11 +118,9 @@ namespace CareGardenApiV1.Migrations
 
             modelBuilder.Entity("CareGardenApiV1.Model.User", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("birthDate")
                         .HasColumnType("timestamp without time zone");
@@ -114,16 +143,24 @@ namespace CareGardenApiV1.Migrations
                     b.Property<int>("gender")
                         .HasColumnType("integer");
 
+                    b.Property<string>("imageUrl")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
                     b.Property<string>("password")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
+
+                    b.Property<string>("role")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
 
                     b.Property<string>("services")
                         .HasColumnType("text");
 
                     b.Property<string>("telephone")
-                        .HasMaxLength(11)
-                        .HasColumnType("character varying(11)");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<DateTime?>("updateDate")
                         .HasColumnType("timestamp without time zone");

@@ -8,7 +8,7 @@ namespace CareGardenApiV1.Model
     public class ConfirmationInfo
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int id { get; set; }
+        public Guid id { get; set; }
 
         [MaxLength(100)]
         public string target { get; set; }

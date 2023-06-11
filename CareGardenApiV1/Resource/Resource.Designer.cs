@@ -61,11 +61,29 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bir dakika içinde birden fazla onay kodu alamazsınız..
+        /// </summary>
+        public static string BirDakikaIcindeOnayKoduMesaji {
+            get {
+                return ResourceManager.GetString("BirDakikaIcindeOnayKoduMesaji", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bu alanı boş bırakmayınız..
         /// </summary>
         public static string BuAlaniBosBirakmayiniz {
             get {
                 return ResourceManager.GetString("BuAlaniBosBirakmayiniz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geçerli bir isim giriniz..
+        /// </summary>
+        public static string GecerliBirIsimGiriniz {
+            get {
+                return ResourceManager.GetString("GecerliBirIsimGiriniz", resourceCulture);
             }
         }
         
@@ -115,6 +133,15 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Girdiğiniz telefon numarasına ait kullanıcı kayıtlı..
+        /// </summary>
+        public static string GirdiginizTelefonNumarasinaAitKullaniciKayitli {
+            get {
+                return ResourceManager.GetString("GirdiginizTelefonNumarasinaAitKullaniciKayitli", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Girilen bilgilere ait kullanıcı bulunamadı..
         /// </summary>
         public static string GirilenBilgilereAitKullaniciBulunamadi {
@@ -142,11 +169,20 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Id parametresi 0&apos; dan büyük olmalı..
+        ///   Looks up a localized string similar to Yapılan istekte geçerli bir id gönderilmedi..
         /// </summary>
         public static string IdParametreHatasi {
             get {
                 return ResourceManager.GetString("IdParametreHatasi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kayıt başarılı bir şekilde tamamlandı..
+        /// </summary>
+        public static string KayitBasarili {
+            get {
+                return ResourceManager.GetString("KayitBasarili", resourceCulture);
             }
         }
         
@@ -250,11 +286,29 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Resim başarılı bir şekilde yüklendi. .
+        /// </summary>
+        public static string ResimYuklemeBasarili {
+            get {
+                return ResourceManager.GetString("ResimYuklemeBasarili", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Şifre 8 karakter olmalı..
         /// </summary>
         public static string Sifre8KarakterOlmali {
             get {
                 return ResourceManager.GetString("Sifre8KarakterOlmali", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Şifreler eşit olmalı..
+        /// </summary>
+        public static string SifrelerEsitOlmali {
+            get {
+                return ResourceManager.GetString("SifrelerEsitOlmali", resourceCulture);
             }
         }
         
@@ -282,6 +336,15 @@ namespace CareGardenApiV1.Resource {
         public static string SifreYenilemeMailMesaji {
             get {
                 return ResourceManager.GetString("SifreYenilemeMailMesaji", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Şifrenizi unuttuysanız şifremi unuttum kısmından şifrenizi yenileyebilirsiniz..
+        /// </summary>
+        public static string SifreYenilemeMesaji {
+            get {
+                return ResourceManager.GetString("SifreYenilemeMesaji", resourceCulture);
             }
         }
     }

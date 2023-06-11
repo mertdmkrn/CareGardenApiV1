@@ -5,7 +5,7 @@ namespace CareGardenApiV1.Service.Abstract
     public interface IServicesService
     {
         Task<List<Services>> GetServicesAsync();
-        Task<Services> GetServiceByIdAsync(int id);
+        Task<Services> GetServiceByIdAsync(Guid id);
         Task<Services> GetServiceByNameAsync(string name);
         Task<Services> GetServiceByNameEnAsync(string nameEn);
         Task<Services> SaveServiceAsync(Services services);

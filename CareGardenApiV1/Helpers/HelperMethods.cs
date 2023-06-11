@@ -24,6 +24,7 @@ namespace CareGardenApiV1.Helpers
         {
             try
             {
+                if(emailaddress.IsNullOrEmpty()) return false;
                 MailAddress m = new MailAddress(emailaddress);
 
                 return true;
@@ -38,6 +39,9 @@ namespace CareGardenApiV1.Helpers
         {
             try
             {
+                if (telephoneNumber.IsNullOrEmpty()) return false;
+
+                telephoneNumber = telephoneNumber.Replace("+9", "");
                 string regex = @"^(05(\d{9}))$";
                 return Regex.IsMatch(telephoneNumber, regex, RegexOptions.IgnoreCase);
             }
@@ -45,6 +49,6 @@ namespace CareGardenApiV1.Helpers
             {
                 return false;
             }
-        }
+        }       
     }
 }

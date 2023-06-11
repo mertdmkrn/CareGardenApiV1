@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BirDakikaIcindeOnayKoduMesaji" xml:space="preserve">
+    <value>You cannot receive more than one confirmation code in one minute.</value>
+  </data>
   <data name="BuAlaniBosBirakmayiniz" xml:space="preserve">
     <value>Do not leave this field blank.</value>
+  </data>
+  <data name="GecerliBirIsimGiriniz" xml:space="preserve">
+    <value>Please enter a valid fullname.</value>
   </data>
   <data name="GecerliMailMesaji" xml:space="preserve">
     <value>Please enter valid mail.</value>
@@ -135,6 +141,9 @@
   <data name="GirdiginizMaileAitKullaniciKayitli" xml:space="preserve">
     <value>The user of the e-mail you entered is registered in the system.</value>
   </data>
+  <data name="GirdiginizTelefonNumarasinaAitKullaniciKayitli" xml:space="preserve">
+    <value>The user for the phone number you entered is registered.</value>
+  </data>
   <data name="GirilenBilgilereAitKullaniciBulunamadi" xml:space="preserve">
     <value>The user for the entered information could not be found.</value>
   </data>
@@ -145,7 +154,10 @@
     <value>Failed to update.</value>
   </data>
   <data name="IdParametreHatasi" xml:space="preserve">
-    <value>Id parameter must be greater than 0.</value>
+    <value>A valid id was not sent in the request.</value>
+  </data>
+  <data name="KayitBasarili" xml:space="preserve">
+    <value>Registration completed successfully.</value>
   </data>
   <data name="KayitBulunamadi" xml:space="preserve">
     <value>No records found.</value>
@@ -180,8 +192,14 @@
   <data name="RenkKoduHatasi" xml:space="preserve">
     <value>The color code must be 3 or 6 digits.</value>
   </data>
+  <data name="ResimYuklemeBasarili" xml:space="preserve">
+    <value>Image uploaded successfully.</value>
+  </data>
   <data name="Sifre8KarakterOlmali" xml:space="preserve">
     <value>Password must be 8 characters.</value>
+  </data>
+  <data name="SifrelerEsitOlmali" xml:space="preserve">
+    <value>Passwords must be equal.</value>
   </data>
   <data name="SifreYenileme" xml:space="preserve">
     <value>Password Reset</value>
@@ -191,5 +209,8 @@
   </data>
   <data name="SifreYenilemeMailMesaji" xml:space="preserve">
     <value>Confirmation code for password reset {0}.</value>
+  </data>
+  <data name="SifreYenilemeMesaji" xml:space="preserve">
+    <value>If you forgot your password, you can reset your password in the forgot password section.</value>
   </data>
 </root>

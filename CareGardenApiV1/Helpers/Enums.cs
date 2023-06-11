@@ -10,9 +10,9 @@
 
         public enum Gender
         {
-            Belirtilmemis,
-            Erkek,
-            Kadin
+            Women,
+            Men,
+            Unspecified
         }
 
         public enum ConfirmationType

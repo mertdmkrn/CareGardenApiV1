@@ -6,7 +6,9 @@ using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Service.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Security.Claims;
 
 namespace CareGardenApiV1.Controller
@@ -16,10 +18,12 @@ namespace CareGardenApiV1.Controller
     public class UserController : ControllerBase
     {
         private IUserService _userService;
+        private IFileHandler _fileHandler;
 
         public UserController()
         {
             _userService = new UserService();
+            _fileHandler = new FileHandler();
         }
 
         /// <summary>
@@ -28,14 +32,14 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("user/getbyid")]
-        public async Task<IActionResult> GetUserById([FromBody] int id)
+        public async Task<IActionResult> GetUserById([FromBody] string id)
         {
             ResponseModel<User> response = new ResponseModel<User>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
-                if (id == 0)
+                if (!id.IsGuid())
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
@@ -43,10 +47,9 @@ namespace CareGardenApiV1.Controller
                 }
 
                 if (response.HasError)
-                    return BadRequest(response);
+                    return Ok(response);
 
-                response.Data = await _userService.GetUserById(id);
-                response.Data.password = "********";
+                response.Data = await _userService.GetUserById(id.ToGuid());
 
                 if (response.Data == null)
                 {
@@ -54,6 +57,9 @@ namespace CareGardenApiV1.Controller
                     response.Message += id + " id " + Resource.Resource.KullaniciBulunamadi;
                     return NotFound(response);
                 }
+
+                response.Data.password = null;
+                response.Data.retryPassword = null;
 
                 return Ok(response);
 
@@ -92,14 +98,14 @@ namespace CareGardenApiV1.Controller
 
                 var userId = token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.PrimarySid)?.Value?.ToString();
 
-                if (userId.IsNullOrEmpty()) 
+                if (!userId.IsGuid()) 
                 {
                     response.HasError = true;
                     response.Message = Resource.Resource.KullaniciBulunamadi;
                     return NotFound(response);
                 }
 
-                var user = await _userService.GetUserById(userId.ToInt());
+                var user = await _userService.GetUserById(userId.ToGuid());
                 
                 if (user == null)
                 {
@@ -108,7 +114,7 @@ namespace CareGardenApiV1.Controller
                     return NotFound(response);
                 }
 
-                user.password = "********";
+                user.password = null;
                 response.Data = user;
 
                 return Ok(response);
@@ -120,7 +126,74 @@ namespace CareGardenApiV1.Controller
                 response.Message += "Exception => " + ex.Message;
                 return Ok(response);
             }
+        }
 
+        /// <summary>
+        /// User Set Profile Photo
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("user/setprofilephoto")]
+        public async Task<IActionResult> SetProfilePhoto(IFormFile file)
+        {
+            ResponseModel<bool> response = new ResponseModel<bool>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                if (file == null)
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("file", Resource.Resource.BuAlaniBosBirakmayiniz));
+                    response.Message = Resource.Resource.BuAlaniBosBirakmayiniz;
+                    return Ok(response);
+                }
+
+                var tokenString = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                var token = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
+
+                if (token == null)
+                {
+                    response.HasError = true;
+                    response.Message = Resource.Resource.KullaniciBulunamadi;
+                    return NotFound(response);
+                }
+
+                var userId = token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.PrimarySid)?.Value?.ToString();
+
+                if (!userId.IsGuid())
+                {
+                    response.HasError = true;
+                    response.Message = Resource.Resource.KullaniciBulunamadi;
+                    return NotFound(response);
+                }
+
+                var user = await _userService.GetUserById(userId.ToGuid());
+
+                if (user == null)
+                {
+                    response.HasError = true;
+                    response.Message = Resource.Resource.KullaniciBulunamadi;
+                    return NotFound(response);
+                }
+
+                string fileName = user.fullName.ToLower().TurkishChrToEnglishChr().Replace(" ", "-") + "-" + DateTime.Now.ToString("ddMMhhmmss") + "." + file.FileName.Split(".").LastOrDefault();
+                user.imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, "UploadedFiles/UserImages/" + fileName);
+                await _fileHandler.UploadFile(file, "UserImages", fileName);
+                await _userService.UpdateUserAsync(user);
+
+                response.Message = Resource.Resource.ResimYuklemeBasarili;
+                response.Data = true;
+
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
+                return Ok(response);
+            }
         }
 
         /// <summary>
@@ -129,14 +202,14 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("user/delete")]
-        public async Task<IActionResult> Delete([FromBody] int id)
+        public async Task<IActionResult> Delete([FromBody] string id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
             
             try
             {
-                if (id == 0)
+                if (!id.IsGuid())
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
@@ -145,10 +218,10 @@ namespace CareGardenApiV1.Controller
                 if (response.HasError)
                 {
                     response.Message = Resource.Resource.KayitSilinemedi;
-                    return BadRequest(response);
+                    return Ok(response);
                 }
 
-                User user = await _userService.GetUserById(id);
+                User user = await _userService.GetUserById(id.ToGuid());
 
                 if (user == null)
                 {
@@ -177,7 +250,6 @@ namespace CareGardenApiV1.Controller
         /// **Sample request body:**
         ///
         ///     { 
-        ///        "id" : 1,
         ///        "fullName" : "Mert DEMİRKIRAN",
         ///        "birthDate": "1998-08-01",
         ///        "gender": 1,
@@ -208,18 +280,43 @@ namespace CareGardenApiV1.Controller
                     response.ValidationErrors.Add(new ValidationError("birthDate", Resource.Resource.BuAlaniBosBirakmayiniz));
                 }
 
+                if (!updateUser.fullName.IsValidFullName())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("fullName", Resource.Resource.GecerliBirIsimGiriniz));
+                }
+
                 if (response.HasError)
                 {
                     response.Message = Resource.Resource.GuncellemeYapilamadi;
-                    return BadRequest(response);
+                    return Ok(response);
                 }
 
-                User user = await _userService.GetUserById(updateUser.id);
+                var tokenString = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                var token = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
+
+                if (token == null)
+                {
+                    response.HasError = true;
+                    response.Message = Resource.Resource.KullaniciBulunamadi;
+                    return NotFound(response);
+                }
+
+                var userId = token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.PrimarySid)?.Value?.ToString();
+
+                if (!userId.IsGuid())
+                {
+                    response.HasError = true;
+                    response.Message = Resource.Resource.KullaniciBulunamadi;
+                    return NotFound(response);
+                }
+
+                var user = await _userService.GetUserById(userId.ToGuid());
 
                 if (user == null)
                 {
                     response.HasError = true;
-                    response.Message += updateUser.id + " id " + Resource.Resource.KullaniciBulunamadi;
+                    response.Message = Resource.Resource.KullaniciBulunamadi;
                     return NotFound(response);
                 }
 
@@ -227,7 +324,7 @@ namespace CareGardenApiV1.Controller
                 user.birthDate = updateUser.birthDate;
                 user.gender = updateUser.gender;
                 user.city = updateUser.city;
-                user.services = updateUser.services;
+                user.services = updateUser.services.TrimEnd(';');
 
                 response.Data = await _userService.UpdateUserAsync(user);
 

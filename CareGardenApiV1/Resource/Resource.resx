@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BirDakikaIcindeOnayKoduMesaji" xml:space="preserve">
+    <value>Bir dakika içinde birden fazla onay kodu alamazsınız.</value>
+  </data>
   <data name="BuAlaniBosBirakmayiniz" xml:space="preserve">
     <value>Bu alanı boş bırakmayınız.</value>
+  </data>
+  <data name="GecerliBirIsimGiriniz" xml:space="preserve">
+    <value>Geçerli bir isim giriniz.</value>
   </data>
   <data name="GecerliMailMesaji" xml:space="preserve">
     <value>Lütfen geçerli bir mail giriniz.</value>
@@ -135,6 +141,9 @@
   <data name="GirdiginizMaileAitKullaniciKayitli" xml:space="preserve">
     <value>Girdiğiniz maile ait kullanıcı sistemde kayıtlı.</value>
   </data>
+  <data name="GirdiginizTelefonNumarasinaAitKullaniciKayitli" xml:space="preserve">
+    <value>Girdiğiniz telefon numarasına ait kullanıcı kayıtlı.</value>
+  </data>
   <data name="GirilenBilgilereAitKullaniciBulunamadi" xml:space="preserve">
     <value>Girilen bilgilere ait kullanıcı bulunamadı.</value>
   </data>
@@ -145,7 +154,10 @@
     <value>Güncelleme yapılamadı.</value>
   </data>
   <data name="IdParametreHatasi" xml:space="preserve">
-    <value>Id parametresi 0' dan büyük olmalı.</value>
+    <value>Yapılan istekte geçerli bir id gönderilmedi.</value>
+  </data>
+  <data name="KayitBasarili" xml:space="preserve">
+    <value>Kayıt başarılı bir şekilde tamamlandı.</value>
   </data>
   <data name="KayitBulunamadi" xml:space="preserve">
     <value>Kayıt bulunamadı.</value>
@@ -180,8 +192,14 @@
   <data name="RenkKoduHatasi" xml:space="preserve">
     <value>Renk kodu 3 veya 6 haneli olmalı.</value>
   </data>
+  <data name="ResimYuklemeBasarili" xml:space="preserve">
+    <value>Resim başarılı bir şekilde yüklendi. </value>
+  </data>
   <data name="Sifre8KarakterOlmali" xml:space="preserve">
     <value>Şifre 8 karakter olmalı.</value>
+  </data>
+  <data name="SifrelerEsitOlmali" xml:space="preserve">
+    <value>Şifreler eşit olmalı.</value>
   </data>
   <data name="SifreYenileme" xml:space="preserve">
     <value>Şifre Yenileme</value>
@@ -191,5 +209,8 @@
   </data>
   <data name="SifreYenilemeMailMesaji" xml:space="preserve">
     <value>Şifre yenileme işlemi için onay kodu {0}.</value>
+  </data>
+  <data name="SifreYenilemeMesaji" xml:space="preserve">
+    <value>Şifrenizi unuttuysanız şifremi unuttum kısmından şifrenizi yenileyebilirsiniz.</value>
   </data>
 </root>

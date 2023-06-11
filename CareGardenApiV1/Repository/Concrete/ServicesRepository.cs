@@ -13,11 +13,11 @@ namespace CareGardenApiV1.Repository.Concrete
         {
             using (var context = new CareGardenApiDbContext())
             {
-                return await context.Services.ToListAsync();
+                return await context.Services.OrderBy(x => x.sortOrder).ToListAsync();
             }
         }
 
-        public async Task<Services> GetServiceByIdAsync(int id)
+        public async Task<Services> GetServiceByIdAsync(Guid id)
         {
             using (var context = new CareGardenApiDbContext())
             {

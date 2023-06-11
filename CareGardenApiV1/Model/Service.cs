@@ -7,7 +7,7 @@ namespace CareGardenApiV1.Model
     public class Services
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int id { get; set; }
+        public Guid id { get; set; }
 
         [MaxLength(100)]
         public string name { get; set; }
@@ -20,5 +20,7 @@ namespace CareGardenApiV1.Model
 
         [MaxLength(50)]
         public string colorCode { get; set; }
+        public int sortOrder { get; set; }
+
     }
 }

@@ -30,7 +30,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("campaign/getall")]
-        public async Task<IActionResult> GetServices()
+        public async Task<IActionResult> GetCampaigns()
         {
             ResponseModel<List<Campaign>> response = new ResponseModel<List<Campaign>>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -54,8 +54,8 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [Route("campaign/getbyid")]
-        public async Task<IActionResult> GetServicesById([FromBody] string businessId)
+        [Route("campaign/getbybusinessid")]
+        public async Task<IActionResult> GetCampaignByBusinessId([FromBody] string businessId)
         {
             ResponseModel<List<Campaign>> response = new ResponseModel<List<Campaign>>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -65,7 +65,7 @@ namespace CareGardenApiV1.Controller
                 if (!businessId.IsGuid())
                 {
                     response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
+                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
                     response.Message = Resource.Resource.IdParametreHatasi;
                 }
 
@@ -78,6 +78,49 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.Message = businessId + " id " + Resource.Resource.KayitBulunamadi;
+                    return NotFound(response);
+                }
+
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+                response.HasError = true;
+                response.Message = "Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
+
+        /// <summary>
+        /// Get Campaign By Id
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("campaign/getbyid")]
+        public async Task<IActionResult> GetCampaignById([FromBody] string id)
+        {
+            ResponseModel<Campaign> response = new ResponseModel<Campaign>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                if (!id.IsGuid())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                    response.Message = Resource.Resource.IdParametreHatasi;
+                }
+
+                if (response.HasError)
+                    return Ok(response);
+
+                response.Data = await _campaingService.GetCampaignByIdAsync(id.ToGuid());
+
+                if (response.Data == null)
+                {
+                    response.HasError = true;
+                    response.Message = id + " id " + Resource.Resource.KayitBulunamadi;
                     return NotFound(response);
                 }
 

@@ -87,7 +87,7 @@ internal class Program
         app.UseStaticFiles();
         app.UseStaticFiles(new StaticFileOptions()
         {
-            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"UploadedFiles")),
+            FileProvider = new PhysicalFileProvider(path),
             RequestPath = new PathString("/UploadedFiles")
         });
 

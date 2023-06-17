@@ -14,6 +14,7 @@ using CareGardenApiV1.Handler.Model;
 using CareGardenApiV1.Handler.Concrete;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 internal class Program
 {
@@ -76,6 +77,12 @@ internal class Program
 
         app.UseSwagger();
         app.UseSwaggerUI();
+
+        string path = Path.Combine(Directory.GetCurrentDirectory(), @"UploadedFiles");
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
 
         app.UseStaticFiles();
         app.UseStaticFiles(new StaticFileOptions()

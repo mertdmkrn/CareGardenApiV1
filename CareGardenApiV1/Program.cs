@@ -26,6 +26,11 @@ internal class Program
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
 
+        builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
+        {
+            builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+        }));
+
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
         builder.Services.AddSwaggerGen(c =>
@@ -77,6 +82,7 @@ internal class Program
         var app = builder.Build();
 
         app.UseSwagger();
+        app.UseCors("corsapp");
         app.UseSwaggerUI();
 
         string path = Path.Combine(Directory.GetCurrentDirectory(), @"UploadedFiles");

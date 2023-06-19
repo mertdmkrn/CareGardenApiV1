@@ -25,6 +25,9 @@ internal class Program
 
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
+
+        builder.Services.AddCors();
+
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
         builder.Services.AddSwaggerGen(c =>
@@ -76,6 +79,7 @@ internal class Program
         var app = builder.Build();
 
         app.UseSwagger();
+        app.UseCors();
         app.UseSwaggerUI();
 
         string path = Path.Combine(Directory.GetCurrentDirectory(), @"UploadedFiles");

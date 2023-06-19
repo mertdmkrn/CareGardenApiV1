@@ -4,15 +4,21 @@
         <name>CareGardenApiV1</name>
     </assembly>
     <members>
-        <member name="M:CareGardenApiV1.Controller.CampaignController.GetServices">
+        <member name="M:CareGardenApiV1.Controller.CampaignController.GetCampaigns">
             <summary>
             Get Services
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.CampaignController.GetServicesById(System.String)">
+        <member name="M:CareGardenApiV1.Controller.CampaignController.GetCampaignByBusinessId(System.String)">
             <summary>
             Get Campaign By BusinessId
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.CampaignController.GetCampaignById(System.String)">
+            <summary>
+            Get Campaign By Id
             </summary>
             <returns></returns>
         </member>

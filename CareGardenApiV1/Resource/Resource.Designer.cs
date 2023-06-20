@@ -295,7 +295,7 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Şifre 8 karakter olmalı..
+        ///   Looks up a localized string similar to Şifre en az 8 karakter olmalı..
         /// </summary>
         public static string Sifre8KarakterOlmali {
             get {

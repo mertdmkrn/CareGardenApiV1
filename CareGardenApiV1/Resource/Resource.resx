@@ -196,7 +196,7 @@
     <value>Resim başarılı bir şekilde yüklendi. </value>
   </data>
   <data name="Sifre8KarakterOlmali" xml:space="preserve">
-    <value>Şifre 8 karakter olmalı.</value>
+    <value>Şifre en az 8 karakter olmalı.</value>
   </data>
   <data name="SifrelerEsitOlmali" xml:space="preserve">
     <value>Şifreler eşit olmalı.</value>

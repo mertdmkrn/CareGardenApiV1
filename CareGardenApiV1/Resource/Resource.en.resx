@@ -196,7 +196,7 @@
     <value>Image uploaded successfully.</value>
   </data>
   <data name="Sifre8KarakterOlmali" xml:space="preserve">
-    <value>Password must be 8 characters.</value>
+    <value>Password must be at least 8 characters.</value>
   </data>
   <data name="SifrelerEsitOlmali" xml:space="preserve">
     <value>Passwords must be equal.</value>

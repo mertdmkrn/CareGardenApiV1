@@ -136,6 +136,21 @@
              </remarks>
              <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.LoginController.AdminLogin(CareGardenApiV1.Model.User)">
+             <summary>
+             Admin Login Control
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "stms5581"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.LoginController.PasswordReset(CareGardenApiV1.Model.User)">
              <summary>
              User Password Reset
@@ -421,7 +436,7 @@
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.Sifre8KarakterOlmali">
             <summary>
-              Looks up a localized string similar to Şifre 8 karakter olmalı..
+              Looks up a localized string similar to Şifre en az 8 karakter olmalı..
             </summary>
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.SifrelerEsitOlmali">

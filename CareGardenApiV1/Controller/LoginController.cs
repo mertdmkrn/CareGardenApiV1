@@ -447,7 +447,7 @@ namespace CareGardenApiV1.Controller
             {
                 response.HasError = true;
                 response.Message = Resource.Resource.GirilenBilgilereAitKullaniciBulunamadi;
-                return NotFound(response);
+                return Ok(response);
             }
 
             var claims = new List<Claim>() {

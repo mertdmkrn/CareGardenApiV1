@@ -19,6 +19,11 @@ namespace CareGardenApiV1.Service.Concrete
             return await _userRepository.GetUserByEmailAndPasswordAsync(email, password);
         }
 
+        public async Task<User> GetAdminByEmailAndPasswordAsync(string email, string password)
+        {
+            return await _userRepository.GetAdminByEmailAndPasswordAsync(email, password);
+        }
+
         public async Task<User> GetUserById(Guid id)
         {
             return await _userRepository.GetUserById(id);

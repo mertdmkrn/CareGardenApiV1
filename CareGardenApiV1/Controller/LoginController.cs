@@ -463,6 +463,77 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
+        /// Admin Login Control
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "email": "mertdmkrn37@gmail.com",
+        ///        "password": "stms5581"
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("admin/login")]
+        public async Task<IActionResult> AdminLogin([FromBody] User loginUser)
+        {
+            ResponseModel<Token> response = new ResponseModel<Token>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            if (loginUser.email.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (!loginUser.email.IsNullOrEmpty() && !loginUser.email.IsValidEmail())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.GecerliMailMesaji));
+            }
+
+            if (loginUser.password.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (loginUser.password.IsNotNullOrEmpty() && loginUser.password.Length != 8)
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.Sifre8KarakterOlmali));
+            }
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.GirisYapilamadi;
+                return Ok(response);
+            }
+
+            var user = await _userService.GetAdminByEmailAndPasswordAsync(loginUser.email, loginUser.password);
+
+            if (user == null)
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.GirilenBilgilereAitKullaniciBulunamadi;
+                return NotFound(response);
+            }
+
+            var claims = new List<Claim>() {
+                new Claim(ClaimTypes.Name, user.fullName),
+                new Claim(ClaimTypes.PrimarySid, user.id.ToString()),
+                new Claim(ClaimTypes.Email, user.email),
+                new Claim(ClaimTypes.Role, user.role)
+            };
+
+            response.Data = _tokenHandler.CreateAccessToken(DateTime.Now.AddDays(60), claims);
+
+            return Ok(response);
+        }
+
+        /// <summary>
         /// User Password Reset
         /// </summary>
         /// <remarks>

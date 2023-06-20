@@ -5,6 +5,7 @@ namespace CareGardenApiV1.Service.Abstract
     public interface IUserService
     {
         Task<User> GetUserByEmailAndPasswordAsync(string email, string password);
+        Task<User> GetAdminByEmailAndPasswordAsync(string email, string password);
         Task<User> GetUserByEmailAsync(string email);
         Task<User> GetUserByTelephoneNumberAsync(string telephoneNumber);
         Task<List<User>> GetUsersAsync();

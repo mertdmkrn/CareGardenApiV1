@@ -13,7 +13,17 @@ namespace CareGardenApiV1.Repository.Concrete
             using (var context = new CareGardenApiDbContext())
             {
                 return await context.Users
-                    .FirstOrDefaultAsync(x => x.email.Equals(email) && x.password.Equals(password.HashString()));
+                    .FirstOrDefaultAsync(x => x.email.Equals(email) && x.password.Equals(password.HashString()) && x.role == "User");
+            }
+        }
+
+        public async Task<User> GetAdminByEmailAndPasswordAsync(string email, string password)
+        {
+
+            using (var context = new CareGardenApiDbContext())
+            {
+                return await context.Users
+                    .FirstOrDefaultAsync(x => x.email.Equals(email) && x.password.Equals(password.HashString()) && x.role == "Admin");
             }
         }
 

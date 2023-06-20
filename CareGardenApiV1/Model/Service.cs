@@ -10,16 +10,16 @@ namespace CareGardenApiV1.Model
         public Guid id { get; set; }
 
         [MaxLength(100)]
-        public string name { get; set; }
+        public string? name { get; set; }
 
         [MaxLength(100)]
-        public string nameEn { get; set; }
+        public string? nameEn { get; set; }
 
         [MaxLength(50)]
-        public string className { get; set; }
+        public string? className { get; set; }
 
         [MaxLength(50)]
-        public string colorCode { get; set; }
+        public string? colorCode { get; set; }
         public int sortOrder { get; set; }
 
     }

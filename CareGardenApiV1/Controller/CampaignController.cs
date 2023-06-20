@@ -78,7 +78,7 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.Message = businessId + " id " + Resource.Resource.KayitBulunamadi;
-                    return NotFound(response);
+                    return Ok(response);
                 }
 
                 return Ok(response);
@@ -121,7 +121,7 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.Message = id + " id " + Resource.Resource.KayitBulunamadi;
-                    return NotFound(response);
+                    return Ok(response);
                 }
 
                 return Ok(response);
@@ -300,7 +300,7 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.Message += campaign.id + " id " + Resource.Resource.KayitBulunamadi;
-                    return NotFound(response);
+                    return Ok(response);
                 }
 
                 campaign.path = updateCampaign.path;
@@ -354,7 +354,7 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.Message += id + " id " + Resource.Resource.KayitBulunamadi;
-                    return NotFound(response);
+                    return Ok(response);
                 }
 
                 response.Data = await _campaingService.DeleteCampaignAsync(campaign);

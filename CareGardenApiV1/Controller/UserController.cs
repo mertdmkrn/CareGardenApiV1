@@ -55,7 +55,7 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.Message += id + " id " + Resource.Resource.KullaniciBulunamadi;
-                    return NotFound(response);
+                    return Ok(response);
                 }
 
                 response.Data.password = null;
@@ -93,7 +93,7 @@ namespace CareGardenApiV1.Controller
                 { 
                     response.HasError = true;
                     response.Message = Resource.Resource.KullaniciBulunamadi;
-                    return NotFound(response);
+                    return Ok(response);
                 }
 
                 var userId = token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.PrimarySid)?.Value?.ToString();
@@ -102,7 +102,7 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.Message = Resource.Resource.KullaniciBulunamadi;
-                    return NotFound(response);
+                    return Ok(response);
                 }
 
                 var user = await _userService.GetUserById(userId.ToGuid());
@@ -111,7 +111,7 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.Message = Resource.Resource.KullaniciBulunamadi;
-                    return NotFound(response);
+                    return Ok(response);
                 }
 
                 user.password = null;
@@ -156,7 +156,7 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.Message = Resource.Resource.KullaniciBulunamadi;
-                    return NotFound(response);
+                    return Ok(response);
                 }
 
                 var userId = token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.PrimarySid)?.Value?.ToString();
@@ -165,7 +165,7 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.Message = Resource.Resource.KullaniciBulunamadi;
-                    return NotFound(response);
+                    return Ok(response);
                 }
 
                 var user = await _userService.GetUserById(userId.ToGuid());
@@ -174,7 +174,7 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.Message = Resource.Resource.KullaniciBulunamadi;
-                    return NotFound(response);
+                    return Ok(response);
                 }
 
                 string fileName = user.fullName.ToLower().TurkishChrToEnglishChr().Replace(" ", "-") + "-" + DateTime.Now.ToString("ddMMhhmmss") + "." + file.FileName.Split(".").LastOrDefault();
@@ -227,7 +227,7 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.Message = id + " id " + Resource.Resource.KullaniciBulunamadi;
-                    return NotFound(response);
+                    return Ok(response);
                 }
 
                 response.Data = await _userService.DeleteUserAsync(user);
@@ -299,7 +299,7 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.Message = Resource.Resource.KullaniciBulunamadi;
-                    return NotFound(response);
+                    return Ok(response);
                 }
 
                 var userId = token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.PrimarySid)?.Value?.ToString();
@@ -308,7 +308,7 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.Message = Resource.Resource.KullaniciBulunamadi;
-                    return NotFound(response);
+                    return Ok(response);
                 }
 
                 var user = await _userService.GetUserById(userId.ToGuid());
@@ -317,7 +317,7 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.Message = Resource.Resource.KullaniciBulunamadi;
-                    return NotFound(response);
+                    return Ok(response);
                 }
 
                 user.fullName = updateUser.fullName;

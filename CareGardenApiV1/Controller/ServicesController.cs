@@ -73,7 +73,7 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.Message = id + " id " + Resource.Resource.KayitBulunamadi;
-                    return NotFound(response);
+                    return Ok(response);
                 }
 
                 return Ok(response);
@@ -116,7 +116,7 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.Message = Resource.Resource.KayitBulunamadi;
-                    return NotFound(response);
+                    return Ok(response);
                 }
 
                 return Ok(response);
@@ -159,7 +159,7 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.Message = Resource.Resource.KayitBulunamadi;
-                    return NotFound(response);
+                    return Ok(response);
                 }
 
                 return Ok(response);
@@ -318,7 +318,7 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.Message += updateServices.id + " id " + Resource.Resource.KayitBulunamadi;
-                    return NotFound(response);
+                    return Ok(response);
                 }
 
                 services.name = updateServices.name;
@@ -372,7 +372,7 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.Message += id + " id " + Resource.Resource.KayitBulunamadi;
-                    return NotFound(response);
+                    return Ok(response);
                 }
 
                 response.Data = await _servicesService.DeleteServiceAsync(services);

@@ -139,7 +139,7 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.Message += Resource.Resource.GirdiginizMaileAitKullaniciBulunamadi;
-                    return NotFound(response);
+                    return Ok(response);
                 }
 
                 var systemConfirmationInfo = await _contirmationService.GetConfirmationInfo(email);
@@ -232,7 +232,7 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.Message += Resource.Resource.OnayKoduDogrulanamadi;
-                    return NotFound(response);
+                    return Ok(response);
                 }
 
                 if (systemConfirmationInfo.code != confirmationInfo.code)
@@ -518,7 +518,7 @@ namespace CareGardenApiV1.Controller
             {
                 response.HasError = true;
                 response.Message = Resource.Resource.GirilenBilgilereAitKullaniciBulunamadi;
-                return NotFound(response);
+                return Ok(response);
             }
 
             var claims = new List<Claim>() {
@@ -605,7 +605,7 @@ namespace CareGardenApiV1.Controller
             {
                 response.HasError = true;
                 response.Message = Resource.Resource.GirilenBilgilereAitKullaniciBulunamadi;
-                return NotFound(response);
+                return Ok(response);
             }
             
             user.password = updateUser.password;

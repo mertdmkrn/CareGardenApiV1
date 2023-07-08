@@ -236,6 +236,12 @@ namespace CareGardenApiV1.Controller
                     response.ValidationErrors.Add(new ValidationError("firstname", Resource.Resource.BuAlaniBosBirakmayiniz));
                 }
 
+                if (updateUser.city.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("city", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
                 if (!updateUser.birthDate.HasValue)
                 {
                     response.HasError = true;

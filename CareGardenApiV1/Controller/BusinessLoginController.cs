@@ -157,7 +157,7 @@ namespace CareGardenApiV1.Controller
 
                 string mailMessage = "";
 
-                using (StreamReader reader = new StreamReader(Path.Combine(AppContext.BaseDirectory.Replace("bin\\Debug\\net7.0\\", "") + "Template/MailTemplate.html")))
+                using (StreamReader reader = new StreamReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "Template/MailTemplate.html")))
                 {
                     mailMessage = reader.ReadToEnd();
                 }
@@ -183,7 +183,7 @@ namespace CareGardenApiV1.Controller
             catch (Exception ex)
             {
                 response.HasError = true;
-                response.Message = Resource.Resource.OnayKoduGonderilemedi + " Exception => " + ex.Message;
+                response.Message = Resource.Resource.OnayKoduGonderilemedi + " Exception => " + ex.Message + " " + AppDomain.CurrentDomain.BaseDirectory; 
                 return Ok(response);
             }
        

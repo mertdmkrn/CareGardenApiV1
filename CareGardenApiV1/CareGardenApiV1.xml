@@ -4,6 +4,102 @@
         <name>CareGardenApiV1</name>
     </assembly>
     <members>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessById(System.String)">
+            <summary>
+            Get Business By Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusiness">
+            <summary>
+            Get Session Business
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessSelectList">
+            <summary>
+            Get Business Select Box
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessLoginController.SendTelephoneConfirmationCode(System.String)">
+            <summary>
+            Send Telephone Confirmation Code
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessLoginController.SendEmailConfirmationCode(System.String)">
+            <summary>
+            Send Email Confirmation Code
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessLoginController.VerifyConfirmationCode(CareGardenApiV1.Model.ConfirmationInfo)">
+             <summary>
+             Verify Confirmation Code
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "target": "+905467335939",
+                    "code": "7391"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessLoginController.Save(CareGardenApiV1.Model.Business)">
+             <summary>
+             Create New Business
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "name" : "MERT GÜZELLİK SALONU",
+                    "nameEn" : "MERT BEAUTY",
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "stms5581",
+                    "retryPassword": "stms5581",
+                    "telephone": "+905467335939"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessLoginController.BusinessLogin(CareGardenApiV1.Model.Business)">
+             <summary>
+             Business Login Control
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "stms5581"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessLoginController.PasswordReset(CareGardenApiV1.Model.RequestModel.PasswordResetModel)">
+             <summary>
+             Business Password Reset
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "mert1453",
+                    "retryPassword": "mert1453",
+                    "verifiedCode": "9112"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.CampaignController.GetCampaigns">
             <summary>
             Get Services
@@ -75,97 +171,6 @@
             Get Cities
             </summary>
             <returns></returns>
-        </member>
-        <member name="M:CareGardenApiV1.Controller.LoginController.SendTelephoneConfirmationCode(System.String)">
-            <summary>
-            Send Telephone Confirmation Code
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:CareGardenApiV1.Controller.LoginController.SendEmailConfirmationCode(System.String)">
-            <summary>
-            Send Email Confirmation Code
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:CareGardenApiV1.Controller.LoginController.VerifyConfirmationCode(CareGardenApiV1.Model.ConfirmationInfo)">
-             <summary>
-             Verify Confirmation Code
-             </summary>
-             <remarks>
-             **Sample request body:**
-            
-                 { 
-                    "target": "+905467335939",
-                    "code": "7391"
-                 }
-            
-             </remarks>
-             <returns></returns>
-        </member>
-        <member name="M:CareGardenApiV1.Controller.LoginController.Save(CareGardenApiV1.Model.User)">
-             <summary>
-             Create New User
-             </summary>
-             <remarks>
-             **Sample request body:**
-            
-                 { 
-                    "fullName" : "Mert DEMİRKIRAN",
-                    "email": "mertdmkrn37@gmail.com",
-                    "password": "stms5581",
-                    "retryPassword": "stms5581",
-                    "telephone": "+905467335939"
-                 }
-            
-             </remarks>
-             <returns></returns>
-        </member>
-        <member name="M:CareGardenApiV1.Controller.LoginController.UserLogin(CareGardenApiV1.Model.User)">
-             <summary>
-             User Login Control
-             </summary>
-             <remarks>
-             **Sample request body:**
-            
-                 { 
-                    "email": "mertdmkrn37@gmail.com",
-                    "password": "stms5581"
-                 }
-            
-             </remarks>
-             <returns></returns>
-        </member>
-        <member name="M:CareGardenApiV1.Controller.LoginController.AdminLogin(CareGardenApiV1.Model.User)">
-             <summary>
-             Admin Login Control
-             </summary>
-             <remarks>
-             **Sample request body:**
-            
-                 { 
-                    "email": "mertdmkrn37@gmail.com",
-                    "password": "stms5581"
-                 }
-            
-             </remarks>
-             <returns></returns>
-        </member>
-        <member name="M:CareGardenApiV1.Controller.LoginController.PasswordReset(CareGardenApiV1.Model.User)">
-             <summary>
-             User Password Reset
-             </summary>
-             <remarks>
-             **Sample request body:**
-            
-                 { 
-                    "email": "mertdmkrn37@gmail.com",
-                    "password": "mert1453",
-                    "retryPassword": "mert1453"
-                 }
-            
-             </remarks>
-             <returns></returns>
         </member>
         <member name="M:CareGardenApiV1.Controller.ServicesController.GetServices">
             <summary>
@@ -242,7 +247,7 @@
         </member>
         <member name="M:CareGardenApiV1.Controller.UserController.GetUser">
             <summary>
-            Get User
+            Get Session User
             </summary>
             <returns></returns>
         </member>
@@ -276,6 +281,98 @@
              </remarks>
              <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.UserLoginController.SendTelephoneConfirmationCode(System.String)">
+            <summary>
+            Send Telephone Confirmation Code
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserLoginController.SendEmailConfirmationCode(System.String)">
+            <summary>
+            Send Email Confirmation Code
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserLoginController.VerifyConfirmationCode(CareGardenApiV1.Model.ConfirmationInfo)">
+             <summary>
+             Verify Confirmation Code
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "target": "+905467335939",
+                    "code": "7391"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserLoginController.Save(CareGardenApiV1.Model.User)">
+             <summary>
+             Create New User
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "fullName" : "Mert DEMİRKIRAN",
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "stms5581",
+                    "retryPassword": "stms5581",
+                    "telephone": "+905467335939"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserLoginController.UserLogin(CareGardenApiV1.Model.User)">
+             <summary>
+             User Login Control
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "stms5581"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserLoginController.PasswordReset(CareGardenApiV1.Model.RequestModel.PasswordResetModel)">
+             <summary>
+             User Password Reset
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "mert1453",
+                    "retryPassword": "mert1453",
+                    "verifiedCode": "9112"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserLoginController.AdminLogin(CareGardenApiV1.Model.User)">
+             <summary>
+             Admin Login Control
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "stms5581"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
         <member name="T:CareGardenApiV1.Migrations.CareGarden">
             <inheritdoc />
         </member>
@@ -286,6 +383,18 @@
             <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.CareGarden.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV2">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV2.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV2.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:CareGardenApiV1.Resource.Resource">
@@ -344,14 +453,29 @@
               Looks up a localized string similar to Girdiğiniz maile ait kullanıcı sistemde kayıtlı..
             </summary>
         </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.GirdiginizMaileAitSirketBulunamadi">
+            <summary>
+              Looks up a localized string similar to Girdiğiniz maile ait şirket bulunamadı..
+            </summary>
+        </member>
         <member name="P:CareGardenApiV1.Resource.Resource.GirdiginizTelefonNumarasinaAitKullaniciKayitli">
             <summary>
-              Looks up a localized string similar to Girdiğiniz telefon numarasına ait kullanıcı kayıtlı..
+              Looks up a localized string similar to Girdiğiniz telefon numarasına ait kullanıcı sistemde kayıtlı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.GirdiginizTelefonNumarasinaAitSirketKayitli">
+            <summary>
+              Looks up a localized string similar to The company belonging to the phone number you entered is registered in the system..
             </summary>
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.GirilenBilgilereAitKullaniciBulunamadi">
             <summary>
               Looks up a localized string similar to Girilen bilgilere ait kullanıcı bulunamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.GirilenBilgilereAitSirketBulunamadi">
+            <summary>
+              Looks up a localized string similar to Girilen bilgilere ait şirket bulunamadı..
             </summary>
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.GirisYapilamadi">
@@ -454,6 +578,11 @@
               Looks up a localized string similar to Şifre yenileme işlemi başarılı..
             </summary>
         </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.SifreYenilemedi">
+            <summary>
+              Looks up a localized string similar to Şifre yenilemedi..
+            </summary>
+        </member>
         <member name="P:CareGardenApiV1.Resource.Resource.SifreYenilemeMailMesaji">
             <summary>
               Looks up a localized string similar to Şifre yenileme işlemi için onay kodu {0}..
@@ -462,6 +591,11 @@
         <member name="P:CareGardenApiV1.Resource.Resource.SifreYenilemeMesaji">
             <summary>
               Looks up a localized string similar to Şifrenizi unuttuysanız şifremi unuttum kısmından şifrenizi yenileyebilirsiniz..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.SirketBulunamadi">
+            <summary>
+              Looks up a localized string similar to Şirket bulunamadı..
             </summary>
         </member>
     </members>

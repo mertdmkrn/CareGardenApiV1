@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Converters;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Converters;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,8 +9,17 @@ using static CareGardenApiV1.Helpers.Enums;
 namespace CareGardenApiV1.Model
 {
     [Table("User")]
+    [Index(nameof(email), nameof(telephone))]
     public class User
     {
+        public User()
+        {
+            this.comments = new HashSet<Comment>();
+            this.favorites = new HashSet<Favorite>();
+            this.appointments = new HashSet<Appointment>();
+            this.complains = new HashSet<Complain>();
+        }
+
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid id { get; set; }
 
@@ -48,6 +58,17 @@ namespace CareGardenApiV1.Model
         public string? role { get; set; }
 
         public string? imageUrl { get; set; }
+
+        public bool isBan { get; set; }
+
+        [JsonIgnore]
+        public virtual ICollection<Comment> comments { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<Favorite> favorites { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<Appointment> appointments { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<Complain> complains { get; set; }
 
     }
 }

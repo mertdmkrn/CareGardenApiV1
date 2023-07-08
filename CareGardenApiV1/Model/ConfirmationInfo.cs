@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using static CareGardenApiV1.Helpers.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace CareGardenApiV1.Model
 {
     [Table("ConfirmationInfo")]
+    [Index(nameof(target), nameof(code))]
     public class ConfirmationInfo
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]

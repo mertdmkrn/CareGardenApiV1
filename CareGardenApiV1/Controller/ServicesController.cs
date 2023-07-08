@@ -223,7 +223,7 @@ namespace CareGardenApiV1.Controller
                     response.ValidationErrors.Add(new ValidationError("colorCode", Resource.Resource.BuAlaniBosBirakmayiniz));
                 }
 
-                if (!services.colorCode.IsNullOrEmpty() && (services.colorCode.Replace("#", "").Length % 3 != 0 || services.colorCode.Replace("#", "").Length > 6))
+                if (!services.colorCode.Replace("#", "").IsNullOrEmpty() && (services.colorCode.Replace("#", "").Length % 3 != 0 || services.colorCode.Replace("#", "").Length > 6))
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("colorCode", Resource.Resource.RenkKoduHatasi));
@@ -301,7 +301,7 @@ namespace CareGardenApiV1.Controller
                     response.ValidationErrors.Add(new ValidationError("colorCode", Resource.Resource.BuAlaniBosBirakmayiniz));
                 }
 
-                if (!updateServices.colorCode.IsNullOrEmpty() && (updateServices.colorCode.Replace("#","").Length % 3 != 0 || updateServices.colorCode.Replace("#", "").Length > 6))
+                if (!updateServices.colorCode.Replace("#","").IsNullOrEmpty() && (updateServices.colorCode.Replace("#","").Length % 3 != 0 || updateServices.colorCode.Replace("#", "").Length > 6))
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("colorCode", Resource.Resource.RenkKoduHatasi));

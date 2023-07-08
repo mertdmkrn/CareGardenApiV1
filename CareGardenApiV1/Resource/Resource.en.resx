@@ -141,11 +141,20 @@
   <data name="GirdiginizMaileAitKullaniciKayitli" xml:space="preserve">
     <value>The user of the e-mail you entered is registered in the system.</value>
   </data>
+  <data name="GirdiginizMaileAitSirketBulunamadi" xml:space="preserve">
+    <value>No companies were found for the email you entered.</value>
+  </data>
   <data name="GirdiginizTelefonNumarasinaAitKullaniciKayitli" xml:space="preserve">
     <value>The user for the phone number you entered is registered.</value>
   </data>
+  <data name="GirdiginizTelefonNumarasinaAitSirketKayitli" xml:space="preserve">
+    <value>Girdi</value>
+  </data>
   <data name="GirilenBilgilereAitKullaniciBulunamadi" xml:space="preserve">
     <value>The user for the entered information could not be found.</value>
+  </data>
+  <data name="GirilenBilgilereAitSirketBulunamadi" xml:space="preserve">
+    <value>No company was found for the information entered.</value>
   </data>
   <data name="GirisYapilamadi" xml:space="preserve">
     <value>Failed to login.</value>
@@ -207,10 +216,16 @@
   <data name="SifreYenilemeBasarili" xml:space="preserve">
     <value>Password reset was successful.</value>
   </data>
+  <data name="SifreYenilemedi" xml:space="preserve">
+    <value>Password not reset.</value>
+  </data>
   <data name="SifreYenilemeMailMesaji" xml:space="preserve">
     <value>Confirmation code for password reset {0}.</value>
   </data>
   <data name="SifreYenilemeMesaji" xml:space="preserve">
     <value>If you forgot your password, you can reset your password in the forgot password section.</value>
+  </data>
+  <data name="SirketBulunamadi" xml:space="preserve">
+    <value>Company not found.</value>
   </data>
 </root>

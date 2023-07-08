@@ -2,10 +2,10 @@
 {
     public class Enums
     {
-        public enum AppointmentStatus { 
+        public enum AppointmentStatus {
 
-            Beklemede,
-            Onaylandi      
+            Waiting,
+            Approve
         }
 
         public enum Gender
@@ -30,5 +30,26 @@
             Month,
             Year
         }
+
+        public enum WorkingGenderType
+        {
+            Everyone,
+            FemaleOnly,
+            MaleOnly
+        }
+
+        public enum CommentType
+        {
+            User,
+            Business
+        }
+
+        public enum PaidType
+        {
+            Subscribe,
+            Campaign,
+            Sorting
+        }
+
     }
 }

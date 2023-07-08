@@ -141,11 +141,20 @@
   <data name="GirdiginizMaileAitKullaniciKayitli" xml:space="preserve">
     <value>Girdiğiniz maile ait kullanıcı sistemde kayıtlı.</value>
   </data>
+  <data name="GirdiginizMaileAitSirketBulunamadi" xml:space="preserve">
+    <value>Girdiğiniz maile ait şirket bulunamadı.</value>
+  </data>
   <data name="GirdiginizTelefonNumarasinaAitKullaniciKayitli" xml:space="preserve">
-    <value>Girdiğiniz telefon numarasına ait kullanıcı kayıtlı.</value>
+    <value>Girdiğiniz telefon numarasına ait kullanıcı sistemde kayıtlı.</value>
+  </data>
+  <data name="GirdiginizTelefonNumarasinaAitSirketKayitli" xml:space="preserve">
+    <value>The company belonging to the phone number you entered is registered in the system.</value>
   </data>
   <data name="GirilenBilgilereAitKullaniciBulunamadi" xml:space="preserve">
     <value>Girilen bilgilere ait kullanıcı bulunamadı.</value>
+  </data>
+  <data name="GirilenBilgilereAitSirketBulunamadi" xml:space="preserve">
+    <value>Girilen bilgilere ait şirket bulunamadı.</value>
   </data>
   <data name="GirisYapilamadi" xml:space="preserve">
     <value>Giriş yapılamadı.</value>
@@ -207,10 +216,16 @@
   <data name="SifreYenilemeBasarili" xml:space="preserve">
     <value>Şifre yenileme işlemi başarılı.</value>
   </data>
+  <data name="SifreYenilemedi" xml:space="preserve">
+    <value>Şifre yenilemedi.</value>
+  </data>
   <data name="SifreYenilemeMailMesaji" xml:space="preserve">
     <value>Şifre yenileme işlemi için onay kodu {0}.</value>
   </data>
   <data name="SifreYenilemeMesaji" xml:space="preserve">
     <value>Şifrenizi unuttuysanız şifremi unuttum kısmından şifrenizi yenileyebilirsiniz.</value>
+  </data>
+  <data name="SirketBulunamadi" xml:space="preserve">
+    <value>Şirket bulunamadı.</value>
   </data>
 </root>

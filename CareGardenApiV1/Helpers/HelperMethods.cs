@@ -2,6 +2,13 @@
 using System.Net.Mail;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text.RegularExpressions;
+using CareGardenApiV1.Model;
+using Org.BouncyCastle.Asn1.Ocsp;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using CareGardenApiV1.Service.Concrete;
+using CareGardenApiV1.Service.Abstract;
+using CareGardenApiV1.Repository.Abstract;
 
 namespace CareGardenApiV1.Helpers
 {
@@ -49,6 +56,60 @@ namespace CareGardenApiV1.Helpers
             {
                 return false;
             }
-        }       
+        }
+
+        public async static Task<User> GetSessionUser(HttpRequest request, IUserService userService) 
+        {
+            var tokenString = request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var token = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
+
+            if (token == null)
+            {
+                return null;
+            }
+
+            var userId = token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.PrimarySid)?.Value?.ToString();
+
+            if (!userId.IsGuid())
+            {  
+                return null;
+            }
+
+            return await userService.GetUserById(userId.ToGuid());
+        }
+
+
+        public async static Task<Business> GetSessionBusiness(HttpRequest request, IBusinessService businessService)
+        {
+            var tokenString = request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var token = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
+
+            if (token == null)
+            {
+                return null;
+            }
+
+            var businessId = token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.PrimarySid)?.Value?.ToString();
+
+            if (!businessId.IsGuid())
+            {
+                return null;
+            }
+
+            return await businessService.GetBusinessByIdAsync(businessId.ToGuid());
+        }
+
+        public static string GetSessionUserRole(HttpRequest request)
+        {
+            var tokenString = request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var token = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
+
+            if (token == null)
+            {
+                return null;
+            }
+
+            return token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value?.ToString();
+        }
     }
 }

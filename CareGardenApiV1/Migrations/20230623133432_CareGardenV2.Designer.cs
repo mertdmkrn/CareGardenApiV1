@@ -3,6 +3,7 @@ using System;
 using CareGardenApiV1.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CareGardenApiV1.Migrations
 {
     [DbContext(typeof(CareGardenApiDbContext))]
-    partial class CareGardenApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230623133432_CareGardenV2")]
+    partial class CareGardenV2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,9 +151,6 @@ namespace CareGardenApiV1.Migrations
                     b.Property<string>("workingStartHour")
                         .HasMaxLength(5)
                         .HasColumnType("character varying(5)");
-
-                    b.Property<int>("discountRate")
-                        .HasColumnType("integer");
 
                     b.HasKey("id");
 
@@ -547,14 +547,11 @@ namespace CareGardenApiV1.Migrations
                 {
                     b.HasOne("CareGardenApiV1.Model.Business", "business")
                         .WithMany("appointments")
-                        .HasForeignKey("businessId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
+                        .HasForeignKey("businessId");
 
                     b.HasOne("CareGardenApiV1.Model.User", "user")
                         .WithMany("appointments")
-                        .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("userId");
 
                     b.Navigation("business");
 
@@ -565,8 +562,7 @@ namespace CareGardenApiV1.Migrations
                 {
                     b.HasOne("CareGardenApiV1.Model.Business", "business")
                         .WithMany("galleries")
-                        .HasForeignKey("businessId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("businessId");
 
                     b.Navigation("business");
                 });
@@ -575,8 +571,7 @@ namespace CareGardenApiV1.Migrations
                 {
                     b.HasOne("CareGardenApiV1.Model.Business", "business")
                         .WithMany("properties")
-                        .HasForeignKey("businessId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("businessId");
 
                     b.Navigation("business");
                 });
@@ -585,13 +580,11 @@ namespace CareGardenApiV1.Migrations
                 {
                     b.HasOne("CareGardenApiV1.Model.Business", "business")
                         .WithMany("services")
-                        .HasForeignKey("businessId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("businessId");
 
                     b.HasOne("CareGardenApiV1.Model.Services", "service")
                         .WithMany("businessServices")
-                        .HasForeignKey("serviceId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("serviceId");
 
                     b.Navigation("business");
 
@@ -602,8 +595,7 @@ namespace CareGardenApiV1.Migrations
                 {
                     b.HasOne("CareGardenApiV1.Model.Business", "business")
                         .WithMany("workingInfos")
-                        .HasForeignKey("businessId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("businessId");
 
                     b.Navigation("business");
                 });
@@ -612,8 +604,7 @@ namespace CareGardenApiV1.Migrations
                 {
                     b.HasOne("CareGardenApiV1.Model.Business", "business")
                         .WithMany()
-                        .HasForeignKey("businessId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("businessId");
 
                     b.Navigation("business");
                 });
@@ -622,13 +613,11 @@ namespace CareGardenApiV1.Migrations
                 {
                     b.HasOne("CareGardenApiV1.Model.Business", "business")
                         .WithMany("comments")
-                        .HasForeignKey("businessId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("businessId");
 
                     b.HasOne("CareGardenApiV1.Model.User", "user")
                         .WithMany("comments")
-                        .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("userId");
 
                     b.Navigation("business");
 
@@ -639,13 +628,11 @@ namespace CareGardenApiV1.Migrations
                 {
                     b.HasOne("CareGardenApiV1.Model.Business", "business")
                         .WithMany()
-                        .HasForeignKey("businessId")
-                        .OnDelete(DeleteBehavior.NoAction); ;
+                        .HasForeignKey("businessId");
 
                     b.HasOne("CareGardenApiV1.Model.User", "user")
                         .WithMany("complains")
-                        .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("userId");
 
                     b.Navigation("business");
 
@@ -656,13 +643,11 @@ namespace CareGardenApiV1.Migrations
                 {
                     b.HasOne("CareGardenApiV1.Model.Business", "business")
                         .WithMany()
-                        .HasForeignKey("businessId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("businessId");
 
                     b.HasOne("CareGardenApiV1.Model.User", "user")
                         .WithMany("favorites")
-                        .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("userId");
 
                     b.Navigation("business");
 
@@ -673,8 +658,7 @@ namespace CareGardenApiV1.Migrations
                 {
                     b.HasOne("CareGardenApiV1.Model.Business", "business")
                         .WithMany("paymentInfos")
-                        .HasForeignKey("businessId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("businessId");
 
                     b.Navigation("business");
                 });

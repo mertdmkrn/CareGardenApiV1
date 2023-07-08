@@ -1,0 +1,14 @@
+﻿using CareGardenApiV1.Model;
+
+namespace CareGardenApiV1.Repository.Abstract
+{
+    public interface IComplainService
+    {
+        Task<Complain> GetComplainByIdAsync(Guid id);
+        Task<List<Complain>> GetComplainsByBusinessIdAsync(Guid businessId);
+        Task<List<Complain>> GetComplainsByUserIdAsync(Guid userId);
+        Task<Complain> SaveComplainAsync(Complain complain);
+        Task<Complain> UpdateComplainAsync(Complain complain);
+        Task<bool> DeleteComplainAsync(Complain complain);
+    }
+}

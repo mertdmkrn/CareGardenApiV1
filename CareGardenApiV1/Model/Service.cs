@@ -6,6 +6,13 @@ namespace CareGardenApiV1.Model
     [Table("Services")]
     public class Services
     {
+
+        public Services()
+        {
+            this.businessServices = new HashSet<BusinessServiceModel>();
+        }
+
+
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid id { get; set; }
 
@@ -22,5 +29,6 @@ namespace CareGardenApiV1.Model
         public string? colorCode { get; set; }
         public int sortOrder { get; set; }
 
+        public virtual ICollection<BusinessServiceModel> businessServices { get; set; }
     }
 }

@@ -133,11 +133,29 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Girdiğiniz telefon numarasına ait kullanıcı kayıtlı..
+        ///   Looks up a localized string similar to Girdiğiniz maile ait şirket bulunamadı..
+        /// </summary>
+        public static string GirdiginizMaileAitSirketBulunamadi {
+            get {
+                return ResourceManager.GetString("GirdiginizMaileAitSirketBulunamadi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Girdiğiniz telefon numarasına ait kullanıcı sistemde kayıtlı..
         /// </summary>
         public static string GirdiginizTelefonNumarasinaAitKullaniciKayitli {
             get {
                 return ResourceManager.GetString("GirdiginizTelefonNumarasinaAitKullaniciKayitli", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The company belonging to the phone number you entered is registered in the system..
+        /// </summary>
+        public static string GirdiginizTelefonNumarasinaAitSirketKayitli {
+            get {
+                return ResourceManager.GetString("GirdiginizTelefonNumarasinaAitSirketKayitli", resourceCulture);
             }
         }
         
@@ -147,6 +165,15 @@ namespace CareGardenApiV1.Resource {
         public static string GirilenBilgilereAitKullaniciBulunamadi {
             get {
                 return ResourceManager.GetString("GirilenBilgilereAitKullaniciBulunamadi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Girilen bilgilere ait şirket bulunamadı..
+        /// </summary>
+        public static string GirilenBilgilereAitSirketBulunamadi {
+            get {
+                return ResourceManager.GetString("GirilenBilgilereAitSirketBulunamadi", resourceCulture);
             }
         }
         
@@ -331,6 +358,15 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Şifre yenilemedi..
+        /// </summary>
+        public static string SifreYenilemedi {
+            get {
+                return ResourceManager.GetString("SifreYenilemedi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Şifre yenileme işlemi için onay kodu {0}..
         /// </summary>
         public static string SifreYenilemeMailMesaji {
@@ -345,6 +381,15 @@ namespace CareGardenApiV1.Resource {
         public static string SifreYenilemeMesaji {
             get {
                 return ResourceManager.GetString("SifreYenilemeMesaji", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Şirket bulunamadı..
+        /// </summary>
+        public static string SirketBulunamadi {
+            get {
+                return ResourceManager.GetString("SirketBulunamadi", resourceCulture);
             }
         }
     }

@@ -113,30 +113,32 @@ internal class Program
         builder.Services.AddSingleton<ISmsHandler, SmsHandler>();
         builder.Services.AddSingleton<IFileHandler, FileHandler>();
 
-        builder.Services.AddSingleton<IUserRepository, UserRepository>();
-        builder.Services.AddSingleton<IConfirmationRepository, ConfirmationRepository>();
-        builder.Services.AddSingleton<IServicesRepository, ServicesRepository>();
+        builder.Services.AddSingleton<IBusinessRepository, BusinessRepository>();
+        builder.Services.AddSingleton<IBusinessGalleryRepository, BusinessGalleryRepository>();
+        builder.Services.AddSingleton<IBusinessPropertiesRepository, BusinessPropertiesRepository>();
+        builder.Services.AddSingleton<IBusinessServicesRepository, BusinessServicesRepository>();
+        builder.Services.AddSingleton<IBusinessWorkingInfoRepository, BusinessWorkingInfoRepository>();
         builder.Services.AddSingleton<ICampaignRepository, CampaignRepository>();
-        //builder.Services.AddSingleton<IBusinessRepository, BusinessRepository>();
-        //builder.Services.AddSingleton<IRatingRepository, RatingRepository>();
-        //builder.Services.AddSingleton<ICategoryRepository, CategoryRepository>();
-        //builder.Services.AddSingleton<IAppointmentRepository, AppointmentRepository>();
-        //builder.Services.AddSingleton<IServicesRepository, ServicesRepository>();
-        //builder.Services.AddSingleton<IBusinessCategoryRepository, BusinessCategoryRepository>();
-        //builder.Services.AddSingleton<IBusinessGalleryRepository, BusinessGalleryRepository>();
-        //builder.Services.AddSingleton<IBusinessWorkingInfoRepository, BusinessWorkingInfoRepository>();
+        builder.Services.AddSingleton<ICommentRepository, CommentRepository>();
+        builder.Services.AddSingleton<IComplainRepository, ComplainRepository>();
+        builder.Services.AddSingleton<IConfirmationRepository, ConfirmationRepository>();
+        builder.Services.AddSingleton<IFavoriteRepository, FavoriteRepository>();
+        builder.Services.AddSingleton<IPaymentInfoRepository, PaymentInfoRepository>();
+        builder.Services.AddSingleton<IServicesRepository, ServicesRepository>();
+        builder.Services.AddSingleton<IUserRepository, UserRepository>();
 
-        builder.Services.AddSingleton<IUserService, UserService>();
-        builder.Services.AddSingleton<IConfirmationService, ConfirmationService>();
-        builder.Services.AddSingleton<IServicesService, ServicesService>();
+        builder.Services.AddSingleton<IBusinessService, BusinessService>();
+        builder.Services.AddSingleton<IBusinessGalleryService, BusinessGalleryService>();
+        builder.Services.AddSingleton<IBusinessPropertiesService, BusinessPropertiesService>();
+        builder.Services.AddSingleton<IBusinessServicesService, BusinessServicesService>();
+        builder.Services.AddSingleton<IBusinessWorkingInfoService, BusinessWorkingInfoService>();
         builder.Services.AddSingleton<ICampaignService, CampaignService>();
-        //builder.Services.AddSingleton<IBusinessService, BusinessService>();
-        //builder.Services.AddSingleton<IRatingService, RatingService>();
-        //builder.Services.AddSingleton<ICategoryService, CategoryService>();
-        //builder.Services.AddSingleton<IAppointmentService, AppointmentService>();
-        //builder.Services.AddSingleton<IServicesService, ServicesService>();
-        //builder.Services.AddSingleton<IBusinessCategoryService, BusinessCategoryService>();
-        //builder.Services.AddSingleton<IBusinessGalleryService, BusinessGalleryService>();
-        //builder.Services.AddSingleton<IBusinessWorkingInfoService, BusinessWorkingInfoService>();
+        builder.Services.AddSingleton<ICommentService, CommentService>();
+        builder.Services.AddSingleton<IComplainService, ComplainService>();
+        builder.Services.AddSingleton<IConfirmationService, ConfirmationService>();
+        builder.Services.AddSingleton<IFavoriteService, FavoriteService>();
+        builder.Services.AddSingleton<IPaymentInfoService, PaymentInfoService>();
+        builder.Services.AddSingleton<IServicesService, ServicesService>();
+        builder.Services.AddSingleton<IUserService, UserService>();
     }
 }

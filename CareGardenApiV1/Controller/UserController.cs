@@ -74,7 +74,7 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
-        /// Get User
+        /// Get Session User
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -86,26 +86,7 @@ namespace CareGardenApiV1.Controller
 
             try
             {
-                var tokenString = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-                var token = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
-
-                if (token == null)
-                { 
-                    response.HasError = true;
-                    response.Message = Resource.Resource.KullaniciBulunamadi;
-                    return Ok(response);
-                }
-
-                var userId = token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.PrimarySid)?.Value?.ToString();
-
-                if (!userId.IsGuid()) 
-                {
-                    response.HasError = true;
-                    response.Message = Resource.Resource.KullaniciBulunamadi;
-                    return Ok(response);
-                }
-
-                var user = await _userService.GetUserById(userId.ToGuid());
+                var user = await HelperMethods.GetSessionUser(Request, _userService);
                 
                 if (user == null)
                 {
@@ -149,26 +130,7 @@ namespace CareGardenApiV1.Controller
                     return Ok(response);
                 }
 
-                var tokenString = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-                var token = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
-
-                if (token == null)
-                {
-                    response.HasError = true;
-                    response.Message = Resource.Resource.KullaniciBulunamadi;
-                    return Ok(response);
-                }
-
-                var userId = token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.PrimarySid)?.Value?.ToString();
-
-                if (!userId.IsGuid())
-                {
-                    response.HasError = true;
-                    response.Message = Resource.Resource.KullaniciBulunamadi;
-                    return Ok(response);
-                }
-
-                var user = await _userService.GetUserById(userId.ToGuid());
+                var user = await HelperMethods.GetSessionUser(Request, _userService);
 
                 if (user == null)
                 {
@@ -292,26 +254,7 @@ namespace CareGardenApiV1.Controller
                     return Ok(response);
                 }
 
-                var tokenString = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-                var token = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
-
-                if (token == null)
-                {
-                    response.HasError = true;
-                    response.Message = Resource.Resource.KullaniciBulunamadi;
-                    return Ok(response);
-                }
-
-                var userId = token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.PrimarySid)?.Value?.ToString();
-
-                if (!userId.IsGuid())
-                {
-                    response.HasError = true;
-                    response.Message = Resource.Resource.KullaniciBulunamadi;
-                    return Ok(response);
-                }
-
-                var user = await _userService.GetUserById(userId.ToGuid());
+                var user = await HelperMethods.GetSessionUser(Request, _userService);
 
                 if (user == null)
                 {

@@ -9,11 +9,10 @@ namespace CareGardenApiV1.Repository.Concrete
     {
         public async Task<User> GetUserByEmailAndPasswordAsync(string email, string password)
         {
-
             using (var context = new CareGardenApiDbContext())
             {
                 return await context.Users
-                    .FirstOrDefaultAsync(x => x.email.Equals(email) && x.password.Equals(password.HashString()) && x.role == "User");
+                    .FirstOrDefaultAsync(x => x.email.Equals(email) && x.password.Equals(password.HashString()));
             }
         }
 

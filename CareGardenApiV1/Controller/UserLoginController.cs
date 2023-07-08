@@ -181,7 +181,7 @@ namespace CareGardenApiV1.Controller
             catch (Exception ex)
             {
                 response.HasError = true;
-                response.Message = Resource.Resource.OnayKoduGonderilemedi + " Exception => " + ex.Message + " " + AppDomain.CurrentDomain.BaseDirectory;
+                response.Message = Resource.Resource.OnayKoduGonderilemedi + " Exception => " + ex.Message + " " + AppDomain.CurrentDomain.RelativeSearchPath;
                 return Ok(response);
             }
        

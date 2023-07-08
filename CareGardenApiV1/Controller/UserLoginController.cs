@@ -155,7 +155,7 @@ namespace CareGardenApiV1.Controller
 
                 string mailMessage = "";
 
-                using (StreamReader reader = new StreamReader(Path.Combine(AppContext.BaseDirectory.Replace("bin\\Debug\\net7.0\\", "") + "\\Template\\MailTemplate.html")))
+                using (StreamReader reader = new StreamReader(Path.Combine(AppContext.BaseDirectory.Replace("bin\\Debug\\net7.0\\", "") + "Template/MailTemplate.html")))
                 {
                     mailMessage = reader.ReadToEnd();
                 }

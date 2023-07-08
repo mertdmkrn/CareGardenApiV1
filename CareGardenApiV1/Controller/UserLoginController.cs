@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Security.Claims;
-using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace CareGardenApiV1.Controller
 {
@@ -23,16 +22,14 @@ namespace CareGardenApiV1.Controller
         private ITokenHandler _tokenHandler;
         private ISmsHandler _smsHandler;
         private readonly IMailHandler _mailHandler;
-        private readonly IHostingEnvironment _env;
 
-        public UserLoginController(IMailHandler mailHandler, IHostingEnvironment env)
+        public UserLoginController(IMailHandler mailHandler)
         {
             _userService = new UserService();
             _contirmationService = new ConfirmationService();
             _tokenHandler = new TokenHandler();
             _smsHandler = new SmsHandler();
             _mailHandler = mailHandler;
-            _env = env;
         }
 
         /// <summary>
@@ -151,18 +148,12 @@ namespace CareGardenApiV1.Controller
 
                 if (systemConfirmationInfo != null && systemConfirmationInfo.createDate.DifferenceBetweenDates(DateTime.Now, Enums.DateType.Minute) < 1)
                 {
-                    response.Message = Resource.Resource.BirDakikaIcindeOnayKoduMesaji;
+                    response.Message = Resource.Resource.BirDakikaIcindeOnayKoduMesaji + " SendDate : " + systemConfirmationInfo?.createDate + " DateNow : " + DateTime.Now + " DateUTNow : " + DateTime.UtcNow;
                     response.HasError = true;
                     return Ok(response);
                 }
 
-                string mailMessage = "";
-                var baseRootPath = _env.IsDevelopment() ? _env.ContentRootPath : _env.WebRootPath;
-
-                using (StreamReader reader = new StreamReader(Path.Combine(baseRootPath + "/Template/MailTemplate.html")))
-                {
-                    mailMessage = reader.ReadToEnd();
-                }
+                string mailMessage = HelperMethods.GetMailTemplate();
 
                 string content = string.Format(Resource.Resource.SifreYenilemeMailMesaji, confirmationCode);
 
@@ -185,7 +176,7 @@ namespace CareGardenApiV1.Controller
             catch (Exception ex)
             {
                 response.HasError = true;
-                response.Message = Resource.Resource.OnayKoduGonderilemedi + " Exception => " + ex.Message + " " + _env.WebRootPath;
+                response.Message = Resource.Resource.OnayKoduGonderilemedi + " Exception => " + ex.Message;
                 return Ok(response);
             }
        

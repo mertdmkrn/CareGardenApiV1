@@ -90,7 +90,7 @@ namespace CareGardenApiV1.Controller
 
                 await _contirmationService.SaveConfirmationInfoAsync(telephoneNumber, confirmationCode.ToString());
 
-                response.Message = Resource.Resource.OnayKoduGonderildi;
+                response.Message = Resource.Resource.OnayKoduGonderildi + " " + smsMessage;
                 response.Data = confirmationCode;
 
                 return Ok(response);

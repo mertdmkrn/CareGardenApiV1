@@ -25,6 +25,16 @@ namespace CareGardenApiV1.Helpers
             return value.IsNotNullOrEmpty() ? value : value2;
         }
 
+        public static double IsNull(this double value, double value2)
+        {
+            return value != 0 ? value : value2;
+        }
+
+        public static int IsNull(this int value, int value2)
+        {
+            return value != 0 ? value : value2;
+        }
+
         public static string HashString(this string value)
         {
             if (value.IsNullOrEmpty())
@@ -81,7 +91,7 @@ namespace CareGardenApiV1.Helpers
         {
             if (fullName.IsNullOrEmpty()) return false;
 
-            var fullNameArr = fullName.Split(" ");
+            var fullNameArr = fullName.Trim().Split(" ");
 
             if(fullNameArr.Length < 2) return false;
 

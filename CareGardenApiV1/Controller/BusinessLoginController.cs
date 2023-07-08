@@ -155,13 +155,7 @@ namespace CareGardenApiV1.Controller
                     return Ok(response);
                 }
 
-                string mailMessage = "";
-
-                using (StreamReader reader = new StreamReader(Path.Combine(Directory.GetCurrentDirectory() + "UploadedFiles/Template/MailTemplate.html")))
-                {
-                    mailMessage = reader.ReadToEnd();
-                }
-
+                string mailMessage = HelperMethods.GetMailTemplate();
                 string content = string.Format(Resource.Resource.SifreYenilemeMailMesaji, confirmationCode);
 
                 await _mailHandler.SendEmailAsync(

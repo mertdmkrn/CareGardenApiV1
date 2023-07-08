@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Security.Claims;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace CareGardenApiV1.Controller
 {
@@ -22,14 +23,16 @@ namespace CareGardenApiV1.Controller
         private ITokenHandler _tokenHandler;
         private ISmsHandler _smsHandler;
         private readonly IMailHandler _mailHandler;
+        private readonly IHostingEnvironment _env;
 
-        public UserLoginController(IMailHandler mailHandler)
+        public UserLoginController(IMailHandler mailHandler, IHostingEnvironment env)
         {
             _userService = new UserService();
             _contirmationService = new ConfirmationService();
             _tokenHandler = new TokenHandler();
             _smsHandler = new SmsHandler();
             _mailHandler = mailHandler;
+            _env = env;
         }
 
         /// <summary>
@@ -154,8 +157,9 @@ namespace CareGardenApiV1.Controller
                 }
 
                 string mailMessage = "";
+                var baseRootPath = _env.IsDevelopment() ? _env.ContentRootPath : _env.WebRootPath;
 
-                using (StreamReader reader = new StreamReader(Path.Combine(Directory.GetCurrentDirectory() + "/UploadedFiles/Template/MailTemplate.html")))
+                using (StreamReader reader = new StreamReader(Path.Combine(baseRootPath + "/Template/MailTemplate.html")))
                 {
                     mailMessage = reader.ReadToEnd();
                 }
@@ -181,7 +185,7 @@ namespace CareGardenApiV1.Controller
             catch (Exception ex)
             {
                 response.HasError = true;
-                response.Message = Resource.Resource.OnayKoduGonderilemedi + " Exception => " + ex.Message + " " + AppDomain.CurrentDomain.RelativeSearchPath;
+                response.Message = Resource.Resource.OnayKoduGonderilemedi + " Exception => " + ex.Message + " " + _env.WebRootPath;
                 return Ok(response);
             }
        

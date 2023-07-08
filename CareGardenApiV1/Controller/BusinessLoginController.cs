@@ -157,7 +157,7 @@ namespace CareGardenApiV1.Controller
 
                 string mailMessage = "";
 
-                using (StreamReader reader = new StreamReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "Template/MailTemplate.html")))
+                using (StreamReader reader = new StreamReader(Path.Combine(Directory.GetCurrentDirectory() + "UploadedFiles/Template/MailTemplate.html")))
                 {
                     mailMessage = reader.ReadToEnd();
                 }

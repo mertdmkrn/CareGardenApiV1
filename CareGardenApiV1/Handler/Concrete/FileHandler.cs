@@ -5,6 +5,9 @@ using Microsoft.Extensions.Options;
 using MimeKit;
 using MailKit.Net.Smtp;
 using CareGardenApiV1.Helpers;
+using RestSharp;
+using System.Text.Json.Nodes;
+using System.Text.Json;
 
 namespace CareGardenApiV1.Handler.Concrete
 {
@@ -36,6 +39,45 @@ namespace CareGardenApiV1.Handler.Concrete
             catch (Exception ex)
             {
                 return false;
+            }
+        }
+
+        public async Task<string> UploadFreeImageServer(IFormFile file)
+        {
+            try
+            {
+                var client = new RestClient("https://freeimage.host");
+                var request = new RestRequest("api/1/upload");
+
+                using (var ms = new MemoryStream())
+                {
+                    file.CopyTo(ms);
+                    var fileBytes = ms.ToArray();
+                    request.AddFileBytes("source", fileBytes, file.FileName);
+                }
+
+                request.AddQueryParameter("key", "6d207e02198a847aa98d0a2a901485a5");
+                request.AddQueryParameter("format", "json");
+
+                var response = await client.ExecutePostAsync(request);
+
+                var data = JsonSerializer.Deserialize<JsonNode>(response.Content!);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    var image = data["image"];
+
+                    if (image != null)
+                    {
+                        return (string)image["url"];
+                    }
+                }
+
+                return null;
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
     }

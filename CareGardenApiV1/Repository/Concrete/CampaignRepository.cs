@@ -13,7 +13,10 @@ namespace CareGardenApiV1.Repository.Concrete
         {
             using (var context = new CareGardenApiDbContext())
             {
-                return await context.Campaigns.OrderBy(x => x.sortOrder).ToListAsync();
+                return await context.Campaigns
+                    .OrderBy(x => x.sortOrder)
+                    .AsNoTracking()
+                    .ToListAsync();
             }
         }
 
@@ -59,6 +62,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 return await context.Campaigns
                     .Where(x => x.businessId == businessId)
                     .OrderBy(x => x.sortOrder)
+                    .AsNoTracking()
                     .ToListAsync();
             }
         }

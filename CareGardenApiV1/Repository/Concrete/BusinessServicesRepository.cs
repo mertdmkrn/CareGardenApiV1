@@ -23,6 +23,7 @@ namespace CareGardenApiV1.Repository.Concrete
             {
                 return await context.BusinessServices
                     .Where(x => x.serviceId == serviceId)
+                    .AsNoTracking()
                     .ToListAsync();
             }
         }
@@ -33,6 +34,7 @@ namespace CareGardenApiV1.Repository.Concrete
             {
                 return await context.BusinessServices
                     .Where(x => x.businessId == businessId)
+                    .AsNoTracking()
                     .ToListAsync();
             }
         }

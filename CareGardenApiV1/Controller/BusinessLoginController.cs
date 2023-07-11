@@ -277,8 +277,7 @@ namespace CareGardenApiV1.Controller
         /// **Sample request body:**
         ///
         ///     { 
-        ///        "name" : "MERT GÜZELLİK SALONU",
-        ///        "nameEn" : "MERT BEAUTY",
+        ///        "name" : "MERT BEAUTY",
         ///        "email": "mertdmkrn37@gmail.com",
         ///        "password": "stms5581",
         ///        "retryPassword": "stms5581",
@@ -327,13 +326,13 @@ namespace CareGardenApiV1.Controller
                     response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.BuAlaniBosBirakmayiniz));
                 }
 
-                if (business.password.IsNotNullOrEmpty() && business.password.Length != 8)
+                if (business.password.IsNotNullOrEmpty() && !business.password.Length.Between(8, 20))
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.Sifre8KarakterOlmali));
                 }
                 
-                if (business.retryPassword.IsNotNullOrEmpty() && business.retryPassword.Length != 8)
+                if (business.retryPassword.IsNotNullOrEmpty() && !business.retryPassword.Length.Between(8, 20))
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.Sifre8KarakterOlmali));
@@ -357,18 +356,6 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("name", Resource.Resource.GecerliBirIsimGiriniz));
-                }
-
-                if (business.nameEn.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("name", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (!business.nameEn.IsNullOrEmpty() && !business.nameEn.IsValidFullName())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("nameEn", Resource.Resource.GecerliBirIsimGiriniz));
                 }
 
                 if (response.HasError)
@@ -447,7 +434,7 @@ namespace CareGardenApiV1.Controller
                 response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
 
-            if (loginBusiness.password.IsNotNullOrEmpty() && loginBusiness.password.Length != 8)
+            if (loginBusiness.password.IsNotNullOrEmpty() && !loginBusiness.password.Length.Between(8, 20))
             {
                 response.HasError = true;
                 response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.Sifre8KarakterOlmali));
@@ -521,13 +508,13 @@ namespace CareGardenApiV1.Controller
                 response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
 
-            if (updateBusiness.password.IsNotNullOrEmpty() && updateBusiness.password.Length != 8)
+            if (updateBusiness.password.IsNotNullOrEmpty() && !updateBusiness.password.Length.Between(8, 20))
             {
                 response.HasError = true;
                 response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.Sifre8KarakterOlmali));
             }
 
-            if (updateBusiness.retryPassword.IsNotNullOrEmpty() && updateBusiness.retryPassword.Length != 8)
+            if (updateBusiness.retryPassword.IsNotNullOrEmpty() && !updateBusiness.retryPassword.Length.Between(8, 20))
             {
                 response.HasError = true;
                 response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.Sifre8KarakterOlmali));

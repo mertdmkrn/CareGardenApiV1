@@ -68,6 +68,12 @@ namespace CareGardenApiV1.Helpers
             return resultNum;
         }
 
+
+        public static bool Between(this int number, int start, int end)
+        {
+            return number >= start && number <= end;
+        }
+
         public static double DifferenceBetweenDates(this DateTime? startDate, DateTime? endDate, DateType dateType = DateType.Minute)
         {
             if (startDate == null || endDate == null) { return 0; }
@@ -93,7 +99,7 @@ namespace CareGardenApiV1.Helpers
 
             var fullNameArr = fullName.Trim().Split(" ");
 
-            if(fullNameArr.Length < 2) return false;
+            if(fullNameArr.Length < 1) return false;
 
             for (int i = 0; i < fullNameArr.Length; i++)
             {

@@ -38,6 +38,13 @@
             MaleOnly
         }
 
+        public enum WorkingDayType
+        {
+            MondayFriday,
+            MondaySaturday,
+            AllDay
+        }
+
         public enum CommentType
         {
             User,

@@ -37,9 +37,9 @@ namespace CareGardenApiV1.Service.Concrete
             return await _businessRepository.GetBusinessByIdAsync(id);
         }
 
-        public async Task<IList<BusinessListModel>> GetBusinessByPopularAsync(double? latitude, double? longitude, int? page, int? take)
+        public async Task<IList<BusinessListModel>> GetBusinessByPopularAsync(double? latitude, double? longitude, string? city, int? page, int? take)
         {
-            return await _businessRepository.GetBusinessByPopularAsync(latitude, longitude, page, take);
+            return await _businessRepository.GetBusinessByPopularAsync(latitude, longitude, city, page, take);
         }
 
         public async Task<Business> GetBusinessByTelephoneNumberAsync(string telephone)

@@ -9,6 +9,8 @@ using System.Security.Claims;
 using CareGardenApiV1.Service.Concrete;
 using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Repository.Abstract;
+using System.Drawing;
+using RestSharp;
 
 namespace CareGardenApiV1.Helpers
 {
@@ -78,6 +80,19 @@ namespace CareGardenApiV1.Helpers
             return await userService.GetUserById(userId.ToGuid());
         }
 
+        public static string GetClaimInfo(HttpRequest request, string type)
+        {
+            var tokenString = request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var token = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
+
+            if (token == null || token.Claims == null)
+            {
+                return null;
+            }
+
+            return token.Claims.FirstOrDefault(x => x.Type == type)?.Value?.ToString();
+        }
+
 
         public async static Task<Business> GetSessionBusiness(HttpRequest request, IBusinessService businessService)
         {
@@ -144,6 +159,23 @@ namespace CareGardenApiV1.Helpers
             "</div>" +
             "</body>" +
             "</html>";
+        }
+
+        public static string GetImageSize(this IFormFile file)
+        {
+            try
+            {
+                if (file == null) return null;
+
+                using (var image = Image.FromStream(file.OpenReadStream()))
+                {
+                    return image.Width + "x" + image.Height;
+                }
+            }
+            catch (FormatException)
+            {
+                return null;
+            }
         }
     }
 }

@@ -98,7 +98,6 @@ namespace CareGardenApiV1.Migrations
                     officialHolidayAvailable = table.Column<bool>(type: "boolean", nullable: false),
                     isActive = table.Column<bool>(type: "boolean", nullable: false),
                     verified = table.Column<bool>(type: "boolean", nullable: false),
-                    discountRate = table.Column<int>(type: "integer", nullable: false),
                 },
                 constraints: table =>
                 {

@@ -12,7 +12,7 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<Business> GetBusinessByTelephoneNumberAsync(string telephone);
         Task<IList<BusinessListModel>> GetBusinessNearByDistanceAsync(double? latitude, double? longitude, int? page, int? take);
         Task<IList<BusinessListModel>> GetBusinessByUserFavorites(double? latitude, double? longitude, Guid userId, int? page, int? take);
-        Task<IList<BusinessListModel>> GetBusinessByPopularAsync(double? latitude, double? longitude, int? page, int? take);
+        Task<IList<BusinessListModel>> GetBusinessByPopularAsync(double? latitude, double? longitude, string? city, int? page, int? take);
         Task<Business> SaveBusinessAsync(Business business);
         Task<Business> UpdateBusinessAsync(Business business);
         Task<bool> DeleteBusinessAsync(Business business);

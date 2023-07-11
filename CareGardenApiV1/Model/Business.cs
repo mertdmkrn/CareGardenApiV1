@@ -29,9 +29,6 @@ namespace CareGardenApiV1.Model
         [MaxLength(100)]
         public string? name { get; set; }
 
-        [MaxLength(100)]
-        public string? nameEn { get; set; }
-
         public string? description { get; set; }
         public string? descriptionEn { get; set; }
 
@@ -50,7 +47,7 @@ namespace CareGardenApiV1.Model
         [MaxLength(20)]
         public string? telephone { get; set; }
 
-        [MaxLength(20)]
+        [MaxLength(100)]
         public string? email { get; set; }
 
         [MaxLength(50)]
@@ -68,6 +65,7 @@ namespace CareGardenApiV1.Model
         public DateTime? createDate { get; set; }
         public DateTime? updateDate { get; set; }
         public WorkingGenderType workingGenderType { get; set; }
+        public WorkingDayType workingDayType { get; set; }
 
         [MaxLength(5)]
         public string? workingStartHour { get; set; }

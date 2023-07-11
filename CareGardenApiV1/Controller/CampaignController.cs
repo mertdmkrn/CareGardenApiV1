@@ -157,8 +157,11 @@ namespace CareGardenApiV1.Controller
                 }
 
                 string fileName = "campaign" + "-" + DateTime.Now.ToString("ddMMhhmmss") + "." + file.FileName.Split(".").LastOrDefault();
-                var imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, "UploadedFiles/CampaignImages/" + fileName);
                 await _fileHandler.UploadFile(file, "CampaignImages", fileName);
+                string imageUrl = await _fileHandler.UploadFreeImageServer(file);
+
+                if (imageUrl.IsNullOrEmpty())
+                    imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, "UploadedFiles/CampaignImages/" + fileName);
 
                 response.Message = Resource.Resource.ResimYuklemeBasarili;
                 response.Data = imageUrl;

@@ -13,7 +13,10 @@ namespace CareGardenApiV1.Repository.Concrete
         {
             using (var context = new CareGardenApiDbContext())
             {
-                return await context.Services.OrderBy(x => x.sortOrder).ToListAsync();
+                return await context.Services
+                    .OrderBy(x => x.sortOrder)
+                    .AsNoTracking()
+                    .ToListAsync();
             }
         }
 
@@ -31,6 +34,7 @@ namespace CareGardenApiV1.Repository.Concrete
             using (var context = new CareGardenApiDbContext())
             {
                 return await context.Services
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(x => x.name.Equals(name));
             }
         }
@@ -40,6 +44,7 @@ namespace CareGardenApiV1.Repository.Concrete
             using (var context = new CareGardenApiDbContext())
             {
                 return await context.Services
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(x => x.nameEn.Equals(nameEn));
             }
         }

@@ -23,6 +23,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 return await context.PaymentInfos
                     .Where(x => x.businessId == businessId)
                     .OrderByDescending(x => x.date)
+                    .AsNoTracking()
                     .ToListAsync();
             }
         }
@@ -34,6 +35,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 return await context.PaymentInfos
                     .Where(x => x.isPaid == isPaid)
                     .OrderByDescending(x => x.date)
+                    .AsNoTracking()
                     .ToListAsync();
             }
         }

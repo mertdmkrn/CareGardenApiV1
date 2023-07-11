@@ -23,6 +23,7 @@ namespace CareGardenApiV1.Repository.Concrete
             {
                 return await context.BusinessWorkingInfos
                     .Where(x => x.businessId == businessId)
+                    .AsNoTracking()
                     .ToListAsync();
             }
         }

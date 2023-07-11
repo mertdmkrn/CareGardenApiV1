@@ -13,6 +13,7 @@ namespace CareGardenApiV1.Repository.Concrete
             using (var context = new CareGardenApiDbContext())
             {
                 return await context.ConfirmationInfos
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(x => x.target.Equals(target));
             }
         }

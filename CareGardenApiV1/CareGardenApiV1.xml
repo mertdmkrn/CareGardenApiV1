@@ -4,6 +4,39 @@
         <name>CareGardenApiV1</name>
     </assembly>
     <members>
+        <member name="M:CareGardenApiV1.Controller.AdminController.VerifyBusiness(CareGardenApiV1.Model.Business)">
+             <summary>
+             Verify Confirmation Code
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                { 
+                    "id" : "9D2B0228-4D0D-4C23-8B49-01A698857709",
+                    "isActive" : true,
+                    "verified" : true
+                }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AdminController.Save(CareGardenApiV1.Model.User)">
+             <summary>
+             Create New Admin
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "fullName" : "Mert DEMİRKIRAN",
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "12345678",
+                    "telephone": "+905467335939"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessById(System.String)">
             <summary>
             Get Business By Id
@@ -19,6 +52,62 @@
         <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessSelectList">
             <summary>
             Get Business Select Box
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.SetProfilePhoto(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Set Profile Photo
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.Update(CareGardenApiV1.Model.Business)">
+             <summary>
+             Update Business
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "name" : "Mert Kuaför",
+                    "address" : "Merkez, Eski Büyükdere Cd. 37/B, 34416 Kağıthane/İstanbul",
+                    "telephone" : "+905467335892",
+                    "latitude": "41.08611",
+                    "longitude": "29.00717",
+                    "city": "İstanbul",
+                    "province": "Kağıthane",
+                    "district": "Çeliktepe Mah.",
+                    "description": "Tesettür saç kesim, bakım, boya, kalıcı makyaj, microblading, manikür, pedikür, kaynak saç.",
+                    "descriptionEn": "Hijab haircut, care, coloring, permanent makeup, microblading, manicure, pedicure, hair welding.",
+                    "discountRate": 20
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.SaveWorkingInfo(CareGardenApiV1.Model.Business)">
+             <summary>
+             Save Business Working Info
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "workingGenderType" : 1,
+                    "workingDayType" : 2,
+                    "workingStartHour": "09:00",
+                    "workingEndHour": "21:00",
+                    "appointmentTimeInterval": 30,
+                    "appointmentPeopleCount": 5,
+                    "officialHolidayAvailable": true
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.AddGalleryPhoto(System.Collections.Generic.List{Microsoft.AspNetCore.Http.IFormFile})">
+            <summary>
+            Add Gallery Photo
             </summary>
             <returns></returns>
         </member>
@@ -57,8 +146,7 @@
              **Sample request body:**
             
                  { 
-                    "name" : "MERT GÜZELLİK SALONU",
-                    "nameEn" : "MERT BEAUTY",
+                    "name" : "MERT BEAUTY",
                     "email": "mertdmkrn37@gmail.com",
                     "password": "stms5581",
                     "retryPassword": "stms5581",
@@ -263,6 +351,24 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.GetPopularBusiness(System.Nullable{System.Double},System.Nullable{System.Double},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            User Get Popular Business
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.GetFavoriteBusiness(System.Nullable{System.Double},System.Nullable{System.Double},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            User Get Favorite Business
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.GetNearByBusiness(System.Nullable{System.Double},System.Nullable{System.Double},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            User Get Near By Business
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.UserController.Update(CareGardenApiV1.Model.User)">
              <summary>
              Update User
@@ -395,6 +501,42 @@
             <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.CareGardenV2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV3">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV3.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV3.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV3.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV4">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV4.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV4.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV4.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV5">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV5.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV5.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV5.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:CareGardenApiV1.Resource.Resource">

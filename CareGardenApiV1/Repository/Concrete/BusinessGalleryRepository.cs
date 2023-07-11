@@ -23,6 +23,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 return await context.BusinessGalleries
                     .Where(x => x.businessId == businessId)
                     .OrderBy(x => x.size)
+                    .AsNoTracking()
                     .ToListAsync();
             }
         }

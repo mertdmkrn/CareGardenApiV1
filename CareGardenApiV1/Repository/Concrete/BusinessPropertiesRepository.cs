@@ -24,6 +24,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 return await context.BusinessProperties
                     .Where(x => x.businessId == businessId)
                     .OrderBy(x => x.key)
+                    .AsNoTracking()
                     .ToListAsync();
             }
         }

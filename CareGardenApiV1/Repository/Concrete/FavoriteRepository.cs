@@ -23,6 +23,7 @@ namespace CareGardenApiV1.Repository.Concrete
             {
                 return await context.Favorites
                     .Where(x => x.userId == userId)
+                    .AsNoTracking()
                     .ToListAsync();
             }
         }

@@ -26,7 +26,7 @@ namespace CareGardenApiV1.Repository.Concrete
             using (var context = new CareGardenApiDbContext())
             {
                 return await context.Businesses
-                    .FirstOrDefaultAsync(x => x.email == email && x.password == password);
+                    .FirstOrDefaultAsync(x => x.email == email && x.password == password.HashString());
             }
         }
 
@@ -48,7 +48,7 @@ namespace CareGardenApiV1.Repository.Concrete
             }
         }
 
-        public async Task<IList<BusinessListModel>> GetBusinessByPopularAsync(double? latitude, double? longitude, int? page, int? take)
+        public async Task<IList<BusinessListModel>> GetBusinessByPopularAsync(double? latitude, double? longitude, string? city, int? page, int? take)
         {
             using (var context = new CareGardenApiDbContext())
             {
@@ -64,43 +64,47 @@ namespace CareGardenApiV1.Repository.Concrete
                 {
                     return await context.Businesses
                         .Where(x => x.isActive == true && x.verified == true)
+                        .Where(x => city.IsNotNullOrEmpty() ? x.city.Equals(city) : x.city != null)
                         .Include(x => x.comments)
-                        .Include(x => x.galleries)
+                        .Include(x => x.galleries.Where(x => x.isProfilePhoto))
                         .Select(x => new BusinessListModel
                         {
                             id = x.id,
-                            name = x.name,
+                            name = x.name ?? "",
                             discountRate = x.discountRate,
-                            workingGenderType = x.workingGenderType,
-                            assets = x.galleries.Select(x => new BusinessGallery { imageUrl = x.imageUrl, size = x.size }).ToList(),
-                            averageRating = x.comments.Average(x => x.point),
+                            workingGenderType = x.workingGenderType.ToString(),
+                            imageUrl = x.galleries.FirstOrDefault().imageUrl,
+                            averageRating = x.comments.Any() ? x.comments.Average(x => x.point) : 0,
                             countRating = x.comments.Count(),
-                            distance = userLocation != null ? x.location.Distance(gf.CreateGeometry(userLocation)) : 0
+                            distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0
                         })
                         .OrderByDescending(x => x.averageRating)
                         .ThenBy(x => x.distance)
                         .Skip(page.Value * take.Value)
                         .Take(take.Value)
+                        .AsNoTracking()
                         .ToListAsync();
                 }
 
                 return await context.Businesses
-                    .Where(x => x.isActive == true && x.verified == true)
                     .Include(x => x.comments)
-                    .Include(x => x.galleries)
+                    .Include(x => x.galleries.Where(x => x.isProfilePhoto))
+                    .Where(x => x.isActive == true && x.verified == true)
+                    .Where(x => city.IsNotNullOrEmpty() ? x.city.Equals(city) : x.city != null)
                     .Select(x => new BusinessListModel
                     {
                         id = x.id,
-                        name = x.name,
+                        name = x.name ?? "",
                         discountRate = x.discountRate,
-                        workingGenderType = x.workingGenderType,
-                        assets = x.galleries.Select(x => new BusinessGallery { imageUrl = x.imageUrl, size = x.size }).ToList(),
-                        averageRating = x.comments.Average(x => x.point),
+                        workingGenderType = x.workingGenderType.ToString(),
+                        imageUrl = x.galleries.FirstOrDefault().imageUrl,
+                        averageRating = x.comments.Any() ? x.comments.Average(x => x.point) : 0,
                         countRating = x.comments.Count(),
-                        distance = userLocation != null ? x.location.Distance(gf.CreateGeometry(userLocation)) : 0
+                        distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0
                     })
                     .OrderByDescending(x => x.averageRating)
                     .ThenBy(x => x.distance)
+                    .AsNoTracking()
                     .ToListAsync();
             }
         }
@@ -129,46 +133,48 @@ namespace CareGardenApiV1.Repository.Concrete
                 if (page.HasValue && take.HasValue)
                 {
                     return await context.Businesses
-                        .Where(x => x.isActive == true && x.verified == true)
                         .Include(x => x.comments)
-                        .Include(x => x.galleries)
+                        .Include(x => x.galleries.Where(x => x.isProfilePhoto))
                         .Include(x => x.favorites.Where(x => x.userId == userId))
+                        .Where(x => x.isActive == true && x.verified == true && x.favorites.Any(x => x.userId == userId))
                         .Select(x => new BusinessListModel
                         {
                             id = x.id,
-                            name = x.name,
+                            name = x.name ?? "",
                             discountRate = x.discountRate,
-                            workingGenderType = x.workingGenderType,
-                            assets = x.galleries.Select(x => new BusinessGallery { imageUrl = x.imageUrl, size = x.size }).ToList(),
-                            averageRating = x.comments.Average(x => x.point),
+                            workingGenderType = x.workingGenderType.ToString(),
+                            imageUrl = x.galleries.FirstOrDefault().imageUrl,
+                            averageRating = x.comments.Any() ? x.comments.Average(x => x.point) : 0,
                             countRating = x.comments.Count(),
-                            distance = userLocation != null ? x.location.Distance(gf.CreateGeometry(userLocation)) : 0
+                            distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0
                         })
                         .OrderBy(x => x.distance)
                         .ThenByDescending(x => x.averageRating)
                         .Skip(page.Value * take.Value)
                         .Take(take.Value)
+                        .AsNoTracking()
                         .ToListAsync();
                 }
 
                 return await context.Businesses
-                    .Where(x => x.isActive == true && x.verified == true)
                     .Include(x => x.comments)
-                    .Include(x => x.galleries)
+                    .Include(x => x.galleries.Where(x => x.isProfilePhoto))
                     .Include(x => x.favorites.Where(x => x.userId == userId))
+                    .Where(x => x.isActive == true && x.verified == true && x.favorites.Any(x => x.userId == userId))
                     .Select(x => new BusinessListModel
                     {
                         id = x.id,
-                        name = x.name,
+                        name = x.name ?? "",
                         discountRate = x.discountRate,
-                        workingGenderType = x.workingGenderType,
-                        assets = x.galleries.Select(x => new BusinessGallery { imageUrl = x.imageUrl, size = x.size }).ToList(),
-                        averageRating = x.comments.Average(x => x.point),
+                        workingGenderType = x.workingGenderType.ToString(),
+                        imageUrl = x.galleries.FirstOrDefault().imageUrl,
+                        averageRating = x.comments.Any() ? x.comments.Average(x => x.point) : 0,
                         countRating = x.comments.Count(),
-                        distance = userLocation != null ? x.location.Distance(gf.CreateGeometry(userLocation)) : 0
+                        distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0
                     })
                     .OrderBy(x => x.distance)
                     .ThenByDescending(x => x.averageRating)
+                    .AsNoTracking()
                     .ToListAsync();
             }
         }
@@ -190,42 +196,44 @@ namespace CareGardenApiV1.Repository.Concrete
                     return await context.Businesses
                         .Where(x => x.isActive == true && x.verified == true)
                         .Include(x => x.comments)
-                        .Include(x => x.galleries)
+                        .Include(x => x.galleries.Where(x => x.isProfilePhoto))
                         .Select(x => new BusinessListModel
                         {
                             id = x.id,
-                            name = x.name,
+                            name = x.name ?? "",
                             discountRate = x.discountRate,
-                            workingGenderType = x.workingGenderType,
-                            assets = x.galleries.Select(x => new BusinessGallery { imageUrl = x.imageUrl, size = x.size }).ToList(),
-                            averageRating = x.comments.Average(x => x.point),
+                            workingGenderType = x.workingGenderType.ToString(),
+                            imageUrl = x.galleries.FirstOrDefault().imageUrl,
+                            averageRating = x.comments.Any() ? x.comments.Average(x => x.point) : 0,
                             countRating = x.comments.Count(),
-                            distance = userLocation != null ? x.location.Distance(gf.CreateGeometry(userLocation)) : 0
+                            distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0
                         })
                         .OrderBy(x => x.distance)
                         .ThenByDescending(x => x.averageRating)
                         .Skip(page.Value * take.Value)
                         .Take(take.Value)
+                        .AsNoTracking()
                         .ToListAsync();
                 }
 
                 return await context.Businesses
                     .Where(x => x.isActive == true && x.verified == true)
                     .Include(x => x.comments)
-                    .Include(x => x.galleries)
+                    .Include(x => x.galleries.Where(x => x.isProfilePhoto))
                     .Select(x => new BusinessListModel
                     {
                         id = x.id,
                         name = x.name,
                         discountRate = x.discountRate,
-                        workingGenderType = x.workingGenderType,
-                        assets = x.galleries.Select(x => new BusinessGallery { imageUrl = x.imageUrl, size = x.size }).ToList(),
-                        averageRating = x.comments.Average(x => x.point),
+                        workingGenderType = x.workingGenderType.ToString(),
+                        imageUrl = x.galleries.FirstOrDefault().imageUrl,
+                        averageRating = x.comments.Any() ? x.comments.Average(x => x.point) : 0,
                         countRating = x.comments.Count(),
-                        distance = userLocation != null ? x.location.Distance(gf.CreateGeometry(userLocation)) : 0
+                        distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0
                     })
                     .OrderBy(x => x.distance)
                     .ThenByDescending(x => x.averageRating)
+                    .AsNoTracking()
                     .ToListAsync();
             }
         }
@@ -237,6 +245,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 return await context.Businesses
                         .Where(x => x.isActive == true && x.verified == true)
                         .Select(x => new BusinessListModel { id = x.id, name = x.name })
+                        .AsNoTracking()
                         .ToDictionaryAsync(x => x.id.ToString(), x => x.name);
             }
         }

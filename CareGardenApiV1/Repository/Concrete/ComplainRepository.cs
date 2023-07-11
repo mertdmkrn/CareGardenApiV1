@@ -22,6 +22,7 @@ namespace CareGardenApiV1.Repository.Concrete
             {
                 return await context.Complains
                     .Where(x => x.businessId == businessId)
+                    .AsNoTracking()
                     .ToListAsync();
             }
         }
@@ -32,6 +33,7 @@ namespace CareGardenApiV1.Repository.Concrete
             {
                 return await context.Complains
                     .Where(x => x.userId == userId)
+                    .AsNoTracking()
                     .ToListAsync();
             }
         }

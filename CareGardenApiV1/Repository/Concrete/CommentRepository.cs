@@ -23,6 +23,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 return await context.Comments
                     .Where(x => x.businessId == businessId)
                     .OrderByDescending(x => x.updateDate)
+                    .AsNoTracking()
                     .ToListAsync();
             }
         }
@@ -34,6 +35,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 return await context.Comments
                     .Where(x => x.userId == userId)
                     .OrderByDescending(x => x.updateDate)
+                    .AsNoTracking()
                     .ToListAsync();
             }
         }

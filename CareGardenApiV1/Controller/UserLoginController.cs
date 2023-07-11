@@ -9,8 +9,11 @@ using CareGardenApiV1.Service.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
+using RestSharp;
 using System;
 using System.Security.Claims;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace CareGardenApiV1.Controller
 {
@@ -76,8 +79,8 @@ namespace CareGardenApiV1.Controller
                 }
 
                 var systemConfirmationInfo = await _contirmationService.GetConfirmationInfo(telephoneNumber);
-                 
-                if(systemConfirmationInfo != null && systemConfirmationInfo.createDate.DifferenceBetweenDates(DateTime.Now, Enums.DateType.Minute) < 1)
+
+                if (systemConfirmationInfo != null && systemConfirmationInfo.createDate.DifferenceBetweenDates(DateTime.Now, Enums.DateType.Minute) < 1)
                 {
                     response.Message = Resource.Resource.BirDakikaIcindeOnayKoduMesaji;
                     response.HasError = true;
@@ -179,7 +182,7 @@ namespace CareGardenApiV1.Controller
                 response.Message = Resource.Resource.OnayKoduGonderilemedi + " Exception => " + ex.Message;
                 return Ok(response);
             }
-       
+
         }
 
 
@@ -325,20 +328,20 @@ namespace CareGardenApiV1.Controller
                     response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.BuAlaniBosBirakmayiniz));
                 }
 
-                if (user.password.IsNotNullOrEmpty() && user.password.Length != 8)
+                if (user.password.IsNotNullOrEmpty() && !user.password.Length.Between(8, 20))
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.Sifre8KarakterOlmali));
                 }
-                
-                if (user.retryPassword.IsNotNullOrEmpty() && user.retryPassword.Length != 8)
+
+                if (user.retryPassword.IsNotNullOrEmpty() && !user.retryPassword.Length.Between(8, 20))
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.Sifre8KarakterOlmali));
                 }
 
 
-                if(!user.password.IsNullOrEmpty() && !user.password.Equals(user.retryPassword))
+                if (!user.password.IsNullOrEmpty() && !user.password.Equals(user.retryPassword))
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.SifrelerEsitOlmali));
@@ -351,7 +354,7 @@ namespace CareGardenApiV1.Controller
                     response.ValidationErrors.Add(new ValidationError("fullName", Resource.Resource.BuAlaniBosBirakmayiniz));
                 }
 
-                if(!user.fullName.IsNullOrEmpty() && !user.fullName.IsValidFullName())
+                if (!user.fullName.IsNullOrEmpty() && !user.fullName.IsValidFullName())
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("fullName", Resource.Resource.GecerliBirIsimGiriniz));
@@ -380,6 +383,7 @@ namespace CareGardenApiV1.Controller
                     new Claim(ClaimTypes.Name, user.fullName),
                     new Claim(ClaimTypes.PrimarySid, user.id.ToString()),
                     new Claim(ClaimTypes.Email, user.email),
+                    new Claim(ClaimTypes.Locality, user.city),
                     new Claim(ClaimTypes.Role, user.role)
                 };
 
@@ -433,7 +437,7 @@ namespace CareGardenApiV1.Controller
                 response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
 
-            if (loginUser.password.IsNotNullOrEmpty() && loginUser.password.Length != 8)
+            if (loginUser.password.IsNotNullOrEmpty() && !loginUser.password.Length.Between(8, 20))
             {
                 response.HasError = true;
                 response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.Sifre8KarakterOlmali));
@@ -458,6 +462,7 @@ namespace CareGardenApiV1.Controller
                 new Claim(ClaimTypes.Name, user.fullName),
                 new Claim(ClaimTypes.PrimarySid, user.id.ToString()),
                 new Claim(ClaimTypes.Email, user.email),
+                new Claim(ClaimTypes.Locality, user.city),
                 new Claim(ClaimTypes.Role, user.role)
             };
 
@@ -507,13 +512,13 @@ namespace CareGardenApiV1.Controller
                 response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
 
-            if (updateUser.password.IsNotNullOrEmpty() && updateUser.password.Length != 8)
+            if (updateUser.password.IsNotNullOrEmpty() && !updateUser.password.Length.Between(8, 20))
             {
                 response.HasError = true;
                 response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.Sifre8KarakterOlmali));
             }
 
-            if (updateUser.retryPassword.IsNotNullOrEmpty() && updateUser.retryPassword.Length != 8)
+            if (updateUser.retryPassword.IsNotNullOrEmpty() && !updateUser.retryPassword.Length.Between(8, 20))
             {
                 response.HasError = true;
                 response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.Sifre8KarakterOlmali));
@@ -563,6 +568,7 @@ namespace CareGardenApiV1.Controller
                 new Claim(ClaimTypes.Name, user.fullName),
                 new Claim(ClaimTypes.PrimarySid, user.id.ToString()),
                 new Claim(ClaimTypes.Email, user.email),
+                new Claim(ClaimTypes.Locality, user.city),
                 new Claim(ClaimTypes.Role, user.role)
             };
 
@@ -611,7 +617,7 @@ namespace CareGardenApiV1.Controller
                 response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
 
-            if (loginUser.password.IsNotNullOrEmpty() && loginUser.password.Length != 8)
+            if (loginUser.password.IsNotNullOrEmpty() && !loginUser.password.Length.Between(8, 20))
             {
                 response.HasError = true;
                 response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.Sifre8KarakterOlmali));

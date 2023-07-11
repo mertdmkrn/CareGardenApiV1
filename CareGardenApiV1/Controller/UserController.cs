@@ -2,14 +2,18 @@
 using CareGardenApiV1.Handler.Concrete;
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
+using CareGardenApiV1.Model.ResponseModel;
+using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Service.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RestSharp;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Security.Claims;
+using System.Text.Json.Nodes;
 
 namespace CareGardenApiV1.Controller
 {
@@ -18,11 +22,13 @@ namespace CareGardenApiV1.Controller
     public class UserController : ControllerBase
     {
         private IUserService _userService;
+        private IBusinessService _businessService;
         private IFileHandler _fileHandler;
 
         public UserController()
         {
             _userService = new UserService();
+            _businessService = new BusinessService();
             _fileHandler = new FileHandler();
         }
 
@@ -140,8 +146,12 @@ namespace CareGardenApiV1.Controller
                 }
 
                 string fileName = user.fullName.ToLower().TurkishChrToEnglishChr().Replace(" ", "-") + "-" + DateTime.Now.ToString("ddMMhhmmss") + "." + file.FileName.Split(".").LastOrDefault();
-                user.imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, "UploadedFiles/UserImages/" + fileName);
                 await _fileHandler.UploadFile(file, "UserImages", fileName);
+                user.imageUrl = await _fileHandler.UploadFreeImageServer(file);
+
+                if (user.imageUrl.IsNullOrEmpty())
+                    user.imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, "UploadedFiles/UserImages/" + fileName);
+
                 await _userService.UpdateUserAsync(user);
 
                 response.Message = Resource.Resource.ResimYuklemeBasarili;
@@ -204,6 +214,114 @@ namespace CareGardenApiV1.Controller
             }
         }
 
+        /// <summary>
+        /// User Get Popular Business
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("user/getpopularbusiness")]
+        public async Task<IActionResult> GetPopularBusiness(double? latitude, double? longitude, int? page, int? take)
+        {
+            ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
+
+                if (userId.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.Message = Resource.Resource.KullaniciBulunamadi;
+                    return Ok(response);
+                }
+
+                var userCity = HelperMethods.GetClaimInfo(Request, ClaimTypes.Locality);
+
+                response.Data = await _businessService.GetBusinessByPopularAsync(latitude, longitude, userCity, page, take);
+                response.Data.ToList().ConvertAll(x => x.distance = Math.Round(x.distance, 1));
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.KayitBulunamadi + " Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
+
+        /// <summary>
+        /// User Get Favorite Business
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("user/getfavoritebusiness")]
+        public async Task<IActionResult> GetFavoriteBusiness(double? latitude, double? longitude, int? page, int? take)
+        {
+            ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
+
+                if (userId.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.Message = Resource.Resource.KullaniciBulunamadi;
+                    return Ok(response);
+                }
+
+                response.Data = await _businessService.GetBusinessByUserFavorites(latitude, longitude, userId.ToGuid(), page, take);
+                response.Data.ToList().ConvertAll(x => x.distance = Math.Round(x.distance, 1));
+
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.KayitSilinemedi + " Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
+
+
+        /// <summary>
+        /// User Get Near By Business
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("user/getnearbybusiness")]
+        public async Task<IActionResult> GetNearByBusiness(double? latitude, double? longitude, int? page, int? take)
+        {
+            ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
+
+                if (userId.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.Message = Resource.Resource.KullaniciBulunamadi;
+                    return Ok(response);
+                }
+
+                response.Data = await _businessService.GetBusinessNearByDistanceAsync(latitude, longitude, page, take);
+                response.Data.ToList().ConvertAll(x => x.distance = Math.Round(x.distance, 1));
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.KayitSilinemedi + " Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
 
         /// <summary>
         /// Update User
@@ -276,6 +394,7 @@ namespace CareGardenApiV1.Controller
                 user.services = updateUser.services.TrimEnd(';');
 
                 response.Data = await _userService.UpdateUserAsync(user);
+                response.Message = Resource.Resource.KayitBasarili;
 
                 return Ok(response);
             }

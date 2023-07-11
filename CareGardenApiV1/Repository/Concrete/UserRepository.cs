@@ -40,6 +40,7 @@ namespace CareGardenApiV1.Repository.Concrete
             using (var context = new CareGardenApiDbContext())
             {
                 return await context.Users
+                    .AsNoTracking()
                     .ToListAsync();
             }
         }
@@ -69,7 +70,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 user.createDate = DateTime.Now;
                 user.updateDate = user.createDate;
                 user.gender = Enums.Gender.Unspecified;
-                user.role = "User";
+                user.role = user.role.IsNull("User");
 
                 await context.Users.AddAsync(user);
                 await context.SaveChangesAsync();

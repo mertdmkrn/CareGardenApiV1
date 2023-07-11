@@ -155,7 +155,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("business/setprofilephoto")]
-        public async Task<IActionResult> SetProfilePhoto([FromForm]IFormFile file)
+        public async Task<IActionResult> SetProfilePhoto(IFormFile file)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));

@@ -141,7 +141,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("campaign/uploadimage")]
-        public async Task<IActionResult> UploadImage([FromForm]IFormFile file)
+        public async Task<IActionResult> UploadImage(IFormFile file)
         {
             ResponseModel<string> response = new ResponseModel<string>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));

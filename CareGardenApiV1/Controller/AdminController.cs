@@ -198,5 +198,36 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
         }
+
+        [HttpPost]
+        [Route("admin/fileupload")]
+        public async Task<IActionResult> FileUpload(IFormFile file)
+        {
+            ResponseModel<string> response = new ResponseModel<string>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                if (file == null)
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("file", Resource.Resource.BuAlaniBosBirakmayiniz));
+                    response.Message = Resource.Resource.BuAlaniBosBirakmayiniz;
+                    return Ok(response);
+                }
+
+                response.Data = await _fileHandler.UploadFreeImageServer(file);
+                response.Message = Resource.Resource.ResimYuklemeBasarili;
+
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
     }
 }

@@ -214,12 +214,6 @@ namespace CareGardenApiV1.Controller
                     response.ValidationErrors.Add(new ValidationError("url", Resource.Resource.BuAlaniBosBirakmayiniz));
                 }
 
-                if (!campaign.businessId.HasValue)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
                 if (response.HasError)
                 {
                     response.Message = Resource.Resource.KayitYapilamadi;
@@ -277,18 +271,6 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("url", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (!updateCampaign.businessId.HasValue)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (response.HasError)
-                {
-                    response.Message = Resource.Resource.KayitYapilamadi;
-                    return Ok(response);
                 }
 
                 if (response.HasError)

@@ -383,7 +383,7 @@ namespace CareGardenApiV1.Controller
                     new Claim(ClaimTypes.Name, user.fullName),
                     new Claim(ClaimTypes.PrimarySid, user.id.ToString()),
                     new Claim(ClaimTypes.Email, user.email),
-                    new Claim(ClaimTypes.Locality, user.city),
+                    new Claim(ClaimTypes.Locality, user.city.IsNull("")),
                     new Claim(ClaimTypes.Role, user.role)
                 };
 
@@ -462,7 +462,7 @@ namespace CareGardenApiV1.Controller
                 new Claim(ClaimTypes.Name, user.fullName),
                 new Claim(ClaimTypes.PrimarySid, user.id.ToString()),
                 new Claim(ClaimTypes.Email, user.email),
-                new Claim(ClaimTypes.Locality, user.city),
+                new Claim(ClaimTypes.Locality, user.city.IsNull("")),
                 new Claim(ClaimTypes.Role, user.role)
             };
 
@@ -568,7 +568,7 @@ namespace CareGardenApiV1.Controller
                 new Claim(ClaimTypes.Name, user.fullName),
                 new Claim(ClaimTypes.PrimarySid, user.id.ToString()),
                 new Claim(ClaimTypes.Email, user.email),
-                new Claim(ClaimTypes.Locality, user.city),
+                new Claim(ClaimTypes.Locality, user.city.IsNull("")),
                 new Claim(ClaimTypes.Role, user.role)
             };
 
@@ -642,6 +642,7 @@ namespace CareGardenApiV1.Controller
                 new Claim(ClaimTypes.Name, user.fullName),
                 new Claim(ClaimTypes.PrimarySid, user.id.ToString()),
                 new Claim(ClaimTypes.Email, user.email),
+                new Claim(ClaimTypes.Locality, user.city.IsNull("")),
                 new Claim(ClaimTypes.Role, user.role)
             };
 

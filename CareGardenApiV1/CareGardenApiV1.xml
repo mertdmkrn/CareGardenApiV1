@@ -6,7 +6,7 @@
     <members>
         <member name="M:CareGardenApiV1.Controller.AdminController.VerifyBusiness(CareGardenApiV1.Model.Business)">
              <summary>
-             Verify Confirmation Code
+             Update Business State
              </summary>
              <remarks>
              **Sample request body:**

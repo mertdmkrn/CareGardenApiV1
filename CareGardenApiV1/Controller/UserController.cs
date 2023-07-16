@@ -41,7 +41,7 @@ namespace CareGardenApiV1.Controller
         [Route("user/getbyid")]
         public async Task<IActionResult> GetUserById([FromBody] string id)
         {
-            ResponseModel<User> response = new ResponseModel<User>();
+            ResponseModel<UserResponseModel> response = new ResponseModel<UserResponseModel>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
@@ -56,7 +56,7 @@ namespace CareGardenApiV1.Controller
                 if (response.HasError)
                     return Ok(response);
 
-                response.Data = await _userService.GetUserById(id.ToGuid());
+                response.Data = await _userService.GetUserResponseModelById(id.ToGuid());
 
                 if (response.Data == null)
                 {
@@ -64,9 +64,6 @@ namespace CareGardenApiV1.Controller
                     response.Message += id + " id " + Resource.Resource.KullaniciBulunamadi;
                     return Ok(response);
                 }
-
-                response.Data.password = null;
-                response.Data.retryPassword = null;
 
                 return Ok(response);
 
@@ -88,12 +85,12 @@ namespace CareGardenApiV1.Controller
         [Route("user/get")]
         public async Task<IActionResult> GetUser()
         {
-            ResponseModel<User> response = new ResponseModel<User>();
+            ResponseModel<UserResponseModel> response = new ResponseModel<UserResponseModel>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
-                var user = await HelperMethods.GetSessionUser(Request, _userService);
+                var user = await HelperMethods.GetSessionUserResponseModel(Request, _userService);
                 
                 if (user == null)
                 {
@@ -102,7 +99,6 @@ namespace CareGardenApiV1.Controller
                     return Ok(response);
                 }
 
-                user.password = null;
                 response.Data = user;
 
                 return Ok(response);
@@ -179,7 +175,7 @@ namespace CareGardenApiV1.Controller
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
-            
+
             try
             {
                 if (!id.IsGuid())

@@ -21,12 +21,14 @@ namespace CareGardenApiV1.Model
         public DateTime? updateDate { get; set; }
         public Guid? userId { get; set; }
         public Guid? businessId { get; set; }
-        public Guid? baseId { get; set; }
+        public Guid? replyId { get; set; }
         public CommentType commentType { get; set; }
        
         [JsonIgnore]
         public Business? business { get; set; }
         [JsonIgnore]
         public User? user { get; set; }
+
+        public Comment? reply { get; set; }
     }
 }

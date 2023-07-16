@@ -171,6 +171,9 @@
   <data name="KayitBulunamadi" xml:space="preserve">
     <value>Kayıt bulunamadı.</value>
   </data>
+  <data name="KayitSilindi" xml:space="preserve">
+    <value>Kayıt silindi.</value>
+  </data>
   <data name="KayitSilinemedi" xml:space="preserve">
     <value>Kayıt silinemedi.</value>
   </data>

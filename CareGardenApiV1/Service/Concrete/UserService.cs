@@ -1,4 +1,5 @@
 ﻿using CareGardenApiV1.Model;
+using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Repository.Concrete;
 using CareGardenApiV1.Service.Abstract;
@@ -27,6 +28,11 @@ namespace CareGardenApiV1.Service.Concrete
         public async Task<User> GetUserById(Guid id)
         {
             return await _userRepository.GetUserById(id);
+        }     
+        
+        public async Task<UserResponseModel> GetUserResponseModelById(Guid id)
+        {
+            return await _userRepository.GetUserResponseModelById(id);
         }
 
         public async Task<List<User>> GetUsersAsync()

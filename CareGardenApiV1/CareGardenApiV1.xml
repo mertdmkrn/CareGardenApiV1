@@ -260,12 +260,102 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.CommentController.GetCommentBySessionUser">
+            <summary>
+            Get CommentBy Session User (User or Business)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.CommentController.GetCommentByBusinessId(System.Guid)">
+             <summary>
+             Get Comment By Business Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.CommentController.GetCommentByUserId(System.Guid)">
+             <summary>
+             Get Comment By User Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.CommentController.AddComment(CareGardenApiV1.Model.Comment)">
+             <summary>
+             Add Comment (İşyeri cevabı ise replyId dolu olacak. Cevap verilen yorumun id si yazılması yeterli. Kullanıcı yorum yapmışsa businessId dolu olmalı.)
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "userId" : "00000000-0000-0000-0000-000000000000",
+                    "businessId" : "00000000-0000-0000-0000-000000000000",
+                    "replyId" : "00000000-0000-0000-0000-000000000000",
+                    "comment" : "Harika bir hizmet teşekkürler.",
+                    "point" : 5
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.CommentController.UpdateComment(CareGardenApiV1.Model.Comment)">
+             <summary>
+             Update Comment
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "comment" : "Harika bir hizmet teşekkürler.",
+                    "point" : 5
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:CareGardenApiV1.Controller.CommentController.DeleteComment(System.Guid)" -->
         <member name="M:CareGardenApiV1.Controller.DefinitionController.GetCities">
             <summary>
             Get Cities
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.FavoriteController.GetFavoriteBusinesses">
+            <summary>
+            Get Favorite Businesses
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.FavoriteController.AddFavorite(System.Guid)">
+             <summary>
+             Add Favorite
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:CareGardenApiV1.Controller.FavoriteController.DeleteFavorite(System.Guid)" -->
         <member name="M:CareGardenApiV1.Controller.ServicesController.GetServices">
             <summary>
             Get Services
@@ -545,6 +635,18 @@
         <member name="M:CareGardenApiV1.Migrations.CareGardenV5.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV6">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV6.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV6.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV6.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="T:CareGardenApiV1.Resource.Resource">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -649,6 +751,11 @@
         <member name="P:CareGardenApiV1.Resource.Resource.KayitBulunamadi">
             <summary>
               Looks up a localized string similar to Kayıt bulunamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.KayitSilindi">
+            <summary>
+              Looks up a localized string similar to Kayıt silindi..
             </summary>
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.KayitSilinemedi">

@@ -79,5 +79,16 @@ namespace CareGardenApiV1.Repository.Concrete
                 return true;
             }
         }
+        public async Task<bool> DeleteFavoriteByBusinessIdAndUserIdAsync(Guid userId, Guid businessId)
+        {
+            using (var context = new CareGardenApiDbContext())
+            {
+                await context.Favorites
+                    .Where(x => x.userId == userId && x.businessId == businessId)
+                    .ExecuteDeleteAsync();
+                return true;
+            }
+        }
+
     }
 }

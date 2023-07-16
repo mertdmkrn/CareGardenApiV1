@@ -11,6 +11,7 @@ using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Repository.Abstract;
 using System.Drawing;
 using RestSharp;
+using CareGardenApiV1.Model.ResponseModel;
 
 namespace CareGardenApiV1.Helpers
 {
@@ -60,7 +61,27 @@ namespace CareGardenApiV1.Helpers
             }
         }
 
-        public async static Task<User> GetSessionUser(HttpRequest request, IUserService userService) 
+        public async static Task<User> GetSessionUser(HttpRequest request, IUserService userService)
+        {
+            var tokenString = request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var token = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
+
+            if (token == null)
+            {
+                return null;
+            }
+
+            var userId = token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.PrimarySid)?.Value?.ToString();
+
+            if (!userId.IsGuid())
+            {
+                return null;
+            }
+
+            return await userService.GetUserById(userId.ToGuid());
+        }
+
+        public async static Task<UserResponseModel> GetSessionUserResponseModel(HttpRequest request, IUserService userService) 
         {
             var tokenString = request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             var token = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
@@ -77,7 +98,7 @@ namespace CareGardenApiV1.Helpers
                 return null;
             }
 
-            return await userService.GetUserById(userId.ToGuid());
+            return await userService.GetUserResponseModelById(userId.ToGuid());
         }
 
         public static string GetClaimInfo(HttpRequest request, string type)

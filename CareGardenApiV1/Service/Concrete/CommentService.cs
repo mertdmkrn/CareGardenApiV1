@@ -29,6 +29,11 @@ namespace CareGardenApiV1.Service.Concrete
             return await _commentRepository.DeleteCommentByUserIdAsync(userId);
         }
 
+        public async Task<bool> DeleteCommentByIdAsync(Guid id)
+        {
+            return await _commentRepository.DeleteCommentByIdAsync(id);
+        }
+
         public async Task<Comment> GetCommentByIdAsync(Guid id)
         {
             return await _commentRepository.GetCommentByIdAsync(id);
@@ -52,6 +57,11 @@ namespace CareGardenApiV1.Service.Concrete
         public async Task<Comment> UpdateCommentAsync(Comment comment)
         {
             return await _commentRepository.UpdateCommentAsync(comment);
+        }
+
+        public async Task<bool> UpdateCommentReplyIdAsync(Guid id, Guid replyId)
+        {
+            return await _commentRepository.UpdateCommentReplyIdAsync(id, replyId);
         }
     }
 }

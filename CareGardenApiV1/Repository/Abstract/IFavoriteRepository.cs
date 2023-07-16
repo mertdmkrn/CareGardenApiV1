@@ -11,5 +11,6 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<bool> DeleteFavoriteAsync(Favorite favorite);
         Task<bool> DeleteFavoriteByUserIdAsync(Guid userId);
         Task<bool> DeleteFavoriteByBusinessIdAsync(Guid businessId);
+        Task<bool> DeleteFavoriteByBusinessIdAndUserIdAsync(Guid userId, Guid businessId);
     }
 }

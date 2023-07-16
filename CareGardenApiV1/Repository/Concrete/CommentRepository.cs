@@ -21,7 +21,8 @@ namespace CareGardenApiV1.Repository.Concrete
             using (var context = new CareGardenApiDbContext())
             {
                 return await context.Comments
-                    .Where(x => x.businessId == businessId)
+                    .Include(x => x.reply)
+                    .Where(x => x.businessId == businessId && x.commentType == Enums.CommentType.Business)
                     .OrderByDescending(x => x.updateDate)
                     .AsNoTracking()
                     .ToListAsync();
@@ -33,7 +34,8 @@ namespace CareGardenApiV1.Repository.Concrete
             using (var context = new CareGardenApiDbContext())
             {
                 return await context.Comments
-                    .Where(x => x.userId == userId)
+                    .Include(x => x.reply)
+                    .Where(x => x.userId == userId && x.commentType == Enums.CommentType.User)
                     .OrderByDescending(x => x.updateDate)
                     .AsNoTracking()
                     .ToListAsync();
@@ -93,6 +95,28 @@ namespace CareGardenApiV1.Repository.Concrete
                 await context.Comments
                     .Where(x => x.userId == userId)
                     .ExecuteDeleteAsync();
+                return true;
+            }
+        }
+
+        public async Task<bool> DeleteCommentByIdAsync(Guid id)
+        {
+            using (var context = new CareGardenApiDbContext())
+            {
+                await context.Comments
+                    .Where(x => x.id == id)
+                    .ExecuteDeleteAsync();
+                return true;
+            }
+        }
+
+        public async Task<bool> UpdateCommentReplyIdAsync(Guid id, Guid replyId)
+        {
+            using (var context = new CareGardenApiDbContext())
+            {
+                await context.Comments
+                    .Where(x => x.id == id)
+                    .ExecuteUpdateAsync(x => x.SetProperty(y=> y.replyId, replyId));
                 return true;
             }
         }

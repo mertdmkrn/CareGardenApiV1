@@ -12,5 +12,7 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<bool> DeleteCommentAsync(Comment comment);
         Task<bool> DeleteCommentByBusinessIdAsync(Guid businessId);
         Task<bool> DeleteCommentByUserIdAsync(Guid userId);
+        Task<bool> DeleteCommentByIdAsync(Guid id);
+        Task<bool> UpdateCommentReplyIdAsync(Guid id, Guid replyId);
     }
 }

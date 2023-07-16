@@ -27,6 +27,10 @@ namespace CareGardenApiV1.Service.Concrete
         public async Task<bool> DeleteFavoriteByUserIdAsync(Guid userId)
         {
             return await _favoriteRepository.DeleteFavoriteByUserIdAsync(userId);
+        }    
+        public async Task<bool> DeleteFavoriteByBusinessIdAndUserIdAsync(Guid userId, Guid businessId)
+        {
+            return await _favoriteRepository.DeleteFavoriteByBusinessIdAndUserIdAsync(userId, businessId);
         }
 
         public async Task<Favorite> GetFavoriteByIdAsync(Guid id)

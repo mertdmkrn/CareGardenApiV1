@@ -171,6 +171,9 @@
   <data name="KayitBulunamadi" xml:space="preserve">
     <value>No records found.</value>
   </data>
+  <data name="KayitSilindi" xml:space="preserve">
+    <value>The record deleted.</value>
+  </data>
   <data name="KayitSilinemedi" xml:space="preserve">
     <value>The record could not be deleted.</value>
   </data>

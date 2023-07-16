@@ -223,6 +223,15 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kayıt silindi..
+        /// </summary>
+        public static string KayitSilindi {
+            get {
+                return ResourceManager.GetString("KayitSilindi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Kayıt silinemedi..
         /// </summary>
         public static string KayitSilinemedi {

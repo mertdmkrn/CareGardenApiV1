@@ -2,6 +2,7 @@
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Model;
 using Microsoft.EntityFrameworkCore;
+using CareGardenApiV1.Model.ResponseModel;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -23,6 +24,29 @@ namespace CareGardenApiV1.Repository.Concrete
             {
                 return await context.Users
                     .FirstOrDefaultAsync(x => x.email.Equals(email) && x.password.Equals(password.HashString()) && x.role == "Admin");
+            }
+        }
+
+        public async Task<UserResponseModel> GetUserResponseModelById(Guid id)
+        {
+            using (var context = new CareGardenApiDbContext())
+            {
+                return await context.Users
+                    .Include(x => x.favorites)
+                    .Where(x => x.id == id)
+                    .Select(x => new UserResponseModel { 
+                        id = x.id,
+                        fullName = x.fullName,
+                        telephone = x.telephone,
+                        email = x.email,
+                        city = x.city, 
+                        imageUrl = x.imageUrl,
+                        services = x.services,
+                        gender = x.gender.ToString(),
+                        favoriteBusinessList = x.favorites.Count > 0 ? x.favorites.Select(x => x.businessId.ToString()).ToHashSet() : new HashSet<string>()
+                    })
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
             }
         }
 

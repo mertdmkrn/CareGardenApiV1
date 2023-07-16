@@ -37,6 +37,12 @@
              </remarks>
              <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.AdminController.UploadFile(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Upload File
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessById(System.String)">
             <summary>
             Get Business By Id
@@ -351,19 +357,19 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.UserController.GetPopularBusiness(System.Nullable{System.Double},System.Nullable{System.Double},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+        <member name="M:CareGardenApiV1.Controller.UserController.GetPopularBusiness(CareGardenApiV1.Model.RequestModel.BusinessSearchModel)">
             <summary>
             User Get Popular Business
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.UserController.GetFavoriteBusiness(System.Nullable{System.Double},System.Nullable{System.Double},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+        <member name="M:CareGardenApiV1.Controller.UserController.GetFavoriteBusiness(CareGardenApiV1.Model.RequestModel.BusinessSearchModel)">
             <summary>
             User Get Favorite Business
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.UserController.GetNearByBusiness(System.Nullable{System.Double},System.Nullable{System.Double},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+        <member name="M:CareGardenApiV1.Controller.UserController.GetNearByBusiness(CareGardenApiV1.Model.RequestModel.BusinessSearchModel)">
             <summary>
             User Get Near By Business
             </summary>

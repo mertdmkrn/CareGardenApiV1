@@ -122,7 +122,7 @@ namespace CareGardenApiV1.Controller
         [Route("business/selectlist")]
         public async Task<IActionResult> GetBusinessSelectList()
         {
-            ResponseModel<Dictionary<string, string>> response = new ResponseModel<Dictionary<string, string>>();
+            ResponseModel<List<Tuple<string, string>>> response = new ResponseModel<List<Tuple<string, string>>>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try

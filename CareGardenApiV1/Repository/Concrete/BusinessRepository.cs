@@ -6,6 +6,7 @@ using CareGardenApiV1.Model.ResponseModel;
 using NetTopologySuite.Geometries;
 using Microsoft.AspNetCore.DataProtection.XmlEncryption;
 using OneSignalApi.Model;
+using CareGardenApiV1.Model.RequestModel;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -48,23 +49,23 @@ namespace CareGardenApiV1.Repository.Concrete
             }
         }
 
-        public async Task<IList<BusinessListModel>> GetBusinessByPopularAsync(double? latitude, double? longitude, string? city, int? page, int? take)
+        public async Task<IList<BusinessListModel>> GetBusinessByPopularAsync(BusinessSearchModel businessSearchModel)
         {
             using (var context = new CareGardenApiDbContext())
             {
                 Point? userLocation = null;
                 var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
 
-                if (latitude.HasValue && longitude.HasValue)
+                if (businessSearchModel.latitude.HasValue && businessSearchModel.longitude.HasValue)
                 {
-                    userLocation = gf.CreatePoint(new Coordinate(latitude.Value, longitude.Value));
+                    userLocation = gf.CreatePoint(new Coordinate(businessSearchModel.latitude.Value, businessSearchModel.longitude.Value));
                 }
 
-                if (page.HasValue && take.HasValue)
+                if (businessSearchModel.page.HasValue && businessSearchModel.take.HasValue)
                 {
                     return await context.Businesses
                         .Where(x => x.isActive == true && x.verified == true)
-                        .Where(x => city.IsNotNullOrEmpty() ? x.city.Equals(city) : x.city != null)
+                        .Where(x => businessSearchModel.city.IsNotNullOrEmpty() ? x.city.Equals(businessSearchModel.city) : x.city != null)
                         .Include(x => x.comments)
                         .Include(x => x.galleries.Where(x => x.isProfilePhoto))
                         .Select(x => new BusinessListModel
@@ -80,8 +81,8 @@ namespace CareGardenApiV1.Repository.Concrete
                         })
                         .OrderByDescending(x => x.averageRating)
                         .ThenBy(x => x.distance)
-                        .Skip(page.Value * take.Value)
-                        .Take(take.Value)
+                        .Skip(businessSearchModel.page.Value * businessSearchModel.take.Value)
+                        .Take(businessSearchModel.take.Value)
                         .AsNoTracking()
                         .ToListAsync();
                 }
@@ -90,7 +91,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     .Include(x => x.comments)
                     .Include(x => x.galleries.Where(x => x.isProfilePhoto))
                     .Where(x => x.isActive == true && x.verified == true)
-                    .Where(x => city.IsNotNullOrEmpty() ? x.city.Equals(city) : x.city != null)
+                    .Where(x => businessSearchModel.city.IsNotNullOrEmpty() ? x.city.Equals(businessSearchModel.city) : x.city != null)
                     .Select(x => new BusinessListModel
                     {
                         id = x.id,
@@ -118,25 +119,25 @@ namespace CareGardenApiV1.Repository.Concrete
             }
         }
 
-        public async Task<IList<BusinessListModel>> GetBusinessByUserFavorites(double? latitude, double? longitude, Guid userId, int? page, int? take)
+        public async Task<IList<BusinessListModel>> GetBusinessByUserFavorites(BusinessSearchModel businessSearchModel)
         {
             using (var context = new CareGardenApiDbContext())
             {
                 Point? userLocation = null;
                 var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
 
-                if (latitude.HasValue && longitude.HasValue)
+                if (businessSearchModel.latitude.HasValue && businessSearchModel.longitude.HasValue)
                 {
-                    userLocation = gf.CreatePoint(new Coordinate(latitude.Value, longitude.Value));
+                    userLocation = gf.CreatePoint(new Coordinate(businessSearchModel.latitude.Value, businessSearchModel.longitude.Value));
                 }
 
-                if (page.HasValue && take.HasValue)
+                if (businessSearchModel.page.HasValue && businessSearchModel.take.HasValue)
                 {
                     return await context.Businesses
                         .Include(x => x.comments)
                         .Include(x => x.galleries.Where(x => x.isProfilePhoto))
-                        .Include(x => x.favorites.Where(x => x.userId == userId))
-                        .Where(x => x.isActive == true && x.verified == true && x.favorites.Any(x => x.userId == userId))
+                        .Include(x => x.favorites.Where(x => x.userId == businessSearchModel.userId))
+                        .Where(x => x.isActive == true && x.verified == true && x.favorites.Any(x => x.userId == businessSearchModel.userId))
                         .Select(x => new BusinessListModel
                         {
                             id = x.id,
@@ -150,8 +151,8 @@ namespace CareGardenApiV1.Repository.Concrete
                         })
                         .OrderBy(x => x.distance)
                         .ThenByDescending(x => x.averageRating)
-                        .Skip(page.Value * take.Value)
-                        .Take(take.Value)
+                        .Skip(businessSearchModel.page.Value * businessSearchModel.take.Value)
+                        .Take(businessSearchModel.take.Value)
                         .AsNoTracking()
                         .ToListAsync();
                 }
@@ -159,8 +160,8 @@ namespace CareGardenApiV1.Repository.Concrete
                 return await context.Businesses
                     .Include(x => x.comments)
                     .Include(x => x.galleries.Where(x => x.isProfilePhoto))
-                    .Include(x => x.favorites.Where(x => x.userId == userId))
-                    .Where(x => x.isActive == true && x.verified == true && x.favorites.Any(x => x.userId == userId))
+                    .Include(x => x.favorites.Where(x => x.userId == businessSearchModel.userId))
+                    .Where(x => x.isActive == true && x.verified == true && x.favorites.Any(x => x.userId == businessSearchModel.userId))
                     .Select(x => new BusinessListModel
                     {
                         id = x.id,
@@ -179,19 +180,19 @@ namespace CareGardenApiV1.Repository.Concrete
             }
         }
 
-        public async Task<IList<BusinessListModel>> GetBusinessNearByDistanceAsync(double? latitude, double? longitude, int? page, int? take)
+        public async Task<IList<BusinessListModel>> GetBusinessNearByDistanceAsync(BusinessSearchModel businessSearchModel)
         {
             using (var context = new CareGardenApiDbContext())
             {
                 Point? userLocation = null;
                 var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
 
-                if (latitude.HasValue && longitude.HasValue)
+                if (businessSearchModel.latitude.HasValue && businessSearchModel.longitude.HasValue)
                 {
-                    userLocation = gf.CreatePoint(new Coordinate(latitude.Value, longitude.Value));
+                    userLocation = gf.CreatePoint(new Coordinate(businessSearchModel.latitude.Value, businessSearchModel.longitude.Value));
                 }
 
-                if (page.HasValue && take.HasValue)
+                if (businessSearchModel.page.HasValue && businessSearchModel.take.HasValue)
                 {
                     return await context.Businesses
                         .Where(x => x.isActive == true && x.verified == true)
@@ -210,8 +211,8 @@ namespace CareGardenApiV1.Repository.Concrete
                         })
                         .OrderBy(x => x.distance)
                         .ThenByDescending(x => x.averageRating)
-                        .Skip(page.Value * take.Value)
-                        .Take(take.Value)
+                        .Skip(businessSearchModel.page.Value * businessSearchModel.take.Value)
+                        .Take(businessSearchModel.take.Value)
                         .AsNoTracking()
                         .ToListAsync();
                 }
@@ -238,15 +239,15 @@ namespace CareGardenApiV1.Repository.Concrete
             }
         }
 
-        public async Task<Dictionary<string, string>> GetBusinessSelectListAsync()
+        public async Task<List<Tuple<string, string>>> GetBusinessSelectListAsync()
         {
             using (var context = new CareGardenApiDbContext())
             {
                 return await context.Businesses
                         .Where(x => x.isActive == true && x.verified == true)
-                        .Select(x => new BusinessListModel { id = x.id, name = x.name })
+                        .Select(x => new Tuple<string, string>(x.id.ToString(), x.name))
                         .AsNoTracking()
-                        .ToDictionaryAsync(x => x.id.ToString(), x => x.name);
+                        .ToListAsync();
             }
         }
 

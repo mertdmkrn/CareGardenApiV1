@@ -1,4 +1,5 @@
 ﻿using CareGardenApiV1.Model;
+using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Repository.Concrete;
@@ -37,9 +38,9 @@ namespace CareGardenApiV1.Service.Concrete
             return await _businessRepository.GetBusinessByIdAsync(id);
         }
 
-        public async Task<IList<BusinessListModel>> GetBusinessByPopularAsync(double? latitude, double? longitude, string? city, int? page, int? take)
+        public async Task<IList<BusinessListModel>> GetBusinessByPopularAsync(BusinessSearchModel businessSearchModel)
         {
-            return await _businessRepository.GetBusinessByPopularAsync(latitude, longitude, city, page, take);
+            return await _businessRepository.GetBusinessByPopularAsync(businessSearchModel);
         }
 
         public async Task<Business> GetBusinessByTelephoneNumberAsync(string telephone)
@@ -47,17 +48,17 @@ namespace CareGardenApiV1.Service.Concrete
             return await _businessRepository.GetBusinessByTelephoneNumberAsync(telephone);
         }
 
-        public async Task<IList<BusinessListModel>> GetBusinessByUserFavorites(double? latitude, double? longitude, Guid userId, int? page, int? take)
+        public async Task<IList<BusinessListModel>> GetBusinessByUserFavorites(BusinessSearchModel businessSearchModel)
         {
-            return await _businessRepository.GetBusinessByUserFavorites(latitude, longitude, userId, page, take);
+            return await _businessRepository.GetBusinessByUserFavorites(businessSearchModel);
         }
 
-        public async Task<IList<BusinessListModel>> GetBusinessNearByDistanceAsync(double? latitude, double? longitude, int? page, int? take)
+        public async Task<IList<BusinessListModel>> GetBusinessNearByDistanceAsync(BusinessSearchModel businessSearchModel)
         {
-            return await _businessRepository.GetBusinessNearByDistanceAsync(latitude, longitude, page, take);
+            return await _businessRepository.GetBusinessNearByDistanceAsync(businessSearchModel);
         }
 
-        public async Task<Dictionary<string, string>> GetBusinessSelectListAsync()
+        public async Task<List<Tuple<string, string>>> GetBusinessSelectListAsync()
         {
             return await _businessRepository.GetBusinessSelectListAsync();
         }

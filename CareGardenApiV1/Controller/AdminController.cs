@@ -199,9 +199,15 @@ namespace CareGardenApiV1.Controller
             }
         }
 
+
+        /// <summary>
+        /// Upload File
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
-        [Route("admin/fileupload")]
-        public async Task<IActionResult> FileUpload(IFormFile file)
+        [HttpPost]
+        [Route("admin/uploadfile")]
+        public async Task<IActionResult> UploadFile(IFormFile file)
         {
             ResponseModel<string> response = new ResponseModel<string>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));

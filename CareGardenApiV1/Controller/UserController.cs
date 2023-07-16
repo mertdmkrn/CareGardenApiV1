@@ -2,6 +2,7 @@
 using CareGardenApiV1.Handler.Concrete;
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
+using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
@@ -220,7 +221,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("user/getpopularbusiness")]
-        public async Task<IActionResult> GetPopularBusiness(double? latitude, double? longitude, int? page, int? take)
+        public async Task<IActionResult> GetPopularBusiness([FromBody] BusinessSearchModel businessSearchModel)
         {
             ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -236,9 +237,9 @@ namespace CareGardenApiV1.Controller
                     return Ok(response);
                 }
 
-                var userCity = HelperMethods.GetClaimInfo(Request, ClaimTypes.Locality);
+                businessSearchModel.city = HelperMethods.GetClaimInfo(Request, ClaimTypes.Locality);
 
-                response.Data = await _businessService.GetBusinessByPopularAsync(latitude, longitude, userCity, page, take);
+                response.Data = await _businessService.GetBusinessByPopularAsync(businessSearchModel);
                 response.Data.ToList().ConvertAll(x => x.distance = Math.Round(x.distance, 1));
 
                 return Ok(response);
@@ -257,7 +258,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("user/getfavoritebusiness")]
-        public async Task<IActionResult> GetFavoriteBusiness(double? latitude, double? longitude, int? page, int? take)
+        public async Task<IActionResult> GetFavoriteBusiness([FromBody] BusinessSearchModel businessSearchModel)
         {
             ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -273,7 +274,9 @@ namespace CareGardenApiV1.Controller
                     return Ok(response);
                 }
 
-                response.Data = await _businessService.GetBusinessByUserFavorites(latitude, longitude, userId.ToGuid(), page, take);
+                businessSearchModel.userId = userId.ToGuid();
+
+                response.Data = await _businessService.GetBusinessByUserFavorites(businessSearchModel);
                 response.Data.ToList().ConvertAll(x => x.distance = Math.Round(x.distance, 1));
 
 
@@ -294,7 +297,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("user/getnearbybusiness")]
-        public async Task<IActionResult> GetNearByBusiness(double? latitude, double? longitude, int? page, int? take)
+        public async Task<IActionResult> GetNearByBusiness([FromBody] BusinessSearchModel businessSearchModel)
         {
             ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -310,7 +313,7 @@ namespace CareGardenApiV1.Controller
                     return Ok(response);
                 }
 
-                response.Data = await _businessService.GetBusinessNearByDistanceAsync(latitude, longitude, page, take);
+                response.Data = await _businessService.GetBusinessNearByDistanceAsync(businessSearchModel);
                 response.Data.ToList().ConvertAll(x => x.distance = Math.Round(x.distance, 1));
 
                 return Ok(response);

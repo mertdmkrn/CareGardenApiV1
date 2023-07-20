@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NetTopologySuite.Geometries;
 using Newtonsoft.Json.Converters;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -21,7 +22,7 @@ namespace CareGardenApiV1.Model
         }
 
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid id { get; set; }
+        public Guid id { get; set; } = Guid.Empty;
 
         [MaxLength(150)]
         public string? fullName { get; set; }
@@ -60,6 +61,13 @@ namespace CareGardenApiV1.Model
         public string? imageUrl { get; set; }
 
         public bool isBan { get; set; }
+
+        public double latitude { get; set; }
+        public double longitude { get; set; }
+
+        [JsonIgnore]
+        public Point? location { get; set; }
+
 
         [JsonIgnore]
         public virtual ICollection<Comment> comments { get; set; }

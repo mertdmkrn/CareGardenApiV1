@@ -309,6 +309,11 @@ namespace CareGardenApiV1.Controller
                     return Ok(response);
                 }
 
+                if (businessSearchModel.longitude == null || businessSearchModel.latitude == null)
+                {
+                    return Ok(response);
+                }
+
                 response.Data = await _businessService.GetBusinessNearByDistanceAsync(businessSearchModel);
                 response.Data.ToList().ConvertAll(x => x.distance = Math.Round(x.distance, 1));
 
@@ -391,6 +396,77 @@ namespace CareGardenApiV1.Controller
                 user.gender = updateUser.gender;
                 user.city = updateUser.city;
                 user.services = updateUser.services.TrimEnd(';');
+
+                response.Data = await _userService.UpdateUserAsync(user);
+                response.Message = Resource.Resource.KayitBasarili;
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.GuncellemeYapilamadi + " Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
+
+        /// <summary>
+        /// Update User Location
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "latitude" : 32,
+        ///        "longitude": 31
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("user/updatelocation")]
+        public async Task<IActionResult> UpdateLocation([FromBody] User updateUser)
+        {
+            ResponseModel<User> response = new ResponseModel<User>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                if (updateUser.longitude <= 0)
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("longitude", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (updateUser.latitude <= 0)
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("latitude", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (response.HasError)
+                {
+                    response.Message = Resource.Resource.GuncellemeYapilamadi;
+                    return Ok(response);
+                }
+
+                var user = await HelperMethods.GetSessionUser(Request, _userService);
+
+                if (user == null)
+                {
+                    response.HasError = true;
+                    response.Message = Resource.Resource.KullaniciBulunamadi;
+                    return Ok(response);
+                }
+
+                user.latitude = updateUser.latitude.IsNull(user.latitude);
+                user.longitude = updateUser.longitude.IsNull(user.longitude);
+
+                if (updateUser.latitude > 0 && updateUser.longitude > 0)
+                {
+                    var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
+                    user.location = gf.CreatePoint(new NetTopologySuite.Geometries.Coordinate(updateUser.latitude, updateUser.longitude));
+                }
 
                 response.Data = await _userService.UpdateUserAsync(user);
                 response.Message = Resource.Resource.KayitBasarili;

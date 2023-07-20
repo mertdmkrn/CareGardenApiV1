@@ -233,7 +233,7 @@ namespace CareGardenApiV1.Controller
         ///        "descriptionEn": "Hijab haircut, care, coloring, permanent makeup, microblading, manicure, pedicure, hair welding.",
         ///        "discountRate": 20,
         ///        "isFeatured": true,
-        ///        "hasPromotion: true
+        ///        "hasPromotion": true
         ///     }
         ///
         /// </remarks>

@@ -85,7 +85,9 @@
                     "district": "Çeliktepe Mah.",
                     "description": "Tesettür saç kesim, bakım, boya, kalıcı makyaj, microblading, manikür, pedikür, kaynak saç.",
                     "descriptionEn": "Hijab haircut, care, coloring, permanent makeup, microblading, manicure, pedicure, hair welding.",
-                    "discountRate": 20
+                    "discountRate": 20,
+                    "isFeatured": true,
+                    "hasPromotion: true
                  }
             
              </remarks>

@@ -178,6 +178,15 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Giriş başarılı..
+        /// </summary>
+        public static string GirisBasarili {
+            get {
+                return ResourceManager.GetString("GirisBasarili", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Giriş yapılamadı..
         /// </summary>
         public static string GirisYapilamadi {

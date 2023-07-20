@@ -87,7 +87,7 @@
                     "descriptionEn": "Hijab haircut, care, coloring, permanent makeup, microblading, manicure, pedicure, hair welding.",
                     "discountRate": 20,
                     "isFeatured": true,
-                    "hasPromotion: true
+                    "hasPromotion": true
                  }
             
              </remarks>
@@ -485,6 +485,21 @@
              </remarks>
              <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.UpdateLocation(CareGardenApiV1.Model.User)">
+             <summary>
+             Update User Location
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "latitude" : 32,
+                    "longitude": 31
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.UserLoginController.SendTelephoneConfirmationCode(System.String)">
             <summary>
             Send Telephone Confirmation Code
@@ -661,6 +676,18 @@
         <member name="M:CareGardenApiV1.Migrations.CareGardenV8.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV9">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV9.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV9.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV9.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="T:CareGardenApiV1.Resource.Resource">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -740,6 +767,11 @@
         <member name="P:CareGardenApiV1.Resource.Resource.GirilenBilgilereAitSirketBulunamadi">
             <summary>
               Looks up a localized string similar to Girilen bilgilere ait şirket bulunamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.GirisBasarili">
+            <summary>
+              Looks up a localized string similar to Giriş başarılı..
             </summary>
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.GirisYapilamadi">

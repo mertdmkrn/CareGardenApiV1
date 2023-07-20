@@ -156,6 +156,9 @@
   <data name="GirilenBilgilereAitSirketBulunamadi" xml:space="preserve">
     <value>Girilen bilgilere ait şirket bulunamadı.</value>
   </data>
+  <data name="GirisBasarili" xml:space="preserve">
+    <value>Giriş başarılı.</value>
+  </data>
   <data name="GirisYapilamadi" xml:space="preserve">
     <value>Giriş yapılamadı.</value>
   </data>

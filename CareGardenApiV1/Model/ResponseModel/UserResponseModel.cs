@@ -11,5 +11,7 @@
         public HashSet<string> favoriteBusinessList { get; set; } = new HashSet<string>();
         public string services { get; set; }
         public string gender { get; set; }
+        public double latitude { get; set; }
+        public double longitude { get; set; }
     }
 }

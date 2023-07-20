@@ -467,6 +467,7 @@ namespace CareGardenApiV1.Controller
             };
 
             response.Data = _tokenHandler.CreateAccessToken(DateTime.Now.AddDays(60), claims);
+            response.Message = Resource.Resource.GirisBasarili;
 
             return Ok(response);
         }

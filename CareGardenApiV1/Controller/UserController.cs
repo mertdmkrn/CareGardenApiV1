@@ -427,7 +427,7 @@ namespace CareGardenApiV1.Controller
         [Route("user/updatelocation")]
         public async Task<IActionResult> UpdateLocation([FromBody] User updateUser)
         {
-            ResponseModel<User> response = new ResponseModel<User>();
+            ResponseModel<bool> response = new ResponseModel<bool>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
@@ -468,7 +468,8 @@ namespace CareGardenApiV1.Controller
                     user.location = gf.CreatePoint(new NetTopologySuite.Geometries.Coordinate(updateUser.latitude, updateUser.longitude));
                 }
 
-                response.Data = await _userService.UpdateUserAsync(user);
+                await _userService.UpdateUserAsync(user);
+                response.Data = true;
                 response.Message = Resource.Resource.KayitBasarili;
 
                 return Ok(response);

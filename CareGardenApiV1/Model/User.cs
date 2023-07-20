@@ -62,8 +62,8 @@ namespace CareGardenApiV1.Model
 
         public bool isBan { get; set; }
 
-        public double latitude { get; set; }
-        public double longitude { get; set; }
+        public double? latitude { get; set; }
+        public double? longitude { get; set; }
 
         [JsonIgnore]
         public Point? location { get; set; }

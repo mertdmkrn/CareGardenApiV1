@@ -156,6 +156,9 @@
   <data name="GirilenBilgilereAitSirketBulunamadi" xml:space="preserve">
     <value>No company was found for the information entered.</value>
   </data>
+  <data name="GirisBasarili" xml:space="preserve">
+    <value>Login successful.</value>
+  </data>
   <data name="GirisYapilamadi" xml:space="preserve">
     <value>Failed to login.</value>
   </data>

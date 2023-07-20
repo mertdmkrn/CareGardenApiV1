@@ -79,6 +79,8 @@ namespace CareGardenApiV1.Model
         public bool isActive { get; set; }
         public bool verified { get; set; }
         public int discountRate { get; set; }
+        public bool isFeatured { get; set; }
+        public bool hasPromotion { get; set; }
 
         public virtual ICollection<Comment> comments { get; set; }
         public virtual ICollection<BusinessGallery> galleries { get; set; }

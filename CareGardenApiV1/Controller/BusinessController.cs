@@ -231,7 +231,9 @@ namespace CareGardenApiV1.Controller
         ///        "district": "Çeliktepe Mah.",
         ///        "description": "Tesettür saç kesim, bakım, boya, kalıcı makyaj, microblading, manikür, pedikür, kaynak saç.",
         ///        "descriptionEn": "Hijab haircut, care, coloring, permanent makeup, microblading, manicure, pedicure, hair welding.",
-        ///        "discountRate": 20
+        ///        "discountRate": 20,
+        ///        "isFeatured": true,
+        ///        "hasPromotion: true
         ///     }
         ///
         /// </remarks>
@@ -265,6 +267,8 @@ namespace CareGardenApiV1.Controller
                 business.description = updateBusiness.description.IsNull(business.description);
                 business.descriptionEn = updateBusiness.descriptionEn.IsNull(business.descriptionEn);
                 business.discountRate = updateBusiness.discountRate.IsNull(business.discountRate);
+                business.isFeatured = updateBusiness.isFeatured;
+                business.hasPromotion = updateBusiness.hasPromotion;
 
                 if(updateBusiness.latitude > 0 && updateBusiness.longitude > 0)
                 {

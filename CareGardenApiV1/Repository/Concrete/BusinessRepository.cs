@@ -73,11 +73,14 @@ namespace CareGardenApiV1.Repository.Concrete
                             id = x.id,
                             name = x.name ?? "",
                             discountRate = x.discountRate,
-                            workingGenderType = x.workingGenderType.ToString(),
+                            workingGenderType = (int)x.workingGenderType,
                             imageUrl = x.galleries.FirstOrDefault().imageUrl,
                             averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
                             countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
-                            distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0
+                            distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0,
+                            isFeatured = x.isFeatured,
+                            hasPromotion = x.hasPromotion,
+                            isOpen = true
                         })
                         .OrderByDescending(x => x.averageRating)
                         .ThenBy(x => x.distance)
@@ -97,11 +100,14 @@ namespace CareGardenApiV1.Repository.Concrete
                         id = x.id,
                         name = x.name ?? "",
                         discountRate = x.discountRate,
-                        workingGenderType = x.workingGenderType.ToString(),
+                        workingGenderType = (int)x.workingGenderType,
                         imageUrl = x.galleries.FirstOrDefault().imageUrl,
                         averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
                         countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
-                        distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0
+                        distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0,
+                        isFeatured = x.isFeatured,
+                        hasPromotion = x.hasPromotion,
+                        isOpen = true
                     })
                     .OrderByDescending(x => x.averageRating)
                     .ThenBy(x => x.distance)
@@ -143,11 +149,14 @@ namespace CareGardenApiV1.Repository.Concrete
                             id = x.id,
                             name = x.name ?? "",
                             discountRate = x.discountRate,
-                            workingGenderType = x.workingGenderType.ToString(),
+                            workingGenderType = (int)x.workingGenderType,
                             imageUrl = x.galleries.FirstOrDefault().imageUrl,
                             averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
                             countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
-                            distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0
+                            distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0,
+                            isFeatured = x.isFeatured,
+                            hasPromotion = x.hasPromotion,
+                            isOpen = true
                         })
                         .OrderBy(x => x.distance)
                         .ThenByDescending(x => x.averageRating)
@@ -167,11 +176,14 @@ namespace CareGardenApiV1.Repository.Concrete
                         id = x.id,
                         name = x.name ?? "",
                         discountRate = x.discountRate,
-                        workingGenderType = x.workingGenderType.ToString(),
+                        workingGenderType = (int)x.workingGenderType,
                         imageUrl = x.galleries.FirstOrDefault().imageUrl,
                         averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
                         countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
-                        distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0
+                        distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0,
+                        isFeatured = x.isFeatured,
+                        hasPromotion = x.hasPromotion,
+                        isOpen = true
                     })
                     .OrderBy(x => x.distance)
                     .ThenByDescending(x => x.averageRating)
@@ -204,11 +216,14 @@ namespace CareGardenApiV1.Repository.Concrete
                             id = x.id,
                             name = x.name ?? "",
                             discountRate = x.discountRate,
-                            workingGenderType = x.workingGenderType.ToString(),
+                            workingGenderType = (int)x.workingGenderType,
                             imageUrl = x.galleries.FirstOrDefault().imageUrl,
                             averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
                             countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
-                            distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0
+                            distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0,
+                            isFeatured = x.isFeatured,
+                            hasPromotion = x.hasPromotion,
+                            isOpen = true
                         })
                         .OrderBy(x => x.distance)
                         .ThenByDescending(x => x.averageRating)
@@ -227,11 +242,14 @@ namespace CareGardenApiV1.Repository.Concrete
                         id = x.id,
                         name = x.name,
                         discountRate = x.discountRate,
-                        workingGenderType = x.workingGenderType.ToString(),
+                        workingGenderType = (int)x.workingGenderType,
                         imageUrl = x.galleries.FirstOrDefault().imageUrl,
                         averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
                         countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
-                        distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0
+                        distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0,
+                        isFeatured = x.isFeatured,
+                        hasPromotion = x.hasPromotion,
+                        isOpen = true
                     })
                     .OrderBy(x => x.distance)
                     .ThenByDescending(x => x.averageRating)

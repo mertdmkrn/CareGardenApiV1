@@ -433,16 +433,16 @@ namespace CareGardenApiV1.Controller
 
             try
             {
-                if (updateUser.longitude <= 0)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("longitude", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (updateUser.latitude <= 0)
+                if (!updateUser.latitude.HasValue || updateUser.latitude <= 0)
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("latitude", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (!updateUser.longitude.HasValue || updateUser.longitude <= 0)
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("longitude", Resource.Resource.BuAlaniBosBirakmayiniz));
                 }
 
                 if (response.HasError)

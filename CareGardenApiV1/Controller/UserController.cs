@@ -347,7 +347,7 @@ namespace CareGardenApiV1.Controller
         [Route("user/update")]
         public async Task<IActionResult> Update([FromBody] User updateUser)
         {
-            ResponseModel<User> response = new ResponseModel<User>();
+            ResponseModel<bool> response = new ResponseModel<bool>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
@@ -397,7 +397,8 @@ namespace CareGardenApiV1.Controller
                 user.city = updateUser.city;
                 user.services = updateUser.services.TrimEnd(';');
 
-                response.Data = await _userService.UpdateUserAsync(user);
+                await _userService.UpdateUserAsync(user);
+                response.Data = true;
                 response.Message = Resource.Resource.KayitBasarili;
 
                 return Ok(response);
@@ -459,13 +460,13 @@ namespace CareGardenApiV1.Controller
                     return Ok(response);
                 }
 
-                user.latitude = updateUser.latitude.IsNull(user.latitude);
-                user.longitude = updateUser.longitude.IsNull(user.longitude);
+                user.latitude = updateUser.latitude.HasValue ? updateUser.latitude : user.latitude;
+                user.longitude = updateUser.longitude.HasValue ? updateUser.longitude : user.latitude;
 
                 if (updateUser.latitude > 0 && updateUser.longitude > 0)
                 {
                     var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
-                    user.location = gf.CreatePoint(new NetTopologySuite.Geometries.Coordinate(updateUser.latitude, updateUser.longitude));
+                    user.location = gf.CreatePoint(new NetTopologySuite.Geometries.Coordinate(updateUser.longitude.Value, updateUser.longitude.Value));
                 }
 
                 await _userService.UpdateUserAsync(user);

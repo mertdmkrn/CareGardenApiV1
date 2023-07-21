@@ -43,8 +43,8 @@ namespace CareGardenApiV1.Repository.Concrete
                         imageUrl = x.imageUrl,
                         services = x.services,
                         gender = x.gender.ToString(),
-                        latitude = x.latitude,
-                        longitude = x.longitude,
+                        latitude = x.latitude.HasValue ? x.latitude.Value : 0,
+                        longitude = x.longitude.HasValue ? x.longitude.Value : 0,
                         favoriteBusinessList = x.favorites.Count > 0 ? x.favorites.Select(x => x.businessId.ToString()).ToHashSet() : new HashSet<string>()
                     })
                     .AsNoTracking()

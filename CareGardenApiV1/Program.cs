@@ -105,6 +105,7 @@ internal class Program
             Directory.CreateDirectory(path);
         }
 
+        app.UseStaticFiles();
         app.UseStaticFiles(new StaticFileOptions()
         {
             FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"StaticFiles")),

@@ -43,4 +43,9 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="StaticFiles\Logs\" />
+    <Folder Include="StaticFiles\UploadedFiles\" />
+  </ItemGroup>
+
 </Project>

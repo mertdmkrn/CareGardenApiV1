@@ -99,7 +99,7 @@ internal class Program
         app.UseCors("corsapp");
         app.UseSwaggerUI();
 
-        string path = Path.Combine(Directory.GetCurrentDirectory(), @"StaticFiles\UploadedFiles");
+        string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"StaticFiles\UploadedFiles");
         if (!Directory.Exists(path))
         {
             Directory.CreateDirectory(path);
@@ -108,7 +108,7 @@ internal class Program
         app.UseStaticFiles();
         app.UseStaticFiles(new StaticFileOptions()
         {
-            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"StaticFiles")),
+            FileProvider = new PhysicalFileProvider(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"StaticFiles")),
             RequestPath = new PathString("/StaticFiles")
         });
 

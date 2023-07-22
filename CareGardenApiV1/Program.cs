@@ -106,11 +106,6 @@ internal class Program
         }
 
         app.UseStaticFiles();
-        app.UseStaticFiles(new StaticFileOptions()
-        {
-            FileProvider = new PhysicalFileProvider(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"StaticFiles")),
-            RequestPath = new PathString("/StaticFiles")
-        });
 
         app.UseAuthentication();
         app.UseAuthorization();

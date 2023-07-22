@@ -47,8 +47,6 @@
 	  <Content Include="StaticFiles\*">
 		  <CopyToPublishDirectory>always</CopyToPublishDirectory>
 	  </Content>
-	  <Folder Include="StaticFiles\Logs\" />
-      <Folder Include="StaticFiles\UploadedFiles\" />
   </ItemGroup>
 
 </Project>

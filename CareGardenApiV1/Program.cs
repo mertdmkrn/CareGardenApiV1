@@ -25,11 +25,6 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
         var currentPath = Path.Combine(AppContext.BaseDirectory.Replace("bin\\Debug\\net7.0\\", ""));
 
-        string path = Path.Combine(Directory.GetCurrentDirectory(), @"StaticFiles\UploadedFiles");
-        if (!Directory.Exists(path))
-        {
-            Directory.CreateDirectory(path);
-        }
 
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Logger(lc => lc
@@ -103,6 +98,12 @@ internal class Program
         app.UseSwagger();
         app.UseCors("corsapp");
         app.UseSwaggerUI();
+
+        string path = Path.Combine(Directory.GetCurrentDirectory(), @"StaticFiles\UploadedFiles");
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
 
         app.UseStaticFiles(new StaticFileOptions()
         {

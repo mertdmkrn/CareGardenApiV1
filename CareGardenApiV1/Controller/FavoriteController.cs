@@ -19,10 +19,12 @@ namespace CareGardenApiV1.Controller
     public class FavoriteController : ControllerBase
     {
         private IFavoriteService _favoriteService;
+        private readonly ILoggerHandler _loggerHandler;
 
-        public FavoriteController()
+        public FavoriteController(ILoggerHandler loggerHandler)
         {
             _favoriteService = new FavoriteService();
+            _loggerHandler = loggerHandler;
         }
 
         /// <summary>
@@ -54,6 +56,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message += "Exception => " + ex.Message;
                 return Ok(response);
@@ -106,6 +109,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message += "Exception => " + ex.Message;
                 return Ok(response);
@@ -154,6 +158,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message += "Exception => " + ex.Message;
                 return Ok(response);

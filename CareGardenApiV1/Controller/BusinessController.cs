@@ -22,13 +22,15 @@ namespace CareGardenApiV1.Controller
         private IBusinessWorkingInfoService _businessWorkingInfoService;
         private IBusinessGalleryService _businessGalleryService;
         private IFileHandler _fileHandler;
+        private readonly ILoggerHandler _loggerHandler;
 
-        public BusinessController()
+        public BusinessController(ILoggerHandler loggerHandler)
         {
             _businessService = new BusinessService();
             _businessGalleryService = new BusinessGalleryService();
             _businessWorkingInfoService = new BusinessWorkingInfoService();
             _fileHandler = new FileHandler();
+            _loggerHandler = loggerHandler;
         }
 
         /// <summary>
@@ -71,6 +73,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message += "Exception => " + ex.Message;
                 return Ok(response);
@@ -108,6 +111,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message += "Exception => " + ex.Message;
                 return Ok(response);
@@ -143,6 +147,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message += "Exception => " + ex.Message;
                 return Ok(response);
@@ -188,7 +193,7 @@ namespace CareGardenApiV1.Controller
                 string imageUrl = await _fileHandler.UploadFreeImageServer(file);
 
                 if(imageUrl.IsNullOrEmpty())
-                    imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, "UploadedFiles/BusinessImages/" + businessName + "/" + fileName);
+                    imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, "StaticFiles/UploadedFiles/BusinessImages/" + businessName + "/" + fileName);
 
                 BusinessGallery businessGallery = new BusinessGallery
                 {
@@ -208,6 +213,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message += "Exception => " + ex.Message;
                 return Ok(response);
@@ -285,6 +291,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message += "Exception => " + ex.Message;
                 return Ok(response);
@@ -388,6 +395,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message += "Exception => " + ex.Message;
                 return Ok(response);
@@ -435,7 +443,7 @@ namespace CareGardenApiV1.Controller
                     string imageUrl = await _fileHandler.UploadFreeImageServer(file);
 
                     if (imageUrl.IsNullOrEmpty())
-                        imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, "UploadedFiles/BusinessImages/" + businessName + "/" + fileName);
+                        imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, "StaticFiles/UploadedFiles/BusinessImages/" + businessName + "/" + fileName);
 
                     businessGalleries.Add(new BusinessGallery
                     {
@@ -455,6 +463,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message += "Exception => " + ex.Message;
                 return Ok(response);

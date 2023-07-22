@@ -17,11 +17,13 @@ namespace CareGardenApiV1.Controller
     {
         private ICampaignService _campaingService;
         private IFileHandler _fileHandler;
+        private readonly ILoggerHandler _loggerHandler;
 
-        public CampaignController()
+        public CampaignController(ILoggerHandler loggerHandler)
         {
             _campaingService = new CampaignService();
             _fileHandler = new FileHandler();
+            _loggerHandler = loggerHandler;
         }
 
         /// <summary>
@@ -43,6 +45,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message = "Exception => " + ex.Message;
                 return Ok(response);
@@ -86,6 +89,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message = "Exception => " + ex.Message;
                 return Ok(response);
@@ -129,6 +133,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message = "Exception => " + ex.Message;
                 return Ok(response);
@@ -161,7 +166,7 @@ namespace CareGardenApiV1.Controller
                 string imageUrl = await _fileHandler.UploadFreeImageServer(file);
 
                 if (imageUrl.IsNullOrEmpty())
-                    imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, "UploadedFiles/CampaignImages/" + fileName);
+                    imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, "StaticFiles/UploadedFiles/CampaignImages/" + fileName);
 
                 response.Message = Resource.Resource.ResimYuklemeBasarili;
                 response.Data = imageUrl;
@@ -171,6 +176,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message += "Exception => " + ex.Message;
                 return Ok(response);
@@ -227,6 +233,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message = Resource.Resource.KayitYapilamadi + " Exception => " + ex.Message;
                 return Ok(response);
@@ -301,6 +308,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message = Resource.Resource.GuncellemeYapilamadi + " Exception => " + ex.Message;
                 return Ok(response);
@@ -348,6 +356,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message = Resource.Resource.KayitSilinemedi + " Exception => " + ex.Message;
                 return Ok(response);

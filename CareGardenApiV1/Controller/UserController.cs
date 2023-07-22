@@ -25,12 +25,14 @@ namespace CareGardenApiV1.Controller
         private IUserService _userService;
         private IBusinessService _businessService;
         private IFileHandler _fileHandler;
+        private readonly ILoggerHandler _loggerHandler;
 
-        public UserController()
+        public UserController(ILoggerHandler loggerHandler)
         {
             _userService = new UserService();
             _businessService = new BusinessService();
             _fileHandler = new FileHandler();
+            _loggerHandler = loggerHandler;
         }
 
         /// <summary>
@@ -70,8 +72,9 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = "Exception => " + ex.Message;
                 return Ok(response);
             }
 
@@ -106,8 +109,9 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = "Exception => " + ex.Message;
                 return Ok(response);
             }
         }
@@ -147,7 +151,7 @@ namespace CareGardenApiV1.Controller
                 user.imageUrl = await _fileHandler.UploadFreeImageServer(file);
 
                 if (user.imageUrl.IsNullOrEmpty())
-                    user.imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, "UploadedFiles/UserImages/" + fileName);
+                    user.imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, "StaticFiles/UploadedFiles/UserImages/" + fileName);
 
                 await _userService.UpdateUserAsync(user);
 
@@ -159,6 +163,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message += "Exception => " + ex.Message;
                 return Ok(response);
@@ -205,6 +210,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message = Resource.Resource.KayitSilinemedi + " Exception => " + ex.Message;
                 return Ok(response);
@@ -242,6 +248,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message = Resource.Resource.KayitBulunamadi + " Exception => " + ex.Message;
                 return Ok(response);
@@ -280,6 +287,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message = Resource.Resource.KayitSilinemedi + " Exception => " + ex.Message;
                 return Ok(response);
@@ -321,6 +329,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message = Resource.Resource.KayitSilinemedi + " Exception => " + ex.Message;
                 return Ok(response);
@@ -405,6 +414,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message = Resource.Resource.GuncellemeYapilamadi + " Exception => " + ex.Message;
                 return Ok(response);
@@ -477,6 +487,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message = Resource.Resource.GuncellemeYapilamadi + " Exception => " + ex.Message;
                 return Ok(response);

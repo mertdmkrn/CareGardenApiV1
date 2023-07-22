@@ -20,10 +20,12 @@ namespace CareGardenApiV1.Controller
     {
         private ICommentService _commentService;
         private IFileHandler _fileHandler;
+        private readonly ILoggerHandler _loggerHandler;
 
-        public CommentController()
+        public CommentController(ILoggerHandler loggerHandler)
         {
             _commentService = new CommentService();
+            _loggerHandler = loggerHandler;
         }
 
         /// <summary>
@@ -58,6 +60,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message += "Exception => " + ex.Message;
                 return Ok(response);
@@ -99,6 +102,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message += "Exception => " + ex.Message;
                 return Ok(response);
@@ -140,6 +144,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message += "Exception => " + ex.Message;
                 return Ok(response);
@@ -230,6 +235,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message += "Exception => " + ex.Message;
                 return Ok(response);
@@ -301,6 +307,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message += "Exception => " + ex.Message;
                 return Ok(response);
@@ -348,6 +355,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message += "Exception => " + ex.Message;
                 return Ok(response);

@@ -15,6 +15,8 @@ using CareGardenApiV1.Handler.Concrete;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
+using Serilog;
+using Serilog.Formatting.Compact;
 
 internal class Program
 {
@@ -23,9 +25,25 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
         var currentPath = Path.Combine(AppContext.BaseDirectory.Replace("bin\\Debug\\net7.0\\", ""));
 
+        string path = Path.Combine(Directory.GetCurrentDirectory(), @"StaticFiles\UploadedFiles");
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Logger(lc => lc
+                .MinimumLevel.Warning()
+                .WriteTo.File(new CompactJsonFormatter(), "StaticFiles/Logs/log.json", rollingInterval: RollingInterval.Day, flushToDiskInterval: TimeSpan.Zero))
+            .WriteTo.Logger(lc => lc
+                .MinimumLevel.Error()
+                .WriteTo.File(new CompactJsonFormatter(), "StaticFiles/Logs/error.json", rollingInterval: RollingInterval.Day, flushToDiskInterval: TimeSpan.Zero))
+            .CreateLogger();
+
+        builder.Host.UseSerilog();
+
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
-
 
         builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
         {
@@ -86,17 +104,10 @@ internal class Program
         app.UseCors("corsapp");
         app.UseSwaggerUI();
 
-        string path = Path.Combine(Directory.GetCurrentDirectory(), @"UploadedFiles");
-        if (!Directory.Exists(path))
-        {
-            Directory.CreateDirectory(path);
-        }
-
-        app.UseStaticFiles();
         app.UseStaticFiles(new StaticFileOptions()
         {
-            FileProvider = new PhysicalFileProvider(path),
-            RequestPath = new PathString("/UploadedFiles")
+            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"StaticFiles")),
+            RequestPath = new PathString("/staticfiles")
         });
 
         app.UseAuthentication();
@@ -113,6 +124,7 @@ internal class Program
         builder.Services.AddSingleton<IMailHandler, MailHandler>();
         builder.Services.AddSingleton<ISmsHandler, SmsHandler>();
         builder.Services.AddSingleton<IFileHandler, FileHandler>();
+        builder.Services.AddSingleton<ILoggerHandler, LoggerHandler>();
 
         builder.Services.AddSingleton<IBusinessRepository, BusinessRepository>();
         builder.Services.AddSingleton<IBusinessGalleryRepository, BusinessGalleryRepository>();

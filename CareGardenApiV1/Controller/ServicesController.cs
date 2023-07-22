@@ -13,10 +13,12 @@ namespace CareGardenApiV1.Controller
     public class ServicesController : ControllerBase
     {
         private IServicesService _servicesService;
+        private readonly ILoggerHandler _loggerHandler;
 
-        public ServicesController()
+        public ServicesController(ILoggerHandler loggerHandler)
         {
             _servicesService = new ServicesService();
+            _loggerHandler = loggerHandler;
         }
 
         /// <summary>
@@ -38,6 +40,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message = "Exception => " + ex.Message;
                 return Ok(response);
@@ -81,6 +84,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message = "Exception => " + ex.Message;
                 return Ok(response);
@@ -124,6 +128,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message += "Exception => " + ex.Message;
                 return Ok(response);
@@ -242,6 +247,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message = Resource.Resource.KullaniciBulunamadi + " Exception => " + ex.Message;
                 return Ok(response);
@@ -276,7 +282,6 @@ namespace CareGardenApiV1.Controller
 
             try
             {
-
                 if (updateServices.name.IsNullOrEmpty())
                 {
                     response.HasError = true;
@@ -334,6 +339,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message = Resource.Resource.GuncellemeYapilamadi + " Exception => " + ex.Message;
                 return Ok(response);
@@ -381,6 +387,7 @@ namespace CareGardenApiV1.Controller
             }
             catch (Exception ex)
             {
+                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message = Resource.Resource.KayitSilinemedi + " Exception => " + ex.Message;
                 return Ok(response);

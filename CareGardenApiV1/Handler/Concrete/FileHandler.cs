@@ -20,7 +20,7 @@ namespace CareGardenApiV1.Handler.Concrete
             {
                 if (file.Length > 0)
                 {
-                    path = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, pathName.IsNullOrEmpty() ? "UploadedFiles" : "UploadedFiles\\" + pathName));
+                    path = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, pathName.IsNullOrEmpty() ? "StaticFiles/UploadedFiles" : "StaticFiles/UploadedFiles\\" + pathName));
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);

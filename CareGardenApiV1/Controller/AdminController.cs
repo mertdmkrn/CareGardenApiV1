@@ -24,13 +24,15 @@ namespace CareGardenApiV1.Controller
         private IUserService _userService;
         private IFileHandler _fileHandler;
         private readonly IMailHandler _mailHandler;
+        private readonly ILoggerHandler _loggerHandler;
 
-        public AdminController(IMailHandler mailHandler)
+        public AdminController(IMailHandler mailHandler, ILoggerHandler loggerHandler)
         {
             _businessService = new BusinessService();
             _userService = new UserService();
             _fileHandler = new FileHandler();
             _mailHandler = mailHandler;
+            _loggerHandler = loggerHandler;
         }
 
         /// <summary>

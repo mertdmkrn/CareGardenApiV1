@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -44,8 +44,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="StaticFiles\Logs\" />
-    <Folder Include="StaticFiles\UploadedFiles\" />
+	  <Content Include="StaticFiles\*">
+		  <CopyToPublishDirectory>always</CopyToPublishDirectory>
+	  </Content>
+	  <Folder Include="StaticFiles\Logs\" />
+      <Folder Include="StaticFiles\UploadedFiles\" />
   </ItemGroup>
 
 </Project>

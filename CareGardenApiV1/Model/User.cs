@@ -66,6 +66,7 @@ namespace CareGardenApiV1.Model
         public double? longitude { get; set; }
 
         [JsonIgnore]
+        [Column(TypeName = "geometry (point)")]
         public Point? location { get; set; }
 
 

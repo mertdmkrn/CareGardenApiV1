@@ -55,6 +55,7 @@ namespace CareGardenApiV1.Repository.Concrete
             {
                 Point? userLocation = null;
                 var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
+                int day = DateTime.Today.GetDay();
 
                 if (businessSearchModel.latitude.HasValue && businessSearchModel.longitude.HasValue)
                 {
@@ -66,6 +67,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     return await context.Businesses
                         .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
                         .Include(x => x.galleries.Where(x => x.isProfilePhoto))
+                        .Include(x => x.workingInfos.Where(x => x.day == day))
                         .Where(x => x.isActive == true && x.verified == true)
                         .Where(x => businessSearchModel.city.IsNotNullOrEmpty() ? x.city.Equals(businessSearchModel.city) : x.city != null)
                         .Select(x => new BusinessListModel
@@ -80,7 +82,8 @@ namespace CareGardenApiV1.Repository.Concrete
                             distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0,
                             isFeatured = x.isFeatured,
                             hasPromotion = x.hasPromotion,
-                            isOpen = true
+                            officialDayAvailable = x.officialHolidayAvailable,
+                            workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault(x => x.day == day) : null
                         })
                         .OrderByDescending(x => x.averageRating)
                         .ThenBy(x => x.distance)
@@ -93,6 +96,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 return await context.Businesses
                     .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
                     .Include(x => x.galleries.Where(x => x.isProfilePhoto))
+                    .Include(x => x.workingInfos.Where(x => x.day == day))
                     .Where(x => x.isActive == true && x.verified == true)
                     .Where(x => businessSearchModel.city.IsNotNullOrEmpty() ? x.city.Equals(businessSearchModel.city) : x.city != null)
                     .Select(x => new BusinessListModel
@@ -107,7 +111,8 @@ namespace CareGardenApiV1.Repository.Concrete
                         distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0,
                         isFeatured = x.isFeatured,
                         hasPromotion = x.hasPromotion,
-                        isOpen = true
+                        officialDayAvailable = x.officialHolidayAvailable,
+                        workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault(x => x.day == day) : null
                     })
                     .OrderByDescending(x => x.averageRating)
                     .ThenBy(x => x.distance)
@@ -130,6 +135,7 @@ namespace CareGardenApiV1.Repository.Concrete
             using (var context = new CareGardenApiDbContext())
             {
                 Point? userLocation = null;
+                int day = DateTime.Today.GetDay();
                 var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
 
                 if (businessSearchModel.latitude.HasValue && businessSearchModel.longitude.HasValue)
@@ -143,6 +149,7 @@ namespace CareGardenApiV1.Repository.Concrete
                         .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
                         .Include(x => x.galleries.Where(x => x.isProfilePhoto))
                         .Include(x => x.favorites.Where(x => x.userId == businessSearchModel.userId))
+                        .Include(x => x.workingInfos.Where(x => x.day == day))
                         .Where(x => x.isActive == true && x.verified == true && x.favorites.Any(x => x.userId == businessSearchModel.userId))
                         .Select(x => new BusinessListModel
                         {
@@ -156,7 +163,8 @@ namespace CareGardenApiV1.Repository.Concrete
                             distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0,
                             isFeatured = x.isFeatured,
                             hasPromotion = x.hasPromotion,
-                            isOpen = true
+                            officialDayAvailable = x.officialHolidayAvailable,
+                            workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault(x => x.day == day) : null
                         })
                         .OrderBy(x => x.distance)
                         .ThenByDescending(x => x.averageRating)
@@ -170,6 +178,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
                     .Include(x => x.galleries.Where(x => x.isProfilePhoto))
                     .Include(x => x.favorites.Where(x => x.userId == businessSearchModel.userId))
+                    .Include(x => x.workingInfos.Where(x => x.day == day))
                     .Where(x => x.isActive == true && x.verified == true && x.favorites.Any(x => x.userId == businessSearchModel.userId))
                     .Select(x => new BusinessListModel
                     {
@@ -183,7 +192,8 @@ namespace CareGardenApiV1.Repository.Concrete
                         distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0,
                         isFeatured = x.isFeatured,
                         hasPromotion = x.hasPromotion,
-                        isOpen = true
+                        officialDayAvailable = x.officialHolidayAvailable,
+                        workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault(x => x.day == day) : null
                     })
                     .OrderBy(x => x.distance)
                     .ThenByDescending(x => x.averageRating)
@@ -197,6 +207,7 @@ namespace CareGardenApiV1.Repository.Concrete
             using (var context = new CareGardenApiDbContext())
             {
                 Point? userLocation = null;
+                int day = DateTime.Today.GetDay();
                 var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
 
                 if (businessSearchModel.latitude.HasValue && businessSearchModel.longitude.HasValue)
@@ -210,6 +221,7 @@ namespace CareGardenApiV1.Repository.Concrete
                         .AsNoTracking()
                         .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
                         .Include(x => x.galleries.Where(x => x.isProfilePhoto))
+                        .Include(x => x.workingInfos.Where(x => x.day == day))
                         .Where(x => x.isActive == true && x.verified == true)
                         .Select(x => new BusinessListModel
                         {
@@ -223,7 +235,8 @@ namespace CareGardenApiV1.Repository.Concrete
                             distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0,
                             isFeatured = x.isFeatured,
                             hasPromotion = x.hasPromotion,
-                            isOpen = true
+                            officialDayAvailable = x.officialHolidayAvailable,
+                            workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault(x => x.day == day) : null
                         })
                         .OrderBy(x => x.distance)
                         .ThenByDescending(x => x.averageRating)
@@ -236,6 +249,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     .AsNoTracking()
                     .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
                     .Include(x => x.galleries.Where(x => x.isProfilePhoto))
+                    .Include(x => x.workingInfos.Where(x => x.day == day))
                     .Where(x => x.isActive == true && x.verified == true)
                     .Select(x => new BusinessListModel
                     {
@@ -249,7 +263,8 @@ namespace CareGardenApiV1.Repository.Concrete
                         distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0,
                         isFeatured = x.isFeatured,
                         hasPromotion = x.hasPromotion,
-                        isOpen = true
+                        officialDayAvailable = x.officialHolidayAvailable,
+                        workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault(x => x.day == day) : null
                     })
                     .OrderBy(x => x.distance)
                     .ThenByDescending(x => x.averageRating)

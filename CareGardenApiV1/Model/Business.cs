@@ -60,22 +60,16 @@ namespace CareGardenApiV1.Model
         public double longitude { get; set; }
 
         [JsonIgnore]
+        [Column(TypeName = "geometry (point)")]
         public Point? location { get; set; }
+
 
         public DateTime? createDate { get; set; }
         public DateTime? updateDate { get; set; }
         public WorkingGenderType workingGenderType { get; set; }
-        public WorkingDayType workingDayType { get; set; }
-
-        [MaxLength(5)]
-        public string? workingStartHour { get; set; }
-
-        [MaxLength(5)]
-        public string? workingEndHour { get; set; }
-
+        public bool officialHolidayAvailable { get; set; }
         public int appointmentTimeInterval { get; set; }
         public int appointmentPeopleCount { get; set; }
-        public bool officialHolidayAvailable { get; set; }
         public bool isActive { get; set; }
         public bool verified { get; set; }
         public int discountRate { get; set; }

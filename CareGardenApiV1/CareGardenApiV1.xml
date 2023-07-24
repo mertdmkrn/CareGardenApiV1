@@ -93,7 +93,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessController.SaveWorkingInfo(CareGardenApiV1.Model.Business)">
+        <member name="M:CareGardenApiV1.Controller.BusinessController.SaveWorkingInfo(CareGardenApiV1.Model.RequestModel.BusinessWorkInfoModel)">
              <summary>
              Save Business Working Info
              </summary>
@@ -101,13 +101,51 @@
              **Sample request body:**
             
                  { 
-                    "workingGenderType" : 1,
-                    "workingDayType" : 2,
-                    "workingStartHour": "09:00",
-                    "workingEndHour": "21:00",
-                    "appointmentTimeInterval": 30,
-                    "appointmentPeopleCount": 5,
-                    "officialHolidayAvailable": true
+                    "businessWorkingInfos" : [
+                         {
+                             "day" : 1,
+                             "startHour" : "09:00",
+                             "endHour" : "21:00",
+                             "isOffDay" : false
+                         },
+                         {
+                             "day" : 2,
+                             "startHour" : "09:00",
+                             "endHour" : "21:00",
+                             "isOffDay" : false
+                         },
+                         {
+                             "day" : 3,
+                             "startHour" : "09:00",
+                             "endHour" : "21:00",
+                             "isOffDay" : false
+                         },
+                         {
+                             "day" : 4,
+                             "startHour" : "09:00",
+                             "endHour" : "21:00",
+                             "isOffDay" : false
+                         },
+                         {
+                             "day" : 5,
+                             "startHour" : "09:00",
+                             "endHour" : "21:00",
+                             "isOffDay" : false
+                         },
+                         {
+                             "day" : 6,
+                             "startHour" : "09:00",
+                             "endHour" : "13:00",
+                             "isOffDay" : false
+                         },
+                         {
+                             "day" : 7,
+                             "isOffDay" : true
+                         }
+                     ],
+                    "appointmentTimeInterval" : 30,
+                    "appointmentPeopleCount" : 5,
+                    "officialHolidayAvailable" : true
                  }
             
              </remarks>
@@ -686,6 +724,30 @@
             <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.CareGardenV9.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV10">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV10.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV10.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV10.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV11">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV11.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV11.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV11.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:CareGardenApiV1.Resource.Resource">

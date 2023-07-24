@@ -9,6 +9,7 @@ using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Service.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NetTopologySuite.Geometries;
 using RestSharp;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
@@ -94,7 +95,7 @@ namespace CareGardenApiV1.Controller
             try
             {
                 var user = await HelperMethods.GetSessionUserResponseModel(Request, _userService);
-                
+
                 if (user == null)
                 {
                     response.HasError = true;
@@ -243,6 +244,7 @@ namespace CareGardenApiV1.Controller
 
                 response.Data = await _businessService.GetBusinessByPopularAsync(businessSearchModel);
                 response.Data.ToList().ConvertAll(x => x.distance = Math.Round(x.distance, 1));
+                response.Data.ToList().ConvertAll(x => x.isOpen = HelperMethods.GetBusinessOpen(x.workingInfo, x.officialDayAvailable));
 
                 return Ok(response);
             }
@@ -281,6 +283,7 @@ namespace CareGardenApiV1.Controller
 
                 response.Data = await _businessService.GetBusinessByUserFavorites(businessSearchModel);
                 response.Data.ToList().ConvertAll(x => x.distance = Math.Round(x.distance, 1));
+                response.Data.ToList().ConvertAll(x => x.isOpen = HelperMethods.GetBusinessOpen(x.workingInfo, x.officialDayAvailable));
 
 
                 return Ok(response);
@@ -324,6 +327,7 @@ namespace CareGardenApiV1.Controller
 
                 response.Data = await _businessService.GetBusinessNearByDistanceAsync(businessSearchModel);
                 response.Data.ToList().ConvertAll(x => x.distance = Math.Round(x.distance, 1));
+                response.Data.ToList().ConvertAll(x => x.isOpen = HelperMethods.GetBusinessOpen(x.workingInfo, x.officialDayAvailable));
 
                 return Ok(response);
             }

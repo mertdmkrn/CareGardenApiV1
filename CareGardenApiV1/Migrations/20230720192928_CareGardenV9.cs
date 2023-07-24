@@ -18,7 +18,7 @@ namespace CareGardenApiV1.Migrations
                 nullable: false,
                 defaultValue: 0.0);
 
-            migrationBuilder.AddColumn<Point>(
+            migrationBuilder.AddColumn<Geometry>(
                 name: "location",
                 table: "User",
                 type: "geometry",

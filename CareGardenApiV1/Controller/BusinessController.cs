@@ -2,6 +2,7 @@
 using CareGardenApiV1.Handler.Concrete;
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
+using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Service.Concrete;
@@ -306,31 +307,85 @@ namespace CareGardenApiV1.Controller
         /// **Sample request body:**
         ///
         ///     { 
-        ///        "workingGenderType" : 1,
-        ///        "workingDayType" : 2,
-        ///        "workingStartHour": "09:00",
-        ///        "workingEndHour": "21:00",
-        ///        "appointmentTimeInterval": 30,
-        ///        "appointmentPeopleCount": 5,
-        ///        "officialHolidayAvailable": true
+        ///        "businessWorkingInfos" : [
+        ///             {
+        ///                 "day" : 1,
+        ///                 "startHour" : "09:00",
+        ///                 "endHour" : "21:00",
+        ///                 "isOffDay" : false
+        ///             },
+        ///             {
+        ///                 "day" : 2,
+        ///                 "startHour" : "09:00",
+        ///                 "endHour" : "21:00",
+        ///                 "isOffDay" : false
+        ///             },
+        ///             {
+        ///                 "day" : 3,
+        ///                 "startHour" : "09:00",
+        ///                 "endHour" : "21:00",
+        ///                 "isOffDay" : false
+        ///             },
+        ///             {
+        ///                 "day" : 4,
+        ///                 "startHour" : "09:00",
+        ///                 "endHour" : "21:00",
+        ///                 "isOffDay" : false
+        ///             },
+        ///             {
+        ///                 "day" : 5,
+        ///                 "startHour" : "09:00",
+        ///                 "endHour" : "21:00",
+        ///                 "isOffDay" : false
+        ///             },
+        ///             {
+        ///                 "day" : 6,
+        ///                 "startHour" : "09:00",
+        ///                 "endHour" : "13:00",
+        ///                 "isOffDay" : false
+        ///             },
+        ///             {
+        ///                 "day" : 7,
+        ///                 "isOffDay" : true
+        ///             }
+        ///         ],
+        ///        "appointmentTimeInterval" : 30,
+        ///        "appointmentPeopleCount" : 5,
+        ///        "officialHolidayAvailable" : true
         ///     }
         ///
         /// </remarks>
         /// <returns></returns>
         [HttpPost]
         [Route("business/saveworkinginfo")]
-        public async Task<IActionResult> SaveWorkingInfo(Business updateBusiness)
+        public async Task<IActionResult> SaveWorkingInfo(BusinessWorkInfoModel businessWorkInfoModel)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
-                if (updateBusiness == null)
+                if (businessWorkInfoModel.businessWorkingInfos.IsNullOrEmpty())
                 {
                     response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("updateBusiness", Resource.Resource.BuAlaniBosBirakmayiniz));
-                    response.Message = Resource.Resource.BuAlaniBosBirakmayiniz;
+                    response.ValidationErrors.Add(new ValidationError("businessWorkingInfos", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if(businessWorkInfoModel.appointmentPeopleCount == 0)
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("appointmentPeopleCount", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (businessWorkInfoModel.appointmentTimeInterval == 0)
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("appointmentTimeInterval", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (response.HasError)
+                {
+                    response.Message = Resource.Resource.KayitSilinemedi;
                     return Ok(response);
                 }
 
@@ -342,50 +397,16 @@ namespace CareGardenApiV1.Controller
                     response.Message = Resource.Resource.SirketBulunamadi;
                     return Ok(response);
                 }
-                
-                business.workingGenderType = updateBusiness.workingGenderType;
-                business.workingDayType = updateBusiness.workingDayType;
-                business.workingStartHour = updateBusiness.workingStartHour;
-                business.workingEndHour = updateBusiness.workingEndHour;
-                business.appointmentTimeInterval = updateBusiness.appointmentTimeInterval;
-                business.appointmentPeopleCount = updateBusiness.appointmentPeopleCount;
-                business.officialHolidayAvailable = updateBusiness.officialHolidayAvailable;
+
+                business.officialHolidayAvailable = businessWorkInfoModel.officialDayAvailable;
+                business.appointmentPeopleCount = businessWorkInfoModel.appointmentPeopleCount;
+                business.appointmentTimeInterval = businessWorkInfoModel.appointmentTimeInterval;
 
                 await _businessService.UpdateBusinessAsync(business);
-                List<BusinessWorkingInfo> businessWorkingInfos = new List<BusinessWorkingInfo>();
 
-                for (int i = 0; i < 15; i++)
-                {
-                    BusinessWorkingInfo businessWorkingInfo = new BusinessWorkingInfo();
-
-                    DateTime date = DateTime.Today.AddDays(i);
-
-                    businessWorkingInfo.businessId = business.id;
-                    businessWorkingInfo.appointmentPeopleCount = business.appointmentPeopleCount;
-                    businessWorkingInfo.appointmentTimeInterval = business.appointmentTimeInterval;
-                    businessWorkingInfo.startHour = business.workingStartHour;
-                    businessWorkingInfo.endHour = business.workingEndHour;
-                    businessWorkingInfo.date = date;
-
-                    if (business.workingDayType == Enums.WorkingDayType.MondayFriday && (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday))
-                    {
-                        businessWorkingInfo.isOffDay = true;
-                    }
-                    else if (business.workingDayType == Enums.WorkingDayType.MondaySaturday && date.DayOfWeek == DayOfWeek.Sunday)
-                    {
-                        businessWorkingInfo.isOffDay = true;
-                    }
-
-                    if (business.officialHolidayAvailable && Constants.OfficialDays.Any(x => x.date.Equals(date)))
-                    {
-                        businessWorkingInfo.isOffDay = true;
-                    }
-
-                    businessWorkingInfos.Add(businessWorkingInfo);
-                }
-
+                businessWorkInfoModel.businessWorkingInfos.ConvertAll(x => x.businessId = business.id);
                 await _businessWorkingInfoService.DeleteBusinessWorkingInfoByBusinessIdAsync(business.id);
-                await _businessWorkingInfoService.SaveBusinessWorkingInfosAsync(businessWorkingInfos);
+                await _businessWorkingInfoService.SaveBusinessWorkingInfosAsync(businessWorkInfoModel.businessWorkingInfos);
 
                 response.Message = Resource.Resource.KayitBasarili;
                 response.Data = true;

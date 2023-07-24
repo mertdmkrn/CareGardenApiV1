@@ -198,5 +198,51 @@ namespace CareGardenApiV1.Helpers
                 return null;
             }
         }
+
+        public static int GetDay(this DateTime date) 
+        { 
+            switch (date.DayOfWeek) {
+                
+                case DayOfWeek.Monday: return 1;
+                case DayOfWeek.Tuesday: return 2;
+                case DayOfWeek.Wednesday: return 3;
+                case DayOfWeek.Thursday: return 4;
+                case DayOfWeek.Friday: return 5;
+                case DayOfWeek.Saturday: return 6;
+                case DayOfWeek.Sunday: return 7;
+                default : return -1;
+            }
+        }
+
+        public static bool GetBusinessOpen(BusinessWorkingInfo workingInfo, bool officialDayAvailable)
+        {
+            var now = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, "Turkey Standard Time");
+            var today = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Today, "Turkey Standard Time");
+
+            if (workingInfo == null)
+                return true;
+
+            if (officialDayAvailable && Constants.OfficialDays.Any(x => x.date.Equals(today)))
+                return false;
+
+            if (workingInfo.isOffDay)
+                return false;
+
+            if (workingInfo.startHour.IsNullOrEmpty() || workingInfo.endHour.IsNullOrEmpty())
+                return false;
+
+            var startHour = workingInfo.startHour.Split(":")[0].ToInt();
+            var startMinute = workingInfo.startHour.Split(":")[1].ToInt();
+            var businessStartDate = new DateTime(today.Year, today.Month, today.Day, startHour, startMinute, 0);
+            
+            var endHour = workingInfo.endHour.Split(":")[0].ToInt();
+            var endMinute = workingInfo.endHour.Split(":")[1].ToInt();
+            var businessEndDate = new DateTime(today.Year, today.Month, today.Day, endHour, endMinute, 0);
+
+            if (now >= businessStartDate && now < businessEndDate)
+                return true;
+
+            return false;    
+        }
     }
 }

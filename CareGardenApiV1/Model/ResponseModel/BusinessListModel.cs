@@ -1,4 +1,4 @@
-﻿using static CareGardenApiV1.Helpers.Enums;
+﻿using System.Text.Json.Serialization;
 
 namespace CareGardenApiV1.Model.ResponseModel
 {
@@ -15,5 +15,11 @@ namespace CareGardenApiV1.Model.ResponseModel
         public bool isFeatured { get; set; }
         public bool hasPromotion { get; set; }
         public bool isOpen { get; set; }
+
+        [JsonIgnore]
+        public BusinessWorkingInfo workingInfo { get; set; }
+
+        [JsonIgnore]
+        public bool officialDayAvailable { get; set; }
     }
 }

@@ -17,6 +17,13 @@ using Microsoft.Extensions.FileProviders;
 using System.IO;
 using Serilog;
 using Serilog.Formatting.Compact;
+using Hangfire;
+using Hangfire.PostgreSql;
+using HangfireBasicAuthenticationFilter;
+using CareGardenApiV1.Hangfire;
+using System.Globalization;
+using System;
+using Npgsql;
 
 internal class Program
 {
@@ -24,7 +31,6 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         var currentPath = Path.Combine(AppContext.BaseDirectory.Replace("bin\\Debug\\net7.0\\", ""));
-
 
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Logger(lc => lc
@@ -74,6 +80,7 @@ internal class Program
             });
         });
 
+
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
                 options.TokenValidationParameters = new()
@@ -93,11 +100,28 @@ internal class Program
 
         configureInjection(builder);
 
-        var app = builder.Build();
 
+        builder.Services.AddHangfire(x => x.UsePostgreSqlStorage(builder.Configuration["ConnectionStrings:AWSHangfirePostgreSQL"]));
+        builder.Services.AddHangfireServer();
+
+        var app = builder.Build();
         app.UseSwagger();
         app.UseCors("corsapp");
         app.UseSwaggerUI();
+
+        app.UseHangfireDashboard("/hangfire", new DashboardOptions()
+        {
+            DashboardTitle = "Hangfire Dashboard",
+            Authorization = new[]{
+            new HangfireCustomBasicAuthenticationFilter{
+                User = builder.Configuration["HangfireSettings:UserName"],
+                Pass = builder.Configuration["HangfireSettings:Password"]
+            },
+        }
+        });
+
+        app.UseHangfireServer(new BackgroundJobServerOptions());
+        HangfireJobScheduler.ScheduleRecurringJob();
 
         string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"StaticFiles\UploadedFiles");
         if (!Directory.Exists(path))

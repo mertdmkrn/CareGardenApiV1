@@ -15,12 +15,21 @@ namespace CareGardenApiV1.Model
 
         public Guid? businessId { get; set; }
         public Guid? serviceId { get; set; }
+
+        public string? name { get; set; }
+
+        public string? spot { get; set; }   
+
+        public int minDuration { get; set; }
+
+        public int maxDuration { get; set; }
+
+        public double price { get; set; } 
         
         [JsonIgnore]
         public Business? business { get; set; }
 
         [JsonIgnore]
         public Services? service { get; set; }
-
     }
 }

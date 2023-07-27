@@ -360,7 +360,7 @@ namespace CareGardenApiV1.Controller
         [Route("user/update")]
         public async Task<IActionResult> Update([FromBody] User updateUser)
         {
-            ResponseModel<bool> response = new ResponseModel<bool>();
+            ResponseModel<UserResponseModel> response = new ResponseModel<UserResponseModel>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
@@ -411,7 +411,7 @@ namespace CareGardenApiV1.Controller
                 user.services = updateUser.services.TrimEnd(';');
 
                 await _userService.UpdateUserAsync(user);
-                response.Data = true;
+                response.Data = await _userService.GetUserResponseModelById(user.id);
                 response.Message = Resource.Resource.KayitBasarili;
 
                 return Ok(response);

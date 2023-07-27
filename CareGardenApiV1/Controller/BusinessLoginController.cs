@@ -7,6 +7,7 @@ using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Service.Concrete;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
@@ -161,14 +162,14 @@ namespace CareGardenApiV1.Controller
                 string mailMessage = HelperMethods.GetMailTemplate();
                 string content = string.Format(Resource.Resource.SifreYenilemeMailMesaji, confirmationCode);
 
-                await _mailHandler.SendEmailAsync(
-                        new MailRequest()
-                        {
-                            ToEmail = email,
-                            Subject = "CareGarden " + Resource.Resource.SifreYenileme,
-                            Body = mailMessage.Replace("{content}", content)
-                        }
-                );
+                var mailRequest = new MailRequest()
+                {
+                    ToEmail = email,
+                    Subject = "CareGarden " + Resource.Resource.SifreYenileme,
+                    Body = mailMessage.Replace("{content}", content)
+                };
+
+                BackgroundJob.Enqueue(() => _mailHandler.SendEmailAsync(mailRequest));
 
                 await _contirmationService.SaveConfirmationInfoAsync(email, confirmationCode.ToString());
 

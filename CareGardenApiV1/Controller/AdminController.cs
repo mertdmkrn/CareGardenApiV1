@@ -22,6 +22,7 @@ namespace CareGardenApiV1.Controller
 
         private IBusinessService _businessService;
         private IUserService _userService;
+        private IFaqService _faqService;
         private IFileHandler _fileHandler;
         private readonly IMailHandler _mailHandler;
         private readonly ILoggerHandler _loggerHandler;
@@ -30,6 +31,7 @@ namespace CareGardenApiV1.Controller
         {
             _businessService = new BusinessService();
             _userService = new UserService();
+            _faqService = new FaqService();
             _fileHandler = new FileHandler();
             _mailHandler = mailHandler;
             _loggerHandler = loggerHandler;
@@ -229,6 +231,219 @@ namespace CareGardenApiV1.Controller
 
                 return Ok(response);
 
+            }
+            catch (Exception ex)
+            {
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
+
+        /// <summary>
+        /// Save Faq
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "question" : "Biz Kimiz?",
+        ///        "questionEn": "Who Us?",
+        ///        "answer": "En iyisiyiz.",
+        ///        "answerEn": "We are the best.",
+        ///        "category": "Kayıt",
+        ///        "sortOrder": 1
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("admin/savefaq")]
+        public async Task<IActionResult> SaveFaq([FromBody] Faq faq)
+        {
+            ResponseModel<bool> response = new ResponseModel<bool>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                if (faq.question.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("question", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (faq.questionEn.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("questionEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (faq.answer.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("answer", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (faq.answerEn.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("answerEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (faq.category.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("category", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                var index = Constants.FaqCategories.IndexOf(faq.category);
+
+                if (response.HasError && index < 0)
+                {
+                    response.Message = Resource.Resource.KayitYapilamadi;
+                    return Ok(response);
+                }
+
+                faq.categoryEn = Constants.FaqEnCategories[index];
+
+                response.Data = await _faqService.SaveFaqAsync(faq);
+                response.Message = Resource.Resource.KayitBasarili;
+
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
+
+        /// <summary>
+        /// Update Faq
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "id": "00000000-0000-0000-0000-000000000000",
+        ///        "question": "Biz Kimiz?",
+        ///        "questionEn": "Who Us?",
+        ///        "answer": "En iyisiyiz.",
+        ///        "answerEn": "We are the best.",
+        ///        "category": "Kayıt",
+        ///        "sortOrder": 2
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("admin/updatefaq")]
+        public async Task<IActionResult> UpdateFaq([FromBody] Faq updateFaq)
+        {
+            ResponseModel<bool> response = new ResponseModel<bool>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                if (updateFaq.question.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("question", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (updateFaq.questionEn.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("questionEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (updateFaq.answer.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("answer", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (updateFaq.answerEn.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("answerEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (updateFaq.category.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("category", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                var index = Constants.FaqCategories.IndexOf(updateFaq.category);
+
+                if (response.HasError && index < 0)
+                {
+                    response.Message = Resource.Resource.GuncellemeYapilamadi;
+                    return Ok(response);
+                }
+
+                var faq = await _faqService.GetFaqByIdAsync(updateFaq.id);
+
+                faq.question = updateFaq.question;
+                faq.questionEn = updateFaq.questionEn;
+                faq.answer = updateFaq.answer;
+                faq.answerEn = updateFaq.answerEn;
+                faq.category = updateFaq.category;
+                faq.categoryEn = Constants.FaqEnCategories[index];
+                faq.sortOrder = updateFaq.sortOrder;
+
+                response.Data = await _faqService.UpdateFaqAsync(faq);
+                response.Message = Resource.Resource.KayitBasarili;
+
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
+
+        /// <summary>
+        /// Delete Faq
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("admin/deletefaq")]
+        public async Task<IActionResult> DeleteFaq([FromBody] string? id)
+        {
+            ResponseModel<bool> response = new ResponseModel<bool>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                if (id.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (!id.IsGuid())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                }
+
+                if (response.HasError)
+                {
+                    response.Message = Resource.Resource.KayitSilinemedi;
+                    return Ok(response);
+                }
+
+                response.Data = await _faqService.DeleteFaqAsync(id.ToGuid());
+                response.Message = Resource.Resource.KayitSilindi;
+
+                return Ok(response);
             }
             catch (Exception ex)
             {

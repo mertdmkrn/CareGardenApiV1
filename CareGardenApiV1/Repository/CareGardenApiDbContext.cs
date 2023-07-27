@@ -31,6 +31,6 @@ namespace CareGardenApiV1.Repository
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<PaymentInfo> PaymentInfos { get; set; }
         public DbSet<Services> Services { get; set; }
-
+        public DbSet<Faq> Faqs { get; set; }
     }
 }

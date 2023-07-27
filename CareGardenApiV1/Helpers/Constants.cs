@@ -129,6 +129,32 @@ namespace CareGardenApiV1.Helpers
             new OfficialDay("Cumhuriyet Bayramı", "Republic Day", "Çarşamba", new DateTime(2025, 10, 29))
         };
 
+        public static List<string> FaqEnCategories = new List<string>
+        {
+            "Register",
+            "Appointment",
+            "Cancellation",
+            "Reminder",
+            "Payments",
+            "Review",
+            "Account",
+            "Venues",
+            "Others"
+        };
+
+        public static List<string> FaqCategories = new List<string>
+        {
+            "Kayıt",
+            "Randevu",
+            "İptal",
+            "Hatırlatma",
+            "Ödemeler",
+            "İnceleme",
+            "Hesap",
+            "Mekanlar",
+            "Diğer"
+        };
+
         public static double DistanceValue = 160.9344;
     }
 }

@@ -1,0 +1,29 @@
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
+
+namespace CareGardenApiV1.Model
+{
+    [Table("Faq")]
+    public class Faq
+    {
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid id { get; set; }
+
+        [MaxLength(150)]
+        public string? question { get; set; }
+        [MaxLength(150)]
+        public string? questionEn { get; set; }
+      
+        public string? answer { get; set; }
+        public string? answerEn { get; set; }
+
+        [MaxLength(30)]
+        public string? category { get; set; }
+
+        [MaxLength(30)]
+        public string? categoryEn { get; set; }
+        public int sortOrder { get; set; }
+    }
+}

@@ -27,6 +27,7 @@ namespace CareGardenApiV1.Controller
     {
         private IUserService _userService;
         private IBusinessService _businessService;
+        private IFaqService _faqService;
         private IFileHandler _fileHandler;
         private readonly IMailHandler _mailHandler;
         private readonly ILoggerHandler _loggerHandler;
@@ -35,6 +36,7 @@ namespace CareGardenApiV1.Controller
         {
             _userService = new UserService();
             _businessService = new BusinessService();
+            _faqService = new FaqService();
             _fileHandler = new FileHandler();
             _loggerHandler = loggerHandler;
             _mailHandler = mailHandler;
@@ -673,6 +675,38 @@ namespace CareGardenApiV1.Controller
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message = Resource.Resource.GuncellemeYapilamadi + " Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
+
+
+        /// <summary>
+        /// Get Faqs
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("user/getfaqs")]
+        public async Task<IActionResult> GetFaqs()
+        {
+            var culture = Request.Headers["Language"].ToString().IsNull("en");
+            ResponseModel<FaqResponseModel> response = new ResponseModel<FaqResponseModel>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(culture);
+
+            try
+            {
+                var fagResponseModel = new FaqResponseModel();
+
+                fagResponseModel.faqs = await _faqService.GetFaqsAsync();
+                fagResponseModel.categories = fagResponseModel.faqs.Select(x => culture == "en" ? x.categoryEn : x.category).ToList();
+
+                response.Data = fagResponseModel;
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.HasError = true;
+                response.Message = "Exception => " + ex.Message;
                 return Ok(response);
             }
         }

@@ -43,6 +43,51 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.AdminController.SaveFaq(CareGardenApiV1.Model.Faq)">
+             <summary>
+             Save Faq
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "question" : "Biz Kimiz?",
+                    "questionEn": "Who Us?",
+                    "answer": "En iyisiyiz.",
+                    "answerEn": "We are the best.",
+                    "category": "Kayıt",
+                    "sortOrder": 1
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AdminController.UpdateFaq(CareGardenApiV1.Model.Faq)">
+             <summary>
+             Update Faq
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id": "00000000-0000-0000-0000-000000000000",
+                    "question": "Biz Kimiz?",
+                    "questionEn": "Who Us?",
+                    "answer": "En iyisiyiz.",
+                    "answerEn": "We are the best.",
+                    "category": "Kayıt",
+                    "sortOrder": 2
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AdminController.DeleteFaq(System.String)">
+            <summary>
+            Delete Faq
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessById(System.String)">
             <summary>
             Get Business By Id
@@ -532,7 +577,7 @@
         </member>
         <member name="M:CareGardenApiV1.Controller.UserController.ChangePassword(CareGardenApiV1.Model.RequestModel.PasswordChangeModel)">
              <summary>
-             Update User
+             User Change Password
              </summary>
              <remarks>
              **Sample request body:**
@@ -560,6 +605,12 @@
             
              </remarks>
              <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.GetFaqs">
+            <summary>
+            Get Faqs
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:CareGardenApiV1.Controller.UserLoginController.SendTelephoneConfirmationCode(System.String)">
             <summary>
@@ -771,6 +822,18 @@
             <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.CareGardenV11.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV12">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV12.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV12.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV12.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:CareGardenApiV1.Resource.Resource">

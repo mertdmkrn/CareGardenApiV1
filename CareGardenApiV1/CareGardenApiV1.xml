@@ -475,6 +475,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.SendFeedBack(CareGardenApiV1.Handler.Model.MailRequest)">
+            <summary>
+            User Send FeedBack
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.UserController.SetProfilePhoto(Microsoft.AspNetCore.Http.IFormFile)">
             <summary>
             User Set Profile Photo
@@ -514,10 +520,27 @@
             
                  { 
                     "fullName" : "Mert DEMİRKIRAN",
+                    "email" : "mertdmkrn37@gmail.com",
                     "birthDate": "1998-08-01",
                     "gender": 1,
                     "city": "İstanbul",
                     "services": "Make Up;Beauty Saloon"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.ChangePassword(CareGardenApiV1.Model.RequestModel.PasswordChangeModel)">
+             <summary>
+             Update User
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "currentPassword" : "12345678",
+                    "newPassword" : "87654321",
+                    "newRetryPassword": "87654321"
                  }
             
              </remarks>
@@ -796,6 +819,11 @@
               Looks up a localized string similar to Lütfen geçerli bir telefon numarası giriniz..
             </summary>
         </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.GeriBildirimGonderildi">
+            <summary>
+              Looks up a localized string similar to Thank you for your feedback..
+            </summary>
+        </member>
         <member name="P:CareGardenApiV1.Resource.Resource.GirdiginizMaileAitKullaniciBulunamadi">
             <summary>
               Looks up a localized string similar to Girdiğiniz maile ait kullanıcı bulunamadı..
@@ -844,6 +872,11 @@
         <member name="P:CareGardenApiV1.Resource.Resource.GuncellemeYapilamadi">
             <summary>
               Looks up a localized string similar to Güncelleme yapılamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.GuncelSifreniziDogruGiriniz">
+            <summary>
+              Looks up a localized string similar to Güncel şifrenizi doğru giriniz..
             </summary>
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.IdParametreHatasi">

@@ -15,5 +15,6 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<User> GetUserById(Guid id);
         Task<UserResponseModel> GetUserResponseModelById(Guid id);
         Task<bool> DeleteUserAsync(User user);
+        Task<List<string>> GetAdminEmailListAsync();
     }
 }

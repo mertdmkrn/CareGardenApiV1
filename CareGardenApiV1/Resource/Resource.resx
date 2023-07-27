@@ -135,6 +135,9 @@
   <data name="GecerliTelefonMesaji" xml:space="preserve">
     <value>Lütfen geçerli bir telefon numarası giriniz.</value>
   </data>
+  <data name="GeriBildirimGonderildi" xml:space="preserve">
+    <value>Thank you for your feedback.</value>
+  </data>
   <data name="GirdiginizMaileAitKullaniciBulunamadi" xml:space="preserve">
     <value>Girdiğiniz maile ait kullanıcı bulunamadı.</value>
   </data>
@@ -164,6 +167,9 @@
   </data>
   <data name="GuncellemeYapilamadi" xml:space="preserve">
     <value>Güncelleme yapılamadı.</value>
+  </data>
+  <data name="GuncelSifreniziDogruGiriniz" xml:space="preserve">
+    <value>Güncel şifrenizi doğru giriniz.</value>
   </data>
   <data name="IdParametreHatasi" xml:space="preserve">
     <value>Yapılan istekte geçerli bir id gönderilmedi.</value>

@@ -57,8 +57,14 @@ namespace CareGardenApiV1.Service.Concrete
         public async Task<User> GetUserByEmailAsync(string email)
         {
             return await _userRepository.GetUserByEmailAsync(email);
-        }        
-        
+        }
+
+        public async Task<List<string>> GetAdminEmailListAsync()
+        {
+            return await _userRepository.GetAdminEmailListAsync();
+        }
+
+
         public async Task<User> GetUserByTelephoneNumberAsync(string telephoneNumber)
         {
             return await _userRepository.GetUserByTelephoneNumberAsync(telephoneNumber);

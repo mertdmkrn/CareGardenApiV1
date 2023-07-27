@@ -1,5 +1,6 @@
 ﻿using CareGardenApiV1.Handler.Abstract;
 using CareGardenApiV1.Handler.Concrete;
+using CareGardenApiV1.Handler.Model;
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
@@ -7,6 +8,7 @@ using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Service.Concrete;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NetTopologySuite.Geometries;
@@ -26,14 +28,16 @@ namespace CareGardenApiV1.Controller
         private IUserService _userService;
         private IBusinessService _businessService;
         private IFileHandler _fileHandler;
+        private readonly IMailHandler _mailHandler;
         private readonly ILoggerHandler _loggerHandler;
 
-        public UserController(ILoggerHandler loggerHandler)
+        public UserController(IMailHandler mailHandler, ILoggerHandler loggerHandler)
         {
             _userService = new UserService();
             _businessService = new BusinessService();
             _fileHandler = new FileHandler();
             _loggerHandler = loggerHandler;
+            _mailHandler = mailHandler;
         }
 
         /// <summary>
@@ -115,6 +119,68 @@ namespace CareGardenApiV1.Controller
                 response.Message = "Exception => " + ex.Message;
                 return Ok(response);
             }
+        }
+        /// <summary>
+        /// User Send FeedBack
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("user/sendfeedback")]
+        public async Task<IActionResult> SendFeedBack([FromForm] MailRequest email)
+        {
+            ResponseModel<bool> response = new ResponseModel<bool>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                if (email.Subject.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("subject", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (email.Body.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("body", Resource.Resource.GecerliMailMesaji));
+                }
+
+                if (response.HasError)
+                {
+                    response.Message = Resource.Resource.OnayKoduGonderilemedi;
+                    return Ok(response);
+                }
+
+                var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
+
+                if (userId.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.Message = Resource.Resource.GirdiginizMaileAitKullaniciBulunamadi;
+                    return Ok(response);
+                }
+
+                var userName = HelperMethods.GetClaimInfo(Request, ClaimTypes.Name);
+                var userEmail = HelperMethods.GetClaimInfo(Request, ClaimTypes.Email);
+
+                email.Body = "<p>" + email.Body + "</p><p>Gönderen: " + userName + " - " + userEmail + "</p>";
+                email.ToEmailList = await _userService.GetAdminEmailListAsync();
+
+                await _mailHandler.SendEmailAsync(email);
+
+                response.Message = Resource.Resource.GeriBildirimGonderildi;
+                response.Data = true;
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _loggerHandler.LogMessage(ex);
+                response.HasError = true;
+                response.Message = Resource.Resource.OnayKoduGonderilemedi + " Exception => " + ex.Message;
+                return Ok(response);
+            }
+
         }
 
         /// <summary>
@@ -348,6 +414,7 @@ namespace CareGardenApiV1.Controller
         ///
         ///     { 
         ///        "fullName" : "Mert DEMİRKIRAN",
+        ///        "email" : "mertdmkrn37@gmail.com",
         ///        "birthDate": "1998-08-01",
         ///        "gender": 1,
         ///        "city": "İstanbul",
@@ -389,6 +456,12 @@ namespace CareGardenApiV1.Controller
                     response.ValidationErrors.Add(new ValidationError("fullName", Resource.Resource.GecerliBirIsimGiriniz));
                 }
 
+                if (!updateUser.email.IsNullOrEmpty() && !updateUser.email.IsValidEmail())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.GecerliMailMesaji));
+                }
+
                 if (response.HasError)
                 {
                     response.Message = Resource.Resource.GuncellemeYapilamadi;
@@ -404,6 +477,7 @@ namespace CareGardenApiV1.Controller
                     return Ok(response);
                 }
 
+                user.email = updateUser.email.IsNull(user.email);
                 user.fullName = updateUser.fullName;
                 user.birthDate = updateUser.birthDate;
                 user.gender = updateUser.gender;
@@ -412,6 +486,111 @@ namespace CareGardenApiV1.Controller
 
                 await _userService.UpdateUserAsync(user);
                 response.Data = await _userService.GetUserResponseModelById(user.id);
+                response.Message = Resource.Resource.KayitBasarili;
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _loggerHandler.LogMessage(ex);
+                response.HasError = true;
+                response.Message = Resource.Resource.GuncellemeYapilamadi + " Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
+
+        /// <summary>
+        /// User Change Password
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "currentPassword" : "12345678",
+        ///        "newPassword" : "87654321",
+        ///        "newRetryPassword": "87654321"
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("user/changepassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] PasswordChangeModel updateUser)
+        {
+            ResponseModel<bool> response = new ResponseModel<bool>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                if (updateUser.currentPassword.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("currentPassword", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (updateUser.newPassword.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("newPassword", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (updateUser.newRetryPassword.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("newRetryPassword", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (updateUser.currentPassword.IsNotNullOrEmpty() && !updateUser.currentPassword.Length.Between(8, 20))
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("currentPassword", Resource.Resource.Sifre8KarakterOlmali));
+                }
+
+                if (updateUser.newPassword.IsNotNullOrEmpty() && !updateUser.newPassword.Length.Between(8, 20))
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("newPassword", Resource.Resource.Sifre8KarakterOlmali));
+                }
+
+                if (updateUser.newRetryPassword.IsNotNullOrEmpty() && !updateUser.newRetryPassword.Length.Between(8, 20))
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("newRetryPassword", Resource.Resource.Sifre8KarakterOlmali));
+                }
+
+                if (!updateUser.newPassword.Equals(updateUser.newRetryPassword))
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("newPassword", Resource.Resource.SifrelerEsitOlmali));
+                    response.ValidationErrors.Add(new ValidationError("newRetryPassword", Resource.Resource.SifrelerEsitOlmali));
+                }
+
+                if (response.HasError)
+                {
+                    response.Message = Resource.Resource.GuncellemeYapilamadi;
+                    return Ok(response);
+                }
+
+                var user = await HelperMethods.GetSessionUser(Request, _userService);
+
+                if (user == null)
+                {
+                    response.HasError = true;
+                    response.Message = Resource.Resource.KullaniciBulunamadi;
+                    return Ok(response);
+                }
+
+                if (user.password != updateUser.currentPassword.HashString())
+                {
+                    response.HasError = true;
+                    response.Message = Resource.Resource.GuncelSifreniziDogruGiriniz;
+                    return Ok(response);
+                }
+
+                user.password = updateUser.newPassword;
+                await _userService.UpdateUserAsync(user);
+
+                response.Data = true;
                 response.Message = Resource.Resource.KayitBasarili;
 
                 return Ok(response);

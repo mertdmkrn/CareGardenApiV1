@@ -115,6 +115,15 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Thank you for your feedback..
+        /// </summary>
+        public static string GeriBildirimGonderildi {
+            get {
+                return ResourceManager.GetString("GeriBildirimGonderildi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Girdiğiniz maile ait kullanıcı bulunamadı..
         /// </summary>
         public static string GirdiginizMaileAitKullaniciBulunamadi {
@@ -201,6 +210,15 @@ namespace CareGardenApiV1.Resource {
         public static string GuncellemeYapilamadi {
             get {
                 return ResourceManager.GetString("GuncellemeYapilamadi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Güncel şifrenizi doğru giriniz..
+        /// </summary>
+        public static string GuncelSifreniziDogruGiriniz {
+            get {
+                return ResourceManager.GetString("GuncelSifreniziDogruGiriniz", resourceCulture);
             }
         }
         

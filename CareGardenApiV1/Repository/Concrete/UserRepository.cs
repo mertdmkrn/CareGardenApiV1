@@ -34,12 +34,13 @@ namespace CareGardenApiV1.Repository.Concrete
                 return await context.Users
                     .Include(x => x.favorites)
                     .Where(x => x.id == id)
-                    .Select(x => new UserResponseModel { 
+                    .Select(x => new UserResponseModel
+                    {
                         id = x.id,
                         fullName = x.fullName,
                         telephone = x.telephone,
                         email = x.email,
-                        city = x.city, 
+                        city = x.city,
                         imageUrl = x.imageUrl,
                         services = x.services,
                         gender = x.gender.ToString(),
@@ -122,8 +123,8 @@ namespace CareGardenApiV1.Repository.Concrete
                 return await context.Users
                     .FirstOrDefaultAsync(x => x.email.Equals(email));
             }
-        } 
-        
+        }
+
         public async Task<User> GetUserByTelephoneNumberAsync(string telephoneNumber)
         {
 
@@ -131,6 +132,18 @@ namespace CareGardenApiV1.Repository.Concrete
             {
                 return await context.Users
                     .FirstOrDefaultAsync(x => x.telephone.Equals(telephoneNumber));
+            }
+        }
+
+        public async Task<List<string>> GetAdminEmailListAsync()
+        {
+            using (var context = new CareGardenApiDbContext())
+            {
+                return await context.Users
+                    .Where(x => x.role == "Admin")
+                    .Select(x => x.email)
+                    .AsNoTracking()
+                    .ToListAsync();
             }
         }
     }

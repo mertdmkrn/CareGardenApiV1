@@ -165,7 +165,7 @@ namespace CareGardenApiV1.Controller
 
                 var mailRequest = new MailRequest()
                 {
-                    ToEmail = email,
+                    ToEmailList = new List<string> { email },
                     Subject = "CareGarden " + Resource.Resource.SifreYenileme,
                     Body = mailMessage.Replace("{content}", content)
                 };

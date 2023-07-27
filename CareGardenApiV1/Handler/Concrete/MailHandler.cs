@@ -19,7 +19,7 @@ namespace CareGardenApiV1.Handler.Concrete
         {
             var email = new MimeMessage();
             email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
-            email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
+            mailRequest.ToEmailList.ForEach(x => email.To.Add(MailboxAddress.Parse(x)));
             email.Subject = mailRequest.Subject;
             var builder = new BodyBuilder();
             if (mailRequest.Attachments != null)

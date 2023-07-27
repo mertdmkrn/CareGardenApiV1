@@ -185,7 +185,7 @@ namespace CareGardenApiV1.Controller
                 await _mailHandler.SendEmailAsync(
                     new MailRequest()
                     {
-                        ToEmail = user.email,
+                        ToEmailList = new List<string> { user.email },
                         Subject = "CG Admin' e Hoşgeldin",
                         Body = mailMessage.Replace("{content}", content)
                     }

@@ -135,6 +135,9 @@
   <data name="GecerliTelefonMesaji" xml:space="preserve">
     <value>Please enter valid phone number.</value>
   </data>
+  <data name="GeriBildirimGonderildi" xml:space="preserve">
+    <value>Thank you for your feedback.</value>
+  </data>
   <data name="GirdiginizMaileAitKullaniciBulunamadi" xml:space="preserve">
     <value>The user for the e-mail you entered could not be found.</value>
   </data>
@@ -164,6 +167,9 @@
   </data>
   <data name="GuncellemeYapilamadi" xml:space="preserve">
     <value>Failed to update.</value>
+  </data>
+  <data name="GuncelSifreniziDogruGiriniz" xml:space="preserve">
+    <value>Enter your current password correctly.</value>
   </data>
   <data name="IdParametreHatasi" xml:space="preserve">
     <value>A valid id was not sent in the request.</value>

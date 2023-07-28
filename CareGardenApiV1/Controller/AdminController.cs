@@ -503,7 +503,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("admin/getfaqcategories")]
-        public async Task<IActionResult> GetFaqCategories([FromBody] string? id)
+        public async Task<IActionResult> GetFaqCategories()
         {
             ResponseModel<List<string>> response = new ResponseModel<List<string>>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));

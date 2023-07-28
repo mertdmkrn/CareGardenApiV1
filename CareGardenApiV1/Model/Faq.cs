@@ -9,7 +9,7 @@ namespace CareGardenApiV1.Model
     public class Faq
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid id { get; set; }
+        public Guid id { get; set; } = Guid.Empty;
 
         [MaxLength(150)]
         public string? question { get; set; }

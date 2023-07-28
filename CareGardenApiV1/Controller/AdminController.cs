@@ -452,5 +452,92 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
         }
+
+        /// <summary>
+        /// Admin Get Faq
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("admin/getfaq")]
+        public async Task<IActionResult> GetFaq([FromBody] string? id)
+        {
+            ResponseModel<Faq> response = new ResponseModel<Faq>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                if (id.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (!id.IsGuid())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                }
+
+                if (response.HasError)
+                {
+                    response.Message = Resource.Resource.KayitBulunamadi;
+                    return Ok(response);
+                }
+
+                response.Data = await _faqService.GetFaqByIdAsync(id.ToGuid());
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
+
+
+        /// <summary>
+        /// Admin Get Faq Categories
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("admin/getfaqcategories")]
+        public async Task<IActionResult> GetFaqCategories([FromBody] string? id)
+        {
+            ResponseModel<List<string>> response = new ResponseModel<List<string>>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                if (id.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (!id.IsGuid())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                }
+
+                if (response.HasError)
+                {
+                    response.Message = Resource.Resource.KayitBulunamadi;
+                    return Ok(response);
+                }
+
+                response.Data = Constants.FaqCategories;
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
     }
 }

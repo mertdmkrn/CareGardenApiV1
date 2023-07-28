@@ -415,7 +415,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("admin/deletefaq")]
-        public async Task<IActionResult> DeleteFaq([FromBody] string? id)
+        public async Task<IActionResult> DeleteFaq([FromBody] string id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -459,7 +459,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("admin/getfaq")]
-        public async Task<IActionResult> GetFaq([FromBody] string? id)
+        public async Task<IActionResult> GetFaq([FromBody] string id)
         {
             ResponseModel<Faq> response = new ResponseModel<Faq>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -510,26 +510,7 @@ namespace CareGardenApiV1.Controller
 
             try
             {
-                if (id.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (!id.IsGuid())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                }
-
-                if (response.HasError)
-                {
-                    response.Message = Resource.Resource.KayitBulunamadi;
-                    return Ok(response);
-                }
-
                 response.Data = Constants.FaqCategories;
-
                 return Ok(response);
             }
             catch (Exception ex)

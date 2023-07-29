@@ -10,7 +10,8 @@
         public string imageUrl { get; set; }
         public HashSet<string> favoriteBusinessList { get; set; } = new HashSet<string>();
         public string services { get; set; }
-        public string gender { get; set; }
+        public int gender { get; set; }
+        public DateTime? birthDate { get; set; }
         public double latitude { get; set; }
         public double longitude { get; set; }
     }

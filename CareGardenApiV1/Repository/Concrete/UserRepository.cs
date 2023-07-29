@@ -43,7 +43,8 @@ namespace CareGardenApiV1.Repository.Concrete
                         city = x.city,
                         imageUrl = x.imageUrl,
                         services = x.services,
-                        gender = x.gender.ToString(),
+                        gender = (int)x.gender,
+                        birthDate = x.birthDate,
                         latitude = x.latitude.HasValue ? x.latitude.Value : 0,
                         longitude = x.longitude.HasValue ? x.longitude.Value : 0,
                         favoriteBusinessList = x.favorites.Count > 0 ? x.favorites.Select(x => x.businessId.ToString()).ToHashSet() : new HashSet<string>()

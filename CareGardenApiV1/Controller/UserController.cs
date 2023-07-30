@@ -706,7 +706,7 @@ namespace CareGardenApiV1.Controller
                 else
                 {
                     fagResponseModel.faqs = await _faqService.GetFaqsAsync();
-                    _memoryCache.Set("faqs", response.Data, new MemoryCacheEntryOptions
+                    _memoryCache.Set("faqs", fagResponseModel.faqs, new MemoryCacheEntryOptions
                     {
                         Priority = CacheItemPriority.Normal
                     });

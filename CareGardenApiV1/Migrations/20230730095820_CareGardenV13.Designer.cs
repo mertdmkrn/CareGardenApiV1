@@ -3,6 +3,7 @@ using System;
 using CareGardenApiV1.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CareGardenApiV1.Migrations
 {
     [DbContext(typeof(CareGardenApiDbContext))]
-    partial class CareGardenApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230730095820_CareGardenV13")]
+    partial class CareGardenV13
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -248,24 +251,31 @@ namespace CareGardenApiV1.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("fridayWorkHours")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("mondayWorkHours")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("saturdayWorkHours")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("sundayWorkHours")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("thursdayWorkHours")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("tuesdayWorkHours")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("wednesdayWorkHours")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("id");

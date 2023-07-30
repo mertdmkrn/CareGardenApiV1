@@ -53,6 +53,11 @@ namespace CareGardenApiV1.Service.Concrete
             return await _businessRepository.GetBusinessByUserFavorites(businessSearchModel);
         }
 
+        public async Task<BusinessDetailModel> GetBusinessDetailByIdAsync(Guid id)
+        {
+            return await _businessRepository.GetBusinessDetailByIdAsync(id);
+        }
+
         public async Task<IList<BusinessListModel>> GetBusinessNearByDistanceAsync(BusinessSearchModel businessSearchModel)
         {
             return await _businessRepository.GetBusinessNearByDistanceAsync(businessSearchModel);

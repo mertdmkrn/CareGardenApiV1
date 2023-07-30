@@ -8,6 +8,7 @@ using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Service.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Asn1.X500;
 using System;
@@ -24,10 +25,11 @@ namespace CareGardenApiV1.Controller
         private IUserService _userService;
         private IFaqService _faqService;
         private IFileHandler _fileHandler;
+        private IMemoryCache _memoryCache;
         private readonly IMailHandler _mailHandler;
         private readonly ILoggerHandler _loggerHandler;
 
-        public AdminController(IMailHandler mailHandler, ILoggerHandler loggerHandler)
+        public AdminController(IMailHandler mailHandler, ILoggerHandler loggerHandler, IMemoryCache memoryCache)
         {
             _businessService = new BusinessService();
             _userService = new UserService();
@@ -35,6 +37,7 @@ namespace CareGardenApiV1.Controller
             _fileHandler = new FileHandler();
             _mailHandler = mailHandler;
             _loggerHandler = loggerHandler;
+            _memoryCache = memoryCache;
         }
 
         /// <summary>
@@ -308,6 +311,7 @@ namespace CareGardenApiV1.Controller
 
                 response.Data = await _faqService.SaveFaqAsync(faq);
                 response.Message = Resource.Resource.KayitBasarili;
+                _memoryCache.Remove("faqs");
 
                 return Ok(response);
 
@@ -394,6 +398,7 @@ namespace CareGardenApiV1.Controller
                 faq.category = updateFaq.category;
                 faq.categoryEn = Constants.FaqEnCategories[index];
                 faq.sortOrder = updateFaq.sortOrder;
+                _memoryCache.Remove("faqs");
 
                 response.Data = await _faqService.UpdateFaqAsync(faq);
                 response.Message = Resource.Resource.KayitBasarili;
@@ -442,6 +447,7 @@ namespace CareGardenApiV1.Controller
 
                 response.Data = await _faqService.DeleteFaqAsync(id.ToGuid());
                 response.Message = Resource.Resource.KayitSilindi;
+                _memoryCache.Remove("faqs");
 
                 return Ok(response);
             }

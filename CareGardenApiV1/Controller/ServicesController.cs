@@ -6,6 +6,7 @@ using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Service.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace CareGardenApiV1.Controller
 {
@@ -14,11 +15,14 @@ namespace CareGardenApiV1.Controller
     {
         private IServicesService _servicesService;
         private readonly ILoggerHandler _loggerHandler;
+        private IMemoryCache _memoryCache;
+        private const string cacheKey = "services";
 
-        public ServicesController(ILoggerHandler loggerHandler)
+        public ServicesController(ILoggerHandler loggerHandler, IMemoryCache memoryCache)
         {
             _servicesService = new ServicesService();
             _loggerHandler = loggerHandler;
+            _memoryCache = memoryCache;
         }
 
         /// <summary>
@@ -34,9 +38,20 @@ namespace CareGardenApiV1.Controller
 
             try
             {
-                response.Data = await _servicesService.GetServicesAsync();
-                return Ok(response);
+                if (_memoryCache.TryGetValue(cacheKey, out object list))
+                {
+                    response.Data = (List<Services>)list;
+                }
+                else
+                {
+                    response.Data = await _servicesService.GetServicesAsync();
+                    _memoryCache.Set(cacheKey, response.Data, new MemoryCacheEntryOptions
+                    {
+                        Priority = CacheItemPriority.Normal
+                    });
+                }
 
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -242,6 +257,7 @@ namespace CareGardenApiV1.Controller
 
                 Services service = await _servicesService.SaveServiceAsync(services);
                 response.Data = true;
+                _memoryCache.Remove(cacheKey);
 
                 return Ok(response);
             }
@@ -334,6 +350,7 @@ namespace CareGardenApiV1.Controller
 
                 services = await _servicesService.UpdateServiceAsync(services);
                 response.Data = true;
+                _memoryCache.Remove(cacheKey);
 
                 return Ok(response);
             }
@@ -382,6 +399,7 @@ namespace CareGardenApiV1.Controller
                 }
 
                 response.Data = await _servicesService.DeleteServiceAsync(services);
+                _memoryCache.Remove(cacheKey);
 
                 return Ok(response);
             }

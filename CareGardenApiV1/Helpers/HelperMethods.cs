@@ -225,24 +225,45 @@ namespace CareGardenApiV1.Helpers
             if (officialDayAvailable && Constants.OfficialDays.Any(x => x.date.Equals(today)))
                 return false;
 
-            if (workingInfo.isOffDay)
+            var workHours = workingInfo.GetBusinessWorkInfoHours(today);
+
+            if (workHours.IsNullOrEmpty())
                 return false;
 
-            if (workingInfo.startHour.IsNullOrEmpty() || workingInfo.endHour.IsNullOrEmpty())
+            var startHours = workHours.Split('-').FirstOrDefault();
+            var endHours = workHours.Split('-').LastOrDefault();
+
+            if (startHours.IsNullOrEmpty() || endHours.IsNullOrEmpty())
                 return false;
 
-            var startHour = workingInfo.startHour.Split(":")[0].ToInt();
-            var startMinute = workingInfo.startHour.Split(":")[1].ToInt();
+            var startHour = startHours.Split(":")[0].ToInt();
+            var startMinute = startHours.Split(":")[1].ToInt();
             var businessStartDate = new DateTime(today.Year, today.Month, today.Day, startHour, startMinute, 0);
             
-            var endHour = workingInfo.endHour.Split(":")[0].ToInt();
-            var endMinute = workingInfo.endHour.Split(":")[1].ToInt();
+            var endHour = endHours.Split(":")[0].ToInt();
+            var endMinute = endHours.Split(":")[1].ToInt();
             var businessEndDate = new DateTime(today.Year, today.Month, today.Day, endHour, endMinute, 0);
 
             if (now >= businessStartDate && now < businessEndDate)
                 return true;
 
             return false;    
+        }
+
+        public static string GetBusinessWorkInfoHours(this BusinessWorkingInfo workingInfo, DateTime date)
+        {
+            switch (date.DayOfWeek)
+            {
+
+                case DayOfWeek.Monday: return workingInfo.mondayWorkHours;
+                case DayOfWeek.Tuesday: return workingInfo.tuesdayWorkHours;
+                case DayOfWeek.Wednesday: return workingInfo.wednesdayWorkHours;
+                case DayOfWeek.Thursday: return workingInfo.thursdayWorkHours;
+                case DayOfWeek.Friday: return workingInfo.fridayWorkHours;
+                case DayOfWeek.Saturday: return workingInfo.saturdayWorkHours;
+                case DayOfWeek.Sunday: return workingInfo.sundayWorkHours;
+                default: return null;
+            }
         }
     }
 }

@@ -7,6 +7,7 @@ using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Service.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -18,12 +19,15 @@ namespace CareGardenApiV1.Controller
         private ICampaignService _campaingService;
         private IFileHandler _fileHandler;
         private readonly ILoggerHandler _loggerHandler;
+        private IMemoryCache _memoryCache;
+        private const string cacheKey = "campaigns";
 
-        public CampaignController(ILoggerHandler loggerHandler)
+        public CampaignController(ILoggerHandler loggerHandler, IMemoryCache memoryCache)
         {
             _campaingService = new CampaignService();
             _fileHandler = new FileHandler();
             _loggerHandler = loggerHandler;
+            _memoryCache = memoryCache;
         }
 
         /// <summary>
@@ -39,7 +43,19 @@ namespace CareGardenApiV1.Controller
 
             try
             {
-                response.Data = await _campaingService.GetCampaignsAsync();
+                if (_memoryCache.TryGetValue(cacheKey, out object list))
+                {
+                    response.Data = (List<Campaign>)list;
+                }
+                else
+                {
+                    response.Data = await _campaingService.GetCampaignsAsync();
+                    _memoryCache.Set(cacheKey, response.Data, new MemoryCacheEntryOptions
+                    {
+                        Priority = CacheItemPriority.Normal
+                    });
+                }
+
                 return Ok(response);
 
             }
@@ -228,6 +244,7 @@ namespace CareGardenApiV1.Controller
 
                 campaign = await _campaingService.SaveCampaignAsync(campaign);
                 response.Data = campaign;
+                _memoryCache.Remove(cacheKey);
 
                 return Ok(response);
             }
@@ -303,6 +320,7 @@ namespace CareGardenApiV1.Controller
 
                 campaign = await _campaingService.UpdateCampaignAsync(campaign);
                 response.Data = campaign;
+                _memoryCache.Remove(cacheKey);
 
                 return Ok(response);
             }
@@ -351,6 +369,7 @@ namespace CareGardenApiV1.Controller
                 }
 
                 response.Data = await _campaingService.DeleteCampaignAsync(campaign);
+                _memoryCache.Remove(cacheKey);
 
                 return Ok(response);
             }

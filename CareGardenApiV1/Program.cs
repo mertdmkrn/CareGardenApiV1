@@ -24,6 +24,7 @@ using CareGardenApiV1.Hangfire;
 using System.Globalization;
 using System;
 using Npgsql;
+using CareGardenApiV1.Middleware;
 
 internal class Program
 {
@@ -44,6 +45,7 @@ internal class Program
         builder.Host.UseSerilog();
 
         builder.Services.AddControllers();
+        builder.Services.AddMemoryCache();
         builder.Services.AddEndpointsApiExplorer();
 
         builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
@@ -96,10 +98,10 @@ internal class Program
                 }
         );
 
+        builder.Services.AddTransient<ExceptionMiddleware>();
         builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
         configureInjection(builder);
-
 
         builder.Services.AddHangfire(x => x.UsePostgreSqlStorage(builder.Configuration["ConnectionStrings:AWSHangfirePostgreSQL"]));
         builder.Services.AddHangfireServer();
@@ -130,6 +132,7 @@ internal class Program
         }
 
         app.UseStaticFiles();
+        app.UseMiddleware<ExceptionMiddleware>();
 
         app.UseAuthentication();
         app.UseAuthorization();

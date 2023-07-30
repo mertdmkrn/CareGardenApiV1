@@ -3,11 +3,13 @@ using CareGardenApiV1.Handler.Concrete;
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
+using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Service.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
@@ -22,16 +24,20 @@ namespace CareGardenApiV1.Controller
         private IBusinessService _businessService;
         private IBusinessWorkingInfoService _businessWorkingInfoService;
         private IBusinessGalleryService _businessGalleryService;
+        private IServicesService _servicesService;
+        private IMemoryCache _memoryCache;
         private IFileHandler _fileHandler;
         private readonly ILoggerHandler _loggerHandler;
 
-        public BusinessController(ILoggerHandler loggerHandler)
+        public BusinessController(ILoggerHandler loggerHandler, IMemoryCache memoryCache)
         {
             _businessService = new BusinessService();
             _businessGalleryService = new BusinessGalleryService();
             _businessWorkingInfoService = new BusinessWorkingInfoService();
+            _servicesService = new ServicesService();
             _fileHandler = new FileHandler();
             _loggerHandler = loggerHandler;
+            _memoryCache = memoryCache;
         }
 
         /// <summary>
@@ -117,6 +123,77 @@ namespace CareGardenApiV1.Controller
                 response.Message += "Exception => " + ex.Message;
                 return Ok(response);
             }
+        }
+
+
+        /// <summary>
+        /// Get Business Detail By Id
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("business/getdetailbyid")]
+        public async Task<IActionResult> GetDetailById([FromBody] string id)
+        {
+            var culture = Request.Headers["Language"].ToString().IsNull("en");
+            ResponseModel<BusinessDetailModel> response = new ResponseModel<BusinessDetailModel>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(culture);
+
+            try
+            {
+                if (!id.IsGuid())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                    response.Message += Resource.Resource.IdParametreHatasi;
+                }
+
+                if (response.HasError)
+                    return Ok(response);
+
+                var businessDetail = await _businessService.GetBusinessDetailByIdAsync(id.ToGuid());
+                businessDetail.isOpen = HelperMethods.GetBusinessOpen(businessDetail.businessWorkingInfo, businessDetail.officialDayAvailable);
+                var services = new List<Services>();
+
+                if (_memoryCache.TryGetValue("services", out object list))
+                {
+                    services = (List<Services>)list;
+                }
+                else
+                {
+                    services = await _servicesService.GetServicesAsync();
+                    _memoryCache.Set("services", response.Data, new MemoryCacheEntryOptions
+                    {
+                        Priority = CacheItemPriority.Normal
+                    });
+                }
+
+                foreach (var items in businessDetail.businessServices.GroupBy(x => x.serviceId))
+                {
+                    BusinessServicesInfo businessServiceInfo = new BusinessServicesInfo();
+                    var service = services.FirstOrDefault(x => x.id == items.Key.Value);
+                    businessServiceInfo.serviceName = service != null ? (culture == "en" ? service.nameEn : service.name) : "";
+                    
+                    foreach (var item in items)
+                    {
+                        businessServiceInfo.businessServices.Add(item);
+                    }
+
+                    businessDetail.businessServicesInfos.Add(businessServiceInfo);
+                }
+
+                response.Data = businessDetail;
+
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+                _loggerHandler.LogMessage(ex);
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
+                return Ok(response);
+            }
+
         }
 
         /// <summary>
@@ -307,48 +384,15 @@ namespace CareGardenApiV1.Controller
         /// **Sample request body:**
         ///
         ///     { 
-        ///        "businessWorkingInfos" : [
-        ///             {
-        ///                 "day" : 1,
-        ///                 "startHour" : "09:00",
-        ///                 "endHour" : "21:00",
-        ///                 "isOffDay" : false
-        ///             },
-        ///             {
-        ///                 "day" : 2,
-        ///                 "startHour" : "09:00",
-        ///                 "endHour" : "21:00",
-        ///                 "isOffDay" : false
-        ///             },
-        ///             {
-        ///                 "day" : 3,
-        ///                 "startHour" : "09:00",
-        ///                 "endHour" : "21:00",
-        ///                 "isOffDay" : false
-        ///             },
-        ///             {
-        ///                 "day" : 4,
-        ///                 "startHour" : "09:00",
-        ///                 "endHour" : "21:00",
-        ///                 "isOffDay" : false
-        ///             },
-        ///             {
-        ///                 "day" : 5,
-        ///                 "startHour" : "09:00",
-        ///                 "endHour" : "21:00",
-        ///                 "isOffDay" : false
-        ///             },
-        ///             {
-        ///                 "day" : 6,
-        ///                 "startHour" : "09:00",
-        ///                 "endHour" : "13:00",
-        ///                 "isOffDay" : false
-        ///             },
-        ///             {
-        ///                 "day" : 7,
-        ///                 "isOffDay" : true
-        ///             }
-        ///         ],
+        ///        "businessWorkingInfo" : {
+        ///             "mondayWorkHours" : "09:00-21:00",
+        ///             "tuesdayWorkHours" : "09:00-21:00",
+        ///             "wednesdayWorkHours" : "09:00-21:00",
+        ///             "thursdayWorkHours" : "09:00-21:00",
+        ///             "fridayWorkHours" : "09:00-21:00",
+        ///             "saturdayWorkHours" : "09:00-13:00",
+        ///             "sundayWorkHours" : null
+        ///        },
         ///        "appointmentTimeInterval" : 30,
         ///        "appointmentPeopleCount" : 5,
         ///        "officialHolidayAvailable" : true
@@ -365,10 +409,10 @@ namespace CareGardenApiV1.Controller
 
             try
             {
-                if (businessWorkInfoModel.businessWorkingInfos.IsNullOrEmpty())
+                if (businessWorkInfoModel.businessWorkingInfo == null)
                 {
                     response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("businessWorkingInfos", Resource.Resource.BuAlaniBosBirakmayiniz));
+                    response.ValidationErrors.Add(new ValidationError("businessWorkingInfo", Resource.Resource.BuAlaniBosBirakmayiniz));
                 }
 
                 if(businessWorkInfoModel.appointmentPeopleCount == 0)
@@ -404,9 +448,9 @@ namespace CareGardenApiV1.Controller
 
                 await _businessService.UpdateBusinessAsync(business);
 
-                businessWorkInfoModel.businessWorkingInfos.ConvertAll(x => x.businessId = business.id);
+                businessWorkInfoModel.businessWorkingInfo.businessId = business.id;
                 await _businessWorkingInfoService.DeleteBusinessWorkingInfoByBusinessIdAsync(business.id);
-                await _businessWorkingInfoService.SaveBusinessWorkingInfosAsync(businessWorkInfoModel.businessWorkingInfos);
+                await _businessWorkingInfoService.SaveBusinessWorkingInfoAsync(businessWorkInfoModel.businessWorkingInfo);
 
                 response.Message = Resource.Resource.KayitBasarili;
                 response.Data = true;

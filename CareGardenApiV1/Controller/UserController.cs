@@ -11,6 +11,7 @@ using CareGardenApiV1.Service.Concrete;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using NetTopologySuite.Geometries;
 using RestSharp;
 using System.Globalization;
@@ -29,10 +30,11 @@ namespace CareGardenApiV1.Controller
         private IBusinessService _businessService;
         private IFaqService _faqService;
         private IFileHandler _fileHandler;
+        private IMemoryCache _memoryCache;
         private readonly IMailHandler _mailHandler;
         private readonly ILoggerHandler _loggerHandler;
 
-        public UserController(IMailHandler mailHandler, ILoggerHandler loggerHandler)
+        public UserController(IMailHandler mailHandler, ILoggerHandler loggerHandler, IMemoryCache memoryCache)
         {
             _userService = new UserService();
             _businessService = new BusinessService();
@@ -40,6 +42,7 @@ namespace CareGardenApiV1.Controller
             _fileHandler = new FileHandler();
             _loggerHandler = loggerHandler;
             _mailHandler = mailHandler;
+            _memoryCache = memoryCache;
         }
 
         /// <summary>
@@ -696,7 +699,19 @@ namespace CareGardenApiV1.Controller
             {
                 var fagResponseModel = new FaqResponseModel();
 
-                fagResponseModel.faqs = await _faqService.GetFaqsAsync();
+                if (_memoryCache.TryGetValue("faqs", out object list))
+                {
+                    fagResponseModel.faqs = (List<Faq>)list;
+                }
+                else
+                {
+                    fagResponseModel.faqs = await _faqService.GetFaqsAsync();
+                    _memoryCache.Set("faqs", response.Data, new MemoryCacheEntryOptions
+                    {
+                        Priority = CacheItemPriority.Normal
+                    });
+                }
+
                 fagResponseModel.categories = fagResponseModel.faqs.Select(x => culture == "en" ? x.categoryEn : x.category).ToList();
 
                 response.Data = fagResponseModel;

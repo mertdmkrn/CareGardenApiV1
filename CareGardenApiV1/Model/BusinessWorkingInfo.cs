@@ -7,21 +7,19 @@ using System.Text.Json.Serialization;
 namespace CareGardenApiV1.Model
 {
     [Table("BusinessWorkingInfo")]
-    [Index(nameof(businessId), nameof(day))]
+    [Index(nameof(businessId))]
     public class BusinessWorkingInfo
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid id { get; set; }
 
-        public int day { get; set; }
-
-        [MaxLength(5)]
-        public string? startHour { get; set; }
-
-        [MaxLength(5)]
-        public string? endHour { get; set; }
-
-        public bool isOffDay { get; set; }
+        public string? mondayWorkHours { get; set; }
+        public string? tuesdayWorkHours { get; set; }
+        public string? wednesdayWorkHours { get; set; }
+        public string? thursdayWorkHours { get; set; }
+        public string? fridayWorkHours { get; set; }
+        public string? saturdayWorkHours { get; set; }
+        public string? sundayWorkHours { get; set; }
     
         public Guid? businessId { get; set; }
 

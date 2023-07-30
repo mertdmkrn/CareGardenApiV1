@@ -55,7 +55,6 @@ namespace CareGardenApiV1.Repository.Concrete
             {
                 Point? userLocation = null;
                 var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
-                int day = DateTime.Today.GetDay();
 
                 if (businessSearchModel.latitude.HasValue && businessSearchModel.longitude.HasValue)
                 {
@@ -67,7 +66,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     return await context.Businesses
                         .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
                         .Include(x => x.galleries.Where(x => x.isProfilePhoto))
-                        .Include(x => x.workingInfos.Where(x => x.day == day))
+                        .Include(x => x.workingInfos)
                         .Where(x => x.isActive == true && x.verified == true)
                         .Where(x => businessSearchModel.city.IsNotNullOrEmpty() ? x.city.Equals(businessSearchModel.city) : x.city != null)
                         .Select(x => new BusinessListModel
@@ -83,7 +82,7 @@ namespace CareGardenApiV1.Repository.Concrete
                             isFeatured = x.isFeatured,
                             hasPromotion = x.hasPromotion,
                             officialDayAvailable = x.officialHolidayAvailable,
-                            workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault(x => x.day == day) : null
+                            workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null
                         })
                         .OrderByDescending(x => x.averageRating)
                         .ThenBy(x => x.distance)
@@ -96,7 +95,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 return await context.Businesses
                     .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
                     .Include(x => x.galleries.Where(x => x.isProfilePhoto))
-                    .Include(x => x.workingInfos.Where(x => x.day == day))
+                    .Include(x => x.workingInfos)
                     .Where(x => x.isActive == true && x.verified == true)
                     .Where(x => businessSearchModel.city.IsNotNullOrEmpty() ? x.city.Equals(businessSearchModel.city) : x.city != null)
                     .Select(x => new BusinessListModel
@@ -112,7 +111,7 @@ namespace CareGardenApiV1.Repository.Concrete
                         isFeatured = x.isFeatured,
                         hasPromotion = x.hasPromotion,
                         officialDayAvailable = x.officialHolidayAvailable,
-                        workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault(x => x.day == day) : null
+                        workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null
                     })
                     .OrderByDescending(x => x.averageRating)
                     .ThenBy(x => x.distance)
@@ -135,7 +134,6 @@ namespace CareGardenApiV1.Repository.Concrete
             using (var context = new CareGardenApiDbContext())
             {
                 Point? userLocation = null;
-                int day = DateTime.Today.GetDay();
                 var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
 
                 if (businessSearchModel.latitude.HasValue && businessSearchModel.longitude.HasValue)
@@ -149,7 +147,7 @@ namespace CareGardenApiV1.Repository.Concrete
                         .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
                         .Include(x => x.galleries.Where(x => x.isProfilePhoto))
                         .Include(x => x.favorites.Where(x => x.userId == businessSearchModel.userId))
-                        .Include(x => x.workingInfos.Where(x => x.day == day))
+                        .Include(x => x.workingInfos)
                         .Where(x => x.isActive == true && x.verified == true && x.favorites.Any(x => x.userId == businessSearchModel.userId))
                         .Select(x => new BusinessListModel
                         {
@@ -164,7 +162,7 @@ namespace CareGardenApiV1.Repository.Concrete
                             isFeatured = x.isFeatured,
                             hasPromotion = x.hasPromotion,
                             officialDayAvailable = x.officialHolidayAvailable,
-                            workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault(x => x.day == day) : null
+                            workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null
                         })
                         .OrderBy(x => x.distance)
                         .ThenByDescending(x => x.averageRating)
@@ -178,7 +176,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
                     .Include(x => x.galleries.Where(x => x.isProfilePhoto))
                     .Include(x => x.favorites.Where(x => x.userId == businessSearchModel.userId))
-                    .Include(x => x.workingInfos.Where(x => x.day == day))
+                    .Include(x => x.workingInfos)
                     .Where(x => x.isActive == true && x.verified == true && x.favorites.Any(x => x.userId == businessSearchModel.userId))
                     .Select(x => new BusinessListModel
                     {
@@ -193,7 +191,7 @@ namespace CareGardenApiV1.Repository.Concrete
                         isFeatured = x.isFeatured,
                         hasPromotion = x.hasPromotion,
                         officialDayAvailable = x.officialHolidayAvailable,
-                        workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault(x => x.day == day) : null
+                        workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null
                     })
                     .OrderBy(x => x.distance)
                     .ThenByDescending(x => x.averageRating)
@@ -202,12 +200,46 @@ namespace CareGardenApiV1.Repository.Concrete
             }
         }
 
+        public async Task<BusinessDetailModel> GetBusinessDetailByIdAsync(Guid id)
+        {
+            using (var context = new CareGardenApiDbContext())
+            {
+                return await context.Businesses
+                    .Include(x => x.galleries)
+                    .Include(x => x.services)
+                    .Include(x => x.services)
+                    .Include(x => x.workingInfos)
+                    .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
+                    .Where(x => x.id == id)
+                    .Select(x => new BusinessDetailModel
+                    {
+                        id = x.id,
+                        name = x.name,
+                        address = x.address,
+                        telephone = x.telephone,
+                        description = x.description,
+                        descriptionEn = x.descriptionEn,
+                        workingGenderType = x.workingGenderType,
+                        latitude = x.latitude,
+                        longitude = x.longitude,
+                        discountRate = x.discountRate,
+                        officialDayAvailable = x.officialHolidayAvailable,
+                        averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
+                        countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
+                        businessWorkingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null,
+                        assets = x.galleries.ToList(),
+                        businessServices = x.services.ToList()
+                    })
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
+            }
+        }
+
         public async Task<IList<BusinessListModel>> GetBusinessNearByDistanceAsync(BusinessSearchModel businessSearchModel)
         {
             using (var context = new CareGardenApiDbContext())
             {
                 Point? userLocation = null;
-                int day = DateTime.Today.GetDay();
                 var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
 
                 if (businessSearchModel.latitude.HasValue && businessSearchModel.longitude.HasValue)
@@ -221,7 +253,7 @@ namespace CareGardenApiV1.Repository.Concrete
                         .AsNoTracking()
                         .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
                         .Include(x => x.galleries.Where(x => x.isProfilePhoto))
-                        .Include(x => x.workingInfos.Where(x => x.day == day))
+                        .Include(x => x.workingInfos)
                         .Where(x => x.isActive == true && x.verified == true)
                         .Select(x => new BusinessListModel
                         {
@@ -236,7 +268,7 @@ namespace CareGardenApiV1.Repository.Concrete
                             isFeatured = x.isFeatured,
                             hasPromotion = x.hasPromotion,
                             officialDayAvailable = x.officialHolidayAvailable,
-                            workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault(x => x.day == day) : null
+                            workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null
                         })
                         .OrderBy(x => x.distance)
                         .ThenByDescending(x => x.averageRating)
@@ -249,7 +281,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     .AsNoTracking()
                     .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
                     .Include(x => x.galleries.Where(x => x.isProfilePhoto))
-                    .Include(x => x.workingInfos.Where(x => x.day == day))
+                    .Include(x => x.workingInfos)
                     .Where(x => x.isActive == true && x.verified == true)
                     .Select(x => new BusinessListModel
                     {
@@ -264,7 +296,7 @@ namespace CareGardenApiV1.Repository.Concrete
                         isFeatured = x.isFeatured,
                         hasPromotion = x.hasPromotion,
                         officialDayAvailable = x.officialHolidayAvailable,
-                        workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault(x => x.day == day) : null
+                        workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null
                     })
                     .OrderBy(x => x.distance)
                     .ThenByDescending(x => x.averageRating)

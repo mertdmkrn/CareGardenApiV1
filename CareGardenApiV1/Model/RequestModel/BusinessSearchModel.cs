@@ -8,7 +8,6 @@ namespace CareGardenApiV1.Model.RequestModel
         public double? longitude { get; set; }
         public int? page { get; set; }
         public int? take { get; set; }
-        [JsonIgnore]
         public string? city { get; set; }
         [JsonIgnore]
         public Guid userId{ get; set; } = Guid.Empty;

@@ -311,8 +311,6 @@ namespace CareGardenApiV1.Controller
                     return Ok(response);
                 }
 
-                businessSearchModel.city = HelperMethods.GetClaimInfo(Request, ClaimTypes.Locality);
-
                 response.Data = await _businessService.GetBusinessByPopularAsync(businessSearchModel);
                 response.Data.ToList().ConvertAll(x => x.distance = Math.Round(x.distance, 1));
                 response.Data.ToList().ConvertAll(x => x.isOpen = HelperMethods.GetBusinessOpen(x.workingInfo, x.officialDayAvailable));

@@ -196,7 +196,7 @@ namespace CareGardenApiV1.Controller
         [Route("user/setprofilephoto")]
         public async Task<IActionResult> SetProfilePhoto(IFormFile file)
         {
-            ResponseModel<bool> response = new ResponseModel<bool>();
+            ResponseModel<string> response = new ResponseModel<string>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
@@ -228,7 +228,7 @@ namespace CareGardenApiV1.Controller
                 await _userService.UpdateUserAsync(user);
 
                 response.Message = Resource.Resource.ResimYuklemeBasarili;
-                response.Data = true;
+                response.Data = user.imageUrl;
 
                 return Ok(response);
 

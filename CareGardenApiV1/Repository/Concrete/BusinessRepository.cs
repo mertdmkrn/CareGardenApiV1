@@ -7,6 +7,7 @@ using NetTopologySuite.Geometries;
 using Microsoft.AspNetCore.DataProtection.XmlEncryption;
 using OneSignalApi.Model;
 using CareGardenApiV1.Model.RequestModel;
+using Nest;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -232,6 +233,42 @@ namespace CareGardenApiV1.Repository.Concrete
                     })
                     .AsNoTracking()
                     .FirstOrDefaultAsync();
+            }
+        }
+
+        public async Task<IList<BusinessDetailModel>> GetBusinessesAsync()
+        {
+            using (var context = new CareGardenApiDbContext())
+            {
+                return await context.Businesses
+                    .Include(x => x.galleries)
+                    .Include(x => x.services)
+                    .Include(x => x.services)
+                    .Include(x => x.workingInfos)
+                    .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
+                    .Select(x => new BusinessDetailModel
+                    {
+                        id = x.id,
+                        name = x.name,
+                        address = x.address,
+                        telephone = x.telephone,
+                        description = x.description,
+                        descriptionEn = x.descriptionEn,
+                        workingGenderType = x.workingGenderType,
+                        latitude = x.latitude,
+                        longitude = x.longitude,
+                        discountRate = x.discountRate,
+                        officialDayAvailable = x.officialHolidayAvailable,
+                        isFeatured = x.isFeatured,
+                        hasPromotion = x.hasPromotion,
+                        averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
+                        countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
+                        businessWorkingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null,
+                        assets = x.galleries.ToList(),
+                        businessServices = x.services.ToList()
+                    })
+                    .AsNoTracking()
+                    .ToListAsync();
             }
         }
 

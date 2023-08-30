@@ -79,6 +79,15 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Elastic indexleme işlemi arkaplanda başlamıştır..
+        /// </summary>
+        public static string ElasticIndexlemeIslemiBasladi {
+            get {
+                return ResourceManager.GetString("ElasticIndexlemeIslemiBasladi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Geçerli bir isim giriniz..
         /// </summary>
         public static string GecerliBirIsimGiriniz {

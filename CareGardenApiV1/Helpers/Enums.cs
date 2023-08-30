@@ -31,6 +31,17 @@
             Year
         }
 
+
+        public enum SortByType
+        {
+            Recommended,
+            MostPopular,
+            Nearest,
+            TopRated,
+            FirstAvailableTime,
+            Newest
+        }
+
         public enum WorkingGenderType
         {
             Everyone,

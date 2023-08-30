@@ -100,6 +100,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.AdminController.IndexBusiness">
+            <summary>
+            Business Detail Index List
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessById(System.String)">
             <summary>
             Get Business By Id
@@ -426,6 +432,12 @@
              <returns></returns>
         </member>
         <!-- Badly formed XML comment ignored for member "M:CareGardenApiV1.Controller.FavoriteController.DeleteFavorite(System.Guid)" -->
+        <member name="M:CareGardenApiV1.Controller.SearchController.GetUserById(CareGardenApiV1.Model.RequestModel.KeywordSearchModel)">
+            <summary>
+            Get Search By Keyword
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.ServicesController.GetServices">
             <summary>
             Get Services
@@ -869,6 +881,11 @@
         <member name="P:CareGardenApiV1.Resource.Resource.BuAlaniBosBirakmayiniz">
             <summary>
               Looks up a localized string similar to Bu alanı boş bırakmayınız..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ElasticIndexlemeIslemiBasladi">
+            <summary>
+              Looks up a localized string similar to Elastic indexleme işlemi arkaplanda başlamıştır..
             </summary>
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.GecerliBirIsimGiriniz">

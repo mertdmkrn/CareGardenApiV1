@@ -5,6 +5,7 @@ using CareGardenApiV1.Model;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Service.Concrete;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
@@ -21,11 +22,13 @@ namespace CareGardenApiV1.Controller
         private ICommentService _commentService;
         private IFileHandler _fileHandler;
         private readonly ILoggerHandler _loggerHandler;
+        private readonly IElasticHandler _elasticHandler;
 
-        public CommentController(ILoggerHandler loggerHandler)
+        public CommentController(ILoggerHandler loggerHandler, IElasticHandler elasticHandler)
         {
             _commentService = new CommentService();
             _loggerHandler = loggerHandler;
+            _elasticHandler = elasticHandler;
         }
 
         /// <summary>
@@ -230,6 +233,12 @@ namespace CareGardenApiV1.Controller
                 response.Data = true;
                 response.Message = Resource.Resource.KayitBasarili;
 
+                if (comment.businessId.HasValue)
+                {
+                    BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(comment.businessId.Value));
+
+                }
+
                 return Ok(response);
 
             }
@@ -298,6 +307,11 @@ namespace CareGardenApiV1.Controller
                 comment.point = updateComment.point;
 
                 await _commentService.UpdateCommentAsync(comment);
+
+                if (comment.businessId.HasValue)
+                {
+                    BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(comment.businessId.Value));
+                }
 
                 response.Data = true;
                 response.Message = Resource.Resource.KayitBasarili;

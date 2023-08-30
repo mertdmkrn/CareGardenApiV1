@@ -123,6 +123,9 @@
   <data name="BuAlaniBosBirakmayiniz" xml:space="preserve">
     <value>Bu alanı boş bırakmayınız.</value>
   </data>
+  <data name="ElasticIndexlemeIslemiBasladi" xml:space="preserve">
+    <value>Elastic indexleme işlemi arkaplanda başlamıştır.</value>
+  </data>
   <data name="GecerliBirIsimGiriniz" xml:space="preserve">
     <value>Geçerli bir isim giriniz.</value>
   </data>

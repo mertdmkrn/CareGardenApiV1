@@ -25,6 +25,7 @@ using System.Globalization;
 using System;
 using Npgsql;
 using CareGardenApiV1.Middleware;
+using CareGardenApiV1.Helpers;
 
 internal class Program
 {
@@ -43,7 +44,7 @@ internal class Program
             .CreateLogger();
 
         builder.Host.UseSerilog();
-
+        builder.Services.AddElasticSearch(builder.Configuration);
         builder.Services.AddControllers();
         builder.Services.AddMemoryCache();
         builder.Services.AddEndpointsApiExplorer();
@@ -149,6 +150,7 @@ internal class Program
         builder.Services.AddSingleton<ISmsHandler, SmsHandler>();
         builder.Services.AddSingleton<IFileHandler, FileHandler>();
         builder.Services.AddSingleton<ILoggerHandler, LoggerHandler>();
+        builder.Services.AddSingleton<IElasticHandler, ElasticHandler>();
 
         builder.Services.AddSingleton<IBusinessRepository, BusinessRepository>();
         builder.Services.AddSingleton<IBusinessGalleryRepository, BusinessGalleryRepository>();

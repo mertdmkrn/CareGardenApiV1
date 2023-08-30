@@ -26,8 +26,9 @@ namespace CareGardenApiV1.Controller
         private ISmsHandler _smsHandler;
         private readonly IMailHandler _mailHandler;
         private readonly ILoggerHandler _loggerHandler;
+        private readonly IElasticHandler _elasticHandler;
 
-        public BusinessLoginController(IMailHandler mailHandler, ILoggerHandler loggerHandler)
+        public BusinessLoginController(IMailHandler mailHandler, ILoggerHandler loggerHandler, IElasticHandler elasticHandler)
         {
             _businessService = new BusinessService();
             _contirmationService = new ConfirmationService();
@@ -35,6 +36,7 @@ namespace CareGardenApiV1.Controller
             _smsHandler = new SmsHandler();
             _mailHandler = mailHandler;
             _loggerHandler = loggerHandler;
+            _elasticHandler = elasticHandler;
         }
 
         /// <summary>
@@ -391,6 +393,7 @@ namespace CareGardenApiV1.Controller
                 };
 
                 response.Data = _tokenHandler.CreateAccessToken(DateTime.Now.AddDays(60), claims);
+                BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
 
                 return Ok(response);
             }

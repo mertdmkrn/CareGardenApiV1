@@ -7,6 +7,7 @@ using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Service.Concrete;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -28,8 +29,9 @@ namespace CareGardenApiV1.Controller
         private IMemoryCache _memoryCache;
         private IFileHandler _fileHandler;
         private readonly ILoggerHandler _loggerHandler;
+        private readonly IElasticHandler _elasticHandler;
 
-        public BusinessController(ILoggerHandler loggerHandler, IMemoryCache memoryCache)
+        public BusinessController(ILoggerHandler loggerHandler, IMemoryCache memoryCache, IElasticHandler elasticHandler)
         {
             _businessService = new BusinessService();
             _businessGalleryService = new BusinessGalleryService();
@@ -37,6 +39,7 @@ namespace CareGardenApiV1.Controller
             _servicesService = new ServicesService();
             _fileHandler = new FileHandler();
             _loggerHandler = loggerHandler;
+            _elasticHandler = elasticHandler;
             _memoryCache = memoryCache;
         }
 
@@ -282,6 +285,7 @@ namespace CareGardenApiV1.Controller
                 };
 
                 await _businessGalleryService.SaveBusinessGalleryAsync(businessGallery);
+                BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
 
                 response.Message = Resource.Resource.ResimYuklemeBasarili;
                 response.Data = true;
@@ -361,6 +365,7 @@ namespace CareGardenApiV1.Controller
                 }
 
                 await _businessService.UpdateBusinessAsync(business);
+                BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
                 response.Message = Resource.Resource.KayitBasarili;
                 response.Data = true;
 
@@ -451,6 +456,7 @@ namespace CareGardenApiV1.Controller
                 businessWorkInfoModel.businessWorkingInfo.businessId = business.id;
                 await _businessWorkingInfoService.DeleteBusinessWorkingInfoByBusinessIdAsync(business.id);
                 await _businessWorkingInfoService.SaveBusinessWorkingInfoAsync(businessWorkInfoModel.businessWorkingInfo);
+                BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
 
                 response.Message = Resource.Resource.KayitBasarili;
                 response.Data = true;
@@ -519,6 +525,7 @@ namespace CareGardenApiV1.Controller
                 }
        
                 await _businessGalleryService.SaveBusinessGalleriesAsync(businessGalleries);
+                BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
 
                 response.Message = Resource.Resource.ResimYuklemeBasarili;
                 response.Data = true;

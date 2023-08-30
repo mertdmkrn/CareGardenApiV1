@@ -6,6 +6,7 @@ using CareGardenApiV1.Model;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Service.Concrete;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -27,9 +28,10 @@ namespace CareGardenApiV1.Controller
         private IFileHandler _fileHandler;
         private IMemoryCache _memoryCache;
         private readonly IMailHandler _mailHandler;
+        private readonly IElasticHandler _elasticHandler;
         private readonly ILoggerHandler _loggerHandler;
 
-        public AdminController(IMailHandler mailHandler, ILoggerHandler loggerHandler, IMemoryCache memoryCache)
+        public AdminController(IMailHandler mailHandler, ILoggerHandler loggerHandler, IMemoryCache memoryCache, IElasticHandler elasticHandler)
         {
             _businessService = new BusinessService();
             _userService = new UserService();
@@ -37,6 +39,7 @@ namespace CareGardenApiV1.Controller
             _fileHandler = new FileHandler();
             _mailHandler = mailHandler;
             _loggerHandler = loggerHandler;
+            _elasticHandler = elasticHandler;
             _memoryCache = memoryCache;
         }
 
@@ -517,6 +520,33 @@ namespace CareGardenApiV1.Controller
             try
             {
                 response.Data = Constants.FaqCategories;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
+
+        /// <summary>
+        /// Business Detail Index List
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [HttpPost]
+        [Route("admin/indexbusiness")]
+        public async Task<IActionResult> IndexBusiness()
+        {
+            ResponseModel<bool> response = new ResponseModel<bool>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                BackgroundJob.Enqueue(() => _elasticHandler.MakeIndexBusiness());
+                response.Message = Resource.Resource.ElasticIndexlemeIslemiBasladi;
+                response.Data = true;
                 return Ok(response);
             }
             catch (Exception ex)

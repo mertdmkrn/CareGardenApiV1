@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using NetTopologySuite.Geometries;
+using System.Text.Json.Serialization;
 using static CareGardenApiV1.Helpers.Enums;
 
 namespace CareGardenApiV1.Model.ResponseModel
@@ -17,6 +18,8 @@ namespace CareGardenApiV1.Model.ResponseModel
         public double latitude { get; set; }
         public double longitude { get; set; }
         public bool isOpen { get; set; }
+        public bool isFeatured { get; set; }
+        public bool hasPromotion { get; set; }
         public WorkingGenderType workingGenderType { get; set; }
         public BusinessWorkingInfo businessWorkingInfo { get; set; } = new BusinessWorkingInfo();
         public List<BusinessServicesInfo> businessServicesInfos { get; set; } = new List<BusinessServicesInfo>();

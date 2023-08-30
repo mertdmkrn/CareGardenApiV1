@@ -123,6 +123,9 @@
   <data name="BuAlaniBosBirakmayiniz" xml:space="preserve">
     <value>Do not leave this field blank.</value>
   </data>
+  <data name="ElasticIndexlemeIslemiBasladi" xml:space="preserve">
+    <value>Elastic indexing process started in the background.</value>
+  </data>
   <data name="GecerliBirIsimGiriniz" xml:space="preserve">
     <value>Please enter a valid fullname.</value>
   </data>

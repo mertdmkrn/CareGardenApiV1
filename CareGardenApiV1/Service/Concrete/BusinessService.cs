@@ -5,6 +5,7 @@ using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Repository.Concrete;
 using CareGardenApiV1.Service.Abstract;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Nest;
 using OneSignalApi.Model;
 
 namespace CareGardenApiV1.Service.Concrete
@@ -56,6 +57,11 @@ namespace CareGardenApiV1.Service.Concrete
         public async Task<BusinessDetailModel> GetBusinessDetailByIdAsync(Guid id)
         {
             return await _businessRepository.GetBusinessDetailByIdAsync(id);
+        }
+
+        public async Task<IList<BusinessDetailModel>> GetBusinessesAsync()
+        {
+            return await _businessRepository.GetBusinessesAsync();
         }
 
         public async Task<IList<BusinessListModel>> GetBusinessNearByDistanceAsync(BusinessSearchModel businessSearchModel)

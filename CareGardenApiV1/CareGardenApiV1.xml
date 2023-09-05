@@ -270,6 +270,75 @@
              </remarks>
              <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessServicesController.GetBusinessServiceById(System.String)">
+            <summary>
+            Get Service By Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessServicesController.GetBusinessServicesByServiceId(System.String)">
+            <summary>
+            Get Service By Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessServicesController.GetBusinessServicesByBusinessId(System.String)">
+            <summary>
+            Get Service By Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessServicesController.Save(CareGardenApiV1.Model.BusinessServiceModel)">
+             <summary>
+             Save Business Service
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "businessId" : "00000000-0000-0000-0000-000000000000",
+                    "serviceId": "00000000-0000-0000-0000-000000000000",
+                    "name": "Saç Kesim",
+                    "nameEn": "Hair Cut",
+                    "spot": "Tam isteğinize göre bir saç kesime hazır olun.",
+                    "spotEn": "Get ready for a haircut just to your liking.",
+                    "minDuration": 30,
+                    "maxDuration": 45,
+                    "price": 150
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessServicesController.Update(CareGardenApiV1.Model.BusinessServiceModel)">
+             <summary>
+             Update Business Service
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "businessId" : "00000000-0000-0000-0000-000000000000",
+                    "serviceId": "00000000-0000-0000-0000-000000000000",
+                    "name": "Saç Kesim",
+                    "nameEn": "Hair Cut",
+                    "spot": "Tam isteğinize göre bir saç kesime hazır olun.",
+                    "spotEn": "Get ready for a haircut just to your liking.",
+                    "minDuration": 30,
+                    "maxDuration": 45,
+                    "price": 150
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessServicesController.Delete(System.String)">
+            <summary>
+            Delete BusinessService
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.CampaignController.GetCampaigns">
             <summary>
             Get Services
@@ -432,7 +501,13 @@
              <returns></returns>
         </member>
         <!-- Badly formed XML comment ignored for member "M:CareGardenApiV1.Controller.FavoriteController.DeleteFavorite(System.Guid)" -->
-        <member name="M:CareGardenApiV1.Controller.SearchController.GetUserById(CareGardenApiV1.Model.RequestModel.KeywordSearchModel)">
+        <member name="M:CareGardenApiV1.Controller.SearchController.GetSearchByKeyword(CareGardenApiV1.Model.RequestModel.KeywordSearchModel)">
+            <summary>
+            Get Search By Keyword
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.SearchController.GetSearch(CareGardenApiV1.Model.RequestModel.BusinessExproleModel)">
             <summary>
             Get Search By Keyword
             </summary>
@@ -855,6 +930,18 @@
             <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.CareGardenV14.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV15">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV15.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV15.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV15.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:CareGardenApiV1.Resource.Resource">

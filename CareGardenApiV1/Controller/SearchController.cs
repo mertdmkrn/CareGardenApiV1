@@ -52,7 +52,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("user/getsearchbykeyword")]
-        public async Task<IActionResult> GetUserById([FromBody] KeywordSearchModel keywordSearchModel)
+        public async Task<IActionResult> GetSearchByKeyword([FromBody] KeywordSearchModel keywordSearchModel)
         {
             var culture = Request.Headers["Language"].ToString().IsNull("en");
             ResponseModel<KeywordSearchResponseModel> response = new ResponseModel<KeywordSearchResponseModel>();
@@ -124,9 +124,36 @@ namespace CareGardenApiV1.Controller
 
         }
 
+        /// <summary>
+        /// Get Search By Keyword
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("user/getsearch")]
+        public async Task<IActionResult> GetSearch([FromBody] BusinessExproleModel businessExproleModel)
+        {
+            var culture = Request.Headers["Language"].ToString().IsNull("en");
+            ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(culture);
+
+            try
+            {
+                response.Data = await _businessService.ExploreBusinesses(businessExproleModel);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _loggerHandler.LogMessage(ex);
+                response.HasError = true;
+                response.Message = "Exception => " + ex.Message;
+                return Ok(response);
+            }
+
+        }
+
         private async Task<List<BusinessDetailModel>> GetSearchBusinessWithElastic(string keyword)
         {
-            //Elastic available control
+            //Todo : Elastic available control
             var result =  await _elasticClient.SearchAsync<BusinessDetailModel>(s => s.Query(q => q.QueryString(d => d.Query('*' + keyword + '*'))).Size(15));
             var finalContent = result.Documents.ToList();
             return finalContent;

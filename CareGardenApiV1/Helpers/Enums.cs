@@ -69,5 +69,11 @@
             Sorting
         }
 
+        public enum DayZone
+        {
+            Morning,
+            Afternoon,
+            Evening
+        }
     }
 }

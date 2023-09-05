@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Globalization;
+using System.Text.Json.Serialization;
+using static CareGardenApiV1.Helpers.Enums;
 
 namespace CareGardenApiV1.Model.RequestModel
 {
@@ -6,10 +8,13 @@ namespace CareGardenApiV1.Model.RequestModel
     {
         public double? latitude { get; set; }
         public double? longitude { get; set; }
+        public DateTime? availableDate { get; set; }
+        public Guid? serviceId { get; set; }
+        public DayZone dayZone { get; set; }
+        public int offers { get; set; }
         public int? page { get; set; }
         public int? take { get; set; }
-        public string? city { get; set; }
-        [JsonIgnore]
-        public Guid userId{ get; set; } = Guid.Empty;
+        public WorkingGenderType workingGenderType { get; set; }
+        public SortByType sortByType { get; set; }
     }
 }

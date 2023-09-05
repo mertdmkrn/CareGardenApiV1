@@ -201,13 +201,130 @@ namespace CareGardenApiV1.Repository.Concrete
             }
         }
 
+        public async Task<IList<BusinessListModel>> ExploreBusinesses(BusinessExproleModel businessExploreModel)
+        {
+            using (var context = new CareGardenApiDbContext())
+            {
+                IList<BusinessListModel> businesses = null;
+                Point? searchLocation = null;
+                var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
+
+                if (businessExploreModel.latitude.HasValue && businessExploreModel.longitude.HasValue)
+                {
+                    searchLocation = gf.CreatePoint(new Coordinate(businessExploreModel.latitude.Value, businessExploreModel.longitude.Value));
+                }
+
+                var businessQueryable = context.Businesses
+                    .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
+                    .Include(x => x.galleries.Where(x => x.isProfilePhoto))
+                    .Include(x => x.workingInfos);
+
+                if (businessExploreModel.availableDate.HasValue)
+                {
+                    businessQueryable.Include(x => x.appointments.Where(x => x.date == businessExploreModel.availableDate.Value));
+                }
+
+                if (businessExploreModel.serviceId.HasValue)
+                {
+                    businessQueryable.Include(x => x.services.Where(x => x.serviceId == businessExploreModel.serviceId.Value));
+                }
+
+                var businessListQueryable = businessQueryable
+                    .Where(x => x.isActive == true && x.verified == true)
+                    .Where(x => x.workingGenderType == businessExploreModel.workingGenderType)
+                    .Where(x => businessExploreModel.serviceId.HasValue ? x.services.Any(x => x.serviceId == businessExploreModel.serviceId) : x.verified == true)
+                    .Where(x => businessExploreModel.offers > 0 ? x.discountRate == businessExploreModel.offers : x.discountRate > -1)
+                    .Select(x => new BusinessListModel
+                    {
+                        id = x.id,
+                        name = x.name ?? "",
+                        discountRate = x.discountRate,
+                        workingGenderType = (int)x.workingGenderType,
+                        imageUrl = x.galleries.FirstOrDefault().imageUrl,
+                        averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
+                        countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
+                        distance = searchLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(searchLocation)) * Constants.DistanceValue : 0,
+                        isFeatured = x.isFeatured,
+                        hasPromotion = x.hasPromotion,
+                        officialDayAvailable = x.officialHolidayAvailable,
+                        createDate = x.createDate,
+                        workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null,
+                        appointmentPeopleCount = x.appointmentPeopleCount,
+                        appointmentTimeInterval = x.appointmentTimeInterval,
+                        appointments = businessExploreModel.availableDate.HasValue && x.appointments.Any() ? x.appointments.Where(x => x.date == businessExploreModel.availableDate.Value).ToList() : null
+                    });
+
+
+                switch(businessExploreModel.sortByType)
+                {
+                    case Enums.SortByType.Recommended:
+                        businessListQueryable.OrderByDescending(x => x.appointments.Count());
+                        break;
+                    case Enums.SortByType.MostPopular:
+                        businessListQueryable.OrderByDescending(x => x.countRating);
+                        break;
+                    case Enums.SortByType.Newest:
+                        businessListQueryable.OrderByDescending(x => x.createDate);
+                        break;
+                    case Enums.SortByType.TopRated:
+                        businessListQueryable.OrderByDescending(x => x.averageRating);
+                        break;
+                    case Enums.SortByType.Nearest:
+                        businessListQueryable.OrderBy(x => x.distance);
+                        break;
+                    default:
+                        businessListQueryable.OrderBy(x => x.distance);
+                        break;
+                };
+
+                businesses = await businessListQueryable.AsNoTracking().ToListAsync();
+
+                businesses.ToList().ForEach(x =>
+                {
+                    if (businessExploreModel.availableDate.HasValue)
+                    {
+                        bool isOpen = HelperMethods.GetBusinessOpenSpecialDate(x.workingInfo, x.officialDayAvailable, businessExploreModel.availableDate);
+
+                        if (!isOpen)
+                        {
+                            businesses.Remove(x);
+                            return;
+                        } 
+
+                        var dailyAppointmentCount = HelperMethods.GetDailyAppointmentCount(x.appointments, x.workingInfo, x.officialDayAvailable, businessExploreModel.availableDate.Value, x.appointmentPeopleCount, x.appointmentTimeInterval);
+
+                        if (x.appointments != null && x.appointments.Count() >= dailyAppointmentCount)
+                        {
+                            businesses.Remove(x);
+                            return;
+                        }
+                    }
+
+                    if (x.distance > 50)
+                    {
+                        businesses.Remove(x);
+                        return;
+                    }
+
+                    x.isOpen = HelperMethods.GetBusinessOpen(x.workingInfo, x.officialDayAvailable);
+                    x.distance = Math.Round(x.distance, 1);
+                });
+
+                return businessExploreModel.page.HasValue && businessExploreModel.take.HasValue
+                        ? businesses
+                            .Skip(businessExploreModel.page.Value * businessExploreModel.take.Value)
+                            .Take(businessExploreModel.take.Value)
+                            .ToList()
+                        : businesses.ToList();
+            }
+        }
+
         public async Task<BusinessDetailModel> GetBusinessDetailByIdAsync(Guid id)
         {
             using (var context = new CareGardenApiDbContext())
             {
                 return await context.Businesses
                     .Include(x => x.galleries)
-                    .Include(x => x.services)
                     .Include(x => x.services)
                     .Include(x => x.workingInfos)
                     .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
@@ -242,7 +359,6 @@ namespace CareGardenApiV1.Repository.Concrete
             {
                 return await context.Businesses
                     .Include(x => x.galleries)
-                    .Include(x => x.services)
                     .Include(x => x.services)
                     .Include(x => x.workingInfos)
                     .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))

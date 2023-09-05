@@ -12,6 +12,7 @@ using CareGardenApiV1.Repository.Abstract;
 using System.Drawing;
 using RestSharp;
 using CareGardenApiV1.Model.ResponseModel;
+using Nest;
 
 namespace CareGardenApiV1.Helpers
 {
@@ -250,6 +251,28 @@ namespace CareGardenApiV1.Helpers
             return false;    
         }
 
+        public static bool GetBusinessOpenSpecialDate(BusinessWorkingInfo workingInfo, bool officialDayAvailable, DateTime? specialDate)
+        {
+            if (!specialDate.HasValue)
+                return true;
+
+            var date = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(specialDate.Value, "Turkey Standard Time");
+
+            if (workingInfo == null)
+                return true;
+
+            if (officialDayAvailable && Constants.OfficialDays.Any(x => x.date.Equals(specialDate)))
+                return false;
+
+            var workHours = workingInfo.GetBusinessWorkInfoHours(date);
+
+            if (workHours.IsNullOrEmpty())
+                return false;
+
+            return true;
+        }
+
+
         public static string GetBusinessWorkInfoHours(this BusinessWorkingInfo workingInfo, DateTime date)
         {
             switch (date.DayOfWeek)
@@ -264,6 +287,35 @@ namespace CareGardenApiV1.Helpers
                 case DayOfWeek.Sunday: return workingInfo.sundayWorkHours;
                 default: return null;
             }
+        }
+
+        public static int GetDailyAppointmentCount(List<Appointment> appointments, BusinessWorkingInfo workingInfo, bool officialDayAvailable, DateTime availableDate, int appointmentPeopleCount, int appointmentTimeInterval)
+        {
+            var date = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(availableDate, "Turkey Standard Time");
+
+            if (workingInfo == null)
+                return 0;
+
+            if (officialDayAvailable && Constants.OfficialDays.Any(x => x.date.Equals(date)))
+                return 0;
+
+            var workHours = workingInfo.GetBusinessWorkInfoHours(date);
+
+            if (workHours.IsNullOrEmpty())
+                return 0;
+
+            var startHours = workHours.Split('-').FirstOrDefault();
+            var endHours = workHours.Split('-').LastOrDefault();
+
+            if (startHours.IsNullOrEmpty() || endHours.IsNullOrEmpty())
+                return 0;
+
+            var endStartTimeDifference = endHours.Replace(":", "").ToInt() - startHours.Replace(":", "").ToInt();
+
+            var sumWorkMinutes = (endStartTimeDifference / 100) * 60;
+            sumWorkMinutes += endStartTimeDifference % 100;
+
+            return (sumWorkMinutes / appointmentTimeInterval) * appointmentPeopleCount;
         }
     }
 }

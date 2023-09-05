@@ -10,7 +10,7 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<List<BusinessServiceModel>> SaveBusinessServicesAsync(List<BusinessServiceModel> businessServices);
         Task<BusinessServiceModel> SaveBusinessServiceAsync(BusinessServiceModel businessService);
         Task<BusinessServiceModel> UpdateBusinessServiceAsync(BusinessServiceModel businessService);
-        Task<bool> DeleteBusinessServiceAsync(BusinessServiceModel businessService);
+        Task<bool> DeleteBusinessServiceAsync(Guid id);
         Task<bool> DeleteBusinessServiceByBusinessIdAsync(Guid businessId);
     }
 }

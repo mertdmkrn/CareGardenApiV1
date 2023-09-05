@@ -47,6 +47,7 @@ namespace CareGardenApiV1.Model.ResponseModel
         public bool isFeatured { get; set; }
         public bool hasPromotion { get; set; }
         public bool isOpen { get; set; }
+        public DateTime? createDate { get; set; }
 
         [JsonIgnore]
         public BusinessWorkingInfo workingInfo { get; set; }
@@ -54,6 +55,13 @@ namespace CareGardenApiV1.Model.ResponseModel
         [JsonIgnore]
         public bool officialDayAvailable { get; set; }
 
+        [JsonIgnore]
+        public List<Appointment> appointments { get; set; }
 
+        [JsonIgnore]
+        public int appointmentTimeInterval { get; set; }
+
+        [JsonIgnore]
+        public int appointmentPeopleCount { get; set; }
     }
 }

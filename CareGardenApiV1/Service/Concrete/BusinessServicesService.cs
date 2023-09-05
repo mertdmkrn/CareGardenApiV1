@@ -14,9 +14,9 @@ namespace CareGardenApiV1.Service.Concrete
             _businessServicesRepository = new BusinessServicesRepository();
         }
 
-        public async Task<bool> DeleteBusinessServiceAsync(BusinessServiceModel businessService)
+        public async Task<bool> DeleteBusinessServiceAsync(Guid id)
         {
-            return await _businessServicesRepository.DeleteBusinessServiceAsync(businessService);          
+            return await _businessServicesRepository.DeleteBusinessServiceAsync(id);          
         }
 
         public async Task<bool> DeleteBusinessServiceByBusinessIdAsync(Guid businessId)

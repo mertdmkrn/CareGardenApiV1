@@ -69,12 +69,13 @@ namespace CareGardenApiV1.Repository.Concrete
             }
         }
 
-        public async Task<bool> DeleteBusinessServiceAsync(BusinessServiceModel businessService)
+        public async Task<bool> DeleteBusinessServiceAsync(Guid id)
         {
             using (var context = new CareGardenApiDbContext())
             {
-                context.BusinessServices.Remove(businessService);
-                await context.SaveChangesAsync();
+                await context.BusinessServices
+                    .Where(x => x.id == id)
+                    .ExecuteDeleteAsync();
                 return true;
             }
         }

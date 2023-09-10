@@ -187,7 +187,8 @@
                     },
                     "appointmentTimeInterval" : 30,
                     "appointmentPeopleCount" : 5,
-                    "officialHolidayAvailable" : true
+                    "officialHolidayAvailable" : true,
+                    "workingGenderType" : 0
                  }
             
              </remarks>

@@ -45,7 +45,7 @@ namespace CareGardenApiV1.Service.Concrete
         }
         public async Task<Business> GetBusinessAllByIdAsync(Guid id)
         {
-            return await _businessRepository.GetBusinessByIdAsync(id);
+            return await _businessRepository.GetBusinessAllByIdAsync(id);
         }
 
         public async Task<IList<BusinessListModel>> GetBusinessByPopularAsync(BusinessSearchModel businessSearchModel)

@@ -7,6 +7,7 @@ namespace CareGardenApiV1.Repository.Abstract
     public interface IBusinessRepository
     {
         Task<Business> GetBusinessByIdAsync(Guid id);
+        Task<Business> GetBusinessAllByIdAsync(Guid id);
         Task<List<Tuple<string, string>>> GetBusinessSelectListAsync();
         Task<Business> GetBusinessByEmailAndPasswordAsync(string email, string password);
         Task<Business> GetBusinessByEmailAsync(string email);

@@ -3,6 +3,7 @@ using System;
 using CareGardenApiV1.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CareGardenApiV1.Migrations
 {
     [DbContext(typeof(CareGardenApiDbContext))]
-    partial class CareGardenApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230909154055_CareGardenv16")]
+    partial class CareGardenv16
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -777,7 +780,7 @@ namespace CareGardenApiV1.Migrations
             modelBuilder.Entity("CareGardenApiV1.Model.Worker", b =>
                 {
                     b.HasOne("CareGardenApiV1.Model.Business", "business")
-                        .WithMany("workers")
+                        .WithMany()
                         .HasForeignKey("businessId");
 
                     b.Navigation("business");
@@ -798,8 +801,6 @@ namespace CareGardenApiV1.Migrations
                     b.Navigation("properties");
 
                     b.Navigation("services");
-
-                    b.Navigation("workers");
 
                     b.Navigation("workingInfos");
                 });

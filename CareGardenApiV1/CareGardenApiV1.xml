@@ -112,6 +112,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessAllById(System.String)">
+            <summary>
+            Get Business All By Id
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusiness">
             <summary>
             Get Session Business
@@ -776,6 +782,115 @@
              </remarks>
              <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerController.GetById(System.String)">
+             <summary>
+             Get Worker By Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerController.GetByBusinessId(System.String)">
+             <summary>
+             Get Worker By Business Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerController.GetByBusinessServiceId(System.String)">
+             <summary>
+             Get Worker By Business Service Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerController.Save(CareGardenApiV1.Model.Worker)">
+             <summary>
+             Add Worker
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "name" : "Mert DEMİRKIRAN",
+                    "title" : "Hair Stylist",
+                    "path" : "mert.jpg",
+                    "businessId" : "00000000-0000-0000-0000-000000000000",
+                    "serviceIds" : "00000000-0000-0000-0000-000000000000;00000000-0000-0000-0000-000000000001"
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerController.Update(CareGardenApiV1.Model.Worker)">
+             <summary>
+             Update Worker
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "name" : "Mert DEMİRKIRAN",
+                    "title" : "Hair Stylist",
+                    "path" : "mert.jpg",
+                    "businessId" : "00000000-0000-0000-0000-000000000000",
+                    "serviceIds" : "00000000-0000-0000-0000-000000000000;00000000-0000-0000-0000-000000000001",
+                    "isActive" : true,
+                    "isAvailable" : false
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerController.Delete(System.String)">
+             <summary>
+             Get Worker By Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerController.DeleteByBusinessId(System.String)">
+             <summary>
+             Get Worker By Busimess Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
         <member name="T:CareGardenApiV1.Migrations.CareGarden">
             <inheritdoc />
         </member>
@@ -942,6 +1057,18 @@
             <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.CareGardenV15.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenv16">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenv16.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenv16.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenv16.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:CareGardenApiV1.Resource.Resource">

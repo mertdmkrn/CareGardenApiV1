@@ -21,6 +21,7 @@ namespace CareGardenApiV1.Model
             this.properties = new HashSet<BusinessProperties>();
             this.paymentInfos = new HashSet<PaymentInfo>();
             this.favorites = new HashSet<Favorite>();
+            this.workers = new HashSet<Worker>();
         }
 
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -84,5 +85,6 @@ namespace CareGardenApiV1.Model
         public virtual ICollection<BusinessProperties> properties { get; set; }
         public virtual ICollection<PaymentInfo> paymentInfos { get; set; }
         public virtual ICollection<Favorite> favorites { get; set; }
+        public virtual ICollection<Worker> workers { get; set; }
     }
 }

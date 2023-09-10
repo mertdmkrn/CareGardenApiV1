@@ -71,7 +71,55 @@ namespace CareGardenApiV1.Controller
                 if (response.Data == null)
                 {
                     response.HasError = true;
-                    response.Message += id + " id " + Resource.Resource.KullaniciBulunamadi;
+                    response.Message += id + " id " + Resource.Resource.SirketBulunamadi;
+                    return Ok(response);
+                }
+
+                response.Data.password = null;
+                response.Data.retryPassword = null;
+
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+                _loggerHandler.LogMessage(ex);
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
+                return Ok(response);
+            }
+
+        }
+
+        /// <summary>
+        /// Get Business All By Id
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("business/getallbyid")]
+        public async Task<IActionResult> GetBusinessAllById([FromBody] string id)
+        {
+            ResponseModel<Business> response = new ResponseModel<Business>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                if (!id.IsGuid())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                    response.Message += Resource.Resource.IdParametreHatasi;
+                }
+
+                if (response.HasError)
+                    return Ok(response);
+
+                response.Data = await _businessService.GetBusinessAllByIdAsync(id.ToGuid());
+
+                if (response.Data == null)
+                {
+                    response.HasError = true;
+                    response.Message += id + " id " + Resource.Resource.SirketBulunamadi;
                     return Ok(response);
                 }
 

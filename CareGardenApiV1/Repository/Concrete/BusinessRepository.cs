@@ -50,6 +50,22 @@ namespace CareGardenApiV1.Repository.Concrete
             }
         }
 
+        public async Task<Business> GetBusinessAllByIdAsync(Guid id)
+        {
+            using (var context = new CareGardenApiDbContext())
+            {
+                return await context.Businesses
+                    .AsNoTracking()
+                    .Include(x => x.workingInfos)
+                    .Include(x => x.services)
+                    .Include(x => x.galleries)
+                    .Include(x => x.workers)
+                    .Include(x => x.properties)
+                    .Where(x => x.id == id)
+                    .FirstOrDefaultAsync();
+            }
+        }
+
         public async Task<IList<BusinessListModel>> GetBusinessByPopularAsync(BusinessSearchModel businessSearchModel)
         {
             using (var context = new CareGardenApiDbContext())

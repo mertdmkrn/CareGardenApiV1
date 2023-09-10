@@ -1,0 +1,402 @@
+﻿using CareGardenApiV1.Handler.Abstract;
+using CareGardenApiV1.Handler.Concrete;
+using CareGardenApiV1.Helpers;
+using CareGardenApiV1.Model;
+using CareGardenApiV1.Repository.Abstract;
+using CareGardenApiV1.Service.Abstract;
+using CareGardenApiV1.Service.Concrete;
+using Hangfire;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Nest;
+using RestSharp.Extensions;
+using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
+using System.IO;
+using System.Security.Claims;
+
+namespace CareGardenApiV1.Controller
+{
+    [ApiController]
+    [Authorize(Roles = "Admin,Business")]
+    public class WorkerController : ControllerBase
+    {
+        private IWorkerService _workerService;
+        private IFileHandler _fileHandler;
+        private readonly ILoggerHandler _loggerHandler;
+
+        public WorkerController(ILoggerHandler loggerHandler)
+        {
+            _workerService = new WorkerService();
+            _loggerHandler = loggerHandler;
+        }
+
+        /// <summary>
+        /// Get Worker By Id
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "00000000-0000-0000-0000-000000000000"
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("worker/getbyid")]
+        public async Task<IActionResult> GetById([FromBody] string? id)
+        {
+            ResponseModel<Worker> response = new ResponseModel<Worker>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                if (id.IsNullOrEmpty() || !id.IsGuid())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                    response.Message = Resource.Resource.KayitBulunamadi;
+                    return Ok(response);
+                }
+
+                response.Data = await _workerService.GetWorkerByIdAsync(id.ToGuid());
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+                _loggerHandler.LogMessage(ex);
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
+
+        /// <summary>
+        /// Get Worker By Business Id
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "00000000-0000-0000-0000-000000000000"
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("worker/getbybusinessid")]
+        public async Task<IActionResult> GetByBusinessId([FromBody] string? businessId)
+        {
+            ResponseModel<List<Worker>> response = new ResponseModel<List<Worker>>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                if (businessId.IsNullOrEmpty() || !businessId.IsGuid())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
+                    response.Message = Resource.Resource.KayitBulunamadi;
+                    return Ok(response);
+                }
+
+                response.Data = await _workerService.GetWorkersByBusinessIdAsync(businessId.ToGuid());
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+                _loggerHandler.LogMessage(ex);
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
+
+        /// <summary>
+        /// Get Worker By Business Service Id
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "00000000-0000-0000-0000-000000000000"
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("worker/getbybusinessserviceid")]
+        public async Task<IActionResult> GetByBusinessServiceId([FromBody] string? businessServiceId)
+        {
+            ResponseModel<List<Worker>> response = new ResponseModel<List<Worker>>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                if (businessServiceId.IsNullOrEmpty() || !businessServiceId.IsGuid())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("businessServiceId", Resource.Resource.IdParametreHatasi));
+                    response.Message = Resource.Resource.KayitBulunamadi;
+                    return Ok(response);
+                }
+
+                response.Data = await _workerService.GetWorkersByBusinessServiceIdAsync(businessServiceId.ToGuid());
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+                _loggerHandler.LogMessage(ex);
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
+
+        /// <summary>
+        /// Add Worker
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "name" : "Mert DEMİRKIRAN",
+        ///        "title" : "Hair Stylist",
+        ///        "path" : "mert.jpg",
+        ///        "businessId" : "00000000-0000-0000-0000-000000000000",
+        ///        "serviceIds" : "00000000-0000-0000-0000-000000000000;00000000-0000-0000-0000-000000000001"
+        ///     }
+        ///     
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("worker/add")]
+        public async Task<IActionResult> Save([FromBody] Worker worker)
+        {
+            ResponseModel<Worker> response = new ResponseModel<Worker>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                if (worker.name.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("name", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (worker.title.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("replyId", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (!worker.businessId.HasValue)
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (worker.serviceIds.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("serviceIds", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (response.HasError)
+                {
+                    response.Message = Resource.Resource.KayitYapilamadi;
+                    return Ok(response);
+                }
+
+                worker.createdUserId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid).ToGuid();
+
+                response.Data = await _workerService.SaveWorkerAsync(worker);
+                response.Message = Resource.Resource.KayitBasarili;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _loggerHandler.LogMessage(ex);
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
+
+        /// <summary>
+        /// Update Worker
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "id" : "00000000-0000-0000-0000-000000000000",
+        ///        "name" : "Mert DEMİRKIRAN",
+        ///        "title" : "Hair Stylist",
+        ///        "path" : "mert.jpg",
+        ///        "businessId" : "00000000-0000-0000-0000-000000000000",
+        ///        "serviceIds" : "00000000-0000-0000-0000-000000000000;00000000-0000-0000-0000-000000000001",
+        ///        "isActive" : true,
+        ///        "isAvailable" : false
+        ///     }
+        ///     
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("worker/update")]
+        public async Task<IActionResult> Update([FromBody] Worker updateWorker)
+        {
+            ResponseModel<Worker> response = new ResponseModel<Worker>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                if (updateWorker.name.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("name", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (updateWorker.title.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("replyId", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (!updateWorker.businessId.HasValue)
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (updateWorker.serviceIds.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("serviceIds", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (response.HasError)
+                {
+                    response.Message = Resource.Resource.KayitYapilamadi;
+                    return Ok(response);
+                }
+
+                Worker worker = await _workerService.GetWorkerByIdAsync(updateWorker.id);
+
+                if (worker == null)
+                {
+                    response.Message = Resource.Resource.KayitBulunamadi;
+                    return Ok(response);
+                }
+
+                worker.name = updateWorker.name;
+                worker.title = updateWorker.title;
+                worker.path = updateWorker.path;
+                worker.businessId = updateWorker.businessId;
+                worker.serviceIds = updateWorker.serviceIds;
+                worker.createdUserId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid).ToGuid();
+                worker.isActive = updateWorker.isActive;
+                worker.isAvailable = updateWorker.isAvailable;
+     
+                response.Data = await _workerService.UpdateWorkerAsync(worker);
+                response.Message = Resource.Resource.KayitBasarili;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _loggerHandler.LogMessage(ex);
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
+
+        /// <summary>
+        /// Get Worker By Id
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "00000000-0000-0000-0000-000000000000"
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("worker/delete")]
+        public async Task<IActionResult> Delete([FromBody] string? id)
+        {
+            ResponseModel<bool> response = new ResponseModel<bool>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                if (id.IsNullOrEmpty() || !id.IsGuid())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                    response.Message = Resource.Resource.KayitBulunamadi;
+                    return Ok(response);
+                }
+
+                response.Data = await _workerService.DeleteWorkerAsync(id.ToGuid());
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+                _loggerHandler.LogMessage(ex);
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
+
+        /// <summary>
+        /// Get Worker By Busimess Id
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "00000000-0000-0000-0000-000000000000"
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("worker/deletebybusinessid")]
+        public async Task<IActionResult> DeleteByBusinessId([FromBody] string? businessId)
+        {
+            ResponseModel<bool> response = new ResponseModel<bool>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                if (businessId.IsNullOrEmpty() || !businessId.IsGuid())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
+                    response.Message = Resource.Resource.KayitBulunamadi;
+                    return Ok(response);
+                }
+
+                response.Data = await _workerService.DeleteWorkersByBusinessIdAsync(businessId.ToGuid());
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+                _loggerHandler.LogMessage(ex);
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
+    }
+}

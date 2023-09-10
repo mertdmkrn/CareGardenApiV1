@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using static CareGardenApiV1.Helpers.Enums;
 
 namespace CareGardenApiV1.Model.RequestModel
 {
@@ -8,5 +9,6 @@ namespace CareGardenApiV1.Model.RequestModel
         public bool officialDayAvailable { get; set; }
         public int appointmentTimeInterval { get; set; }
         public int appointmentPeopleCount { get; set; }
+        public WorkingGenderType workingGenderType { get; set; }
     }
 }

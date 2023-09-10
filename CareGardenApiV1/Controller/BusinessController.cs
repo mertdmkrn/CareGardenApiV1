@@ -448,7 +448,8 @@ namespace CareGardenApiV1.Controller
         ///        },
         ///        "appointmentTimeInterval" : 30,
         ///        "appointmentPeopleCount" : 5,
-        ///        "officialHolidayAvailable" : true
+        ///        "officialHolidayAvailable" : true,
+        ///        "workingGenderType" : 0
         ///     }
         ///
         /// </remarks>
@@ -498,6 +499,7 @@ namespace CareGardenApiV1.Controller
                 business.officialHolidayAvailable = businessWorkInfoModel.officialDayAvailable;
                 business.appointmentPeopleCount = businessWorkInfoModel.appointmentPeopleCount;
                 business.appointmentTimeInterval = businessWorkInfoModel.appointmentTimeInterval;
+                business.workingGenderType = businessWorkInfoModel.workingGenderType;
 
                 await _businessService.UpdateBusinessAsync(business);
 

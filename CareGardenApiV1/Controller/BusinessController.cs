@@ -595,7 +595,7 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
-        /// Add Gallery Photo
+        /// Delete Gallery Photo
         /// </summary>
         /// <returns></returns>
         [HttpPost]

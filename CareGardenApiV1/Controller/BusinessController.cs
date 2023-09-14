@@ -408,7 +408,7 @@ namespace CareGardenApiV1.Controller
                 business.district = updateBusiness.district.IsNull(business.district);
                 business.description = updateBusiness.description.IsNull(business.description);
                 business.descriptionEn = updateBusiness.descriptionEn.IsNull(business.descriptionEn);
-                business.discountRate = updateBusiness.discountRate.IsNull(business.discountRate);
+                business.discountRate = updateBusiness.discountRate;
                 business.isFeatured = updateBusiness.isFeatured;
                 business.hasPromotion = updateBusiness.hasPromotion;
 

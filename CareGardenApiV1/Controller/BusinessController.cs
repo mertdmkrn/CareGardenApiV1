@@ -291,7 +291,7 @@ namespace CareGardenApiV1.Controller
         [Route("business/setprofilephoto")]
         public async Task<IActionResult> SetProfilePhoto(IFormFile file, Guid? id)
         {
-            ResponseModel<bool> response = new ResponseModel<bool>();
+            ResponseModel<BusinessGallery> response = new ResponseModel<BusinessGallery>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
@@ -337,14 +337,11 @@ namespace CareGardenApiV1.Controller
                     isProfilePhoto = true,
                 };
 
-                await _businessGalleryService.SaveBusinessGalleryAsync(businessGallery);
+                response.Message = Resource.Resource.ResimYuklemeBasarili;
+                response.Data = await _businessGalleryService.SaveBusinessGalleryAsync(businessGallery); ;
                 BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
 
-                response.Message = Resource.Resource.ResimYuklemeBasarili;
-                response.Data = true;
-
                 return Ok(response);
-
             }
             catch (Exception ex)
             {
@@ -538,7 +535,7 @@ namespace CareGardenApiV1.Controller
         [Route("business/addgalleryphoto")]
         public async Task<IActionResult> AddGalleryPhoto(List<IFormFile> files, Guid? id)
         {
-            ResponseModel<bool> response = new ResponseModel<bool>();
+            ResponseModel<List<BusinessGallery>> response = new ResponseModel<List<BusinessGallery>>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
@@ -586,11 +583,11 @@ namespace CareGardenApiV1.Controller
                     });
                 }
        
-                await _businessGalleryService.SaveBusinessGalleriesAsync(businessGalleries);
-                BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
+               
 
                 response.Message = Resource.Resource.ResimYuklemeBasarili;
-                response.Data = true;
+                response.Data = await _businessGalleryService.SaveBusinessGalleriesAsync(businessGalleries); ;
+                BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
 
                 return Ok(response);
 

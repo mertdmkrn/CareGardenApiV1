@@ -153,7 +153,7 @@ namespace CareGardenApiV1.Controller
             try
             {
                 var business = await HelperMethods.GetSessionBusiness(Request, _businessService);
-                
+
                 if (business == null)
                 {
                     response.HasError = true;
@@ -223,7 +223,7 @@ namespace CareGardenApiV1.Controller
                     BusinessServicesInfo businessServiceInfo = new BusinessServicesInfo();
                     var service = services.FirstOrDefault(x => x.id == items.Key.Value);
                     businessServiceInfo.serviceName = service != null ? (culture == "en" ? service.nameEn : service.name) : "";
-                    
+
                     foreach (var item in items)
                     {
                         businessServiceInfo.businessServices.Add(item);
@@ -326,7 +326,7 @@ namespace CareGardenApiV1.Controller
 
                 string imageUrl = await _fileHandler.UploadFreeImageServer(file);
 
-                if(imageUrl.IsNullOrEmpty())
+                if (imageUrl.IsNullOrEmpty())
                     imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, "StaticFiles/UploadedFiles/BusinessImages/" + businessName + "/" + fileName);
 
                 BusinessGallery businessGallery = new BusinessGallery
@@ -409,7 +409,7 @@ namespace CareGardenApiV1.Controller
                 business.isFeatured = updateBusiness.isFeatured;
                 business.hasPromotion = updateBusiness.hasPromotion;
 
-                if(updateBusiness.latitude > 0 && updateBusiness.longitude > 0)
+                if (updateBusiness.latitude > 0 && updateBusiness.longitude > 0)
                 {
                     var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
                     business.location = gf.CreatePoint(new NetTopologySuite.Geometries.Coordinate(updateBusiness.latitude, updateBusiness.longitude));
@@ -472,7 +472,7 @@ namespace CareGardenApiV1.Controller
                     response.ValidationErrors.Add(new ValidationError("businessWorkingInfo", Resource.Resource.BuAlaniBosBirakmayiniz));
                 }
 
-                if(businessWorkInfoModel.appointmentPeopleCount == 0)
+                if (businessWorkInfoModel.appointmentPeopleCount == 0)
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("appointmentPeopleCount", Resource.Resource.BuAlaniBosBirakmayiniz));
@@ -533,14 +533,14 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("business/addgalleryphoto")]
-        public async Task<IActionResult> AddGalleryPhoto(List<IFormFile> files, Guid? id)
+        public async Task<IActionResult> AddGalleryPhoto(IFormFile file, Guid? id)
         {
-            ResponseModel<List<BusinessGallery>> response = new ResponseModel<List<BusinessGallery>>();
+            ResponseModel<BusinessGallery> response = new ResponseModel<BusinessGallery>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
-                if (files == null || files.Count == 0)
+                if (file == null)
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("files", Resource.Resource.BuAlaniBosBirakmayiniz));
@@ -562,31 +562,24 @@ namespace CareGardenApiV1.Controller
                     return Ok(response);
                 }
 
-                List<BusinessGallery> businessGalleries = new List<BusinessGallery>();
+                string fileName = file.FileName.Split(".").FirstOrDefault() + "-" + DateTime.Now.ToString("ddMMhhmmss") + "." + file.FileName.Split(".").LastOrDefault();
+                string businessName = business.name.ToLower().TurkishChrToEnglishChr().Replace(" ", "-");
+                await _fileHandler.UploadFile(file, "BusinessImages/" + businessName, fileName);
 
-                foreach (var file in files)
+                string imageUrl = await _fileHandler.UploadFreeImageServer(file);
+
+                if (imageUrl.IsNullOrEmpty())
+                    imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, "StaticFiles/UploadedFiles/BusinessImages/" + businessName + "/" + fileName);
+
+                var businessGallery = new BusinessGallery
                 {
-                    string fileName = file.FileName.Split(".").FirstOrDefault() + "-" + DateTime.Now.ToString("ddMMhhmmss") + "." + file.FileName.Split(".").LastOrDefault();
-                    string businessName = business.name.ToLower().TurkishChrToEnglishChr().Replace(" ", "-");
-                    await _fileHandler.UploadFile(file, "BusinessImages/" + businessName, fileName);
-
-                    string imageUrl = await _fileHandler.UploadFreeImageServer(file);
-
-                    if (imageUrl.IsNullOrEmpty())
-                        imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, "StaticFiles/UploadedFiles/BusinessImages/" + businessName + "/" + fileName);
-
-                    businessGalleries.Add(new BusinessGallery
-                    {
-                        imageUrl = imageUrl,
-                        businessId = business.id,
-                        size = file.GetImageSize()
-                    });
-                }
-       
-               
+                    imageUrl = imageUrl,
+                    businessId = business.id,
+                    size = file.GetImageSize()
+                };
 
                 response.Message = Resource.Resource.ResimYuklemeBasarili;
-                response.Data = await _businessGalleryService.SaveBusinessGalleriesAsync(businessGalleries); ;
+                response.Data = await _businessGalleryService.SaveBusinessGalleryAsync(businessGallery);
                 BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
 
                 return Ok(response);

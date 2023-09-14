@@ -333,7 +333,7 @@ namespace CareGardenApiV1.Controller
                 {
                     imageUrl = imageUrl,
                     businessId = business.id,
-                    size = businessFileInfoModel.file.GetImageSize(),
+                    size = null,
                     isProfilePhoto = true,
                 };
 
@@ -575,7 +575,7 @@ namespace CareGardenApiV1.Controller
                 {
                     imageUrl = imageUrl,
                     businessId = business.id,
-                    size = businessFileInfoModel.file.GetImageSize()
+                    size = null
                 };
 
                 response.Message = Resource.Resource.ResimYuklemeBasarili;

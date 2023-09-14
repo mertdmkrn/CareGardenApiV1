@@ -289,7 +289,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("business/setprofilephoto")]
-        public async Task<IActionResult> SetProfilePhoto(IFormFile file, Guid? id)
+        public async Task<IActionResult> SetProfilePhoto([FromForm] IFormFile file, [FromForm] Guid? id)
         {
             ResponseModel<BusinessGallery> response = new ResponseModel<BusinessGallery>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -533,7 +533,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("business/addgalleryphoto")]
-        public async Task<IActionResult> AddGalleryPhoto(IFormFile file, Guid? id)
+        public async Task<IActionResult> AddGalleryPhoto([FromForm] IFormFile file, [FromForm] Guid? id)
         {
             ResponseModel<BusinessGallery> response = new ResponseModel<BusinessGallery>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));

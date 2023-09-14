@@ -289,14 +289,14 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("business/setprofilephoto")]
-        public async Task<IActionResult> SetProfilePhoto([FromForm] IFormFile file, [FromForm] Guid? id)
+        public async Task<IActionResult> SetProfilePhoto([FromForm] BusinessFileInfoModel businessFileInfoModel)
         {
             ResponseModel<BusinessGallery> response = new ResponseModel<BusinessGallery>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
-                if (file == null)
+                if (businessFileInfoModel.file == null)
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("files", Resource.Resource.BuAlaniBosBirakmayiniz));
@@ -306,9 +306,9 @@ namespace CareGardenApiV1.Controller
 
                 var business = await HelperMethods.GetSessionBusiness(Request, _businessService);
 
-                if (business == null && id.HasValue)
+                if (business == null && businessFileInfoModel.businessId.HasValue)
                 {
-                    business = await _businessService.GetBusinessByIdAsync(id.Value);
+                    business = await _businessService.GetBusinessByIdAsync(businessFileInfoModel.businessId.Value);
                 }
 
                 if (business == null)
@@ -320,11 +320,11 @@ namespace CareGardenApiV1.Controller
 
                 List<BusinessGallery> businessGalleries = new List<BusinessGallery>();
 
-                string fileName = file.FileName.Split(".").FirstOrDefault() + "-" + DateTime.Now.ToString("ddMMhhmmss") + "." + file.FileName.Split(".").LastOrDefault();
+                string fileName = businessFileInfoModel.file.FileName.Split(".").FirstOrDefault() + "-" + DateTime.Now.ToString("ddMMhhmmss") + "." + businessFileInfoModel.file.FileName.Split(".").LastOrDefault();
                 string businessName = business.name.ToLower().TurkishChrToEnglishChr().Replace(" ", "-");
-                await _fileHandler.UploadFile(file, "BusinessImages/" + businessName, fileName);
+                await _fileHandler.UploadFile(businessFileInfoModel.file, "BusinessImages/" + businessName, fileName);
 
-                string imageUrl = await _fileHandler.UploadFreeImageServer(file);
+                string imageUrl = await _fileHandler.UploadFreeImageServer(businessFileInfoModel.file);
 
                 if (imageUrl.IsNullOrEmpty())
                     imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, "StaticFiles/UploadedFiles/BusinessImages/" + businessName + "/" + fileName);
@@ -333,7 +333,7 @@ namespace CareGardenApiV1.Controller
                 {
                     imageUrl = imageUrl,
                     businessId = business.id,
-                    size = file.GetImageSize(),
+                    size = businessFileInfoModel.file.GetImageSize(),
                     isProfilePhoto = true,
                 };
 
@@ -533,26 +533,26 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("business/addgalleryphoto")]
-        public async Task<IActionResult> AddGalleryPhoto([FromForm] IFormFile file, [FromForm] Guid? id)
+        public async Task<IActionResult> AddGalleryPhoto([FromForm] BusinessFileInfoModel businessFileInfoModel)
         {
             ResponseModel<BusinessGallery> response = new ResponseModel<BusinessGallery>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
-                if (file == null)
+                if (businessFileInfoModel.file == null)
                 {
                     response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("files", Resource.Resource.BuAlaniBosBirakmayiniz));
+                    response.ValidationErrors.Add(new ValidationError("file", Resource.Resource.BuAlaniBosBirakmayiniz));
                     response.Message = Resource.Resource.BuAlaniBosBirakmayiniz;
                     return Ok(response);
                 }
 
                 var business = await HelperMethods.GetSessionBusiness(Request, _businessService);
 
-                if (business == null && id.HasValue)
+                if (business == null && businessFileInfoModel.businessId.HasValue)
                 {
-                    business = await _businessService.GetBusinessByIdAsync(id.Value);
+                    business = await _businessService.GetBusinessByIdAsync(businessFileInfoModel.businessId.Value);
                 }
 
                 if (business == null)
@@ -562,11 +562,11 @@ namespace CareGardenApiV1.Controller
                     return Ok(response);
                 }
 
-                string fileName = file.FileName.Split(".").FirstOrDefault() + "-" + DateTime.Now.ToString("ddMMhhmmss") + "." + file.FileName.Split(".").LastOrDefault();
+                string fileName = businessFileInfoModel.file.FileName.Split(".").FirstOrDefault() + "-" + DateTime.Now.ToString("ddMMhhmmss") + "." + businessFileInfoModel.file.FileName.Split(".").LastOrDefault();
                 string businessName = business.name.ToLower().TurkishChrToEnglishChr().Replace(" ", "-");
-                await _fileHandler.UploadFile(file, "BusinessImages/" + businessName, fileName);
+                await _fileHandler.UploadFile(businessFileInfoModel.file, "BusinessImages/" + businessName, fileName);
 
-                string imageUrl = await _fileHandler.UploadFreeImageServer(file);
+                string imageUrl = await _fileHandler.UploadFreeImageServer(businessFileInfoModel.file);
 
                 if (imageUrl.IsNullOrEmpty())
                     imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, "StaticFiles/UploadedFiles/BusinessImages/" + businessName + "/" + fileName);
@@ -575,7 +575,7 @@ namespace CareGardenApiV1.Controller
                 {
                     imageUrl = imageUrl,
                     businessId = business.id,
-                    size = file.GetImageSize()
+                    size = businessFileInfoModel.file.GetImageSize()
                 };
 
                 response.Message = Resource.Resource.ResimYuklemeBasarili;

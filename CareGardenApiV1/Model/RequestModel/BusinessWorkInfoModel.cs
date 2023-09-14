@@ -5,6 +5,8 @@ namespace CareGardenApiV1.Model.RequestModel
 {
     public class BusinessWorkInfoModel
     {
+        public Guid businessId { get; set; } = Guid.Empty;
+
         public BusinessWorkingInfo businessWorkingInfo { get; set; } = new BusinessWorkingInfo();
         public bool officialDayAvailable { get; set; }
         public int appointmentTimeInterval { get; set; }

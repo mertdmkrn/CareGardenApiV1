@@ -289,7 +289,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("business/setprofilephoto")]
-        public async Task<IActionResult> SetProfilePhoto(IFormFile file)
+        public async Task<IActionResult> SetProfilePhoto(IFormFile file, Guid? id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -305,6 +305,11 @@ namespace CareGardenApiV1.Controller
                 }
 
                 var business = await HelperMethods.GetSessionBusiness(Request, _businessService);
+
+                if (business == null && id.HasValue)
+                {
+                    business = await _businessService.GetBusinessByIdAsync(id.Value);
+                }
 
                 if (business == null)
                 {
@@ -383,7 +388,8 @@ namespace CareGardenApiV1.Controller
 
             try
             {
-                var business = await HelperMethods.GetSessionBusiness(Request, _businessService);
+                var business = await HelperMethods.GetSessionBusiness(Request, _businessService)
+                               ?? await _businessService.GetBusinessByIdAsync(updateBusiness.id);
 
                 if (business == null)
                 {
@@ -487,7 +493,8 @@ namespace CareGardenApiV1.Controller
                     return Ok(response);
                 }
 
-                var business = await HelperMethods.GetSessionBusiness(Request, _businessService);
+                var business = await HelperMethods.GetSessionBusiness(Request, _businessService)
+                               ?? await _businessService.GetBusinessByIdAsync(businessWorkInfoModel.businessId);
 
                 if (business == null)
                 {
@@ -529,7 +536,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("business/addgalleryphoto")]
-        public async Task<IActionResult> AddGalleryPhoto(List<IFormFile> files)
+        public async Task<IActionResult> AddGalleryPhoto(List<IFormFile> files, Guid? id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -545,6 +552,11 @@ namespace CareGardenApiV1.Controller
                 }
 
                 var business = await HelperMethods.GetSessionBusiness(Request, _businessService);
+
+                if (business == null && id.HasValue)
+                {
+                    business = await _businessService.GetBusinessByIdAsync(id.Value);
+                }
 
                 if (business == null)
                 {

@@ -239,7 +239,8 @@ namespace CareGardenApiV1.Controller
                 }
 
                 businessService.maxDuration = businessService.maxDuration.IsNull(businessService.minDuration);
-               
+
+                response.Message = Resource.Resource.KayitBasarili;
                 response.Data = await _businessServicesService.SaveBusinessServiceAsync(businessService);
 
                 return Ok(response);
@@ -359,6 +360,7 @@ namespace CareGardenApiV1.Controller
                 businessService.maxDuration = updateBusinessService.maxDuration.IsNull(updateBusinessService.minDuration);
                 businessService.price = updateBusinessService.price;
 
+                response.Message = Resource.Resource.KayitBasarili;
                 response.Data = await _businessServicesService.UpdateBusinessServiceAsync(businessService);
 
                 return Ok(response);
@@ -399,6 +401,7 @@ namespace CareGardenApiV1.Controller
 
                 await _businessServicesService.DeleteBusinessServiceAsync(id.ToGuid());
 
+                response.Message = Resource.Resource.KayitSilindi;
                 response.Data = true;
                 return Ok(response);
             }

@@ -338,7 +338,7 @@ namespace CareGardenApiV1.Controller
                 };
 
                 response.Message = Resource.Resource.ResimYuklemeBasarili;
-                response.Data = await _businessGalleryService.SaveBusinessGalleryAsync(businessGallery); ;
+                response.Data = await _businessGalleryService.SaveBusinessGalleryAsync(businessGallery);
                 BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
 
                 return Ok(response);

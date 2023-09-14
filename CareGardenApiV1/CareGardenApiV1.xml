@@ -136,7 +136,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessController.SetProfilePhoto(Microsoft.AspNetCore.Http.IFormFile)">
+        <member name="M:CareGardenApiV1.Controller.BusinessController.SetProfilePhoto(CareGardenApiV1.Model.RequestModel.BusinessFileInfoModel)">
             <summary>
             Set Profile Photo
             </summary>
@@ -194,7 +194,13 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessController.AddGalleryPhoto(System.Collections.Generic.List{Microsoft.AspNetCore.Http.IFormFile})">
+        <member name="M:CareGardenApiV1.Controller.BusinessController.AddGalleryPhoto(CareGardenApiV1.Model.RequestModel.BusinessFileInfoModel)">
+            <summary>
+            Add Gallery Photo
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.DeleteGalleryPhoto(System.String)">
             <summary>
             Add Gallery Photo
             </summary>

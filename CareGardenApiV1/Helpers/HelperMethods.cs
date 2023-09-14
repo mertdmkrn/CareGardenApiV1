@@ -9,10 +9,10 @@ using System.Security.Claims;
 using CareGardenApiV1.Service.Concrete;
 using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Repository.Abstract;
-using System.Drawing;
 using RestSharp;
 using CareGardenApiV1.Model.ResponseModel;
 using Nest;
+using System.Drawing;
 
 namespace CareGardenApiV1.Helpers
 {
@@ -194,7 +194,7 @@ namespace CareGardenApiV1.Helpers
                     return image.Width + "x" + image.Height;
                 }
             }
-            catch (FormatException)
+            catch (FormatException ex)
             {
                 return null;
             }

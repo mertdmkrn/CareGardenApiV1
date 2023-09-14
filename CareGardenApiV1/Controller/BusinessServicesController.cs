@@ -179,7 +179,7 @@ namespace CareGardenApiV1.Controller
         [Route("businessservice/save")]
         public async Task<IActionResult> Save([FromBody] BusinessServiceModel businessService)
         {
-            ResponseModel<bool> response = new ResponseModel<bool>();
+            ResponseModel<BusinessServiceModel> response = new ResponseModel<BusinessServiceModel>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
             
             try
@@ -239,9 +239,8 @@ namespace CareGardenApiV1.Controller
                 }
 
                 businessService.maxDuration = businessService.maxDuration.IsNull(businessService.minDuration);
-
-                await _businessServicesService.SaveBusinessServiceAsync(businessService);
-                response.Data = true;
+               
+                response.Data = await _businessServicesService.SaveBusinessServiceAsync(businessService);
 
                 return Ok(response);
             }
@@ -280,7 +279,7 @@ namespace CareGardenApiV1.Controller
         [Route("businessservice/update")]
         public async Task<IActionResult> Update([FromBody] BusinessServiceModel updateBusinessService)
         {
-            ResponseModel<bool> response = new ResponseModel<bool>();
+            ResponseModel<BusinessServiceModel> response = new ResponseModel<BusinessServiceModel>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
@@ -360,8 +359,7 @@ namespace CareGardenApiV1.Controller
                 businessService.maxDuration = updateBusinessService.maxDuration.IsNull(updateBusinessService.minDuration);
                 businessService.price = updateBusinessService.price;
 
-                await _businessServicesService.UpdateBusinessServiceAsync(businessService);
-                response.Data = true;
+                response.Data = await _businessServicesService.UpdateBusinessServiceAsync(businessService);
 
                 return Ok(response);
             }

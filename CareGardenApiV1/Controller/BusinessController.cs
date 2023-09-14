@@ -600,7 +600,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("business/deletegalleryphoto")]
-        public async Task<IActionResult> DeleteGalleryPhoto(string id)
+        public async Task<IActionResult> DeleteGalleryPhoto([FromBody] string id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));

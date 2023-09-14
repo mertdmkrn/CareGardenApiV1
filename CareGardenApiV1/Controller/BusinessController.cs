@@ -503,7 +503,7 @@ namespace CareGardenApiV1.Controller
                     return Ok(response);
                 }
 
-                business.officialHolidayAvailable = businessWorkInfoModel.officialDayAvailable;
+                business.officialHolidayAvailable = businessWorkInfoModel.officialHolidayAvailable;
                 business.appointmentPeopleCount = businessWorkInfoModel.appointmentPeopleCount;
                 business.appointmentTimeInterval = businessWorkInfoModel.appointmentTimeInterval;
                 business.workingGenderType = businessWorkInfoModel.workingGenderType;

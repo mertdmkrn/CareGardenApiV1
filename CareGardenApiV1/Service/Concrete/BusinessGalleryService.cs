@@ -24,6 +24,11 @@ namespace CareGardenApiV1.Service.Concrete
              return await _businessGalleryRepository.DeleteBusinessGalleryByBusinessIdAsync(businessId);
         }
 
+        public async Task<bool> DeleteBusinessGalleryByIdAsync(Guid id)
+        {
+            return await _businessGalleryRepository.DeleteBusinessGalleryByIdAsync(id);
+        }
+
         public async Task<List<BusinessGallery>> GetBusinessGalleriesByBusinessIdAsync(Guid businessId)
         {
              return await _businessGalleryRepository.GetBusinessGalleriesByBusinessIdAsync(businessId);

@@ -78,5 +78,16 @@ namespace CareGardenApiV1.Repository.Concrete
                 return true;
             }
         }
+
+        public async Task<bool> DeleteBusinessGalleryByIdAsync(Guid id)
+        {
+            using (var context = new CareGardenApiDbContext())
+            {
+                await context.BusinessGalleries
+                    .Where(x => x.id == id)
+                    .ExecuteDeleteAsync();
+                return true;
+            }
+        }
     }
 }

@@ -11,5 +11,6 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<BusinessGallery> UpdateBusinessGalleryAsync(BusinessGallery businessGallery);
         Task<bool> DeleteBusinessGalleryAsync(BusinessGallery businessGallery);
         Task<bool> DeleteBusinessGalleryByBusinessIdAsync(Guid businessId);
+        Task<bool> DeleteBusinessGalleryByIdAsync(Guid id);
     }
 }

@@ -594,6 +594,45 @@ namespace CareGardenApiV1.Controller
             }
         }
 
+        /// <summary>
+        /// Add Gallery Photo
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("business/deletegalleryphoto")]
+        public async Task<IActionResult> DeleteGalleryPhoto(string id)
+        {
+            ResponseModel<bool> response = new ResponseModel<bool>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                if (!id.IsGuid())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                    response.Message += Resource.Resource.IdParametreHatasi;
+                }
+
+                if (response.HasError)
+                    return Ok(response);
+
+                await _businessGalleryService.DeleteBusinessGalleryByIdAsync(id.ToGuid());
+                response.Message = Resource.Resource.KayitSilindi;
+                response.Data = true;
+
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+                _loggerHandler.LogMessage(ex);
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
+
         ///// <summary>
         ///// Delete User
         ///// </summary>

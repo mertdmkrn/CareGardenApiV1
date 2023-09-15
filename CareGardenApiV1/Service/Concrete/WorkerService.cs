@@ -46,7 +46,7 @@ namespace CareGardenApiV1.Service.Concrete
 
         public async Task<Worker> UpdateWorkerAsync(Worker worker)
         {
-            return await _workerRepository.SaveWorkerAsync(worker);
+            return await _workerRepository.UpdateWorkerAsync(worker);
         }
     }
 }

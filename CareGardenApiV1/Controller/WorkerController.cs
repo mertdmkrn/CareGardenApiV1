@@ -310,7 +310,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message += "Exception => " + ex.Message + ex.StackTrace;
                 return Ok(response);
             }
         }

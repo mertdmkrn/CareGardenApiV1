@@ -69,6 +69,8 @@ namespace CareGardenApiV1.Repository.Concrete
         {
             using (var context = new CareGardenApiDbContext())
             {
+                worker.isActive = true;
+                worker.isAvailable = true;
                 await context.Workers.AddAsync(worker);
                 await context.SaveChangesAsync();
                 return worker;

@@ -345,6 +345,8 @@ namespace CareGardenApiV1.Controller
                 }
 
                 response.Data = await _workerService.DeleteWorkerAsync(id.ToGuid());
+                response.Message = Resource.Resource.KayitSilindi;
+
                 return Ok(response);
 
             }

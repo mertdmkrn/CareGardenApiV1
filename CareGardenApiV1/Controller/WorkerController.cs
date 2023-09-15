@@ -174,7 +174,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost]
-        [Route("worker/add")]
+        [Route("worker/save")]
         public async Task<IActionResult> Save([FromBody] Worker worker)
         {
             ResponseModel<Worker> response = new ResponseModel<Worker>();

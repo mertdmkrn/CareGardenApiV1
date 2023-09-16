@@ -53,7 +53,7 @@ namespace CareGardenApiV1.Helpers
                 if (telephoneNumber.IsNullOrEmpty()) return false;
 
                 telephoneNumber = telephoneNumber.Replace("+9", "");
-                string regex = @"^(05(\d{9}))$";
+                string regex = @"^(0[1-9][0-9]{2})\s?(\d{3})\s?(\d{2})\s?(\d{2})$|^05\d{9}$";
                 return Regex.IsMatch(telephoneNumber, regex, RegexOptions.IgnoreCase);
             }
             catch (FormatException)

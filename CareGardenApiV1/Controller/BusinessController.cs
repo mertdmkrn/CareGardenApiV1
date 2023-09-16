@@ -633,53 +633,31 @@ namespace CareGardenApiV1.Controller
             }
         }
 
-        ///// <summary>
-        ///// Delete User
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpPost]
-        //[Route("user/delete")]
-        //public async Task<IActionResult> Delete([FromBody] string id)
-        //{
-        ///    ResponseModel<bool> response = new ResponseModel<bool>();
-        ///    Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-        ///    try
-        ///    {
-        ///        if (!id.IsGuid())
-        ///        {
-        ///            response.HasError = true;
-        ///            response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-        ///        }
+        /// <summary>
+        /// Delete Business
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("business/delete")]
+        public async Task<IActionResult> Delete([FromBody] Business business)
+        {
+            ResponseModel<bool> response = new ResponseModel<bool>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-        ///        if (response.HasError)
-        ///        {
-        ///            response.Message = Resource.Resource.KayitSilinemedi;
-        ///            return Ok(response);
-        ///        }
-
-        ///        User user = await _userService.GetUserById(id.ToGuid());
-
-        ///        if (user == null)
-        ///        {
-        ///            response.HasError = true;
-        ///            response.Message = id + " id " + Resource.Resource.KullaniciBulunamadi;
-        ///            return Ok(response);
-        ///        }
-
-        ///        response.Data = await _userService.DeleteUserAsync(user);
-
-        ///        return Ok(response);
-        ///    }
-        ///    catch (Exception ex)
-        ///    {
-        ///        response.HasError = true;
-        ///        response.Message = Resource.Resource.KayitSilinemedi + " Exception => " + ex.Message;
-        ///        return Ok(response);
-        ///    }
-        //}
-
-
+            try
+            {               
+                response.Data = await _businessService.DeleteBusinessAsync(business);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _loggerHandler.LogMessage(ex);
+                response.HasError = true;
+                response.Message = Resource.Resource.KayitSilinemedi + " Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
         ///// <summary>
         ///// Update User
         ///// </summary>

@@ -564,9 +564,9 @@ namespace CareGardenApiV1.Repository.Concrete
                     .Take(searchAdminModel.take)
                     .ToListAsync();
 
-                var pageCount = (int)Math.Ceiling((double)businessAdminListQueryable.Count() / (double)searchAdminModel.take);
+                var pageCount = businessAdminListQueryable.Count();
 
-                list.ToList().ForEach(async x => { x.pageCount = pageCount; });
+                list.ToList().ForEach(async x => { x.itemCount = pageCount; });
 
                 return list;
             }          

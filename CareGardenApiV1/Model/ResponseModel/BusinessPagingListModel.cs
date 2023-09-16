@@ -15,6 +15,6 @@ namespace CareGardenApiV1.Model.ResponseModel
         public bool isActive{ get; set; }
         public WorkingGenderType workingGenderType { get; set; }
         public DateTime? createDate { get; set; }
-        public int pageCount { get; set; }
+        public int itemCount { get; set; }
     }
 }

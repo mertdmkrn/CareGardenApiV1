@@ -125,7 +125,7 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
-        /// Get Search By Keyword
+        /// Get Search
         /// </summary>
         /// <returns></returns>
         [HttpPost]

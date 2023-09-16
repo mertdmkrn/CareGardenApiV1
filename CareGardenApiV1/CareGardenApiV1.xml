@@ -106,6 +106,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.AdminController.GetBusinessSearch(CareGardenApiV1.Model.RequestModel.BusinessSearchAdminModel)">
+            <summary>
+            Get Search
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessById(System.String)">
             <summary>
             Get Business By Id
@@ -202,7 +208,7 @@
         </member>
         <member name="M:CareGardenApiV1.Controller.BusinessController.DeleteGalleryPhoto(System.String)">
             <summary>
-            Add Gallery Photo
+            Delete Gallery Photo
             </summary>
             <returns></returns>
         </member>
@@ -522,7 +528,7 @@
         </member>
         <member name="M:CareGardenApiV1.Controller.SearchController.GetSearch(CareGardenApiV1.Model.RequestModel.BusinessExproleModel)">
             <summary>
-            Get Search By Keyword
+            Get Search
             </summary>
             <returns></returns>
         </member>

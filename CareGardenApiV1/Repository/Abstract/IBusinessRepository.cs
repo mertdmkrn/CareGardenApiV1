@@ -12,6 +12,7 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<Business> GetBusinessByEmailAndPasswordAsync(string email, string password);
         Task<Business> GetBusinessByEmailAsync(string email);
         Task<Business> GetBusinessByTelephoneNumberAsync(string telephone);
+        Task<List<BusinessPagingListModel>> GetBusinessLiteListAsync(BusinessSearchAdminModel searchAdminModel);
         Task<BusinessDetailModel> GetBusinessDetailByIdAsync(Guid id);
         Task<IList<BusinessDetailModel>> GetBusinessesAsync();
         Task<IList<BusinessListModel>> GetBusinessNearByDistanceAsync(BusinessSearchModel businessSearchModel);

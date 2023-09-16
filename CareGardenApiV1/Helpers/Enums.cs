@@ -46,7 +46,8 @@
         {
             Everyone,
             FemaleOnly,
-            MaleOnly
+            MaleOnly,
+            All
         }
 
         public enum WorkingDayType

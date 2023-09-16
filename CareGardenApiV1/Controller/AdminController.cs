@@ -3,6 +3,8 @@ using CareGardenApiV1.Handler.Concrete;
 using CareGardenApiV1.Handler.Model;
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
+using CareGardenApiV1.Model.RequestModel;
+using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Service.Concrete;
@@ -535,7 +537,6 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [HttpPost]
         [Route("admin/indexbusiness")]
         public async Task<IActionResult> IndexBusiness()
         {
@@ -555,6 +556,33 @@ namespace CareGardenApiV1.Controller
                 response.Message += "Exception => " + ex.Message;
                 return Ok(response);
             }
+        }
+
+        /// <summary>
+        /// Get Search
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("admin/getbusinesssearch")]
+        public async Task<IActionResult> GetBusinessSearch([FromBody] BusinessSearchAdminModel searchAdminModel)
+        {
+            var culture = Request.Headers["Language"].ToString().IsNull("en");
+            ResponseModel<List<BusinessPagingListModel>> response = new ResponseModel<List<BusinessPagingListModel>>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(culture);
+
+            try
+            {
+                response.Data = await _businessService.GetBusinessLiteListAsync(searchAdminModel);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _loggerHandler.LogMessage(ex);
+                response.HasError = true;
+                response.Message = "Exception => " + ex.Message;
+                return Ok(response);
+            }
+
         }
     }
 }

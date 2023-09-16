@@ -92,5 +92,10 @@ namespace CareGardenApiV1.Service.Concrete
         {
             return await _businessRepository.UpdateBusinessAsync(business);
         }
+
+        public async Task<List<BusinessPagingListModel>> GetBusinessLiteListAsync(BusinessSearchAdminModel searchAdminModel)
+        {
+            return await _businessRepository.GetBusinessLiteListAsync(searchAdminModel);
+        }
     }
 }

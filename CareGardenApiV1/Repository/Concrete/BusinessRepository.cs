@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.DataProtection.XmlEncryption;
 using OneSignalApi.Model;
 using CareGardenApiV1.Model.RequestModel;
 using Nest;
+using static CareGardenApiV1.Helpers.Enums;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -514,6 +515,61 @@ namespace CareGardenApiV1.Repository.Concrete
                 await context.SaveChangesAsync();
                 return business;
             }
+        }
+
+        public async Task<List<BusinessPagingListModel>> GetBusinessLiteListAsync(BusinessSearchAdminModel searchAdminModel)
+        {
+            using (var context = new CareGardenApiDbContext())
+            {
+                var businessAdminListQueryable = context.Businesses.AsNoTracking();
+
+                if (searchAdminModel.city.IsNotNullOrEmpty())
+                {
+                    businessAdminListQueryable.Where(x => x.city == searchAdminModel.city);
+                }
+
+                if (searchAdminModel.name.IsNotNullOrEmpty())
+                {
+                    businessAdminListQueryable.Where(x => x.name == searchAdminModel.name);
+                }
+
+                if (searchAdminModel.isOnlyActive)
+                {
+                    businessAdminListQueryable.Where(x => x.isActive == true);
+                }
+                else if (searchAdminModel.isOnlyNotActive)
+                {
+                    businessAdminListQueryable.Where(x => x.isActive == false);
+                }
+
+                if ((WorkingGenderType)searchAdminModel.workingGenderType != Enums.WorkingGenderType.All)
+                {
+                    businessAdminListQueryable.Where(x => x.workingGenderType == searchAdminModel.workingGenderType);
+                }
+
+                var list = await businessAdminListQueryable
+                    .Select(x => new BusinessPagingListModel
+                    { 
+                        id = x.id,
+                        name = x.name,
+                        city = x.city, 
+                        district = x.district, 
+                        createDate = x.createDate,
+                        isActive = x.isActive,
+                        workingGenderType = x.workingGenderType,
+                    })
+                    .OrderByDescending(x => x.createDate)
+                    .ThenByDescending(x => x.name)
+                    .Skip(searchAdminModel.page * searchAdminModel.take)
+                    .Take(searchAdminModel.take)
+                    .ToListAsync();
+
+                var pageCount = (int)Math.Ceiling((double)businessAdminListQueryable.Count() / (double)searchAdminModel.take);
+
+                list.ToList().ForEach(async x => { x.pageCount = pageCount; });
+
+                return list;
+            }          
         }
     }
 }

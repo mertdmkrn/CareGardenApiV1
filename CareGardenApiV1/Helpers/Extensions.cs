@@ -101,12 +101,9 @@ namespace CareGardenApiV1.Helpers
 
             if(fullNameArr.Length < 1) return false;
 
-            for (int i = 0; i < fullNameArr.Length; i++)
-            {
-                if(i == 0 && fullNameArr[i].Length < 3) return false;
+            if(fullNameArr.FirstOrDefault().Length < 3) return false;
 
-                if(i > 0 && fullNameArr[i].Length < 2) return false;
-            }
+            if(fullNameArr.LastOrDefault().Length < 2) return false;
 
             return true;
         }

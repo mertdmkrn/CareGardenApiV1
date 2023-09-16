@@ -393,6 +393,14 @@ namespace CareGardenApiV1.Controller
                 };
 
                 response.Data = _tokenHandler.CreateAccessToken(DateTime.Now.AddDays(60), claims);
+
+                var sessionUserRole = HelperMethods.GetClaimInfo(Request, ClaimTypes.Role);
+
+                if (sessionUserRole.IsNotNullOrEmpty() && sessionUserRole.Equals("Admin"))
+                {
+                    response.Data.id = business.id;
+                }
+
                 BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
 
                 return Ok(response);

@@ -552,8 +552,8 @@ namespace CareGardenApiV1.Repository.Concrete
                     { 
                         id = x.id,
                         name = x.name,
-                        city = x.city, 
-                        district = x.district, 
+                        city = x.city,
+                        province = x.province, 
                         createDate = x.createDate,
                         isActive = x.isActive,
                         workingGenderType = x.workingGenderType,

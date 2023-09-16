@@ -11,7 +11,7 @@ namespace CareGardenApiV1.Model.ResponseModel
         public Guid id { get; set; }
         public string name { get; set; }
         public string city { get; set; }
-        public string district { get; set; }
+        public string province { get; set; }
         public bool isActive{ get; set; }
         public WorkingGenderType workingGenderType { get; set; }
         public DateTime? createDate { get; set; }

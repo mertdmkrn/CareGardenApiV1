@@ -491,7 +491,7 @@ namespace CareGardenApiV1.Repository.Concrete
             using (var context = new CareGardenApiDbContext())
             {
                 business.password = business.password.HashString();
-                business.createDate = DateTime.Now;
+                business.createDate = DateTime.UtcNow;
                 business.updateDate = business.createDate;
 
                 await context.Businesses.AddAsync(business);
@@ -504,7 +504,7 @@ namespace CareGardenApiV1.Repository.Concrete
         {
             using (var context = new CareGardenApiDbContext())
             {
-                business.updateDate = DateTime.Now;
+                business.updateDate = DateTime.UtcNow;
 
                 if (business.password.IsNotNullOrEmpty() && business.password.Length <= 8)
                 {

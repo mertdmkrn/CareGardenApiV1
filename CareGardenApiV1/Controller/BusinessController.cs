@@ -415,6 +415,14 @@ namespace CareGardenApiV1.Controller
                     business.location = gf.CreatePoint(new NetTopologySuite.Geometries.Coordinate(updateBusiness.latitude, updateBusiness.longitude));
                 }
 
+                var sessionUserRole = HelperMethods.GetClaimInfo(Request, ClaimTypes.Role);
+
+                if (sessionUserRole.IsNotNullOrEmpty() && sessionUserRole.Equals("Admin"))
+                {
+                    business.isActive = updateBusiness.isActive;
+                    business.verified = updateBusiness.verified;
+                }
+
                 await _businessService.UpdateBusinessAsync(business);
                 BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
                 response.Message = Resource.Resource.KayitBasarili;

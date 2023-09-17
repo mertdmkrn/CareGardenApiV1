@@ -83,11 +83,13 @@ namespace CareGardenApiV1.Repository
                 entity.HasOne(d => d.business)
                 .WithMany(p => p.appointments)
                 .HasForeignKey(d => d.businessId)
+                .HasConstraintName("FK_Appointment_Business_businessId")
                 .OnDelete(DeleteBehavior.SetNull);
 
                 entity.HasOne(d => d.user)
                 .WithMany(p => p.appointments)
                 .HasForeignKey(d => d.userId)
+                .HasConstraintName("FK_Appointment_User_userId")
                 .OnDelete(DeleteBehavior.SetNull);
             });
 
@@ -103,6 +105,7 @@ namespace CareGardenApiV1.Repository
                 entity.HasOne(d => d.business)
                 .WithMany(p => p.galleries)
                 .HasForeignKey(d => d.businessId)
+                .HasConstraintName("FK_BusinessGallery_Business_businessId")
                 .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -117,6 +120,7 @@ namespace CareGardenApiV1.Repository
                 entity.HasOne(d => d.business)
                 .WithMany(p => p.properties)
                 .HasForeignKey(d => d.businessId)
+                .HasConstraintName("FK_BusinessProperties_Business_businessId")
                 .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -137,11 +141,13 @@ namespace CareGardenApiV1.Repository
                 entity.HasOne(d => d.business)
                 .WithMany(p => p.services)
                 .HasForeignKey(d => d.businessId)
+                .HasConstraintName("FK_BusinessService_Business_businessId")
                 .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(d => d.service)
                 .WithMany(p => p.businessServices)
                 .HasForeignKey(d => d.serviceId)
+                .HasConstraintName("FK_BusinessService_Services_serviceId")
                 .OnDelete(DeleteBehavior.SetNull);
             });
 
@@ -161,6 +167,7 @@ namespace CareGardenApiV1.Repository
                 entity.HasOne(d => d.business)
                 .WithMany(p => p.workingInfos)
                 .HasForeignKey(d => d.businessId)
+                .HasConstraintName("FK_BusinessWorkingInfo_Business_businessId")
                 .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -179,6 +186,7 @@ namespace CareGardenApiV1.Repository
                 entity.HasOne(d => d.business)
                 .WithMany(p => p.campaigns)
                 .HasForeignKey(d => d.businessId)
+                .HasConstraintName("FK_Campaign_Business_businessId")
                 .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -198,16 +206,19 @@ namespace CareGardenApiV1.Repository
                 entity.HasOne(d => d.business)
                 .WithMany(p => p.comments)
                 .HasForeignKey(d => d.businessId)
+                .HasConstraintName("FK_Comment_Business_businessId")
                 .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(d => d.user)
                 .WithMany(p => p.comments)
                 .HasForeignKey(d => d.userId)
+                .HasConstraintName("FK_Comment_User_userId")
                 .OnDelete(DeleteBehavior.SetNull);
 
                 entity.HasOne(d => d.reply)
                 .WithMany()
                 .HasForeignKey(d => d.replyId)
+                .HasConstraintName("FK_Comment_Comment_replyId")
                 .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -223,11 +234,13 @@ namespace CareGardenApiV1.Repository
                 entity.HasOne(d => d.business)
                 .WithMany(p => p.complains)
                 .HasForeignKey(d => d.businessId)
+                .HasConstraintName("FK_Complain_Business_businessId")
                 .OnDelete(DeleteBehavior.SetNull);
 
                 entity.HasOne(d => d.user)
                 .WithMany(p => p.complains)
                 .HasForeignKey(d => d.userId)
+                .HasConstraintName("FK_Complain_User_userId")
                 .OnDelete(DeleteBehavior.SetNull);
             });
 
@@ -250,11 +263,13 @@ namespace CareGardenApiV1.Repository
                 entity.HasOne(d => d.business)
                 .WithMany(p => p.favorites)
                 .HasForeignKey(d => d.businessId)
+                .HasConstraintName("FK_Favorite_Business_businessId")
                 .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(d => d.user)
                 .WithMany(p => p.favorites)
                 .HasForeignKey(d => d.userId)
+                .HasConstraintName("FK_Favorite_User_userId")
                 .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -275,6 +290,7 @@ namespace CareGardenApiV1.Repository
                 entity.HasOne(d => d.business)
                 .WithMany(p => p.paymentInfos)
                 .HasForeignKey(d => d.businessId)
+                .HasConstraintName("FK_PaymentInfo_Business_businessId")
                 .OnDelete(DeleteBehavior.NoAction);
             });
 
@@ -318,6 +334,7 @@ namespace CareGardenApiV1.Repository
                 entity.HasOne(d => d.business)
                 .WithMany(p => p.workers)
                 .HasForeignKey(d => d.businessId)
+                .HasConstraintName("FK_Worker_Business_businessId")
                 .OnDelete(DeleteBehavior.Cascade);
             });
         }

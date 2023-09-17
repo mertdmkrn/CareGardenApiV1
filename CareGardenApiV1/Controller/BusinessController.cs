@@ -654,9 +654,8 @@ namespace CareGardenApiV1.Controller
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
-            {
+            {               
                 response.Data = await _businessService.DeleteBusinessAsync(business);
-                response.Message = Resource.Resource.KayitSilindi;
                 return Ok(response);
             }
             catch (Exception ex)

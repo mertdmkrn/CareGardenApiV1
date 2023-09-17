@@ -22,6 +22,8 @@ namespace CareGardenApiV1.Model
             this.paymentInfos = new HashSet<PaymentInfo>();
             this.favorites = new HashSet<Favorite>();
             this.workers = new HashSet<Worker>();
+            this.campaigns = new HashSet<Campaign>();
+            this.complains = new HashSet<Complain>();
         }
 
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -86,5 +88,7 @@ namespace CareGardenApiV1.Model
         public virtual ICollection<PaymentInfo> paymentInfos { get; set; }
         public virtual ICollection<Favorite> favorites { get; set; }
         public virtual ICollection<Worker> workers { get; set; }
+        public virtual ICollection<Campaign> campaigns { get; set; }
+        public virtual ICollection<Complain> complains { get; set; }
     }
 }

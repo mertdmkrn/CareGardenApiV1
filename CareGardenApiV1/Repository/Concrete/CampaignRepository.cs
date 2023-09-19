@@ -37,7 +37,7 @@ namespace CareGardenApiV1.Repository.Concrete
         {
             using (var context = new CareGardenApiDbContext())
             {
-                campaign.updateDate = DateTime.Now;
+                campaign.updateDate = DateTime.Now.AddDays(2);
 
                 context.Campaigns.Update(campaign);
                 await context.SaveChangesAsync();

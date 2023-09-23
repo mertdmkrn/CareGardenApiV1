@@ -110,7 +110,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("businessproperties/getbybusinessidwithkey")]
-        public async Task<IActionResult> GetBusinessPropertiesByBusinessIdWithKey([FromBody] string businessId, [FromBody] string key)
+        public async Task<IActionResult> GetBusinessPropertiesByBusinessIdWithKey([FromBody] string businessId, string key)
         {
             ResponseModel<BusinessProperties> response = new ResponseModel<BusinessProperties>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));

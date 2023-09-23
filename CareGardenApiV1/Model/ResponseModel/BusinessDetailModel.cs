@@ -22,11 +22,13 @@ namespace CareGardenApiV1.Model.ResponseModel
         public bool hasPromotion { get; set; }
         public WorkingGenderType workingGenderType { get; set; }
         public BusinessWorkingInfo businessWorkingInfo { get; set; } = new BusinessWorkingInfo();
-        public List<BusinessServicesInfo> businessServicesInfos { get; set; } = new List<BusinessServicesInfo>();
-        public List<BusinessGallery> assets { get; set; } = new List<BusinessGallery>();
+        public ICollection<BusinessServicesInfo> businessServicesInfos { get; set; } = new HashSet<BusinessServicesInfo>();
+        public ICollection<BusinessGallery> assets { get; set; } = new HashSet<BusinessGallery>();
+        public ICollection<Worker> workers { get; set; } = new HashSet<Worker>();
+        public ICollection<BusinessProperties> properties { get; set; } = new HashSet<BusinessProperties>();
 
         [JsonIgnore]
-        public List<BusinessServiceModel> businessServices { get; set; } = new List<BusinessServiceModel>();
+        public ICollection<BusinessServiceModel> businessServices { get; set; } = new HashSet<BusinessServiceModel>();
 
         [JsonIgnore]
         public bool officialDayAvailable { get; set; }

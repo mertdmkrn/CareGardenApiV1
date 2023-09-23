@@ -344,6 +344,8 @@ namespace CareGardenApiV1.Repository.Concrete
                     .Include(x => x.galleries)
                     .Include(x => x.services)
                     .Include(x => x.workingInfos)
+                    .Include(x => x.properties)
+                    .Include(x => x.workers)
                     .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
                     .Where(x => x.id == id)
                     .Select(x => new BusinessDetailModel
@@ -362,8 +364,10 @@ namespace CareGardenApiV1.Repository.Concrete
                         averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
                         countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
                         businessWorkingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null,
-                        assets = x.galleries.ToList(),
-                        businessServices = x.services.ToList()
+                        assets = x.galleries,
+                        businessServices = x.services,
+                        workers = x.workers,
+                        properties = x.properties
                     })
                     .AsNoTracking()
                     .FirstOrDefaultAsync();

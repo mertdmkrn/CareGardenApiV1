@@ -295,6 +295,47 @@
              </remarks>
              <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.GetBusinessPropertiesById(System.String)">
+            <summary>
+            Get BusinessProperties By Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.GetBusinessPropertiesByBusinessId(System.String)">
+            <summary>
+            Get BusinessProperties By Business Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.GetBusinessPropertiesByBusinessIdWithKey(System.String,System.String)">
+            <summary>
+            Get BusinessProperties By Business Id And Key
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.Save(CareGardenApiV1.Model.BusinessProperties)">
+             <summary>
+             Update BusinessProperties
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "key" : "FacebookUrl",
+                    "address" : "https://web.whatsapp.com/",
+                    "businessId" : "00000000-0000-0000-0000-000000000000",
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.Delete(CareGardenApiV1.Model.BusinessProperties)">
+            <summary>
+            Delete BusinessProperties
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.BusinessServicesController.GetBusinessServiceById(System.String)">
             <summary>
             Get Service By Id
@@ -932,6 +973,18 @@
             <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.CareGardenV2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV3">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV3.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV3.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV3.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:CareGardenApiV1.Migrations.CareGardenV4">

@@ -141,6 +141,61 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
+        /// Save BusinessProperties
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "key" : "WhatsappUrl",
+        ///        "address" : "https://web.whatsapp.com/",
+        ///        "businessId" : "00000000-0000-0000-0000-000000000000",
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("businessproperties/save")]
+        public async Task<IActionResult> Save(BusinessProperties businessProperties)
+        {
+            ResponseModel<BusinessProperties> response = new ResponseModel<BusinessProperties>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                if (businessProperties.key.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("key", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (businessProperties.value.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("value", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (response.HasError)
+                {
+                    response.Message = Resource.Resource.GuncellemeYapilamadi;
+                    return Ok(response);
+                }
+
+                response.Data = await _businessPropertiesService.SaveBusinessPropertiesAsync(businessProperties);
+                response.Message = Resource.Resource.KayitBasarili;
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _loggerHandler.LogMessage(ex);
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
+
+        /// <summary>
         /// Update BusinessProperties
         /// </summary>
         /// <remarks>
@@ -157,7 +212,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("businessproperties/update")]
-        public async Task<IActionResult> Save(BusinessProperties updateBusinessProperties)
+        public async Task<IActionResult> Update(BusinessProperties updateBusinessProperties)
         {
             ResponseModel<BusinessProperties> response = new ResponseModel<BusinessProperties>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));

@@ -276,6 +276,7 @@ namespace CareGardenApiV1.Controller
             try
             {
                 response.Data = await _businessPropertiesService.DeleteBusinessPropertiesAsync(businessProperties);
+                response.Message = Resource.Resource.KayitSilindi;
                 return Ok(response);
             }
             catch (Exception ex)

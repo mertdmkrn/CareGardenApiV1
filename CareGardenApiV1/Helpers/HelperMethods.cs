@@ -183,23 +183,6 @@ namespace CareGardenApiV1.Helpers
             "</html>";
         }
 
-        public static string GetImageSize(this IFormFile file)
-        {
-            try
-            {
-                if (file == null) return null;
-
-                using (var image = Image.FromStream(file.OpenReadStream()))
-                {
-                    return image.Width + "x" + image.Height;
-                }
-            }
-            catch (FormatException ex)
-            {
-                return null;
-            }
-        }
-
         public static int GetDay(this DateTime date) 
         { 
             switch (date.DayOfWeek) {

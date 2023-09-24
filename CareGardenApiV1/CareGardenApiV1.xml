@@ -315,6 +315,22 @@
         </member>
         <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.Save(CareGardenApiV1.Model.BusinessProperties)">
              <summary>
+             Save BusinessProperties
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "key" : "WhatsappUrl",
+                    "address" : "https://web.whatsapp.com/",
+                    "businessId" : "00000000-0000-0000-0000-000000000000",
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.Update(CareGardenApiV1.Model.BusinessProperties)">
+             <summary>
              Update BusinessProperties
              </summary>
              <remarks>
@@ -541,6 +557,12 @@
         </member>
         <!-- Badly formed XML comment ignored for member "M:CareGardenApiV1.Controller.CommentController.DeleteComment(System.Guid)" -->
         <member name="M:CareGardenApiV1.Controller.DefinitionController.GetCities">
+            <summary>
+            Get Cities
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.DefinitionController.PrivacyPolicy">
             <summary>
             Get Cities
             </summary>

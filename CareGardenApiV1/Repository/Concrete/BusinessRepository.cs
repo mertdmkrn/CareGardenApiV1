@@ -525,39 +525,40 @@ namespace CareGardenApiV1.Repository.Concrete
         {
             using (var context = new CareGardenApiDbContext())
             {
-                var businessAdminListQueryable = context.Businesses.AsNoTracking();
+                var businessAdminListQueryable = context.Businesses.AsQueryable();
 
                 if (searchAdminModel.city.IsNotNullOrEmpty())
                 {
-                    businessAdminListQueryable.Where(x => x.city == searchAdminModel.city);
+                    businessAdminListQueryable = businessAdminListQueryable.Where(x => x.city == searchAdminModel.city);
                 }
 
                 if (searchAdminModel.name.IsNotNullOrEmpty())
                 {
-                    businessAdminListQueryable.Where(x => x.name == searchAdminModel.name);
+                    businessAdminListQueryable = businessAdminListQueryable.Where(x => x.name == searchAdminModel.name);
                 }
 
                 if (searchAdminModel.isOnlyActive)
                 {
-                    businessAdminListQueryable.Where(x => x.isActive == true);
+                    businessAdminListQueryable = businessAdminListQueryable.Where(x => x.isActive == true);
                 }
                 else if (searchAdminModel.isOnlyNotActive)
                 {
-                    businessAdminListQueryable.Where(x => x.isActive == false);
+                    businessAdminListQueryable = businessAdminListQueryable.Where(x => x.isActive == false);
                 }
 
                 if ((WorkingGenderType)searchAdminModel.workingGenderType != Enums.WorkingGenderType.All)
                 {
-                    businessAdminListQueryable.Where(x => x.workingGenderType == searchAdminModel.workingGenderType);
+                    businessAdminListQueryable = businessAdminListQueryable.Where(x => x.workingGenderType == searchAdminModel.workingGenderType);
                 }
 
                 var list = await businessAdminListQueryable
+                    .AsNoTracking()
                     .Select(x => new BusinessPagingListModel
-                    { 
+                    {
                         id = x.id,
                         name = x.name,
                         city = x.city,
-                        province = x.province, 
+                        province = x.province,
                         createDate = x.createDate,
                         isActive = x.isActive,
                         workingGenderType = x.workingGenderType,
@@ -568,12 +569,13 @@ namespace CareGardenApiV1.Repository.Concrete
                     .Take(searchAdminModel.take)
                     .ToListAsync();
 
-                var pageCount = businessAdminListQueryable.Count();
+                var pageCount = list.Count;
 
-                list.ToList().ForEach(async x => { x.itemCount = pageCount; });
+                list.ForEach(x => { x.itemCount = pageCount; });
 
                 return list;
-            }          
+            }
+
         }
     }
 }

@@ -9,6 +9,7 @@ using OneSignalApi.Model;
 using CareGardenApiV1.Model.RequestModel;
 using Nest;
 using static CareGardenApiV1.Helpers.Enums;
+using System.Linq;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -82,11 +83,8 @@ namespace CareGardenApiV1.Repository.Concrete
                 if (businessSearchModel.page.HasValue && businessSearchModel.take.HasValue)
                 {
                     return await context.Businesses
-                        .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
-                        .Include(x => x.galleries.Where(x => x.isProfilePhoto))
-                        .Include(x => x.workingInfos)
                         .Where(x => x.isActive == true && x.verified == true)
-                        .Where(x => businessSearchModel.city.IsNotNullOrEmpty() ? x.city.Equals(businessSearchModel.city) : x.city != null)
+                        .WhereIf(businessSearchModel.city.IsNotNullOrEmpty(), x => x.city.Equals(businessSearchModel.city))
                         .Select(x => new BusinessListModel
                         {
                             id = x.id,
@@ -111,11 +109,8 @@ namespace CareGardenApiV1.Repository.Concrete
                 }
 
                 return await context.Businesses
-                    .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
-                    .Include(x => x.galleries.Where(x => x.isProfilePhoto))
-                    .Include(x => x.workingInfos)
                     .Where(x => x.isActive == true && x.verified == true)
-                    .Where(x => businessSearchModel.city.IsNotNullOrEmpty() ? x.city.Equals(businessSearchModel.city) : x.city != null)
+                    .WhereIf(businessSearchModel.city.IsNotNullOrEmpty(), x => x.city.Equals(businessSearchModel.city))
                     .Select(x => new BusinessListModel
                     {
                         id = x.id,
@@ -162,18 +157,15 @@ namespace CareGardenApiV1.Repository.Concrete
                 if (businessSearchModel.page.HasValue && businessSearchModel.take.HasValue)
                 {
                     return await context.Businesses
-                        .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
-                        .Include(x => x.galleries.Where(x => x.isProfilePhoto))
-                        .Include(x => x.favorites.Where(x => x.userId == businessSearchModel.userId))
-                        .Include(x => x.workingInfos)
-                        .Where(x => x.isActive == true && x.verified == true && x.favorites.Any(x => x.userId == businessSearchModel.userId))
+                        .Where(x => x.isActive && x.verified)
+                        .Where(x => x.favorites.Any(x => x.userId == businessSearchModel.userId))
                         .Select(x => new BusinessListModel
                         {
                             id = x.id,
                             name = x.name ?? "",
                             discountRate = x.discountRate,
                             workingGenderType = (int)x.workingGenderType,
-                            imageUrl = x.galleries.FirstOrDefault().imageUrl,
+                            imageUrl = x.galleries.Any() ? x.galleries.FirstOrDefault(x => x.isProfilePhoto).imageUrl : null,
                             averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
                             countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
                             distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0,
@@ -191,11 +183,8 @@ namespace CareGardenApiV1.Repository.Concrete
                 }
 
                 return await context.Businesses
-                    .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
-                    .Include(x => x.galleries.Where(x => x.isProfilePhoto))
-                    .Include(x => x.favorites.Where(x => x.userId == businessSearchModel.userId))
-                    .Include(x => x.workingInfos)
-                    .Where(x => x.isActive == true && x.verified == true && x.favorites.Any(x => x.userId == businessSearchModel.userId))
+                    .Where(x => x.isActive && x.verified)
+                    .Where(x => x.favorites.Any(x => x.userId == businessSearchModel.userId))
                     .Select(x => new BusinessListModel
                     {
                         id = x.id,
@@ -222,7 +211,7 @@ namespace CareGardenApiV1.Repository.Concrete
         {
             using (var context = new CareGardenApiDbContext())
             {
-                IList<BusinessListModel> businesses = null;
+                IList<BusinessListModel> filteredBusinesses = null;
                 Point? searchLocation = null;
                 var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
 
@@ -231,26 +220,11 @@ namespace CareGardenApiV1.Repository.Concrete
                     searchLocation = gf.CreatePoint(new Coordinate(businessExploreModel.latitude.Value, businessExploreModel.longitude.Value));
                 }
 
-                var businessQueryable = context.Businesses
-                    .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
-                    .Include(x => x.galleries.Where(x => x.isProfilePhoto))
-                    .Include(x => x.workingInfos);
-
-                if (businessExploreModel.availableDate.HasValue)
-                {
-                    businessQueryable.Include(x => x.appointments.Where(x => x.date == businessExploreModel.availableDate.Value));
-                }
-
-                if (businessExploreModel.serviceId.HasValue)
-                {
-                    businessQueryable.Include(x => x.services.Where(x => x.serviceId == businessExploreModel.serviceId.Value));
-                }
-
-                var businessListQueryable = businessQueryable
-                    .Where(x => x.isActive == true && x.verified == true)
-                    .Where(x => x.workingGenderType == businessExploreModel.workingGenderType)
-                    .Where(x => businessExploreModel.serviceId.HasValue ? x.services.Any(x => x.serviceId == businessExploreModel.serviceId) : x.verified == true)
-                    .Where(x => businessExploreModel.offers > 0 ? x.discountRate == businessExploreModel.offers : x.discountRate > -1)
+                var businessListQueryable = context.Businesses
+                    .Where(x => x.isActive && x.verified)
+                    .WhereIf((WorkingGenderType)businessExploreModel.workingGenderType != Enums.WorkingGenderType.All, x => x.workingGenderType == businessExploreModel.workingGenderType)
+                    .WhereIf(businessExploreModel.serviceId.HasValue, x => x.services.Any(x => x.serviceId == businessExploreModel.serviceId))
+                    .WhereIf(businessExploreModel.offers > 0, x => x.discountRate == businessExploreModel.offers)
                     .Select(x => new BusinessListModel
                     {
                         id = x.id,
@@ -272,55 +246,57 @@ namespace CareGardenApiV1.Repository.Concrete
                     });
 
 
-                switch(businessExploreModel.sortByType)
+                switch (businessExploreModel.sortByType)
                 {
                     case Enums.SortByType.Recommended:
-                        businessListQueryable.OrderByDescending(x => x.appointments.Count());
+                        businessListQueryable = businessListQueryable.OrderByDescending(x => x.appointments.Count());
                         break;
                     case Enums.SortByType.MostPopular:
-                        businessListQueryable.OrderByDescending(x => x.countRating);
+                        businessListQueryable = businessListQueryable.OrderByDescending(x => x.countRating);
                         break;
                     case Enums.SortByType.Newest:
-                        businessListQueryable.OrderByDescending(x => x.createDate);
+                        businessListQueryable = businessListQueryable.OrderByDescending(x => x.createDate);
                         break;
                     case Enums.SortByType.TopRated:
-                        businessListQueryable.OrderByDescending(x => x.averageRating);
+                        businessListQueryable = businessListQueryable.OrderByDescending(x => x.averageRating);
                         break;
                     case Enums.SortByType.Nearest:
-                        businessListQueryable.OrderBy(x => x.distance);
+                        businessListQueryable = businessListQueryable.OrderBy(x => x.distance);
                         break;
                     default:
-                        businessListQueryable.OrderBy(x => x.distance);
+                        businessListQueryable = businessListQueryable.OrderBy(x => x.distance);
                         break;
-                };
+                }
 
-                businesses = await businessListQueryable.AsNoTracking().ToListAsync();
+                filteredBusinesses = await businessListQueryable
+                            .AsNoTracking()
+                            .ToListAsync();
 
-                businesses.ToList().ForEach(x =>
+                filteredBusinesses.ToList().ForEach(x =>
                 {
+                    if (businessExploreModel.isWithinKilometer > 0 && x.distance > businessExploreModel.isWithinKilometer)
+                    {
+                        filteredBusinesses.Remove(x);
+                        return;
+                    }
+
                     if (businessExploreModel.availableDate.HasValue)
                     {
                         bool isOpen = HelperMethods.GetBusinessOpenSpecialDate(x.workingInfo, x.officialDayAvailable, businessExploreModel.availableDate);
 
                         if (!isOpen)
                         {
-                            businesses.Remove(x);
+                            filteredBusinesses.Remove(x);
                             return;
-                        } 
+                        }
 
                         var dailyAppointmentCount = HelperMethods.GetDailyAppointmentCount(x.appointments, x.workingInfo, x.officialDayAvailable, businessExploreModel.availableDate.Value, x.appointmentPeopleCount, x.appointmentTimeInterval);
 
                         if (x.appointments != null && x.appointments.Count() >= dailyAppointmentCount)
                         {
-                            businesses.Remove(x);
+                            filteredBusinesses.Remove(x);
                             return;
                         }
-                    }
-
-                    if (x.distance > 50)
-                    {
-                        businesses.Remove(x);
-                        return;
                     }
 
                     x.isOpen = HelperMethods.GetBusinessOpen(x.workingInfo, x.officialDayAvailable);
@@ -328,11 +304,11 @@ namespace CareGardenApiV1.Repository.Concrete
                 });
 
                 return businessExploreModel.page.HasValue && businessExploreModel.take.HasValue
-                        ? businesses
+                        ? filteredBusinesses
                             .Skip(businessExploreModel.page.Value * businessExploreModel.take.Value)
                             .Take(businessExploreModel.take.Value)
                             .ToList()
-                        : businesses.ToList();
+                        : filteredBusinesses;
             }
         }
 
@@ -341,12 +317,6 @@ namespace CareGardenApiV1.Repository.Concrete
             using (var context = new CareGardenApiDbContext())
             {
                 return await context.Businesses
-                    .Include(x => x.galleries)
-                    .Include(x => x.services)
-                    .Include(x => x.workingInfos)
-                    .Include(x => x.properties)
-                    .Include(x => x.workers)
-                    .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
                     .Where(x => x.id == id)
                     .Select(x => new BusinessDetailModel
                     {
@@ -379,10 +349,6 @@ namespace CareGardenApiV1.Repository.Concrete
             using (var context = new CareGardenApiDbContext())
             {
                 return await context.Businesses
-                    .Include(x => x.galleries)
-                    .Include(x => x.services)
-                    .Include(x => x.workingInfos)
-                    .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
                     .Select(x => new BusinessDetailModel
                     {
                         id = x.id,
@@ -425,9 +391,6 @@ namespace CareGardenApiV1.Repository.Concrete
                 {
                     return await context.Businesses
                         .AsNoTracking()
-                        .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
-                        .Include(x => x.galleries.Where(x => x.isProfilePhoto))
-                        .Include(x => x.workingInfos)
                         .Where(x => x.isActive == true && x.verified == true)
                         .Select(x => new BusinessListModel
                         {
@@ -435,7 +398,7 @@ namespace CareGardenApiV1.Repository.Concrete
                             name = x.name ?? "",
                             discountRate = x.discountRate,
                             workingGenderType = (int)x.workingGenderType,
-                            imageUrl = x.galleries.FirstOrDefault().imageUrl,
+                            imageUrl = x.galleries.Any() ? x.galleries.FirstOrDefault(x => x.isProfilePhoto).imageUrl : null,
                             averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
                             countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
                             distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0,
@@ -453,9 +416,6 @@ namespace CareGardenApiV1.Repository.Concrete
 
                 return await context.Businesses
                     .AsNoTracking()
-                    .Include(x => x.comments.Where(x => x.commentType == Enums.CommentType.User))
-                    .Include(x => x.galleries.Where(x => x.isProfilePhoto))
-                    .Include(x => x.workingInfos)
                     .Where(x => x.isActive == true && x.verified == true)
                     .Select(x => new BusinessListModel
                     {
@@ -463,7 +423,7 @@ namespace CareGardenApiV1.Repository.Concrete
                         name = x.name,
                         discountRate = x.discountRate,
                         workingGenderType = (int)x.workingGenderType,
-                        imageUrl = x.galleries.FirstOrDefault().imageUrl,
+                        imageUrl = x.galleries.Any() ? x.galleries.FirstOrDefault(x => x.isProfilePhoto).imageUrl : null,
                         averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
                         countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
                         distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0,
@@ -525,34 +485,13 @@ namespace CareGardenApiV1.Repository.Concrete
         {
             using (var context = new CareGardenApiDbContext())
             {
-                var businessAdminListQueryable = context.Businesses.AsQueryable();
-
-                if (searchAdminModel.city.IsNotNullOrEmpty())
-                {
-                    businessAdminListQueryable = businessAdminListQueryable.Where(x => x.city == searchAdminModel.city);
-                }
-
-                if (searchAdminModel.name.IsNotNullOrEmpty())
-                {
-                    businessAdminListQueryable = businessAdminListQueryable.Where(x => x.name == searchAdminModel.name);
-                }
-
-                if (searchAdminModel.isOnlyActive)
-                {
-                    businessAdminListQueryable = businessAdminListQueryable.Where(x => x.isActive == true);
-                }
-                else if (searchAdminModel.isOnlyNotActive)
-                {
-                    businessAdminListQueryable = businessAdminListQueryable.Where(x => x.isActive == false);
-                }
-
-                if ((WorkingGenderType)searchAdminModel.workingGenderType != Enums.WorkingGenderType.All)
-                {
-                    businessAdminListQueryable = businessAdminListQueryable.Where(x => x.workingGenderType == searchAdminModel.workingGenderType);
-                }
-
-                var list = await businessAdminListQueryable
+                var list = await context.Businesses
                     .AsNoTracking()
+                    .WhereIf(searchAdminModel.city.IsNotNullOrEmpty(), x => x.city == searchAdminModel.city)
+                    .WhereIf(searchAdminModel.name.IsNotNullOrEmpty(), x => x.name == searchAdminModel.name)
+                    .WhereIf(searchAdminModel.isOnlyActive, x => x.isActive == true)
+                    .WhereIf(searchAdminModel.isOnlyNotActive, x => x.isActive == false)
+                    .WhereIf((WorkingGenderType)searchAdminModel.workingGenderType != Enums.WorkingGenderType.All, x => x.workingGenderType == searchAdminModel.workingGenderType)
                     .Select(x => new BusinessPagingListModel
                     {
                         id = x.id,

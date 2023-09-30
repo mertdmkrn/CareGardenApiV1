@@ -206,7 +206,7 @@ namespace CareGardenApiV1.Helpers
             if (workingInfo == null)
                 return true;
 
-            if (officialDayAvailable && Constants.OfficialDays.Any(x => x.date.Equals(today)))
+            if (officialDayAvailable && Constants.OfficialDays.Exists(x => x.date.Equals(today)))
                 return false;
 
             var workHours = workingInfo.GetBusinessWorkInfoHours(today);
@@ -244,7 +244,7 @@ namespace CareGardenApiV1.Helpers
             if (workingInfo == null)
                 return true;
 
-            if (officialDayAvailable && Constants.OfficialDays.Any(x => x.date.Equals(specialDate)))
+            if (officialDayAvailable && Constants.OfficialDays.Exists(x => x.date.Equals(specialDate)))
                 return false;
 
             var workHours = workingInfo.GetBusinessWorkInfoHours(date);
@@ -279,7 +279,7 @@ namespace CareGardenApiV1.Helpers
             if (workingInfo == null)
                 return 0;
 
-            if (officialDayAvailable && Constants.OfficialDays.Any(x => x.date.Equals(date)))
+            if (officialDayAvailable && Constants.OfficialDays.Exists(x => x.date.Equals(date)))
                 return 0;
 
             var workHours = workingInfo.GetBusinessWorkInfoHours(date);

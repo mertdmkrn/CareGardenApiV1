@@ -321,7 +321,7 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
-        /// Delete Appointment
+        /// Get Worker Available Time
         /// </summary>
         /// <remarks>
         /// **Sample request body:**

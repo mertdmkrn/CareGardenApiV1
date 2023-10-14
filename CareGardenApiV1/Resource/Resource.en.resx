@@ -213,6 +213,9 @@
   <data name="OnayMesaji" xml:space="preserve">
     <value>Welcome CareGarden. Confirmation Code : {0}</value>
   </data>
+  <data name="RandevuIptalUyari" xml:space="preserve">
+    <value>Canceling an appointment 9 hours before the appointment reduces your credibility. Do you want to cancel?</value>
+  </data>
   <data name="RenkKoduHatasi" xml:space="preserve">
     <value>The color code must be 3 or 6 digits.</value>
   </data>

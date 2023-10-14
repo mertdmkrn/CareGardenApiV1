@@ -242,7 +242,7 @@ namespace CareGardenApiV1.Repository.Concrete
                         workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null,
                         appointmentPeopleCount = x.appointmentPeopleCount,
                         appointmentTimeInterval = x.appointmentTimeInterval,
-                        appointments = businessExploreModel.availableDate.HasValue && x.appointments.Any() ? x.appointments.Where(x => x.date == businessExploreModel.availableDate.Value).ToList() : null
+                        appointments = businessExploreModel.availableDate.HasValue && x.appointments.Any() ? x.appointments.Where(x => x.startDate.Value.Date == businessExploreModel.availableDate.Value).ToList() : null
                     });
 
 

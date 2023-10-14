@@ -112,6 +112,108 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.GetById(System.String)">
+             <summary>
+             Get Appointment By Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.Search(CareGardenApiV1.Model.RequestModel.AppointmentSearchModel)">
+             <summary>
+             Search Appointment
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    businessId: "00000000-0000-0000-0000-000000000000",
+                    userId: "00000000-0000-0000-0000-000000000000",
+                    workerId: "00000000-0000-0000-0000-000000000000",
+                    businessServiceId: "00000000-0000-0000-0000-000000000000",
+                    startDate: "2023-10-07",
+                    endDate: "2023-10-22",
+                    page: 0,
+                    take: 5
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.Save(CareGardenApiV1.Model.Appointment)">
+             <summary>
+             Save Appoinment
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    businessId: "00000000-0000-0000-0000-000000000000",
+                    userId: "00000000-0000-0000-0000-000000000000",
+                    workerId: "00000000-0000-0000-0000-000000000000",
+                    businessServiceId: "00000000-0000-0000-0000-000000000000",    
+                    description: "Yeniden geliyorum.",
+                    startDate: "2023-10-07 15:00",
+                    endDate: "2023-10-07 16:00"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.Delete(System.String,System.Nullable{System.Boolean})">
+             <summary>
+             Delete Appointment
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "isForceDelete" : true
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.Update(System.String,CareGardenApiV1.Helpers.Enums.AppointmentStatus)">
+             <summary>
+             Change Appointment Status
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "status" : 1
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.GetWorkerAvailableTime(CareGardenApiV1.Model.RequestModel.AppointmentSearchModel)">
+             <summary>
+             Delete Appointment
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "businessId" : "00000000-0000-0000-0000-000000000000",
+                    "workerId" : "00000000-0000-0000-0000-000000000000",
+                    "businessServiceId" : "00000000-0000-0000-0000-000000000000",
+                    "startDate" : "2023-10-13 10:00"
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessById(System.String)">
             <summary>
             Get Business By Id
@@ -1189,6 +1291,18 @@
         <member name="M:CareGardenApiV1.Migrations.CareGardenV19.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV20">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV20.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV20.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV20.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="T:CareGardenApiV1.Resource.Resource">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -1363,6 +1477,11 @@
         <member name="P:CareGardenApiV1.Resource.Resource.OnayMesaji">
             <summary>
               Looks up a localized string similar to CareGarden&apos; a hoşgeldin. Onay Kodu : {0}.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.RandevuIptalUyari">
+            <summary>
+              Looks up a localized string similar to Randevuya 9 saat kala randevuyu iptal etmek güvenilirliğinizi azaltır. İptal etmek istiyor musunuz?.
             </summary>
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.RenkKoduHatasi">

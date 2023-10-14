@@ -213,6 +213,9 @@
   <data name="OnayMesaji" xml:space="preserve">
     <value>CareGarden' a hoşgeldin. Onay Kodu : {0}</value>
   </data>
+  <data name="RandevuIptalUyari" xml:space="preserve">
+    <value>Randevuya 9 saat kala randevuyu iptal etmek güvenilirliğinizi azaltır. İptal etmek istiyor musunuz?</value>
+  </data>
   <data name="RenkKoduHatasi" xml:space="preserve">
     <value>Renk kodu 3 veya 6 haneli olmalı.</value>
   </data>

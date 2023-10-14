@@ -74,7 +74,7 @@ namespace CareGardenApiV1.Repository
 
                 entity.Property(e => e.createDate);
                 entity.Property(e => e.updateDate);
-                entity.Property(e => e.date);
+                entity.Property(e => e.startDate);
                 entity.Property(e => e.status);
                 entity.Property(e => e.description);
                 entity.Property(e => e.userId);

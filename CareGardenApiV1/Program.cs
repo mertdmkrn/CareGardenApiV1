@@ -167,6 +167,7 @@ internal class Program
         builder.Services.AddSingleton<IUserRepository, UserRepository>();
         builder.Services.AddSingleton<IFaqRepository, FaqRepository>();
         builder.Services.AddSingleton<IWorkerRepository, WorkerRepository>();
+        builder.Services.AddSingleton<IAppointmentRepository, AppointmentRepository>();
 
         builder.Services.AddSingleton<IBusinessService, BusinessService>();
         builder.Services.AddSingleton<IBusinessGalleryService, BusinessGalleryService>();
@@ -183,5 +184,6 @@ internal class Program
         builder.Services.AddSingleton<IUserService, UserService>();
         builder.Services.AddSingleton<IFaqService, FaqService>();
         builder.Services.AddSingleton<IWorkerService, WorkerService>();
+        builder.Services.AddSingleton<IAppointmentService, AppointmentService>();
     }
 }

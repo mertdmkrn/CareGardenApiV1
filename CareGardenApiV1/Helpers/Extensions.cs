@@ -20,6 +20,11 @@ namespace CareGardenApiV1.Helpers
             return !string.IsNullOrEmpty(value);
         }
 
+        public static bool IsNotNullOrEmpty(this Guid? value)
+        {
+            return value.HasValue && value != Guid.Empty;
+        }
+
         public static string IsNull(this string value, string value2)
         {
             return value.IsNotNullOrEmpty() ? value : value2;
@@ -88,6 +93,25 @@ namespace CareGardenApiV1.Helpers
                 case DateType.Day: return Math.Round(timespan.TotalDays, 2);
                 case DateType.Month: return endDate.Value.Month - startDate.Value.Month;
                 case DateType.Year: return endDate.Value.Year - startDate.Value.Year;
+            }
+
+            return 0;
+        }
+
+        public static double DifferenceBetweenDates(this DateTime startDate, DateTime endDate, DateType dateType = DateType.Minute)
+        {
+            if (startDate == null || endDate == null) { return 0; }
+
+            TimeSpan timespan = endDate.Subtract(startDate);
+
+            switch (dateType)
+            {
+                case DateType.Second: return Math.Round(timespan.TotalSeconds, 2);
+                case DateType.Minute: return Math.Round(timespan.TotalMinutes, 2);
+                case DateType.Hour: return Math.Round(timespan.TotalHours, 2);
+                case DateType.Day: return Math.Round(timespan.TotalDays, 2);
+                case DateType.Month: return endDate.Month - startDate.Month;
+                case DateType.Year: return endDate.Year - startDate.Year;
             }
 
             return 0;

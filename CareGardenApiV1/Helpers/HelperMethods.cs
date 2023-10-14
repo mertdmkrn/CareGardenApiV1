@@ -300,5 +300,59 @@ namespace CareGardenApiV1.Helpers
 
             return (sumWorkMinutes / appointmentTimeInterval) * appointmentPeopleCount;
         }
+
+        public static List<WorkerAvailableTimeModel> GetWorkerAvailableTimes(List<Appointment> appointments, BusinessWorkingInfo businessWorkingInfo, BusinessServiceModel businessService, DateTime? startDate, DateTime? endDate)
+        {
+            List<WorkerAvailableTimeModel> workerAvailableTimeModels = new List<WorkerAvailableTimeModel>();
+
+            var dateDifferenceDays = (int)startDate.DifferenceBetweenDates(endDate, Enums.DateType.Day);
+
+            for (int i = 0; i < dateDifferenceDays; i++)
+            {
+                var date = startDate.Value.AddDays(i);
+
+                if (!GetBusinessOpenSpecialDate(businessWorkingInfo, true, date))
+                    continue;
+
+                var workingHours = businessWorkingInfo.GetBusinessWorkInfoHours(date);
+
+                if (string.IsNullOrEmpty(workingHours))
+                    continue;
+
+                var workingHoursParts = workingHours.Split('-');
+                if (workingHoursParts.Length != 2)
+                    continue;
+
+                if (!TimeSpan.TryParse(workingHoursParts[0], out var startWorkTime) ||
+                    !TimeSpan.TryParse(workingHoursParts[1], out var endWorkTime))
+                    continue;
+
+                var dayStartDate = new DateTime(date.Year, date.Month, date.Day)
+                    .Add(startWorkTime);
+
+                var dayEndDate = new DateTime(date.Year, date.Month, date.Day)
+                    .Add(endWorkTime);
+
+                var serviceDurationMinutes = businessService.maxDuration.IsNull(businessService.minDuration);
+                var numberOfAppointmentsPerDay = (int)Math.Ceiling(dayStartDate.DifferenceBetweenDates(dayEndDate, Enums.DateType.Minute) / serviceDurationMinutes);
+
+                for (int j = 0; j < numberOfAppointmentsPerDay; j++)
+                {
+                    WorkerAvailableTimeModel workerAvailableTimeModel = new WorkerAvailableTimeModel();
+
+                    workerAvailableTimeModel.startDate = dayStartDate.AddMinutes(j * serviceDurationMinutes);
+                    workerAvailableTimeModel.endDate = dayStartDate.AddMinutes((j + 1) * serviceDurationMinutes);
+                    workerAvailableTimeModel.dateText = dayStartDate.ToString("dd.MM.yyyy");
+                    workerAvailableTimeModel.hourText = workerAvailableTimeModel.startDate.ToString("HH:mm") + "-" + workerAvailableTimeModel.endDate.ToString("HH:mm");
+
+                    if (appointments.Exists(x => x.startDate >= workerAvailableTimeModel.startDate && x.startDate < workerAvailableTimeModel.endDate))
+                        continue;
+
+                    workerAvailableTimeModels.Add(workerAvailableTimeModel);
+                }
+            }
+
+            return workerAvailableTimeModels;
+        }
     }
 }

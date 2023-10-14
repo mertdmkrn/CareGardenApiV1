@@ -5,7 +5,8 @@
         public enum AppointmentStatus {
 
             Waiting,
-            Approve
+            Approve,
+            Rejected
         }
 
         public enum Gender

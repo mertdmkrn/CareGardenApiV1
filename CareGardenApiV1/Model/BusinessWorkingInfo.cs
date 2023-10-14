@@ -20,7 +20,7 @@ namespace CareGardenApiV1.Model
         public string? fridayWorkHours { get; set; }
         public string? saturdayWorkHours { get; set; }
         public string? sundayWorkHours { get; set; }
-    
+
         public Guid? businessId { get; set; }
 
         [JsonIgnore]

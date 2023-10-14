@@ -349,6 +349,15 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Randevuya 9 saat kala randevuyu iptal etmek güvenilirliğinizi azaltır. İptal etmek istiyor musunuz?.
+        /// </summary>
+        public static string RandevuIptalUyari {
+            get {
+                return ResourceManager.GetString("RandevuIptalUyari", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Renk kodu 3 veya 6 haneli olmalı..
         /// </summary>
         public static string RenkKoduHatasi {

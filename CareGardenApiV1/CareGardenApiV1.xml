@@ -134,14 +134,14 @@
              **Sample request body:**
             
                  { 
-                    businessId: "00000000-0000-0000-0000-000000000000",
-                    userId: "00000000-0000-0000-0000-000000000000",
-                    workerId: "00000000-0000-0000-0000-000000000000",
-                    businessServiceId: "00000000-0000-0000-0000-000000000000",
-                    startDate: "2023-10-07",
-                    endDate: "2023-10-22",
-                    page: 0,
-                    take: 5
+                    "businessId" : "00000000-0000-0000-0000-000000000000",
+                    "userId" : "00000000-0000-0000-0000-000000000000",
+                    "workerId" : "00000000-0000-0000-0000-000000000000",
+                    "businessServiceId" : "00000000-0000-0000-0000-000000000000",
+                    "startDate" : "2023-10-07",
+                    "endDate" : "2023-10-22",
+                    "page" : 0,
+                    "take" : 5
                  }
             
              </remarks>
@@ -155,19 +155,19 @@
              **Sample request body:**
             
                  { 
-                    businessId: "00000000-0000-0000-0000-000000000000",
-                    userId: "00000000-0000-0000-0000-000000000000",
-                    workerId: "00000000-0000-0000-0000-000000000000",
-                    businessServiceId: "00000000-0000-0000-0000-000000000000",    
-                    description: "Yeniden geliyorum.",
-                    startDate: "2023-10-07 15:00",
-                    endDate: "2023-10-07 16:00"
+                    "businessId" : "00000000-0000-0000-0000-000000000000",
+                    "userId" : "00000000-0000-0000-0000-000000000000",
+                    "workerId" : "00000000-0000-0000-0000-000000000000",
+                    "businessServiceId" : "00000000-0000-0000-0000-000000000000",    
+                    "description" : "Yeniden geliyorum.",
+                    "startDate" : "2023-10-07 15:00",
+                    "endDate" : "2023-10-07 16:00"
                  }
             
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.AppointmentController.Delete(System.String,System.Nullable{System.Boolean})">
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.Delete(CareGardenApiV1.Model.RequestModel.AppointmentChangeModel)">
              <summary>
              Delete Appointment
              </summary>
@@ -182,7 +182,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.AppointmentController.Update(System.String,CareGardenApiV1.Helpers.Enums.AppointmentStatus)">
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.Update(CareGardenApiV1.Model.RequestModel.AppointmentChangeModel)">
              <summary>
              Change Appointment Status
              </summary>
@@ -199,7 +199,7 @@
         </member>
         <member name="M:CareGardenApiV1.Controller.AppointmentController.GetWorkerAvailableTime(CareGardenApiV1.Model.RequestModel.AppointmentSearchModel)">
              <summary>
-             Delete Appointment
+             Get Worker Available Time
              </summary>
              <remarks>
              **Sample request body:**

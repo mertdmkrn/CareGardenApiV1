@@ -26,6 +26,7 @@ using System;
 using Npgsql;
 using CareGardenApiV1.Middleware;
 using CareGardenApiV1.Helpers;
+using AspNetCoreRateLimit;
 
 internal class Program
 {
@@ -45,8 +46,19 @@ internal class Program
 
         builder.Host.UseSerilog();
         builder.Services.AddElasticSearch(builder.Configuration);
+        builder.Services.AddOptions();
         builder.Services.AddControllers();
+
         builder.Services.AddMemoryCache();
+
+        builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
+        builder.Services.Configure<IpRateLimitPolicies>(builder.Configuration.GetSection("IpRateLimitPolicies"));
+        builder.Services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+        builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+        builder.Services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
+
         builder.Services.AddEndpointsApiExplorer();
 
         builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
@@ -108,6 +120,14 @@ internal class Program
         builder.Services.AddHangfireServer();
 
         var app = builder.Build();
+        app.UseIpRateLimiting();
+
+        app.UseStaticFiles();
+        app.UseMiddleware<ExceptionMiddleware>();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
         app.UseSwagger();
         app.UseCors("corsapp");
         app.UseSwaggerUI();
@@ -131,12 +151,6 @@ internal class Program
         {
             Directory.CreateDirectory(path);
         }
-
-        app.UseStaticFiles();
-        app.UseMiddleware<ExceptionMiddleware>();
-
-        app.UseAuthentication();
-        app.UseAuthorization();
 
         app.MapControllers();
 

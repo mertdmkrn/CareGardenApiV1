@@ -459,6 +459,12 @@ namespace CareGardenApiV1.Controller
                     response.ValidationErrors.Add(new ValidationError("fullName", Resource.Resource.GecerliBirIsimGiriniz));
                 }
 
+                if (updateUser.email.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
                 if (!updateUser.email.IsNullOrEmpty() && !updateUser.email.IsValidEmail())
                 {
                     response.HasError = true;

@@ -22,6 +22,7 @@ namespace CareGardenApiV1.Model
         public string? sundayWorkHours { get; set; }
 
         public Guid? businessId { get; set; }
+        public bool officialHolidayAvailable { get; set; }
 
         [JsonIgnore]
         public Business? business { get; set; }

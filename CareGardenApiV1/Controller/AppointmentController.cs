@@ -27,6 +27,7 @@ namespace CareGardenApiV1.Controller
         private IAppointmentService _appointmentService;
         private IBusinessWorkingInfoService _businessWorkingInfoService;
         private IBusinessServicesService _businessServicesService;
+        private IWorkerService _workerService;
         private readonly ILoggerHandler _loggerHandler;
 
         public AppointmentController(ILoggerHandler loggerHandler)
@@ -34,6 +35,7 @@ namespace CareGardenApiV1.Controller
             _appointmentService = new AppointmentService();
             _businessWorkingInfoService = new BusinessWorkingInfoService();
             _businessServicesService = new BusinessServicesService();
+            _workerService = new WorkerService();
             _loggerHandler = loggerHandler;
         }
 
@@ -316,6 +318,58 @@ namespace CareGardenApiV1.Controller
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
                 response.Message += "Exception => " + ex.Message + ex.StackTrace;
+                return Ok(response);
+            }
+        }
+
+        /// <summary>
+        /// Get Workers Provide Service 
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "businessId" : "00000000-0000-0000-0000-000000000000",
+        ///        "businessServiceId" : "00000000-0000-0000-0000-000000000000"
+        ///     }
+        ///     
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("appointment/getworkersprovideservice")]
+        public async Task<IActionResult> GetWorkersProvideService([FromBody] AppointmentSearchModel appointmentInfo)
+        {
+            ResponseModel<List<Worker>> response = new ResponseModel<List<Worker>>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                if (!appointmentInfo.businessId.HasValue)
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
+                    response.Message = Resource.Resource.IdParametreHatasi;
+                    return Ok(response);
+                }
+
+                if (!appointmentInfo.businessServiceId.HasValue)
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("workerId", Resource.Resource.IdParametreHatasi));
+                    response.Message = Resource.Resource.IdParametreHatasi;
+                    return Ok(response);
+                }
+
+                var workers = await _workerService.GetWorkersByBusinessIdAsync(appointmentInfo.businessId.Value);
+                response.Data = workers.Where(x => x.serviceIds.ToLower().Contains(appointmentInfo.businessServiceId.Value.ToString().ToLower())).ToList();
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _loggerHandler.LogMessage(ex);
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
                 return Ok(response);
             }
         }

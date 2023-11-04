@@ -120,5 +120,59 @@ namespace CareGardenApiV1.Repository.Concrete
                 return true;
             }
         }
+
+        public async Task<Dictionary<string, string>> GetCommentStatisticsByBusinessId(Guid businessId)
+        {
+            using (var context = new CareGardenApiDbContext())
+            {
+                var retVal = new Dictionary<string, string>();
+
+                var pointList = await context.Comments
+                    .AsNoTracking()
+                    .Where(x => x.businessId == businessId)
+                    .Where(x => x.commentType == Enums.CommentType.User)
+                    .Select(x => x.point)
+                    .ToListAsync();
+
+                var pointListGroups = pointList.GroupBy(x => x).OrderByDescending(x => x.Key);
+
+                retVal.Add("Count", pointList.Count().ToString());
+                retVal.Add("Average", Math.Round(pointList.Average(), 1).ToString());
+
+                foreach (var item in pointListGroups)
+                {
+                    retVal.TryAdd(item.Key.ToString(), item.Count().ToString());
+                }
+
+                return retVal;
+            }
+        }
+
+        public async Task<Dictionary<string, string>> GetCommentStatisticsByUserId(Guid userId)
+        {
+            using (var context = new CareGardenApiDbContext())
+            {
+                var retVal = new Dictionary<string, string>();
+
+                var pointList = await context.Comments
+                    .AsNoTracking()
+                    .Where(x => x.userId == userId)
+                    .Where(x => x.commentType == Enums.CommentType.User)
+                    .Select(x => x.point)
+                    .ToListAsync();
+
+                var pointListGroups = pointList.GroupBy(x => x).OrderByDescending(x => x.Key);
+
+                retVal.Add("Count", pointList.Count().ToString());
+                retVal.Add("Average", Math.Round(pointList.Average(), 1).ToString());
+
+                foreach (var item in pointListGroups)
+                {
+                    retVal.TryAdd(item.Key.ToString(), item.Count().ToString());
+                }
+
+                return retVal;
+            }
+        }
     }
 }

@@ -516,6 +516,7 @@ namespace CareGardenApiV1.Controller
                 await _businessService.UpdateBusinessAsync(business);
 
                 businessWorkInfoModel.businessWorkingInfo.businessId = business.id;
+                businessWorkInfoModel.officialHolidayAvailable = businessWorkInfoModel.officialHolidayAvailable;
                 await _businessWorkingInfoService.DeleteBusinessWorkingInfoByBusinessIdAsync(business.id);
                 await _businessWorkingInfoService.SaveBusinessWorkingInfoAsync(businessWorkInfoModel.businessWorkingInfo);
                 BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));

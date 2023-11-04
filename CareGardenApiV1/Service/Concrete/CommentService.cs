@@ -1,7 +1,6 @@
 ﻿using CareGardenApiV1.Model;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Repository.Concrete;
-using CareGardenApiV1.Service.Abstract;
 
 namespace CareGardenApiV1.Service.Concrete
 {
@@ -62,6 +61,16 @@ namespace CareGardenApiV1.Service.Concrete
         public async Task<bool> UpdateCommentReplyIdAsync(Guid id, Guid replyId)
         {
             return await _commentRepository.UpdateCommentReplyIdAsync(id, replyId);
+        }
+
+        public async Task<Dictionary<string, string>> GetCommentStatisticsByBusinessId(Guid businessId)
+        {
+            return await _commentRepository.GetCommentStatisticsByBusinessId(businessId);
+        }
+
+        public async Task<Dictionary<string, string>> GetCommentStatisticsByUserId(Guid userId)
+        {
+            return await _commentRepository.GetCommentStatisticsByUserId(userId);
         }
     }
 }

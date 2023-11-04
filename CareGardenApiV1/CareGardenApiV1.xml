@@ -197,6 +197,21 @@
              </remarks>
              <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.GetWorkersProvideService(CareGardenApiV1.Model.RequestModel.AppointmentSearchModel)">
+             <summary>
+             Get Workers Provide Service 
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "businessId" : "00000000-0000-0000-0000-000000000000",
+                    "businessServiceId" : "00000000-0000-0000-0000-000000000000"
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.AppointmentController.GetWorkerAvailableTime(CareGardenApiV1.Model.RequestModel.AppointmentSearchModel)">
              <summary>
              Get Worker Available Time
@@ -1301,6 +1316,18 @@
             <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.CareGardenV20.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV21">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV21.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV21.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV21.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:CareGardenApiV1.Resource.Resource">

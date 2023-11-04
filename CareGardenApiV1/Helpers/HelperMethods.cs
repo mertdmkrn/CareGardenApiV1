@@ -311,7 +311,7 @@ namespace CareGardenApiV1.Helpers
             {
                 var date = startDate.Value.AddDays(i);
 
-                if (!GetBusinessOpenSpecialDate(businessWorkingInfo, true, date))
+                if (!GetBusinessOpenSpecialDate(businessWorkingInfo, businessWorkingInfo.officialHolidayAvailable, date))
                     continue;
 
                 var workingHours = businessWorkingInfo.GetBusinessWorkInfoHours(date);

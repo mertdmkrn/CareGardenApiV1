@@ -7,11 +7,11 @@ namespace CareGardenApiV1.Service.Concrete
 {
     public class BusinessGalleryService : IBusinessGalleryService
     {
-        private IBusinessGalleryRepository _businessGalleryRepository;
+        private readonly IBusinessGalleryRepository _businessGalleryRepository;
 
-        public BusinessGalleryService()
+        public BusinessGalleryService(IBusinessGalleryRepository businessGalleryRepository)
         {
-            _businessGalleryRepository = new BusinessGalleryRepository();
+            _businessGalleryRepository = businessGalleryRepository;
         }
 
         public async Task<bool> DeleteBusinessGalleryAsync(BusinessGallery businessGallery)

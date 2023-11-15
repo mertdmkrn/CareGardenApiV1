@@ -7,11 +7,11 @@ namespace CareGardenApiV1.Service.Concrete
 {
     public class FaqService : IFaqService
     {
-        private IFaqRepository _faqRepository;
+        private readonly IFaqRepository _faqRepository;
 
-        public FaqService()
+        public FaqService(IFaqRepository faqRepository)
         {
-            _faqRepository = new FaqRepository();
+            _faqRepository = faqRepository;
         }
 
         public async Task<bool> DeleteFaqAsync(Guid id)

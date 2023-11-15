@@ -19,21 +19,28 @@ using System.Text.Json.Nodes;
 namespace CareGardenApiV1.Controller
 {
     [ApiController]
+    [Route("user")]
     public class UserLoginController : ControllerBase
     {
-        private IUserService _userService;
-        private IConfirmationService _contirmationService;
-        private ITokenHandler _tokenHandler;
-        private ISmsHandler _smsHandler;
+        private readonly IUserService _userService;
+        private readonly IConfirmationService _contirmationService;
+        private readonly ITokenHandler _tokenHandler;
+        private readonly ISmsHandler _smsHandler;
         private readonly IMailHandler _mailHandler;
         private readonly ILoggerHandler _loggerHandler;
 
-        public UserLoginController(IMailHandler mailHandler, ILoggerHandler loggerHandler)
+        public UserLoginController(
+            IUserService userService,
+            IConfirmationService contirmationService,
+            ITokenHandler tokenHandler,
+            ISmsHandler smsHandler,
+            IMailHandler mailHandler,
+            ILoggerHandler loggerHandler)
         {
-            _userService = new UserService();
-            _contirmationService = new ConfirmationService();
-            _tokenHandler = new TokenHandler();
-            _smsHandler = new SmsHandler();
+            _userService = userService;
+            _contirmationService = contirmationService;
+            _tokenHandler = tokenHandler;
+            _smsHandler = smsHandler;
             _mailHandler = mailHandler;
             _loggerHandler = loggerHandler;
         }
@@ -42,8 +49,7 @@ namespace CareGardenApiV1.Controller
         /// Send Telephone Confirmation Code
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("user/sendtelephoneconfirmationcode")]
+        [HttpPost("sendtelephoneconfirmationcode")]
         public async Task<IActionResult> SendTelephoneConfirmationCode([FromBody] string telephoneNumber)
         {
             ResponseModel<int> response = new ResponseModel<int>();
@@ -113,8 +119,7 @@ namespace CareGardenApiV1.Controller
         /// Send Email Confirmation Code
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("user/sendemailconfirmationcode")]
+        [HttpPost("sendemailconfirmationcode")]
         public async Task<IActionResult> SendEmailConfirmationCode([FromBody] string email)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -203,8 +208,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("user/verifyconfirmationcode")]
+        [HttpPost("verifyconfirmationcode")]
         public async Task<IActionResult> VerifyConfirmationCode([FromBody] ConfirmationInfo confirmationInfo)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -278,7 +282,7 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
-        /// Create New User
+        /// Save User
         /// </summary>
         /// <remarks>
         /// **Sample request body:**
@@ -293,8 +297,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("user/save")]
+        [HttpPost("save")]
         public async Task<IActionResult> Save([FromBody] User user)
         {
             ResponseModel<Token> response = new ResponseModel<Token>();
@@ -418,8 +421,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("user/login")]
+        [HttpPost("login")]
         public async Task<IActionResult> UserLogin([FromBody] User loginUser)
         {
             ResponseModel<Token> response = new ResponseModel<Token>();
@@ -504,8 +506,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("user/passwordreset")]
+        [HttpPost("passwordreset")]
         public async Task<IActionResult> PasswordReset([FromBody] PasswordResetModel updateUser)
         {
             ResponseModel<Token> response = new ResponseModel<Token>();
@@ -618,8 +619,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("admin/login")]
+        [HttpPost("adminlogin")]
         public async Task<IActionResult> AdminLogin([FromBody] User loginUser)
         {
             ResponseModel<Token> response = new ResponseModel<Token>();

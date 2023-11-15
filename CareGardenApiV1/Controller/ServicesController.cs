@@ -11,16 +11,20 @@ using Microsoft.Extensions.Caching.Memory;
 namespace CareGardenApiV1.Controller
 {
     [ApiController]
+    [Route("service")]
     public class ServicesController : ControllerBase
     {
-        private IServicesService _servicesService;
+        private readonly IServicesService _servicesService;
         private readonly ILoggerHandler _loggerHandler;
-        private IMemoryCache _memoryCache;
+        private readonly IMemoryCache _memoryCache;
         private const string cacheKey = "services";
 
-        public ServicesController(ILoggerHandler loggerHandler, IMemoryCache memoryCache)
+        public ServicesController(
+            IServicesService servicesService,
+            ILoggerHandler loggerHandler,
+            IMemoryCache memoryCache)
         {
-            _servicesService = new ServicesService();
+            _servicesService = servicesService;
             _loggerHandler = loggerHandler;
             _memoryCache = memoryCache;
         }
@@ -29,9 +33,8 @@ namespace CareGardenApiV1.Controller
         /// Get Services
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("service/getall")]
-        public async Task<IActionResult> GetServices()
+        [HttpPost("getall")]
+        public async Task<IActionResult> GetAll()
         {
             ResponseModel<List<Services>> response = new ResponseModel<List<Services>>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -66,9 +69,8 @@ namespace CareGardenApiV1.Controller
         /// Get Service By Id
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("service/getbyid")]
-        public async Task<IActionResult> GetServicesById([FromBody] string id)
+        [HttpPost("getbyid")]
+        public async Task<IActionResult> GetById([FromBody] string id)
         {
             ResponseModel<Services> response = new ResponseModel<Services>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -110,9 +112,8 @@ namespace CareGardenApiV1.Controller
         /// Get Service By Name
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("service/getbyname")]
-        public async Task<IActionResult> GetServicesByName([FromBody] string name)
+        [HttpPost("getbyname")]
+        public async Task<IActionResult> GetByName([FromBody] string name)
         {
             ResponseModel<Services> response = new ResponseModel<Services>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -154,9 +155,8 @@ namespace CareGardenApiV1.Controller
         /// Get Service By NameEn
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("service/getbynameen")]
-        public async Task<IActionResult> GetServicesByNameEn([FromBody] string nameEn)
+        [HttpPost("getbynameen")]
+        public async Task<IActionResult> GetByNameEn([FromBody] string nameEn)
         {
             ResponseModel<Services> response = new ResponseModel<Services>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -210,8 +210,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [Authorize(Roles = "Admin")]
-        [HttpPost]
-        [Route("service/save")]
+        [HttpPost("save")]
         public async Task<IActionResult> Save([FromBody] Services services)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -289,8 +288,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [Authorize(Roles = "Admin")]
-        [HttpPost]
-        [Route("service/update")]
+        [HttpPost("update")]
         public async Task<IActionResult> Update([FromBody] Services updateServices)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -368,8 +366,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [Authorize(Roles = "Admin")]
-        [HttpPost]
-        [Route("service/delete")]
+        [HttpPost("delete")]
         public async Task<IActionResult> Delete([FromBody] string id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();

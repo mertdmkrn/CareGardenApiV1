@@ -77,5 +77,12 @@
             Afternoon,
             Evening
         }
+
+        public enum DiscountType
+        {
+            AllDay,
+            WeekDay,
+            WeekEnd
+        }
     }
 }

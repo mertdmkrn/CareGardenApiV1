@@ -7,11 +7,11 @@ namespace CareGardenApiV1.Service.Concrete
 {
     public class CampaignService : ICampaignService
     {
-        private ICampaignRepository _campaignRepository;
+        private readonly ICampaignRepository _campaignRepository;
 
-        public CampaignService()
+        public CampaignService(ICampaignRepository campaignRepository)
         {
-            _campaignRepository = new CampaignRepository();
+            _campaignRepository = campaignRepository;
         }
 
         public async Task<bool> DeleteCampaignAsync(Campaign campaign)

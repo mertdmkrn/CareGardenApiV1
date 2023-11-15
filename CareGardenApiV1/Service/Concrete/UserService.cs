@@ -8,11 +8,11 @@ namespace CareGardenApiV1.Service.Concrete
 {
     public class UserService : IUserService
     {
-        private IUserRepository _userRepository;
+        private readonly IUserRepository _userRepository;
 
-        public UserService()
+        public UserService(IUserRepository userRepository)
         {
-            _userRepository = new UserRepository();
+            _userRepository = userRepository;
         }
 
         public async Task<User> GetUserByEmailAndPasswordAsync(string email, string password)

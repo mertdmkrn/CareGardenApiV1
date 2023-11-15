@@ -7,11 +7,11 @@ namespace CareGardenApiV1.Service.Concrete
 {
     public class FavoriteService : IFavoriteService
     {
-        private IFavoriteRepository _favoriteRepository;
+        private readonly IFavoriteRepository _favoriteRepository;
 
-        public FavoriteService()
+        public FavoriteService(IFavoriteRepository favoriteRepository)
         {
-            _favoriteRepository = new FavoriteRepository();
+            _favoriteRepository = favoriteRepository;
         }
 
         public async Task<bool> DeleteFavoriteAsync(Favorite favorite)

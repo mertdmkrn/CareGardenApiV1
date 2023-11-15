@@ -7,11 +7,11 @@ namespace CareGardenApiV1.Service.Concrete
 {
     public class PaymentInfoService : IPaymentInfoService
     {
-        private IPaymentInfoRepository _paymentInfoRepository;
+        private readonly IPaymentInfoRepository _paymentInfoRepository;
 
-        public PaymentInfoService()
+        public PaymentInfoService(IPaymentInfoRepository paymentInfoRepository)
         {
-            _paymentInfoRepository = new PaymentInfoRepository();
+            _paymentInfoRepository = paymentInfoRepository;
         }
 
         public async Task<bool> DeletePaymentInfoAsync(PaymentInfo paymentInfo)

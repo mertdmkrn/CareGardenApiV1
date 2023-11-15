@@ -21,32 +21,40 @@ namespace CareGardenApiV1.Controller
 {
     [ApiController]
     [Authorize(Roles = "Admin")]
+    [Route("admin")]
     public class AdminController : ControllerBase
     {
-
-        private IBusinessService _businessService;
-        private IUserService _userService;
-        private IFaqService _faqService;
-        private IFileHandler _fileHandler;
-        private IMemoryCache _memoryCache;
+        private readonly IBusinessService _businessService;
+        private readonly IUserService _userService;
+        private readonly IFaqService _faqService;
+        private readonly IFileHandler _fileHandler;
+        private readonly IMemoryCache _memoryCache;
         private readonly IMailHandler _mailHandler;
         private readonly IElasticHandler _elasticHandler;
         private readonly ILoggerHandler _loggerHandler;
 
-        public AdminController(IMailHandler mailHandler, ILoggerHandler loggerHandler, IMemoryCache memoryCache, IElasticHandler elasticHandler)
+        public AdminController(
+            IBusinessService businessService,
+            IUserService userService,
+            IFaqService faqService,
+            IFileHandler fileHandler,
+            IMemoryCache memoryCache,
+            IMailHandler mailHandler,
+            ILoggerHandler loggerHandler,
+            IElasticHandler elasticHandler)
         {
-            _businessService = new BusinessService();
-            _userService = new UserService();
-            _faqService = new FaqService();
-            _fileHandler = new FileHandler();
+            _businessService = businessService;
+            _userService = userService;
+            _faqService = faqService;
+            _fileHandler = fileHandler;
+            _memoryCache = memoryCache;
             _mailHandler = mailHandler;
             _loggerHandler = loggerHandler;
             _elasticHandler = elasticHandler;
-            _memoryCache = memoryCache;
         }
 
         /// <summary>
-        /// Update Business State
+        /// It is used for activation and verification of Business.
         /// </summary>
         /// <remarks>
         /// **Sample request body:**
@@ -59,8 +67,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("admin/updatebusinesstate")]
+        [HttpPost("verifybusiness")]
         public async Task<IActionResult> VerifyBusiness(Business updateBusiness)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -99,7 +106,7 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
-        /// Create New Admin
+        /// Save Admin.
         /// </summary>
         /// <remarks>
         /// **Sample request body:**
@@ -113,8 +120,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("admin/save")]
+        [HttpPost("save")]
         public async Task<IActionResult> Save([FromBody] User user)
         {
             ResponseModel<Token> response = new ResponseModel<Token>();
@@ -213,12 +219,10 @@ namespace CareGardenApiV1.Controller
 
 
         /// <summary>
-        /// Upload File
+        /// It is used to upload a new file and get a url.
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [HttpPost]
-        [Route("admin/uploadfile")]
+        [HttpPost("uploadfile")]
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
             ResponseModel<string> response = new ResponseModel<string>();
@@ -265,8 +269,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("admin/savefaq")]
+        [HttpPost("savefaq")]
         public async Task<IActionResult> SaveFaq([FromBody] Faq faq)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -347,8 +350,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("admin/updatefaq")]
+        [HttpPost("updatefaq")]
         public async Task<IActionResult> UpdateFaq([FromBody] Faq updateFaq)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -423,8 +425,7 @@ namespace CareGardenApiV1.Controller
         /// Delete Faq
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("admin/deletefaq")]
+        [HttpPost("deletefaq")]
         public async Task<IActionResult> DeleteFaq([FromBody] string id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -465,11 +466,10 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
-        /// Admin Get Faq
+        /// Get Faq By Id
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("admin/getfaq")]
+        [HttpPost("getfaq")]
         public async Task<IActionResult> GetFaq([FromBody] string id)
         {
             ResponseModel<Faq> response = new ResponseModel<Faq>();
@@ -509,11 +509,10 @@ namespace CareGardenApiV1.Controller
 
 
         /// <summary>
-        /// Admin Get Faq Categories
+        /// Get Faq Categories
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("admin/getfaqcategories")]
+        [HttpPost("getfaqcategories")]
         public async Task<IActionResult> GetFaqCategories()
         {
             ResponseModel<List<string>> response = new ResponseModel<List<string>>();
@@ -533,11 +532,10 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
-        /// Business Detail Index List
+        /// It enables elasticsearch indexing of business records.
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("admin/indexbusiness")]
+        [HttpPost("makeindexbusiness")]
         public async Task<IActionResult> IndexBusiness()
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -559,12 +557,11 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
-        /// Get Search
+        /// Search Business
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("admin/getbusinesssearch")]
-        public async Task<IActionResult> GetBusinessSearch([FromBody] BusinessSearchAdminModel searchAdminModel)
+        [HttpPost("searchbusiness")]
+        public async Task<IActionResult> SearchBusiness([FromBody] BusinessSearchAdminModel searchAdminModel)
         {
             var culture = Request.Headers["Language"].ToString().IsNull("en");
             ResponseModel<List<BusinessPagingListModel>> response = new ResponseModel<List<BusinessPagingListModel>>();
@@ -582,7 +579,6 @@ namespace CareGardenApiV1.Controller
                 response.Message = "Exception => " + ex.Message;
                 return Ok(response);
             }
-
         }
     }
 }

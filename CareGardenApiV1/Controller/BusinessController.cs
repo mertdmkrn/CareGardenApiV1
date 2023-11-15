@@ -20,36 +20,53 @@ namespace CareGardenApiV1.Controller
 {
     [ApiController]
     [Authorize]
+    [Route("business")]
     public class BusinessController : ControllerBase
     {
-        private IBusinessService _businessService;
-        private IBusinessWorkingInfoService _businessWorkingInfoService;
-        private IBusinessGalleryService _businessGalleryService;
-        private IServicesService _servicesService;
-        private IMemoryCache _memoryCache;
-        private IFileHandler _fileHandler;
+        private readonly IBusinessService _businessService;
+        private readonly IBusinessWorkingInfoService _businessWorkingInfoService;
+        private readonly IBusinessGalleryService _businessGalleryService;
+        private readonly IServicesService _servicesService;
+        private readonly IMemoryCache _memoryCache;
+        private readonly IFileHandler _fileHandler;
         private readonly ILoggerHandler _loggerHandler;
         private readonly IElasticHandler _elasticHandler;
 
-        public BusinessController(ILoggerHandler loggerHandler, IMemoryCache memoryCache, IElasticHandler elasticHandler)
+        public BusinessController(
+            IBusinessService businessService,
+            IBusinessWorkingInfoService businessWorkingInfoService,
+            IBusinessGalleryService businessGalleryService,
+            IServicesService servicesService,
+            IMemoryCache memoryCache,
+            IFileHandler fileHandler,
+            ILoggerHandler loggerHandler,
+            IElasticHandler elasticHandler)
         {
-            _businessService = new BusinessService();
-            _businessGalleryService = new BusinessGalleryService();
-            _businessWorkingInfoService = new BusinessWorkingInfoService();
-            _servicesService = new ServicesService();
-            _fileHandler = new FileHandler();
+            _businessService = businessService;
+            _businessWorkingInfoService = businessWorkingInfoService;
+            _businessGalleryService = businessGalleryService;
+            _servicesService = servicesService;
+            _memoryCache = memoryCache;
+            _fileHandler = fileHandler;
             _loggerHandler = loggerHandler;
             _elasticHandler = elasticHandler;
-            _memoryCache = memoryCache;
         }
 
+
         /// <summary>
-        /// Get Business By Id
+        /// Get Business Info By Id (Brings only its own information)
         /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "00000000-0000-0000-0000-000000000000"
+        ///     }
+        ///
+        /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("business/getbyid")]
-        public async Task<IActionResult> GetBusinessById([FromBody] string id)
+        [HttpPost("getinfo")]
+        public async Task<IActionResult> GetInfoById([FromBody] string id)
         {
             ResponseModel<Business> response = new ResponseModel<Business>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -92,12 +109,19 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
-        /// Get Business All By Id
+        /// Get Business By Id (It also brings relationship table information)
         /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "00000000-0000-0000-0000-000000000000"
+        ///     }
+        ///
+        /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("business/getallbyid")]
-        public async Task<IActionResult> GetBusinessAllById([FromBody] string id)
+        [HttpPost("getbyid")]
+        public async Task<IActionResult> GetById([FromBody] string id)
         {
             ResponseModel<Business> response = new ResponseModel<Business>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -143,9 +167,8 @@ namespace CareGardenApiV1.Controller
         /// Get Session Business
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("business/get")]
-        public async Task<IActionResult> GetBusiness()
+        [HttpPost("get")]
+        public async Task<IActionResult> Get()
         {
             ResponseModel<Business> response = new ResponseModel<Business>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -157,7 +180,7 @@ namespace CareGardenApiV1.Controller
                 if (business == null)
                 {
                     response.HasError = true;
-                    response.Message = Resource.Resource.KullaniciBulunamadi;
+                    response.Message = Resource.Resource.SirketBulunamadi;
                     return Ok(response);
                 }
 
@@ -178,12 +201,19 @@ namespace CareGardenApiV1.Controller
 
 
         /// <summary>
-        /// Get Business Detail By Id
+        /// Get Business Details By Id (Can be used for business detail page.)
         /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "00000000-0000-0000-0000-000000000000"
+        ///     }
+        ///
+        /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("business/getdetailbyid")]
-        public async Task<IActionResult> GetDetailById([FromBody] string id)
+        [HttpPost("getdetails")]
+        public async Task<IActionResult> GetBusinessDetailsById([FromBody] string id)
         {
             var culture = Request.Headers["Language"].ToString().IsNull("en");
             ResponseModel<BusinessDetailModel> response = new ResponseModel<BusinessDetailModel>();
@@ -196,10 +226,8 @@ namespace CareGardenApiV1.Controller
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
                     response.Message += Resource.Resource.IdParametreHatasi;
-                }
-
-                if (response.HasError)
                     return Ok(response);
+                }
 
                 var businessDetail = await _businessService.GetBusinessDetailByIdAsync(id.ToGuid());
                 businessDetail.isOpen = HelperMethods.GetBusinessOpen(businessDetail.businessWorkingInfo, businessDetail.officialDayAvailable);
@@ -212,7 +240,7 @@ namespace CareGardenApiV1.Controller
                 else
                 {
                     services = await _servicesService.GetServicesAsync();
-                    _memoryCache.Set("services", response.Data, new MemoryCacheEntryOptions
+                    _memoryCache.Set("services", services, new MemoryCacheEntryOptions
                     {
                         Priority = CacheItemPriority.Normal
                     });
@@ -235,7 +263,6 @@ namespace CareGardenApiV1.Controller
                 response.Data = businessDetail;
 
                 return Ok(response);
-
             }
             catch (Exception ex)
             {
@@ -248,12 +275,11 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
-        /// Get Business Select Box
+        /// Get Business Names
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("business/selectlist")]
-        public async Task<IActionResult> GetBusinessSelectList()
+        [HttpPost("getnames")]
+        public async Task<IActionResult> GetBusinessNames()
         {
             ResponseModel<List<Tuple<string, string>>> response = new ResponseModel<List<Tuple<string, string>>>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -287,8 +313,7 @@ namespace CareGardenApiV1.Controller
         /// Set Profile Photo
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("business/setprofilephoto")]
+        [HttpPost("setprofilephoto")]
         public async Task<IActionResult> SetProfilePhoto([FromForm] BusinessFileInfoModel businessFileInfoModel)
         {
             ResponseModel<BusinessGallery> response = new ResponseModel<BusinessGallery>();
@@ -376,8 +401,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("business/update")]
+        [HttpPost("update")]
         public async Task<IActionResult> Update(Business updateBusiness)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -465,8 +489,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("business/saveworkinginfo")]
+        [HttpPost("saveworkinginfo")]
         public async Task<IActionResult> SaveWorkingInfo(BusinessWorkInfoModel businessWorkInfoModel)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -540,8 +563,7 @@ namespace CareGardenApiV1.Controller
         /// Add Gallery Photo
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("business/addgalleryphoto")]
+        [HttpPost("addgalleryphoto")]
         public async Task<IActionResult> AddGalleryPhoto([FromForm] BusinessFileInfoModel businessFileInfoModel)
         {
             ResponseModel<BusinessGallery> response = new ResponseModel<BusinessGallery>();
@@ -607,8 +629,7 @@ namespace CareGardenApiV1.Controller
         /// Delete Gallery Photo
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("business/deletegalleryphoto")]
+        [HttpPost("deletegalleryphoto")]
         public async Task<IActionResult> DeleteGalleryPhoto([FromBody] string id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -647,8 +668,7 @@ namespace CareGardenApiV1.Controller
         /// Delete Business
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("business/delete")]
+        [HttpPost("delete")]
         public async Task<IActionResult> Delete([FromBody] Business business)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();

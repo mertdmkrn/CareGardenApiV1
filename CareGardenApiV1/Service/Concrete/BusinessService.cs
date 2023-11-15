@@ -12,11 +12,11 @@ namespace CareGardenApiV1.Service.Concrete
 {
     public class BusinessService : IBusinessService
     {
-        private IBusinessRepository _businessRepository;
+        private readonly IBusinessRepository _businessRepository;
 
-        public BusinessService()
+        public BusinessService(IBusinessRepository businessRepository)
         {
-            _businessRepository = new BusinessRepository();
+            _businessRepository = businessRepository;
         }
 
         public async Task<bool> DeleteBusinessAsync(Business business)

@@ -17,16 +17,22 @@ namespace CareGardenApiV1.Controller
 {
     [ApiController]
     [Authorize]
+    [Route("comment")]
     public class CommentController : ControllerBase
     {
-        private ICommentService _commentService;
-        private IFileHandler _fileHandler;
+        private readonly ICommentService _commentService;
+        private readonly IFileHandler _fileHandler;
         private readonly ILoggerHandler _loggerHandler;
         private readonly IElasticHandler _elasticHandler;
 
-        public CommentController(ILoggerHandler loggerHandler, IElasticHandler elasticHandler)
+        public CommentController(
+            ICommentService commentService,
+            IFileHandler fileHandler,
+            ILoggerHandler loggerHandler,
+            IElasticHandler elasticHandler)
         {
-            _commentService = new CommentService();
+            _commentService = commentService;
+            _fileHandler = fileHandler;
             _loggerHandler = loggerHandler;
             _elasticHandler = elasticHandler;
         }
@@ -35,9 +41,8 @@ namespace CareGardenApiV1.Controller
         /// Get CommentBy Session User (User or Business)
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("comment/get")]
-        public async Task<IActionResult> GetCommentBySessionUser()
+        [HttpPost("get")]
+        public async Task<IActionResult> GetBySessionUser()
         {
             ResponseModel<List<Comment>> response = new ResponseModel<List<Comment>>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -82,9 +87,8 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("comment/getcommentbybusinessid")]
-        public async Task<IActionResult> GetCommentByBusinessId([FromBody] Guid businessId)
+        [HttpPost("getbybusinessid")]
+        public async Task<IActionResult> GetByBusinessId([FromBody] Guid businessId)
         {
             ResponseModel<List<Comment>> response = new ResponseModel<List<Comment>>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -124,8 +128,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("comment/getcommentbyuserid")]
+        [HttpPost("getbyuserid")]
         public async Task<IActionResult> GetCommentByUserId([FromBody] Guid userId)
         {
             ResponseModel<List<Comment>> response = new ResponseModel<List<Comment>>();
@@ -155,7 +158,7 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
-        /// Add Comment (İşyeri cevabı ise replyId dolu olacak. Cevap verilen yorumun id si yazılması yeterli. Kullanıcı yorum yapmışsa businessId dolu olmalı.)
+        /// Save Comment (İşyeri cevabı ise replyId dolu olacak. Cevap verilen yorumun id si yazılması yeterli. Kullanıcı yorum yapmışsa businessId dolu olmalı.)
         /// </summary>
         /// <remarks>
         /// **Sample request body:**
@@ -170,9 +173,8 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("comment/add")]
-        public async Task<IActionResult> AddComment([FromBody] Comment comment)
+        [HttpPost("save")]
+        public async Task<IActionResult> Save([FromBody] Comment comment)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -265,9 +267,8 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("comment/update")]
-        public async Task<IActionResult> UpdateComment([FromBody] Comment updateComment)
+        [HttpPost("update")]
+        public async Task<IActionResult> Update([FromBody] Comment updateComment)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -342,9 +343,8 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("comment/delete")]
-        public async Task<IActionResult> DeleteComment([FromBody] Guid id)
+        [HttpPost("delete")]
+        public async Task<IActionResult> Delete([FromBody] Guid id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));

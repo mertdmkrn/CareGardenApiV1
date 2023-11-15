@@ -7,11 +7,11 @@ namespace CareGardenApiV1.Service.Concrete
 {
     public class BusinessWorkingInfoService : IBusinessWorkingInfoService
     {
-        private IBusinessWorkingInfoRepository _businessWorkingInfoRepository;
+        private readonly IBusinessWorkingInfoRepository _businessWorkingInfoRepository;
 
-        public BusinessWorkingInfoService()
+        public BusinessWorkingInfoService(IBusinessWorkingInfoRepository businessWorkingInfoRepository)
         {
-            _businessWorkingInfoRepository = new BusinessWorkingInfoRepository();
+            _businessWorkingInfoRepository = businessWorkingInfoRepository;
         }
 
         public async Task<bool> DeleteBusinessWorkingInfoAsync(BusinessWorkingInfo businessWorkingInfo)

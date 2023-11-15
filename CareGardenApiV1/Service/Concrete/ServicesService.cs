@@ -11,11 +11,11 @@ namespace CareGardenApiV1.Service.Concrete
 {
     public class ServicesService : IServicesService
     {
-        private IServicesRepository _servicesRepository;
+        private readonly IServicesRepository _servicesRepository;
 
-        public ServicesService()
+        public ServicesService(IServicesRepository servicesRepository)
         {
-            _servicesRepository = new ServicesRepository();
+            _servicesRepository = servicesRepository;
         }
 
         public async Task<List<Services>> GetServicesAsync()

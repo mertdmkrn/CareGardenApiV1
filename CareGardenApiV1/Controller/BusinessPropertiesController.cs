@@ -20,24 +20,27 @@ namespace CareGardenApiV1.Controller
 {
     [ApiController]
     [Authorize]
+    [Route("businessproperties")]
     public class BusinessPropertiesController : ControllerBase
     {
-        private IBusinessPropertiesService _businessPropertiesService;
+        private readonly IBusinessPropertiesService _businessPropertiesService;
         private readonly ILoggerHandler _loggerHandler;
 
-        public BusinessPropertiesController(ILoggerHandler loggerHandler)
+        public BusinessPropertiesController(
+            IBusinessPropertiesService businessPropertiesService,
+            ILoggerHandler loggerHandler)
         {
-            _businessPropertiesService = new BusinessPropertiesService();
+            _businessPropertiesService = businessPropertiesService;
             _loggerHandler = loggerHandler;
         }
+
 
         /// <summary>
         /// Get BusinessProperties By Id
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("businessproperties/getbyid")]
-        public async Task<IActionResult> GetBusinessPropertiesById([FromBody] string id)
+        [HttpPost("getbyid")]
+        public async Task<IActionResult> GetById([FromBody] string id)
         {
             ResponseModel<BusinessProperties> response = new ResponseModel<BusinessProperties>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -71,9 +74,8 @@ namespace CareGardenApiV1.Controller
         /// Get BusinessProperties By Business Id
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("businessproperties/getbybusinessid")]
-        public async Task<IActionResult> GetBusinessPropertiesByBusinessId([FromBody] string businessId)
+        [HttpPost("getbybusinessid")]
+        public async Task<IActionResult> GetByBusinessId([FromBody] string businessId)
         {
             ResponseModel<List<BusinessProperties>> response = new ResponseModel<List<BusinessProperties>>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -108,9 +110,8 @@ namespace CareGardenApiV1.Controller
         /// Get BusinessProperties By Business Id And Key
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("businessproperties/getbybusinessidwithkey")]
-        public async Task<IActionResult> GetBusinessPropertiesByBusinessIdWithKey([FromBody] string businessId, string key)
+        [HttpPost("getbybusinessidwithkey")]
+        public async Task<IActionResult> GetByBusinessIdWithKey([FromBody] string businessId, string key)
         {
             ResponseModel<BusinessProperties> response = new ResponseModel<BusinessProperties>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -154,8 +155,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("businessproperties/save")]
+        [HttpPost("save")]
         public async Task<IActionResult> Save(BusinessProperties businessProperties)
         {
             ResponseModel<BusinessProperties> response = new ResponseModel<BusinessProperties>();
@@ -210,8 +210,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("businessproperties/update")]
+        [HttpPost("update")]
         public async Task<IActionResult> Update(BusinessProperties updateBusinessProperties)
         {
             ResponseModel<BusinessProperties> response = new ResponseModel<BusinessProperties>();
@@ -266,8 +265,7 @@ namespace CareGardenApiV1.Controller
         /// Delete BusinessProperties
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("businessproperties/delete")]
+        [HttpPost("delete")]
         public async Task<IActionResult> Delete([FromBody] BusinessProperties businessProperties)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();

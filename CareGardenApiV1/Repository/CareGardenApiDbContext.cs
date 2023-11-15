@@ -355,5 +355,6 @@ namespace CareGardenApiV1.Repository
         public DbSet<Services> Services { get; set; }
         public DbSet<Faq> Faqs { get; set; }
         public DbSet<Worker> Workers { get; set; }
+        public DbSet<Discount> Discounts { get; set; }
     }
 }

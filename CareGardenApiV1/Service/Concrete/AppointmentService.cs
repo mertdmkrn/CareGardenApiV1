@@ -13,12 +13,13 @@ namespace CareGardenApiV1.Service.Concrete
 {
     public class AppointmentService : IAppointmentService
     {
-        private IAppointmentRepository _appointmentRepository;
+        private readonly IAppointmentRepository _appointmentRepository;
 
-        public AppointmentService()
+        public AppointmentService(IAppointmentRepository appointmentRepository)
         {
-            _appointmentRepository = new AppointmentRepository();
+            _appointmentRepository = appointmentRepository;
         }
+
 
         public async Task<bool> DeleteAppointmentAsync(Appointment appointment)
         {

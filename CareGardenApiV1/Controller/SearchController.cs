@@ -25,24 +25,32 @@ namespace CareGardenApiV1.Controller
     [Authorize]
     public class SearchController : ControllerBase
     {
-        private IBusinessService _businessService;
-        private IBusinessWorkingInfoService _businessWorkingInfoService;
-        private IBusinessGalleryService _businessGalleryService;
-        private IServicesService _servicesService;
-        private IMemoryCache _memoryCache;
-        private IFileHandler _fileHandler;
+        private readonly IBusinessService _businessService;
+        private readonly IBusinessWorkingInfoService _businessWorkingInfoService;
+        private readonly IBusinessGalleryService _businessGalleryService;
+        private readonly IServicesService _servicesService;
+        private readonly IMemoryCache _memoryCache;
+        private readonly IFileHandler _fileHandler;
         private readonly ILoggerHandler _loggerHandler;
         private readonly IElasticClient _elasticClient;
 
-        public SearchController(ILoggerHandler loggerHandler, IMemoryCache memoryCache, IElasticClient elasticClient)
+        public SearchController(
+            IBusinessService businessService,
+            IBusinessWorkingInfoService businessWorkingInfoService,
+            IBusinessGalleryService businessGalleryService,
+            IServicesService servicesService,
+            IMemoryCache memoryCache,
+            IFileHandler fileHandler,
+            ILoggerHandler loggerHandler,
+            IElasticClient elasticClient)
         {
-            _businessService = new BusinessService();
-            _businessGalleryService = new BusinessGalleryService();
-            _businessWorkingInfoService = new BusinessWorkingInfoService();
-            _servicesService = new ServicesService();
-            _fileHandler = new FileHandler();
-            _loggerHandler = loggerHandler;
+            _businessService = businessService;
+            _businessWorkingInfoService = businessWorkingInfoService;
+            _businessGalleryService = businessGalleryService;
+            _servicesService = servicesService;
             _memoryCache = memoryCache;
+            _fileHandler = fileHandler;
+            _loggerHandler = loggerHandler;
             _elasticClient = elasticClient;
         }
 
@@ -51,8 +59,8 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [Route("user/getsearchbykeyword")]
-        public async Task<IActionResult> GetSearchByKeyword([FromBody] KeywordSearchModel keywordSearchModel)
+        [Route("user/searchbusinessbykeyword")]
+        public async Task<IActionResult> SearchBusinessByKeyword([FromBody] KeywordSearchModel keywordSearchModel)
         {
             var culture = Request.Headers["Language"].ToString().IsNull("en");
             ResponseModel<KeywordSearchResponseModel> response = new ResponseModel<KeywordSearchResponseModel>();
@@ -129,8 +137,8 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [Route("user/getsearch")]
-        public async Task<IActionResult> GetSearch([FromBody] BusinessExproleModel businessExproleModel)
+        [Route("user/searchbusiness")]
+        public async Task<IActionResult> SearchBusiness([FromBody] BusinessExproleModel businessExproleModel)
         {
             var culture = Request.Headers["Language"].ToString().IsNull("en");
             ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();

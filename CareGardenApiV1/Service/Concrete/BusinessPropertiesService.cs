@@ -7,11 +7,11 @@ namespace CareGardenApiV1.Service.Concrete
 {
     public class BusinessPropertiesService : IBusinessPropertiesService
     {
-        private IBusinessPropertiesRepository _businessPropertiesRepository;
+        private readonly IBusinessPropertiesRepository _businessPropertiesRepository;
 
-        public BusinessPropertiesService()
+        public BusinessPropertiesService(IBusinessPropertiesRepository businessPropertiesRepository)
         {
-            _businessPropertiesRepository = new BusinessPropertiesRepository();
+            _businessPropertiesRepository = businessPropertiesRepository;
         }
 
         public async Task<bool> DeleteBusinessPropertiesAsync(BusinessProperties businessProperties)

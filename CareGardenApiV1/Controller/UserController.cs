@@ -24,34 +24,42 @@ namespace CareGardenApiV1.Controller
 {
     [ApiController]
     [Authorize]
+    [Route("user")]
     public class UserController : ControllerBase
     {
-        private IUserService _userService;
-        private IBusinessService _businessService;
-        private IFaqService _faqService;
-        private IFileHandler _fileHandler;
-        private IMemoryCache _memoryCache;
+        private readonly IUserService _userService;
+        private readonly IBusinessService _businessService;
+        private readonly IFaqService _faqService;
+        private readonly IFileHandler _fileHandler;
+        private readonly IMemoryCache _memoryCache;
         private readonly IMailHandler _mailHandler;
         private readonly ILoggerHandler _loggerHandler;
 
-        public UserController(IMailHandler mailHandler, ILoggerHandler loggerHandler, IMemoryCache memoryCache)
+        public UserController(
+            IUserService userService,
+            IBusinessService businessService,
+            IFaqService faqService,
+            IFileHandler fileHandler,
+            IMemoryCache memoryCache,
+            IMailHandler mailHandler,
+            ILoggerHandler loggerHandler)
         {
-            _userService = new UserService();
-            _businessService = new BusinessService();
-            _faqService = new FaqService();
-            _fileHandler = new FileHandler();
-            _loggerHandler = loggerHandler;
-            _mailHandler = mailHandler;
+            _userService = userService;
+            _businessService = businessService;
+            _faqService = faqService;
+            _fileHandler = fileHandler;
             _memoryCache = memoryCache;
+            _mailHandler = mailHandler;
+            _loggerHandler = loggerHandler;
         }
+
 
         /// <summary>
         /// Get User By Id
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("user/getbyid")]
-        public async Task<IActionResult> GetUserById([FromBody] string id)
+        [HttpPost("getbyid")]
+        public async Task<IActionResult> GetById([FromBody] string id)
         {
             ResponseModel<UserResponseModel> response = new ResponseModel<UserResponseModel>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -94,9 +102,8 @@ namespace CareGardenApiV1.Controller
         /// Get Session User
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("user/get")]
-        public async Task<IActionResult> GetUser()
+        [HttpPost("get")]
+        public async Task<IActionResult> Get()
         {
             ResponseModel<UserResponseModel> response = new ResponseModel<UserResponseModel>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -129,8 +136,7 @@ namespace CareGardenApiV1.Controller
         /// User Send FeedBack
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("user/sendfeedback")]
+        [HttpPost("sendfeedback")]
         public async Task<IActionResult> SendFeedBack([FromForm] MailRequest email)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -192,8 +198,7 @@ namespace CareGardenApiV1.Controller
         /// User Set Profile Photo
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("user/setprofilephoto")]
+        [HttpPost("setprofilephoto")]
         public async Task<IActionResult> SetProfilePhoto(IFormFile file)
         {
             ResponseModel<string> response = new ResponseModel<string>();
@@ -246,8 +251,7 @@ namespace CareGardenApiV1.Controller
         /// Delete User
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("user/delete")]
+        [HttpPost("delete")]
         public async Task<IActionResult> Delete([FromBody] string id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -293,8 +297,7 @@ namespace CareGardenApiV1.Controller
         /// User Get Popular Business
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("user/getpopularbusiness")]
+        [HttpPost("getpopularbusiness")]
         public async Task<IActionResult> GetPopularBusiness([FromBody] BusinessSearchModel businessSearchModel)
         {
             ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
@@ -330,8 +333,7 @@ namespace CareGardenApiV1.Controller
         /// User Get Favorite Business
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("user/getfavoritebusiness")]
+        [HttpPost("getfavoritebusiness")]
         public async Task<IActionResult> GetFavoriteBusiness([FromBody] BusinessSearchModel businessSearchModel)
         {
             ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
@@ -371,8 +373,7 @@ namespace CareGardenApiV1.Controller
         /// User Get Near By Business
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("user/getnearbybusiness")]
+        [HttpPost("getnearbybusiness")]
         public async Task<IActionResult> GetNearByBusiness([FromBody] BusinessSearchModel businessSearchModel)
         {
             ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
@@ -426,8 +427,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("user/update")]
+        [HttpPost("update")]
         public async Task<IActionResult> Update([FromBody] User updateUser)
         {
             ResponseModel<UserResponseModel> response = new ResponseModel<UserResponseModel>();
@@ -522,8 +522,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("user/changepassword")]
+        [HttpPost("changepassword")]
         public async Task<IActionResult> ChangePassword([FromBody] PasswordChangeModel updateUser)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -626,8 +625,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("user/updatelocation")]
+        [HttpPost("updatelocation")]
         public async Task<IActionResult> UpdateLocation([FromBody] User updateUser)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -691,8 +689,7 @@ namespace CareGardenApiV1.Controller
         /// Get Faqs
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("user/getfaqs")]
+        [HttpPost("getfaqs")]
         public async Task<IActionResult> GetFaqs()
         {
             var culture = Request.Headers["Language"].ToString().IsNull("en");

@@ -7,11 +7,11 @@ namespace CareGardenApiV1.Service.Concrete
 {
     public class ComplainService : IComplainService
     {
-        private IComplainRepository _complainRepository;
+        private readonly IComplainRepository _complainRepository;
 
-        public ComplainService()
+        public ComplainService(IComplainRepository complainRepository)
         {
-            _complainRepository = new ComplainRepository();
+            _complainRepository = complainRepository;
         }
 
         public async Task<bool> DeleteComplainAsync(Complain complain)

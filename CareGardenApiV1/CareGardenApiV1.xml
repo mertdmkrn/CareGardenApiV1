@@ -6,7 +6,7 @@
     <members>
         <member name="M:CareGardenApiV1.Controller.AdminController.VerifyBusiness(CareGardenApiV1.Model.Business)">
              <summary>
-             Update Business State
+             It is used for activation and verification of Business.
              </summary>
              <remarks>
              **Sample request body:**
@@ -22,7 +22,7 @@
         </member>
         <member name="M:CareGardenApiV1.Controller.AdminController.Save(CareGardenApiV1.Model.User)">
              <summary>
-             Create New Admin
+             Save Admin.
              </summary>
              <remarks>
              **Sample request body:**
@@ -39,7 +39,7 @@
         </member>
         <member name="M:CareGardenApiV1.Controller.AdminController.UploadFile(Microsoft.AspNetCore.Http.IFormFile)">
             <summary>
-            Upload File
+            It is used to upload a new file and get a url.
             </summary>
             <returns></returns>
         </member>
@@ -90,25 +90,25 @@
         </member>
         <member name="M:CareGardenApiV1.Controller.AdminController.GetFaq(System.String)">
             <summary>
-            Admin Get Faq
+            Get Faq By Id
             </summary>
             <returns></returns>
         </member>
         <member name="M:CareGardenApiV1.Controller.AdminController.GetFaqCategories">
             <summary>
-            Admin Get Faq Categories
+            Get Faq Categories
             </summary>
             <returns></returns>
         </member>
         <member name="M:CareGardenApiV1.Controller.AdminController.IndexBusiness">
             <summary>
-            Business Detail Index List
+            It enables elasticsearch indexing of business records.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.AdminController.GetBusinessSearch(CareGardenApiV1.Model.RequestModel.BusinessSearchAdminModel)">
+        <member name="M:CareGardenApiV1.Controller.AdminController.SearchBusiness(CareGardenApiV1.Model.RequestModel.BusinessSearchAdminModel)">
             <summary>
-            Get Search
+            Search Business
             </summary>
             <returns></returns>
         </member>
@@ -214,7 +214,7 @@
         </member>
         <member name="M:CareGardenApiV1.Controller.AppointmentController.GetWorkerAvailableTime(CareGardenApiV1.Model.RequestModel.AppointmentSearchModel)">
              <summary>
-             Get Worker Available Time
+             Get Worker Available Times
              </summary>
              <remarks>
              **Sample request body:**
@@ -229,33 +229,57 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessById(System.String)">
-            <summary>
-            Get Business By Id
-            </summary>
-            <returns></returns>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.GetInfoById(System.String)">
+             <summary>
+             Get Business Info By Id (Brings only its own information)
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessAllById(System.String)">
-            <summary>
-            Get Business All By Id
-            </summary>
-            <returns></returns>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.GetById(System.String)">
+             <summary>
+             Get Business By Id (It also brings relationship table information)
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusiness">
+        <member name="M:CareGardenApiV1.Controller.BusinessController.Get">
             <summary>
             Get Session Business
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessController.GetDetailById(System.String)">
-            <summary>
-            Get Business Detail By Id
-            </summary>
-            <returns></returns>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessDetailsById(System.String)">
+             <summary>
+             Get Business Details By Id (Can be used for business detail page.)
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessSelectList">
+        <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessNames">
             <summary>
-            Get Business Select Box
+            Get Business Names
             </summary>
             <returns></returns>
         </member>
@@ -364,7 +388,7 @@
         </member>
         <member name="M:CareGardenApiV1.Controller.BusinessLoginController.Save(CareGardenApiV1.Model.Business)">
              <summary>
-             Create New Business
+             Save Business
              </summary>
              <remarks>
              **Sample request body:**
@@ -382,7 +406,7 @@
         </member>
         <member name="M:CareGardenApiV1.Controller.BusinessLoginController.BusinessLogin(CareGardenApiV1.Model.Business)">
              <summary>
-             Business Login Control
+             Login Business
              </summary>
              <remarks>
              **Sample request body:**
@@ -412,19 +436,19 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.GetBusinessPropertiesById(System.String)">
+        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.GetById(System.String)">
             <summary>
             Get BusinessProperties By Id
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.GetBusinessPropertiesByBusinessId(System.String)">
+        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.GetByBusinessId(System.String)">
             <summary>
             Get BusinessProperties By Business Id
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.GetBusinessPropertiesByBusinessIdWithKey(System.String,System.String)">
+        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.GetByBusinessIdWithKey(System.String,System.String)">
             <summary>
             Get BusinessProperties By Business Id And Key
             </summary>
@@ -469,19 +493,19 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessServicesController.GetBusinessServiceById(System.String)">
+        <member name="M:CareGardenApiV1.Controller.BusinessServicesController.GetById(System.String)">
             <summary>
             Get Service By Id
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessServicesController.GetBusinessServicesByServiceId(System.String)">
+        <member name="M:CareGardenApiV1.Controller.BusinessServicesController.GetByServiceId(System.String)">
             <summary>
             Get Service By Id
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessServicesController.GetBusinessServicesByBusinessId(System.String)">
+        <member name="M:CareGardenApiV1.Controller.BusinessServicesController.GetByBusinessId(System.String)">
             <summary>
             Get Service By Id
             </summary>
@@ -538,27 +562,21 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.CampaignController.GetCampaigns">
+        <member name="M:CareGardenApiV1.Controller.CampaignController.GetAll">
             <summary>
             Get Services
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.CampaignController.GetCampaignByBusinessId(System.String)">
+        <member name="M:CareGardenApiV1.Controller.CampaignController.GetByBusinessId(System.String)">
             <summary>
             Get Campaign By BusinessId
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.CampaignController.GetCampaignById(System.String)">
+        <member name="M:CareGardenApiV1.Controller.CampaignController.GetById(System.String)">
             <summary>
             Get Campaign By Id
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:CareGardenApiV1.Controller.CampaignController.UploadImage(Microsoft.AspNetCore.Http.IFormFile)">
-            <summary>
-            Campaign Upload Image
             </summary>
             <returns></returns>
         </member>
@@ -604,13 +622,13 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.CommentController.GetCommentBySessionUser">
+        <member name="M:CareGardenApiV1.Controller.CommentController.GetBySessionUser">
             <summary>
             Get CommentBy Session User (User or Business)
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.CommentController.GetCommentByBusinessId(System.Guid)">
+        <member name="M:CareGardenApiV1.Controller.CommentController.GetByBusinessId(System.Guid)">
              <summary>
              Get Comment By Business Id
              </summary>
@@ -638,9 +656,9 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.CommentController.AddComment(CareGardenApiV1.Model.Comment)">
+        <member name="M:CareGardenApiV1.Controller.CommentController.Save(CareGardenApiV1.Model.Comment)">
              <summary>
-             Add Comment (İşyeri cevabı ise replyId dolu olacak. Cevap verilen yorumun id si yazılması yeterli. Kullanıcı yorum yapmışsa businessId dolu olmalı.)
+             Save Comment (İşyeri cevabı ise replyId dolu olacak. Cevap verilen yorumun id si yazılması yeterli. Kullanıcı yorum yapmışsa businessId dolu olmalı.)
              </summary>
              <remarks>
              **Sample request body:**
@@ -656,7 +674,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.CommentController.UpdateComment(CareGardenApiV1.Model.Comment)">
+        <member name="M:CareGardenApiV1.Controller.CommentController.Update(CareGardenApiV1.Model.Comment)">
              <summary>
              Update Comment
              </summary>
@@ -672,7 +690,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:CareGardenApiV1.Controller.CommentController.DeleteComment(System.Guid)" -->
+        <!-- Badly formed XML comment ignored for member "M:CareGardenApiV1.Controller.CommentController.Delete(System.Guid)" -->
         <member name="M:CareGardenApiV1.Controller.DefinitionController.GetCities">
             <summary>
             Get Cities
@@ -685,13 +703,13 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.FavoriteController.GetFavoriteBusinesses">
+        <member name="M:CareGardenApiV1.Controller.FavoriteController.Get">
             <summary>
             Get Favorite Businesses
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.FavoriteController.AddFavorite(System.Guid)">
+        <member name="M:CareGardenApiV1.Controller.FavoriteController.Add(System.Guid)">
              <summary>
              Add Favorite
              </summary>
@@ -705,38 +723,38 @@
              </remarks>
              <returns></returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:CareGardenApiV1.Controller.FavoriteController.DeleteFavorite(System.Guid)" -->
-        <member name="M:CareGardenApiV1.Controller.SearchController.GetSearchByKeyword(CareGardenApiV1.Model.RequestModel.KeywordSearchModel)">
+        <!-- Badly formed XML comment ignored for member "M:CareGardenApiV1.Controller.FavoriteController.Delete(System.Guid)" -->
+        <member name="M:CareGardenApiV1.Controller.SearchController.SearchBusinessByKeyword(CareGardenApiV1.Model.RequestModel.KeywordSearchModel)">
             <summary>
             Get Search By Keyword
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.SearchController.GetSearch(CareGardenApiV1.Model.RequestModel.BusinessExproleModel)">
+        <member name="M:CareGardenApiV1.Controller.SearchController.SearchBusiness(CareGardenApiV1.Model.RequestModel.BusinessExproleModel)">
             <summary>
             Get Search
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.ServicesController.GetServices">
+        <member name="M:CareGardenApiV1.Controller.ServicesController.GetAll">
             <summary>
             Get Services
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.ServicesController.GetServicesById(System.String)">
+        <member name="M:CareGardenApiV1.Controller.ServicesController.GetById(System.String)">
             <summary>
             Get Service By Id
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.ServicesController.GetServicesByName(System.String)">
+        <member name="M:CareGardenApiV1.Controller.ServicesController.GetByName(System.String)">
             <summary>
             Get Service By Name
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.ServicesController.GetServicesByNameEn(System.String)">
+        <member name="M:CareGardenApiV1.Controller.ServicesController.GetByNameEn(System.String)">
             <summary>
             Get Service By NameEn
             </summary>
@@ -785,13 +803,13 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.UserController.GetUserById(System.String)">
+        <member name="M:CareGardenApiV1.Controller.UserController.GetById(System.String)">
             <summary>
             Get User By Id
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.UserController.GetUser">
+        <member name="M:CareGardenApiV1.Controller.UserController.Get">
             <summary>
             Get Session User
             </summary>
@@ -918,7 +936,7 @@
         </member>
         <member name="M:CareGardenApiV1.Controller.UserLoginController.Save(CareGardenApiV1.Model.User)">
              <summary>
-             Create New User
+             Save User
              </summary>
              <remarks>
              **Sample request body:**
@@ -1025,7 +1043,7 @@
         </member>
         <member name="M:CareGardenApiV1.Controller.WorkerController.Save(CareGardenApiV1.Model.Worker)">
              <summary>
-             Add Worker
+             Save Worker
              </summary>
              <remarks>
              **Sample request body:**

@@ -19,17 +19,23 @@ namespace CareGardenApiV1.Controller
 {
     [ApiController]
     [Authorize(Roles = "Admin,Business")]
+    [Route("worker")]
     public class WorkerController : ControllerBase
     {
-        private IWorkerService _workerService;
-        private IFileHandler _fileHandler;
+        private readonly IWorkerService _workerService;
+        private readonly IFileHandler _fileHandler;
         private readonly ILoggerHandler _loggerHandler;
 
-        public WorkerController(ILoggerHandler loggerHandler)
+        public WorkerController(
+            IWorkerService workerService,
+            IFileHandler fileHandler,
+            ILoggerHandler loggerHandler)
         {
-            _workerService = new WorkerService();
+            _workerService = workerService;
+            _fileHandler = fileHandler;
             _loggerHandler = loggerHandler;
         }
+
 
         /// <summary>
         /// Get Worker By Id
@@ -43,8 +49,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("worker/getbyid")]
+        [HttpPost("getbyid")]
         public async Task<IActionResult> GetById([FromBody] string? id)
         {
             ResponseModel<Worker> response = new ResponseModel<Worker>();
@@ -85,8 +90,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("worker/getbybusinessid")]
+        [HttpPost("getbybusinessid")]
         public async Task<IActionResult> GetByBusinessId([FromBody] string? businessId)
         {
             ResponseModel<List<Worker>> response = new ResponseModel<List<Worker>>();
@@ -127,8 +131,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("worker/getbybusinessserviceid")]
+        [HttpPost("getbybusinessserviceid")]
         public async Task<IActionResult> GetByBusinessServiceId([FromBody] string? businessServiceId)
         {
             ResponseModel<List<Worker>> response = new ResponseModel<List<Worker>>();
@@ -158,7 +161,7 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
-        /// Add Worker
+        /// Save Worker
         /// </summary>
         /// <remarks>
         /// **Sample request body:**
@@ -173,8 +176,7 @@ namespace CareGardenApiV1.Controller
         ///     
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("worker/save")]
+        [HttpPost("save")]
         public async Task<IActionResult> Save([FromBody] Worker worker)
         {
             ResponseModel<Worker> response = new ResponseModel<Worker>();
@@ -246,8 +248,7 @@ namespace CareGardenApiV1.Controller
         ///     
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("worker/update")]
+        [HttpPost("update")]
         public async Task<IActionResult> Update([FromBody] Worker updateWorker)
         {
             ResponseModel<Worker> response = new ResponseModel<Worker>();
@@ -327,8 +328,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("worker/delete")]
+        [HttpPost("delete")]
         public async Task<IActionResult> Delete([FromBody] string? id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -371,8 +371,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("worker/deletebybusinessid")]
+        [HttpPost("deletebybusinessid")]
         public async Task<IActionResult> DeleteByBusinessId([FromBody] string? businessId)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();

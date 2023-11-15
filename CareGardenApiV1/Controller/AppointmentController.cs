@@ -22,22 +22,29 @@ namespace CareGardenApiV1.Controller
 {
     [ApiController]
     [Authorize]
+    [Route("appointment")]
     public class AppointmentController : ControllerBase
     {
-        private IAppointmentService _appointmentService;
-        private IBusinessWorkingInfoService _businessWorkingInfoService;
-        private IBusinessServicesService _businessServicesService;
-        private IWorkerService _workerService;
+        private readonly IAppointmentService _appointmentService;
+        private readonly IBusinessWorkingInfoService _businessWorkingInfoService;
+        private readonly IBusinessServicesService _businessServicesService;
+        private readonly IWorkerService _workerService;
         private readonly ILoggerHandler _loggerHandler;
 
-        public AppointmentController(ILoggerHandler loggerHandler)
+        public AppointmentController(
+            IAppointmentService appointmentService,
+            IBusinessWorkingInfoService businessWorkingInfoService,
+            IBusinessServicesService businessServicesService,
+            IWorkerService workerService,
+            ILoggerHandler loggerHandler)
         {
-            _appointmentService = new AppointmentService();
-            _businessWorkingInfoService = new BusinessWorkingInfoService();
-            _businessServicesService = new BusinessServicesService();
-            _workerService = new WorkerService();
+            _appointmentService = appointmentService;
+            _businessWorkingInfoService = businessWorkingInfoService;
+            _businessServicesService = businessServicesService;
+            _workerService = workerService;
             _loggerHandler = loggerHandler;
         }
+
 
         /// <summary>
         /// Get Appointment By Id
@@ -51,8 +58,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("appointment/getbyid")]
+        [HttpPost("getbyid")]
         public async Task<IActionResult> GetById([FromBody] string? id)
         {
             ResponseModel<Appointment> response = new ResponseModel<Appointment>();
@@ -100,8 +106,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("appointment/search")]
+        [HttpPost("search")]
         public async Task<IActionResult> Search([FromBody] AppointmentSearchModel searchModel)
         {
             ResponseModel<List<Appointment>> response = new ResponseModel<List<Appointment>>();
@@ -147,8 +152,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("appointment/save")]
+        [HttpPost("save")]
         public async Task<IActionResult> Save([FromBody] Appointment appointment)
         {
             ResponseModel<Appointment> response = new ResponseModel<Appointment>();
@@ -224,8 +228,7 @@ namespace CareGardenApiV1.Controller
         ///     
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("appointment/delete")]
+        [HttpPost("delete")]
         public async Task<IActionResult> Delete([FromBody] AppointmentChangeModel appointmentChangeModel)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -292,8 +295,7 @@ namespace CareGardenApiV1.Controller
         ///     
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("appointment/changestatus")]
+        [HttpPost("changestatus")]
         public async Task<IActionResult> Update([FromBody] AppointmentChangeModel appointmentChangeModel)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -335,8 +337,7 @@ namespace CareGardenApiV1.Controller
         ///     
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("appointment/getworkersprovideservice")]
+        [HttpPost("getworkersprovideservice")]
         public async Task<IActionResult> GetWorkersProvideService([FromBody] AppointmentSearchModel appointmentInfo)
         {
             ResponseModel<List<Worker>> response = new ResponseModel<List<Worker>>();
@@ -375,7 +376,7 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
-        /// Get Worker Available Time
+        /// Get Worker Available Times
         /// </summary>
         /// <remarks>
         /// **Sample request body:**
@@ -389,8 +390,7 @@ namespace CareGardenApiV1.Controller
         ///     
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("appointment/getworkeravailabletime")]
+        [HttpPost("getworkeravailabletimes")]
         public async Task<IActionResult> GetWorkerAvailableTime([FromBody] AppointmentSearchModel appointmentInfo)
         {
             ResponseModel<List<WorkerAvailableTimeModel>> response = new ResponseModel<List<WorkerAvailableTimeModel>>();

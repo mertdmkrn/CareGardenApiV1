@@ -6,9 +6,9 @@ namespace CareGardenApiV1.Service.Concrete
 {
     public class CommentService : ICommentService
     {
-        private ICommentRepository _commentRepository;
+        private readonly ICommentRepository _commentRepository;
 
-        public CommentService()
+        public CommentService(ICommentRepository commentRepository)
         {
             _commentRepository = new CommentRepository();
         }

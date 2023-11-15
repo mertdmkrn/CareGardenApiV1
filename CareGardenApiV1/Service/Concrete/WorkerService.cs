@@ -7,11 +7,11 @@ namespace CareGardenApiV1.Service.Concrete
 {
     public class WorkerService : IWorkerService
     {
-        private IWorkerRepository _workerRepository;
+        private readonly IWorkerRepository _workerRepository;
 
-        public WorkerService()
+        public WorkerService(IWorkerRepository workerRepository)
         {
-            _workerRepository = new WorkerRepository();
+            _workerRepository = workerRepository;
         }
 
         public async Task<bool> DeleteWorkerAsync(Guid id)

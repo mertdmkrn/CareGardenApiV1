@@ -14,29 +14,34 @@ using System.Security.Claims;
 namespace CareGardenApiV1.Controller
 {
     [ApiController]
+    [Route("campaign")]
     public class CampaignController : ControllerBase
     {
-        private ICampaignService _campaingService;
-        private IFileHandler _fileHandler;
+        private readonly ICampaignService _campaignService;
+        private readonly IFileHandler _fileHandler;
         private readonly ILoggerHandler _loggerHandler;
-        private IMemoryCache _memoryCache;
+        private readonly IMemoryCache _memoryCache;
         private const string cacheKey = "campaigns";
 
-        public CampaignController(ILoggerHandler loggerHandler, IMemoryCache memoryCache)
+        public CampaignController(
+            ICampaignService campaignService,
+            IFileHandler fileHandler,
+            ILoggerHandler loggerHandler,
+            IMemoryCache memoryCache)
         {
-            _campaingService = new CampaignService();
-            _fileHandler = new FileHandler();
+            _campaignService = campaignService;
+            _fileHandler = fileHandler;
             _loggerHandler = loggerHandler;
             _memoryCache = memoryCache;
         }
+
 
         /// <summary>
         /// Get Services
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("campaign/getall")]
-        public async Task<IActionResult> GetCampaigns()
+        [HttpPost("getall")]
+        public async Task<IActionResult> GetAll()
         {
             ResponseModel<List<Campaign>> response = new ResponseModel<List<Campaign>>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -49,7 +54,7 @@ namespace CareGardenApiV1.Controller
                 }
                 else
                 {
-                    response.Data = await _campaingService.GetCampaignsAsync();
+                    response.Data = await _campaignService.GetCampaignsAsync();
                     _memoryCache.Set(cacheKey, response.Data, new MemoryCacheEntryOptions
                     {
                         Priority = CacheItemPriority.Normal
@@ -72,9 +77,8 @@ namespace CareGardenApiV1.Controller
         /// Get Campaign By BusinessId
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("campaign/getbybusinessid")]
-        public async Task<IActionResult> GetCampaignByBusinessId([FromBody] string businessId)
+        [HttpPost("getbybusinessid")]
+        public async Task<IActionResult> GetByBusinessId([FromBody] string businessId)
         {
             ResponseModel<List<Campaign>> response = new ResponseModel<List<Campaign>>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -91,7 +95,7 @@ namespace CareGardenApiV1.Controller
                 if (response.HasError)
                     return Ok(response);
 
-                response.Data = await _campaingService.GetCampaignByBusinessIdAsync(businessId.ToGuidNullable());
+                response.Data = await _campaignService.GetCampaignByBusinessIdAsync(businessId.ToGuidNullable());
 
                 if (response.Data == null)
                 {
@@ -116,9 +120,8 @@ namespace CareGardenApiV1.Controller
         /// Get Campaign By Id
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("campaign/getbyid")]
-        public async Task<IActionResult> GetCampaignById([FromBody] string id)
+        [HttpPost("getbyid")]
+        public async Task<IActionResult> GetById([FromBody] string id)
         {
             ResponseModel<Campaign> response = new ResponseModel<Campaign>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -135,7 +138,7 @@ namespace CareGardenApiV1.Controller
                 if (response.HasError)
                     return Ok(response);
 
-                response.Data = await _campaingService.GetCampaignByIdAsync(id.ToGuid());
+                response.Data = await _campaignService.GetCampaignByIdAsync(id.ToGuid());
 
                 if (response.Data == null)
                 {
@@ -156,48 +159,6 @@ namespace CareGardenApiV1.Controller
             }
         }
 
-        /// <summary>
-        /// Campaign Upload Image
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        [Route("campaign/uploadimage")]
-        public async Task<IActionResult> UploadImage(IFormFile file)
-        {
-            ResponseModel<string> response = new ResponseModel<string>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
-
-            try
-            {
-                if (file == null)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("file", Resource.Resource.BuAlaniBosBirakmayiniz));
-                    response.Message = Resource.Resource.BuAlaniBosBirakmayiniz;
-                    return Ok(response);
-                }
-
-                string fileName = "campaign" + "-" + DateTime.Now.ToString("ddMMhhmmss") + "." + file.FileName.Split(".").LastOrDefault();
-                await _fileHandler.UploadFile(file, "CampaignImages", fileName);
-                string imageUrl = await _fileHandler.UploadFreeImageServer(file);
-
-                if (imageUrl.IsNullOrEmpty())
-                    imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, "StaticFiles/UploadedFiles/CampaignImages/" + fileName);
-
-                response.Message = Resource.Resource.ResimYuklemeBasarili;
-                response.Data = imageUrl;
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
-                response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
-                return Ok(response);
-            }
-        }
 
         /// <summary>
         /// Save Campaign (Role = 'Admin')
@@ -215,8 +176,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [Authorize(Roles = "Admin")]
-        [HttpPost]
-        [Route("campaign/save")]
+        [HttpPost("save")]
         public async Task<IActionResult> Save([FromBody] Campaign campaign)
         {
             ResponseModel<Campaign> response = new ResponseModel<Campaign>();
@@ -242,7 +202,7 @@ namespace CareGardenApiV1.Controller
                     return Ok(response);
                 }
 
-                campaign = await _campaingService.SaveCampaignAsync(campaign);
+                campaign = await _campaignService.SaveCampaignAsync(campaign);
                 response.Data = campaign;
                 _memoryCache.Remove(cacheKey);
 
@@ -276,8 +236,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [Authorize(Roles = "Admin")]
-        [HttpPost]
-        [Route("campaign/update")]
+        [HttpPost("update")]
         public async Task<IActionResult> Update([FromBody] Campaign updateCampaign)
         {
             ResponseModel<Campaign> response = new ResponseModel<Campaign>();
@@ -303,7 +262,7 @@ namespace CareGardenApiV1.Controller
                     return Ok(response);
                 }
 
-                Campaign campaign = await _campaingService.GetCampaignByIdAsync(updateCampaign.id);
+                Campaign campaign = await _campaignService.GetCampaignByIdAsync(updateCampaign.id);
 
                 if (campaign == null)
                 {
@@ -318,7 +277,7 @@ namespace CareGardenApiV1.Controller
                 campaign.isActive = updateCampaign.isActive;
                 campaign.sortOrder = updateCampaign.sortOrder;
 
-                campaign = await _campaingService.UpdateCampaignAsync(campaign);
+                campaign = await _campaignService.UpdateCampaignAsync(campaign);
                 response.Data = campaign;
                 _memoryCache.Remove(cacheKey);
 
@@ -338,8 +297,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [Authorize(Roles = "Admin")]
-        [HttpPost]
-        [Route("campaign/delete")]
+        [HttpPost("delete")]
         public async Task<IActionResult> Delete([FromBody] string id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -359,7 +317,7 @@ namespace CareGardenApiV1.Controller
                     return Ok(response);
                 }
 
-                Campaign campaign = await _campaingService.GetCampaignByIdAsync(id.ToGuid());
+                Campaign campaign = await _campaignService.GetCampaignByIdAsync(id.ToGuid());
 
                 if (campaign == null)
                 {
@@ -368,7 +326,7 @@ namespace CareGardenApiV1.Controller
                     return Ok(response);
                 }
 
-                response.Data = await _campaingService.DeleteCampaignAsync(campaign);
+                response.Data = await _campaignService.DeleteCampaignAsync(campaign);
                 _memoryCache.Remove(cacheKey);
 
                 return Ok(response);

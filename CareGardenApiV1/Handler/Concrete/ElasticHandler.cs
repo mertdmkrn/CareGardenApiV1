@@ -10,16 +10,20 @@ namespace CareGardenApiV1.Handler.Concrete
 {
     public class ElasticHandler : IElasticHandler
     {
-        private IBusinessService _businessService;
+        private readonly IBusinessService _businessService;
         private readonly IElasticClient _elasticClient;
         private readonly ILogger<ElasticHandler> _logger;
 
-        public ElasticHandler(IElasticClient elasticClient, ILogger<ElasticHandler> logger)
+        public ElasticHandler(
+            IBusinessService businessService,
+            IElasticClient elasticClient,
+            ILogger<ElasticHandler> logger)
         {
+            _businessService = businessService;
             _elasticClient = elasticClient;
             _logger = logger;
-            _businessService = new BusinessService();
         }
+
 
         public async Task<bool> MakeIndexBusiness()
         {

@@ -16,24 +16,27 @@ namespace CareGardenApiV1.Controller
 {
     [ApiController]
     [Authorize]
+    [Route("favorite")]
     public class FavoriteController : ControllerBase
     {
-        private IFavoriteService _favoriteService;
+        private readonly IFavoriteService _favoriteService;
         private readonly ILoggerHandler _loggerHandler;
 
-        public FavoriteController(ILoggerHandler loggerHandler)
+        public FavoriteController(
+            IFavoriteService favoriteService,
+            ILoggerHandler loggerHandler)
         {
-            _favoriteService = new FavoriteService();
+            _favoriteService = favoriteService;
             _loggerHandler = loggerHandler;
         }
+
 
         /// <summary>
         /// Get Favorite Businesses
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("favorite/get")]
-        public async Task<IActionResult> GetFavoriteBusinesses()
+        [HttpPost("get")]
+        public async Task<IActionResult> Get()
         {
             ResponseModel<List<Favorite>> response = new ResponseModel<List<Favorite>>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -75,9 +78,8 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("favorite/add")]
-        public async Task<IActionResult> AddFavorite([FromBody] Guid businessId)
+        [HttpPost("add")]
+        public async Task<IActionResult> Add([FromBody] Guid businessId)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -130,9 +132,8 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("favorite/delete")]
-        public async Task<IActionResult> DeleteFavorite([FromBody] Guid businessId)
+        [HttpPost("delete")]
+        public async Task<IActionResult> Delete([FromBody] Guid businessId)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));

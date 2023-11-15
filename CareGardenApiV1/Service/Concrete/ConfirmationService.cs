@@ -7,11 +7,11 @@ namespace CareGardenApiV1.Service.Concrete
 {
     public class ConfirmationService : IConfirmationService
     {
-        private IConfirmationRepository _confirmationRepository;
+        private readonly IConfirmationRepository _confirmationRepository;
 
-        public ConfirmationService()
+        public ConfirmationService(IConfirmationRepository confirmationRepository)
         {
-            _confirmationRepository = new ConfirmationRepository();
+            _confirmationRepository = confirmationRepository;
         }
 
         public async Task<ConfirmationInfo> GetConfirmationInfo(string target)

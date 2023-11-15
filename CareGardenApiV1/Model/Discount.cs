@@ -7,22 +7,20 @@ using static CareGardenApiV1.Helpers.Enums;
 
 namespace CareGardenApiV1.Model
 {
-    [Table("Campaign")]
-    [Index(nameof(businessId))]
-    public class Campaign
+    [Table("Discount")]
+    [Index(nameof(businessId), nameof(isActive))]
+    public class Discount
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid id { get; set; }
-
-        public string? path { get; set; }
-
-        public string? url { get; set; }
-        public bool isActive { get; set; }
-        public DateTime? createDate { get; set; }
-
-        public DateTime? updateDate { get; set; }
-        public int sortOrder { get; set; }
         public Guid? businessId { get; set; }
+        public string serviceIds { get; set; } = string.Empty;
+        public bool isActive { get; set; }
+        public string description { get; set; }
+        public string descriptionEn { get; set; }
+        public DiscountType discountType { get; set; }
+        public DateTime? startDate { get; set; }
+        public DateTime? endDate { get; set; }
 
         [JsonIgnore]
         public Business? business { get; set; }

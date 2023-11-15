@@ -12,24 +12,27 @@ using Microsoft.Extensions.Caching.Memory;
 namespace CareGardenApiV1.Controller
 {
     [ApiController]
+    [Route("businessservice")]
     public class BusinessServicesController : ControllerBase
     {
-        private IBusinessServicesService _businessServicesService;
+        private readonly IBusinessServicesService _businessServicesService;
         private readonly ILoggerHandler _loggerHandler;
 
-        public BusinessServicesController(ILoggerHandler loggerHandler)
+        public BusinessServicesController(
+            IBusinessServicesService businessServicesService,
+            ILoggerHandler loggerHandler)
         {
-            _businessServicesService = new BusinessServicesService();
+            _businessServicesService = businessServicesService;
             _loggerHandler = loggerHandler;
         }
+
 
         /// <summary>
         /// Get Service By Id
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("businessservice/getbyid")]
-        public async Task<IActionResult> GetBusinessServiceById([FromBody] string id)
+        [HttpPost("getbyid")]
+        public async Task<IActionResult> GetById([FromBody] string id)
         {
             ResponseModel<BusinessServiceModel> response = new ResponseModel<BusinessServiceModel>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -71,9 +74,8 @@ namespace CareGardenApiV1.Controller
         /// Get Service By Id
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("businessservice/getbyserviceid")]
-        public async Task<IActionResult> GetBusinessServicesByServiceId([FromBody] string serviceId)
+        [HttpPost("getbyserviceid")]
+        public async Task<IActionResult> GetByServiceId([FromBody] string serviceId)
         {
             ResponseModel<List<BusinessServiceModel>> response = new ResponseModel<List<BusinessServiceModel>>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -115,9 +117,8 @@ namespace CareGardenApiV1.Controller
         /// Get Service By Id
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("businessservice/getbybusinessid")]
-        public async Task<IActionResult> GetBusinessServicesByBusinessId([FromBody] string businessId)
+        [HttpPost("getbybusinessid")]
+        public async Task<IActionResult> GetByBusinessId([FromBody] string businessId)
         {
             ResponseModel<List<BusinessServiceModel>> response = new ResponseModel<List<BusinessServiceModel>>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -175,8 +176,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("businessservice/save")]
+        [HttpPost("save")]
         public async Task<IActionResult> Save([FromBody] BusinessServiceModel businessService)
         {
             ResponseModel<BusinessServiceModel> response = new ResponseModel<BusinessServiceModel>();
@@ -276,8 +276,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost]
-        [Route("businessservice/update")]
+        [HttpPost("update")]
         public async Task<IActionResult> Update([FromBody] BusinessServiceModel updateBusinessService)
         {
             ResponseModel<BusinessServiceModel> response = new ResponseModel<BusinessServiceModel>();
@@ -378,8 +377,7 @@ namespace CareGardenApiV1.Controller
         /// Delete BusinessService
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("businessservice/delete")]
+        [HttpPost("delete")]
         public async Task<IActionResult> Delete([FromBody] string id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();

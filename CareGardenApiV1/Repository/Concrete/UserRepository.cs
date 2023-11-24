@@ -78,7 +78,7 @@ namespace CareGardenApiV1.Repository.Concrete
             {
                 user.updateDate = DateTime.Now;
 
-                if (user.password.IsNotNullOrEmpty() && user.password.Length <= 8)
+                if (user.password.IsNotNullOrEmpty())
                 {
                     user.password = user.password.HashString();
                 }

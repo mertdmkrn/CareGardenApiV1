@@ -27,6 +27,9 @@ namespace CareGardenApiV1.Model.ResponseModel
         public ICollection<Worker> workers { get; set; } = new HashSet<Worker>();
         public ICollection<BusinessProperties> properties { get; set; } = new HashSet<BusinessProperties>();
 
+        public ICollection<Discount> discounts { get; set; } = new HashSet<Discount>();
+
+
         [JsonIgnore]
         public ICollection<BusinessServiceModel> businessServices { get; set; } = new HashSet<BusinessServiceModel>();
 

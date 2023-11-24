@@ -703,6 +703,74 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.DiscountController.GetByBusinessId(CareGardenApiV1.Model.Discount)">
+             <summary>
+             Get Discount By Business Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "businessId": "00000000-0000-0000-0000-000000000000",
+                    "isActive": true
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.DiscountController.Save(CareGardenApiV1.Model.Discount)">
+             <summary>
+             Save Discount
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "businessId": "00000000-0000-0000-0000-000000000000",
+                    "serviceIds": null,
+                    "isActive": true
+                    "description": "Bugün tüm servislerde",
+                    "descriptionEn": "Every services today",
+                    "discountRate": 20,
+                    "discountType": 0
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.DiscountController.Update(CareGardenApiV1.Model.Discount)">
+             <summary>
+             Update Discount
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id": "00000000-0000-0000-0000-000000000000",
+                    "isActive": false
+                    "description": "Bugün tüm servislerde",
+                    "descriptionEn": "Every services today",
+                    "discountRate": 20,
+                    "discountType": 0
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.DiscountController.DeleteByBusinessId(System.String)">
+             <summary>
+             Get Worker By Busimess Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.FavoriteController.Get">
             <summary>
             Get Favorite Businesses
@@ -1348,6 +1416,18 @@
         <member name="M:CareGardenApiV1.Migrations.CareGardenV21.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV22">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV22.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV22.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV22.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="T:CareGardenApiV1.Resource.Resource">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -1459,9 +1539,24 @@
               Looks up a localized string similar to Güncel şifrenizi doğru giriniz..
             </summary>
         </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.HaftaIci">
+            <summary>
+              Looks up a localized string similar to hafta içi.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.HaftaSonu">
+            <summary>
+              Looks up a localized string similar to hafta sonu.
+            </summary>
+        </member>
         <member name="P:CareGardenApiV1.Resource.Resource.IdParametreHatasi">
             <summary>
               Looks up a localized string similar to Yapılan istekte geçerli bir id gönderilmedi..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.Indirim">
+            <summary>
+              Looks up a localized string similar to {0}% indirim.
             </summary>
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.KayitBasarili">
@@ -1522,6 +1617,11 @@
         <member name="P:CareGardenApiV1.Resource.Resource.OnayMesaji">
             <summary>
               Looks up a localized string similar to CareGarden&apos; a hoşgeldin. Onay Kodu : {0}.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.PopulerServisler">
+            <summary>
+              Looks up a localized string similar to Popüler Servisler.
             </summary>
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.RandevuIptalUyari">

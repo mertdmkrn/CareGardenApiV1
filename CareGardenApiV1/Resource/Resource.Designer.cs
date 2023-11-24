@@ -232,11 +232,38 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to hafta içi.
+        /// </summary>
+        public static string HaftaIci {
+            get {
+                return ResourceManager.GetString("HaftaIci", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to hafta sonu.
+        /// </summary>
+        public static string HaftaSonu {
+            get {
+                return ResourceManager.GetString("HaftaSonu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Yapılan istekte geçerli bir id gönderilmedi..
         /// </summary>
         public static string IdParametreHatasi {
             get {
                 return ResourceManager.GetString("IdParametreHatasi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}% indirim.
+        /// </summary>
+        public static string Indirim {
+            get {
+                return ResourceManager.GetString("Indirim", resourceCulture);
             }
         }
         
@@ -345,6 +372,15 @@ namespace CareGardenApiV1.Resource {
         public static string OnayMesaji {
             get {
                 return ResourceManager.GetString("OnayMesaji", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Popüler Servisler.
+        /// </summary>
+        public static string PopulerServisler {
+            get {
+                return ResourceManager.GetString("PopulerServisler", resourceCulture);
             }
         }
         

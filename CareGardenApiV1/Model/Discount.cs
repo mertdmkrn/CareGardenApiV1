@@ -18,9 +18,12 @@ namespace CareGardenApiV1.Model
         public bool isActive { get; set; }
         public string description { get; set; }
         public string descriptionEn { get; set; }
+
+        public double discountRate { get; set; }
         public DiscountType discountType { get; set; }
-        public DateTime? startDate { get; set; }
-        public DateTime? endDate { get; set; }
+
+        [NotMapped]
+        public string title { get; set; } = string.Empty;
 
         [JsonIgnore]
         public Business? business { get; set; }

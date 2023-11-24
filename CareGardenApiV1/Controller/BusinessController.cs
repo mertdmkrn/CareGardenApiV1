@@ -246,6 +246,50 @@ namespace CareGardenApiV1.Controller
                     });
                 }
 
+                var discountMultiplier = 1.0;
+                Discount activeDiscount = null;
+
+                foreach (var item in businessDetail.discounts.OrderBy(x=>x.discountRate))
+                {
+                    if (item.discountType == Enums.DiscountType.AllDay)
+                    {
+                        discountMultiplier = 1 - (item.discountRate / 100);
+                        activeDiscount = item;
+                    }
+                    else if (item.discountType == Enums.DiscountType.WeekDay && DateTime.Today.DayOfWeek >= DayOfWeek.Monday && DateTime.Today.DayOfWeek <= DayOfWeek.Friday)
+                    {
+                        discountMultiplier = 1 - (item.discountRate / 100);
+                        activeDiscount = item;
+                    }
+                    else if (item.discountType == Enums.DiscountType.WeekEnd && (DateTime.Today.DayOfWeek == DayOfWeek.Saturday || DateTime.Today.DayOfWeek == DayOfWeek.Sunday))
+                    {
+                        discountMultiplier = 1 - (item.discountRate / 100);
+                        activeDiscount = item;
+                    }
+
+                    item.title = string.Format(Resource.Resource.Indirim, item.discountRate)
+                            + (item.discountType == Enums.DiscountType.WeekDay
+                                ? " " + Resource.Resource.HaftaIci
+                                : item.discountType == Enums.DiscountType.WeekEnd ? " " + Resource.Resource.HaftaSonu : "");
+                }
+
+                if (businessDetail.businessServices.Any(x => x.isPopular))
+                {
+                    BusinessServicesInfo businessServiceInfo = new BusinessServicesInfo();
+                    businessServiceInfo.serviceName = Resource.Resource.PopulerServisler;
+
+                    foreach (var item in businessDetail.businessServices.Where(x => x.isPopular))
+                    {
+                        item.discountPrice = activeDiscount.serviceIds.IsNullOrEmpty() || activeDiscount.serviceIds.Contains(item.serviceId.Value.ToString())
+                                             ? item.price * discountMultiplier
+                                             : item.price;
+
+                        businessServiceInfo.businessServices.Add(item);
+                    }
+
+                    businessDetail.businessServicesInfos.Add(businessServiceInfo);
+                }
+
                 foreach (var items in businessDetail.businessServices.GroupBy(x => x.serviceId))
                 {
                     BusinessServicesInfo businessServiceInfo = new BusinessServicesInfo();
@@ -254,6 +298,10 @@ namespace CareGardenApiV1.Controller
 
                     foreach (var item in items)
                     {
+                        item.discountPrice = activeDiscount.serviceIds.IsNullOrEmpty() || activeDiscount.serviceIds.Contains(item.serviceId.Value.ToString())
+                                                         ? item.price * discountMultiplier
+                                                         : item.price;
+                        
                         businessServiceInfo.businessServices.Add(item);
                     }
 

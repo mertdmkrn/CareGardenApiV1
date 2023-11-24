@@ -334,6 +334,7 @@ namespace CareGardenApiV1.Repository.Concrete
                         averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
                         countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
                         businessWorkingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null,
+                        discounts = x.discounts.Where(x => x.isActive).ToList(),
                         assets = x.galleries,
                         businessServices = x.services,
                         workers = x.workers,

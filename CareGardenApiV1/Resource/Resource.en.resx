@@ -174,8 +174,17 @@
   <data name="GuncelSifreniziDogruGiriniz" xml:space="preserve">
     <value>Enter your current password correctly.</value>
   </data>
+  <data name="HaftaIci" xml:space="preserve">
+    <value>weekdays</value>
+  </data>
+  <data name="HaftaSonu" xml:space="preserve">
+    <value>weekend</value>
+  </data>
   <data name="IdParametreHatasi" xml:space="preserve">
     <value>A valid id was not sent in the request.</value>
+  </data>
+  <data name="Indirim" xml:space="preserve">
+    <value>{0}% off</value>
   </data>
   <data name="KayitBasarili" xml:space="preserve">
     <value>Registration completed successfully.</value>
@@ -212,6 +221,9 @@
   </data>
   <data name="OnayMesaji" xml:space="preserve">
     <value>Welcome CareGarden. Confirmation Code : {0}</value>
+  </data>
+  <data name="PopulerServisler" xml:space="preserve">
+    <value>Popular Services</value>
   </data>
   <data name="RandevuIptalUyari" xml:space="preserve">
     <value>Canceling an appointment 9 hours before the appointment reduces your credibility. Do you want to cancel?</value>

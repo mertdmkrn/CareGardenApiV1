@@ -271,7 +271,8 @@ namespace CareGardenApiV1.Controller
         ///        "spotEn": "Get ready for a haircut just to your liking.",
         ///        "minDuration": 30,
         ///        "maxDuration": 45,
-        ///        "price": 150
+        ///        "price": 150,
+        ///        "isPopular": true
         ///     }
         ///
         /// </remarks>
@@ -358,6 +359,7 @@ namespace CareGardenApiV1.Controller
                 businessService.minDuration = updateBusinessService.minDuration;
                 businessService.maxDuration = updateBusinessService.maxDuration.IsNull(updateBusinessService.minDuration);
                 businessService.price = updateBusinessService.price;
+                businessService.isPopular = updateBusinessService.isPopular;
 
                 response.Message = Resource.Resource.KayitBasarili;
                 response.Data = await _businessServicesService.UpdateBusinessServiceAsync(businessService);

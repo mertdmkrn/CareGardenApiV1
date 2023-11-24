@@ -174,8 +174,17 @@
   <data name="GuncelSifreniziDogruGiriniz" xml:space="preserve">
     <value>Güncel şifrenizi doğru giriniz.</value>
   </data>
+  <data name="HaftaIci" xml:space="preserve">
+    <value>hafta içi</value>
+  </data>
+  <data name="HaftaSonu" xml:space="preserve">
+    <value>hafta sonu</value>
+  </data>
   <data name="IdParametreHatasi" xml:space="preserve">
     <value>Yapılan istekte geçerli bir id gönderilmedi.</value>
+  </data>
+  <data name="Indirim" xml:space="preserve">
+    <value>{0}% indirim</value>
   </data>
   <data name="KayitBasarili" xml:space="preserve">
     <value>Kayıt başarılı bir şekilde tamamlandı.</value>
@@ -212,6 +221,9 @@
   </data>
   <data name="OnayMesaji" xml:space="preserve">
     <value>CareGarden' a hoşgeldin. Onay Kodu : {0}</value>
+  </data>
+  <data name="PopulerServisler" xml:space="preserve">
+    <value>Popüler Servisler</value>
   </data>
   <data name="RandevuIptalUyari" xml:space="preserve">
     <value>Randevuya 9 saat kala randevuyu iptal etmek güvenilirliğinizi azaltır. İptal etmek istiyor musunuz?</value>

@@ -29,7 +29,11 @@ namespace CareGardenApiV1.Model
         public int maxDuration { get; set; }
 
         public double price { get; set; } 
-        
+        public bool isPopular { get; set; }
+
+        [NotMapped]
+        public double discountPrice { get; set; }
+
         [JsonIgnore]
         public Business? business { get; set; }
 

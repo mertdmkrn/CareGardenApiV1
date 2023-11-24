@@ -24,6 +24,7 @@ namespace CareGardenApiV1.Model
             this.workers = new HashSet<Worker>();
             this.campaigns = new HashSet<Campaign>();
             this.complains = new HashSet<Complain>();
+            this.discounts = new HashSet<Discount>();
         }
 
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -90,5 +91,6 @@ namespace CareGardenApiV1.Model
         public virtual ICollection<Worker> workers { get; set; }
         public virtual ICollection<Campaign> campaigns { get; set; }
         public virtual ICollection<Complain> complains { get; set; }
+        public virtual ICollection<Discount> discounts { get; set; }
     }
 }

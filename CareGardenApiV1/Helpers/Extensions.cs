@@ -73,6 +73,20 @@ namespace CareGardenApiV1.Helpers
             return resultNum;
         }
 
+        public static int ToInt(this double number, int defaultInt = 0)
+        {
+            int resultNum = defaultInt;
+            try
+            {
+                resultNum = Convert.ToInt32(number);
+            }
+            catch
+            {
+            }
+
+            return resultNum;
+        }
+
 
         public static bool Between(this int number, int start, int end)
         {
@@ -123,11 +137,11 @@ namespace CareGardenApiV1.Helpers
 
             var fullNameArr = fullName.Trim().Split(" ");
 
-            if(fullNameArr.Length < 1) return false;
+            if (fullNameArr.Length < 1) return false;
 
-            if(fullNameArr.FirstOrDefault().Length < 3) return false;
+            if (fullNameArr.FirstOrDefault().Length < 3) return false;
 
-            if(fullNameArr.LastOrDefault().Length < 2) return false;
+            if (fullNameArr.LastOrDefault().Length < 2) return false;
 
             return true;
         }

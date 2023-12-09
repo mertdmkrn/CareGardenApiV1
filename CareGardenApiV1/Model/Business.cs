@@ -76,7 +76,6 @@ namespace CareGardenApiV1.Model
         public int appointmentPeopleCount { get; set; }
         public bool isActive { get; set; }
         public bool verified { get; set; }
-        public int discountRate { get; set; }
         public bool isFeatured { get; set; }
         public bool hasPromotion { get; set; }
 

@@ -2,6 +2,7 @@
 using CareGardenApiV1.Handler.Concrete;
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
+using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Service.Concrete;
@@ -95,16 +96,75 @@ namespace CareGardenApiV1.Controller
 
             try
             {
-                var id = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
-
-                if (id.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.Message = Resource.Resource.KullaniciBulunamadi;
-                    return Ok(response);
-                }
-
                 response.Data = await _commentService.GetCommentsByBusinessIdAsync(businessId);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _loggerHandler.LogMessage(ex);
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
+
+        /// <summary>
+        /// Get Comment By Business Id
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "businessId": "00000000-0000-0000-0000-000000000000",
+        ///        "filterType": 0,
+        ///        "orderType": 0,
+        ///        "page": 1,
+        ///        "take": 10
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost("search")]
+        public async Task<IActionResult> Search([FromBody] CommentSearchModel searchModel)
+        {
+            ResponseModel<List<Comment>> response = new ResponseModel<List<Comment>>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                response.Data = await _commentService.GetSearchCommentsAsync(searchModel);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _loggerHandler.LogMessage(ex);
+                response.HasError = true;
+                response.Message += "Exception => " + ex.Message;
+                return Ok(response);
+            }
+        }
+
+        /// <summary>
+        /// Get Statistics By Business Id
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "00000000-0000-0000-0000-000000000000"
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost("getstatisticsbybusinessid")]
+        public async Task<IActionResult> GetStatisticsByBusinessId([FromBody] Guid businessId)
+        {
+            ResponseModel<Dictionary<string, dynamic>> response = new ResponseModel<Dictionary<string, dynamic>>();
+            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+
+            try
+            {
+                response.Data = await _commentService.GetCommentStatisticsByBusinessId(businessId);
                 return Ok(response);
             }
             catch (Exception ex)
@@ -136,15 +196,6 @@ namespace CareGardenApiV1.Controller
 
             try
             {
-                var id = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
-
-                if (id.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.Message = Resource.Resource.KullaniciBulunamadi;
-                    return Ok(response);
-                }
-
                 response.Data = await _commentService.GetCommentsByUserIdAsync(userId);
                 return Ok(response);
             }

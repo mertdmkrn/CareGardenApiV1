@@ -2,6 +2,8 @@
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Model;
 using Microsoft.EntityFrameworkCore;
+using static CareGardenApiV1.Helpers.Enums;
+using CareGardenApiV1.Model.RequestModel;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -22,7 +24,7 @@ namespace CareGardenApiV1.Repository.Concrete
             {
                 return await context.Comments
                     .Include(x => x.reply)
-                    .Where(x => x.businessId == businessId && x.commentType == Enums.CommentType.Business)
+                    .Where(x => x.businessId == businessId && x.commentType == Enums.CommentType.User)
                     .OrderByDescending(x => x.updateDate)
                     .AsNoTracking()
                     .ToListAsync();
@@ -121,11 +123,11 @@ namespace CareGardenApiV1.Repository.Concrete
             }
         }
 
-        public async Task<Dictionary<string, string>> GetCommentStatisticsByBusinessId(Guid businessId)
+        public async Task<Dictionary<string, dynamic>> GetCommentStatisticsByBusinessId(Guid businessId)
         {
             using (var context = new CareGardenApiDbContext())
             {
-                var retVal = new Dictionary<string, string>();
+                var retVal = new Dictionary<string, dynamic>();
 
                 var pointList = await context.Comments
                     .AsNoTracking()
@@ -136,23 +138,23 @@ namespace CareGardenApiV1.Repository.Concrete
 
                 var pointListGroups = pointList.GroupBy(x => x).OrderByDescending(x => x.Key);
 
-                retVal.Add("Count", pointList.Count().ToString());
-                retVal.Add("Average", Math.Round(pointList.Average(), 1).ToString());
+                retVal.Add("Count", pointList.Count());
+                retVal.Add("Average", Math.Round(pointList.Average(), 1));
 
                 foreach (var item in pointListGroups)
                 {
-                    retVal.TryAdd(item.Key.ToString(), item.Count().ToString());
+                    retVal.TryAdd(item.Key.ToString(), item.Count());
                 }
 
                 return retVal;
             }
         }
 
-        public async Task<Dictionary<string, string>> GetCommentStatisticsByUserId(Guid userId)
+        public async Task<Dictionary<string, dynamic>> GetCommentStatisticsByUserId(Guid userId)
         {
             using (var context = new CareGardenApiDbContext())
             {
-                var retVal = new Dictionary<string, string>();
+                var retVal = new Dictionary<string, dynamic>();
 
                 var pointList = await context.Comments
                     .AsNoTracking()
@@ -163,15 +165,39 @@ namespace CareGardenApiV1.Repository.Concrete
 
                 var pointListGroups = pointList.GroupBy(x => x).OrderByDescending(x => x.Key);
 
-                retVal.Add("Count", pointList.Count().ToString());
-                retVal.Add("Average", Math.Round(pointList.Average(), 1).ToString());
+                retVal.Add("Count", pointList.Count());
+                retVal.Add("Average", Math.Round(pointList.Average(), 1));
 
                 foreach (var item in pointListGroups)
                 {
-                    retVal.TryAdd(item.Key.ToString(), item.Count().ToString());
+                    retVal.TryAdd(item.Key.ToString(), item.Count());
                 }
 
                 return retVal;
+            }
+        }
+
+        public async Task<List<Comment>> GetSearchCommentsAsync(CommentSearchModel searchModel)
+        {
+            using (var context = new CareGardenApiDbContext())
+            {
+                return await context.Comments
+                    .AsNoTracking()
+                    .Where(x => x.businessId == searchModel.businessId)
+                    .Where(x => x.commentType == CommentType.User)
+                    .WhereIf(searchModel.filterType == CommentFilterType.Rate1, x => ((int)x.point) == 1)
+                    .WhereIf(searchModel.filterType == CommentFilterType.Rate2, x => ((int)x.point) == 2)
+                    .WhereIf(searchModel.filterType == CommentFilterType.Rate3, x => ((int)x.point) == 3)
+                    .WhereIf(searchModel.filterType == CommentFilterType.Rate4, x => ((int)x.point) == 4)
+                    .WhereIf(searchModel.filterType == CommentFilterType.Rate5, x => ((int)x.point) == 5)
+                    .OrderByDescendingIf(searchModel.orderType == CommentOrderType.Lastest, x => x.createDate)
+                    .OrderByIf(searchModel.orderType == CommentOrderType.Oldest, x => x.createDate)
+                    .OrderByDescendingIf(searchModel.orderType == CommentOrderType.Popular, x => x.point)
+                    .OrderByIf(searchModel.orderType == CommentOrderType.Worst, x => x.point)
+                    .Skip(searchModel.page * searchModel.take)
+                    .Take(searchModel.take)
+                    .ToAsyncEnumerable()
+                    .ToListAsync();
             }
         }
     }

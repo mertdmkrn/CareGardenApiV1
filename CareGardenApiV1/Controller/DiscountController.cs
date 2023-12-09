@@ -95,8 +95,8 @@ namespace CareGardenApiV1.Controller
         ///        "isActive": true,
         ///        "description": "Bugün tüm servislerde",
         ///        "descriptionEn": "Every services today",
-        ///        "discountRate": 20,
-        ///        "discountType": 0
+        ///        "rate": 20,
+        ///        "type": 0
         ///     }
         ///
         /// </remarks>
@@ -128,10 +128,10 @@ namespace CareGardenApiV1.Controller
                     response.ValidationErrors.Add(new ValidationError("descriptionEn", Resource.Resource.BuAlaniBosBirakmayiniz));
                 }
 
-                if (discount.discountRate <= 0)
+                if (discount.rate <= 0)
                 {
                     response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("discountRate", Resource.Resource.BuAlaniBosBirakmayiniz));
+                    response.ValidationErrors.Add(new ValidationError("rate", Resource.Resource.BuAlaniBosBirakmayiniz));
                 }
 
                 if (response.HasError)
@@ -166,8 +166,8 @@ namespace CareGardenApiV1.Controller
         ///        "isActive": false,
         ///        "description": "Bugün tüm servislerde",
         ///        "descriptionEn": "Every services today",
-        ///        "discountRate": 20,
-        ///        "discountType": 0
+        ///        "rate": 20,
+        ///        "type": 0
         ///     }
         ///
         /// </remarks>
@@ -193,10 +193,10 @@ namespace CareGardenApiV1.Controller
                     response.ValidationErrors.Add(new ValidationError("descriptionEn", Resource.Resource.BuAlaniBosBirakmayiniz));
                 }
 
-                if (updateDiscount.discountRate <= 0)
+                if (updateDiscount.rate <= 0)
                 {
                     response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("discountRate", Resource.Resource.BuAlaniBosBirakmayiniz));
+                    response.ValidationErrors.Add(new ValidationError("rate", Resource.Resource.BuAlaniBosBirakmayiniz));
                 }
 
                 if (response.HasError)
@@ -217,8 +217,8 @@ namespace CareGardenApiV1.Controller
                 discount.description = updateDiscount.description;
                 discount.descriptionEn = updateDiscount.descriptionEn;
                 discount.isActive = updateDiscount.isActive;
-                discount.discountRate = updateDiscount.discountRate;
-                discount.discountType = updateDiscount.discountType;
+                discount.rate = updateDiscount.rate;
+                discount.type = updateDiscount.type;
 
                 response.Data = await _discountService.UpdateDiscountAsync(discount);
                 response.Message = Resource.Resource.KayitBasarili;

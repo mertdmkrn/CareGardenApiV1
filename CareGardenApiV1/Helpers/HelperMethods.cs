@@ -272,33 +272,40 @@ namespace CareGardenApiV1.Helpers
             }
         }
 
-        public static int GetDailyAppointmentCount(List<Appointment> appointments, BusinessWorkingInfo workingInfo, bool officialDayAvailable, DateTime availableDate, int appointmentPeopleCount, int appointmentTimeInterval)
+        public static bool IsAvailableAppointmentDay(List<Appointment> appointments, BusinessWorkingInfo workingInfo, bool officialDayAvailable, DateTime availableDate)
         {
+            if (appointments == null)
+                return true;
+
             var date = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(availableDate, "Turkey Standard Time");
 
             if (workingInfo == null)
-                return 0;
+                return false;
 
             if (officialDayAvailable && Constants.OfficialDays.Exists(x => x.date.Equals(date)))
-                return 0;
+                return false;
 
             var workHours = workingInfo.GetBusinessWorkInfoHours(date);
 
             if (workHours.IsNullOrEmpty())
-                return 0;
+                return false;
 
             var startHours = workHours.Split('-').FirstOrDefault();
             var endHours = workHours.Split('-').LastOrDefault();
 
             if (startHours.IsNullOrEmpty() || endHours.IsNullOrEmpty())
-                return 0;
+                return false;
+
+
+            var todayWorksMinutes = appointments.Sum(x => x.businessService.maxDuration);
+            
 
             var endStartTimeDifference = endHours.Replace(":", "").ToInt() - startHours.Replace(":", "").ToInt();
 
             var sumWorkMinutes = (endStartTimeDifference / 100) * 60;
             sumWorkMinutes += endStartTimeDifference % 100;
 
-            return (sumWorkMinutes / appointmentTimeInterval) * appointmentPeopleCount;
+            return sumWorkMinutes - todayWorksMinutes >= 30;
         }
 
         public static List<WorkerAvailableTimeModel> GetWorkerAvailableTimes(List<Appointment> appointments, BusinessWorkingInfo businessWorkingInfo, BusinessServiceModel businessService, DateTime? startDate, DateTime? endDate)

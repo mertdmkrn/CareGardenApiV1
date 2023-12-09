@@ -19,8 +19,8 @@ namespace CareGardenApiV1.Model
         public string description { get; set; }
         public string descriptionEn { get; set; }
 
-        public double discountRate { get; set; }
-        public DiscountType discountType { get; set; }
+        public double rate { get; set; }
+        public DiscountType type { get; set; }
 
         [NotMapped]
         public string title { get; set; } = string.Empty;

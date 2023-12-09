@@ -1,4 +1,6 @@
 ﻿using CareGardenApiV1.Model;
+using CareGardenApiV1.Model.RequestModel;
+using static CareGardenApiV1.Helpers.Enums;
 
 namespace CareGardenApiV1.Repository.Abstract
 {
@@ -7,6 +9,7 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<Comment> GetCommentByIdAsync(Guid id);
         Task<List<Comment>> GetCommentsByBusinessIdAsync(Guid businessId);
         Task<List<Comment>> GetCommentsByUserIdAsync(Guid userId);
+        Task<List<Comment>> GetSearchCommentsAsync(CommentSearchModel searchModel);
         Task<Comment> SaveCommentAsync(Comment comment);
         Task<Comment> UpdateCommentAsync(Comment comment);
         Task<bool> UpdateCommentReplyIdAsync(Guid id, Guid replyId);
@@ -14,7 +17,7 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<bool> DeleteCommentByBusinessIdAsync(Guid businessId);
         Task<bool> DeleteCommentByUserIdAsync(Guid userId);
         Task<bool> DeleteCommentByIdAsync(Guid id);
-        Task<Dictionary<string, string>> GetCommentStatisticsByBusinessId(Guid businessId);
-        Task<Dictionary<string, string>> GetCommentStatisticsByUserId(Guid userId);
+        Task<Dictionary<string, dynamic>> GetCommentStatisticsByBusinessId(Guid businessId);
+        Task<Dictionary<string, dynamic>> GetCommentStatisticsByUserId(Guid userId);
     }
 }

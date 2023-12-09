@@ -315,8 +315,12 @@ namespace CareGardenApiV1.Controller
                 }
 
                 response.Data = await _businessService.GetBusinessByPopularAsync(businessSearchModel);
-                response.Data.ToList().ConvertAll(x => x.distance = Math.Round(x.distance, 1));
-                response.Data.ToList().ConvertAll(x => x.isOpen = HelperMethods.GetBusinessOpen(x.workingInfo, x.officialDayAvailable));
+                response.Data.ToList().ForEach(x =>
+                {
+                    x.isOpen = HelperMethods.GetBusinessOpen(x.workingInfo, x.officialDayAvailable);
+                    x.distance = Math.Round(x.distance, 1);
+                    x.averageRating = Math.Round(x.averageRating, 1);
+                });
 
                 return Ok(response);
             }
@@ -353,9 +357,12 @@ namespace CareGardenApiV1.Controller
                 businessSearchModel.userId = userId.ToGuid();
 
                 response.Data = await _businessService.GetBusinessByUserFavorites(businessSearchModel);
-                response.Data.ToList().ConvertAll(x => x.distance = Math.Round(x.distance, 1));
-                response.Data.ToList().ConvertAll(x => x.isOpen = HelperMethods.GetBusinessOpen(x.workingInfo, x.officialDayAvailable));
-
+                response.Data.ToList().ForEach(x =>
+                {
+                    x.isOpen = HelperMethods.GetBusinessOpen(x.workingInfo, x.officialDayAvailable);
+                    x.distance = Math.Round(x.distance, 1);
+                    x.averageRating = Math.Round(x.averageRating, 1);
+                });
 
                 return Ok(response);
             }
@@ -396,8 +403,12 @@ namespace CareGardenApiV1.Controller
                 }
 
                 response.Data = await _businessService.GetBusinessNearByDistanceAsync(businessSearchModel);
-                response.Data.ToList().ConvertAll(x => x.distance = Math.Round(x.distance, 1));
-                response.Data.ToList().ConvertAll(x => x.isOpen = HelperMethods.GetBusinessOpen(x.workingInfo, x.officialDayAvailable));
+                response.Data.ToList().ForEach(x =>
+                {
+                    x.isOpen = HelperMethods.GetBusinessOpen(x.workingInfo, x.officialDayAvailable);
+                    x.distance = Math.Round(x.distance, 1);
+                    x.averageRating = Math.Round(x.averageRating, 1);
+                });
 
                 return Ok(response);
             }

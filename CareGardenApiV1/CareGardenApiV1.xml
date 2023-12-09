@@ -307,7 +307,6 @@
                     "district": "Çeliktepe Mah.",
                     "description": "Tesettür saç kesim, bakım, boya, kalıcı makyaj, microblading, manikür, pedikür, kaynak saç.",
                     "descriptionEn": "Hijab haircut, care, coloring, permanent makeup, microblading, manicure, pedicure, hair welding.",
-                    "discountRate": 20,
                     "isFeatured": true,
                     "hasPromotion": true
                  }
@@ -550,7 +549,8 @@
                     "spotEn": "Get ready for a haircut just to your liking.",
                     "minDuration": 30,
                     "maxDuration": 45,
-                    "price": 150
+                    "price": 150,
+                    "isPopular": true
                  }
             
              </remarks>
@@ -631,6 +631,38 @@
         <member name="M:CareGardenApiV1.Controller.CommentController.GetByBusinessId(System.Guid)">
              <summary>
              Get Comment By Business Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.CommentController.Search(CareGardenApiV1.Model.RequestModel.CommentSearchModel)">
+             <summary>
+             Get Comment By Business Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "businessId": "00000000-0000-0000-0000-000000000000",
+                    "filterType": 0,
+                    "orderType": 0,
+                    "page": 1,
+                    "take": 10
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.CommentController.GetStatisticsByBusinessId(System.Guid)">
+             <summary>
+             Get Statistics By Business Id
              </summary>
              <remarks>
              **Sample request body:**
@@ -727,12 +759,11 @@
             
                  { 
                     "businessId": "00000000-0000-0000-0000-000000000000",
-                    "serviceIds": null,
-                    "isActive": true
+                    "isActive": true,
                     "description": "Bugün tüm servislerde",
                     "descriptionEn": "Every services today",
-                    "discountRate": 20,
-                    "discountType": 0
+                    "rate": 20,
+                    "type": 0
                  }
             
              </remarks>
@@ -747,11 +778,11 @@
             
                  { 
                     "id": "00000000-0000-0000-0000-000000000000",
-                    "isActive": false
+                    "isActive": false,
                     "description": "Bugün tüm servislerde",
                     "descriptionEn": "Every services today",
-                    "discountRate": 20,
-                    "discountType": 0
+                    "rate": 20,
+                    "type": 0
                  }
             
              </remarks>
@@ -1426,6 +1457,18 @@
             <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.CareGardenV22.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV23">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV23.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV23.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV23.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:CareGardenApiV1.Resource.Resource">

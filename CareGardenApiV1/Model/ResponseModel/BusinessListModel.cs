@@ -22,7 +22,6 @@ namespace CareGardenApiV1.Model.ResponseModel
 
             id = businessDetailModel.id;
             name = businessDetailModel.name;
-            discountRate = businessDetailModel.discountRate;
             averageRating = businessDetailModel.averageRating;
             countRating = businessDetailModel.countRating;
             workingGenderType = (int)businessDetailModel.workingGenderType;
@@ -39,9 +38,9 @@ namespace CareGardenApiV1.Model.ResponseModel
         public Guid id { get; set; }
         public string name { get; set; }
         public double distance { get; set; }
-        public int discountRate { get; set; }
         public double averageRating { get; set; }
         public int countRating { get; set; }
+        public double discountRate { get; set; }
         public int workingGenderType { get; set; }
         public string imageUrl { get; set; }
         public bool isFeatured { get; set; }

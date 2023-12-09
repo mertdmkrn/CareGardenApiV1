@@ -84,5 +84,24 @@
             WeekDay,
             WeekEnd
         }
+
+        public enum CommentFilterType
+        {
+            AllRates,
+            Rate1,
+            Rate2,
+            Rate3,
+            Rate4,
+            Rate5
+        }
+
+        public enum CommentOrderType
+        {
+            Lastest,
+            Oldest,
+            Popular,
+            Worst
+        }
+
     }
 }

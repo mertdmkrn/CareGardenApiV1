@@ -1,6 +1,8 @@
 ﻿using CareGardenApiV1.Model;
+using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Repository.Concrete;
+using OneSignalApi.Model;
 
 namespace CareGardenApiV1.Service.Concrete
 {
@@ -63,14 +65,19 @@ namespace CareGardenApiV1.Service.Concrete
             return await _commentRepository.UpdateCommentReplyIdAsync(id, replyId);
         }
 
-        public async Task<Dictionary<string, string>> GetCommentStatisticsByBusinessId(Guid businessId)
+        public async Task<Dictionary<string, dynamic>> GetCommentStatisticsByBusinessId(Guid businessId)
         {
             return await _commentRepository.GetCommentStatisticsByBusinessId(businessId);
         }
 
-        public async Task<Dictionary<string, string>> GetCommentStatisticsByUserId(Guid userId)
+        public async Task<Dictionary<string, dynamic>> GetCommentStatisticsByUserId(Guid userId)
         {
             return await _commentRepository.GetCommentStatisticsByUserId(userId);
+        }
+
+        public async Task<List<Comment>> GetSearchCommentsAsync(CommentSearchModel searchModel)
+        {
+            return await _commentRepository.GetSearchCommentsAsync(searchModel);
         }
     }
 }

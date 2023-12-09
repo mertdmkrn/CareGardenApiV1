@@ -41,7 +41,6 @@ namespace CareGardenApiV1.Repository
                 entity.Property(e => e.officialHolidayAvailable);
                 entity.Property(e => e.isActive);
                 entity.Property(e => e.verified);
-                entity.Property(e => e.discountRate);
                 entity.Property(e => e.isFeatured);
                 entity.Property(e => e.hasPromotion);
             });

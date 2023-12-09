@@ -12,7 +12,7 @@ namespace CareGardenApiV1.Model.ResponseModel
         public string telephone { get; set; }
         public string description { get; set; }
         public string descriptionEn { get; set; }
-        public int discountRate { get; set; }
+        public double discountRate { get; set; }
         public double averageRating { get; set; }
         public int countRating { get; set; }
         public double latitude { get; set; }

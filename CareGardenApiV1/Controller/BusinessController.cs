@@ -249,28 +249,28 @@ namespace CareGardenApiV1.Controller
                 var discountMultiplier = 1.0;
                 Discount activeDiscount = null;
 
-                foreach (var item in businessDetail.discounts.OrderBy(x=>x.discountRate))
+                foreach (var item in businessDetail.discounts.OrderBy(x=>x.rate))
                 {
-                    if (item.discountType == Enums.DiscountType.AllDay)
+                    if (item.type == Enums.DiscountType.AllDay)
                     {
-                        discountMultiplier = 1 - (item.discountRate / 100);
+                        discountMultiplier = 1 - (item.rate / 100);
                         activeDiscount = item;
                     }
-                    else if (item.discountType == Enums.DiscountType.WeekDay && DateTime.Today.DayOfWeek >= DayOfWeek.Monday && DateTime.Today.DayOfWeek <= DayOfWeek.Friday)
+                    else if (item.type == Enums.DiscountType.WeekDay && DateTime.Today.DayOfWeek >= DayOfWeek.Monday && DateTime.Today.DayOfWeek <= DayOfWeek.Friday)
                     {
-                        discountMultiplier = 1 - (item.discountRate / 100);
+                        discountMultiplier = 1 - (item.rate / 100);
                         activeDiscount = item;
                     }
-                    else if (item.discountType == Enums.DiscountType.WeekEnd && (DateTime.Today.DayOfWeek == DayOfWeek.Saturday || DateTime.Today.DayOfWeek == DayOfWeek.Sunday))
+                    else if (item.type == Enums.DiscountType.WeekEnd && (DateTime.Today.DayOfWeek == DayOfWeek.Saturday || DateTime.Today.DayOfWeek == DayOfWeek.Sunday))
                     {
-                        discountMultiplier = 1 - (item.discountRate / 100);
+                        discountMultiplier = 1 - (item.rate / 100);
                         activeDiscount = item;
                     }
 
-                    item.title = string.Format(Resource.Resource.Indirim, item.discountRate)
-                            + (item.discountType == Enums.DiscountType.WeekDay
+                    item.title = string.Format(Resource.Resource.Indirim, item.rate)
+                            + (item.type == Enums.DiscountType.WeekDay
                                 ? " " + Resource.Resource.HaftaIci
-                                : item.discountType == Enums.DiscountType.WeekEnd ? " " + Resource.Resource.HaftaSonu : "");
+                                : item.type == Enums.DiscountType.WeekEnd ? " " + Resource.Resource.HaftaSonu : "");
                 }
 
                 if (businessDetail.businessServices.Any(x => x.isPopular))
@@ -442,7 +442,6 @@ namespace CareGardenApiV1.Controller
         ///        "district": "Çeliktepe Mah.",
         ///        "description": "Tesettür saç kesim, bakım, boya, kalıcı makyaj, microblading, manikür, pedikür, kaynak saç.",
         ///        "descriptionEn": "Hijab haircut, care, coloring, permanent makeup, microblading, manicure, pedicure, hair welding.",
-        ///        "discountRate": 20,
         ///        "isFeatured": true,
         ///        "hasPromotion": true
         ///     }
@@ -477,7 +476,6 @@ namespace CareGardenApiV1.Controller
                 business.district = updateBusiness.district.IsNull(business.district);
                 business.description = updateBusiness.description.IsNull(business.description);
                 business.descriptionEn = updateBusiness.descriptionEn.IsNull(business.descriptionEn);
-                business.discountRate = updateBusiness.discountRate;
                 business.isFeatured = updateBusiness.isFeatured;
                 business.hasPromotion = updateBusiness.hasPromotion;
 

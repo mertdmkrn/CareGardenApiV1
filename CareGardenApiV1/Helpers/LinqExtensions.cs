@@ -16,5 +16,17 @@ namespace CareGardenApiV1.Helpers
         {
             return condition ? source.Where(predicate) : source;
         }
+
+        public static IEnumerable<TSource> OrderByIf<TSource, TKey>
+    (this IEnumerable<TSource> source, bool condition, Func<TSource, TKey> keySelector)
+        {
+            return condition ? source.OrderBy(keySelector) : source.OrderBy(x => 0);
+        }
+
+        public static IEnumerable<TSource> OrderByDescendingIf<TSource, TKey>
+            (this IEnumerable<TSource> source, bool condition, Func<TSource, TKey> keySelector)
+        {
+            return condition ? source.OrderByDescending(keySelector) : source.OrderByDescending(x => 0);
+        }
     }
 }

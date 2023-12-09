@@ -63,6 +63,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     .Include(x => x.galleries)
                     .Include(x => x.workers)
                     .Include(x => x.properties)
+                    .Include(x => x.discounts)
                     .Where(x => x.id == id)
                     .FirstOrDefaultAsync();
             }
@@ -89,7 +90,7 @@ namespace CareGardenApiV1.Repository.Concrete
                         {
                             id = x.id,
                             name = x.name ?? "",
-                            discountRate = x.discountRate,
+                            discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
                             workingGenderType = (int)x.workingGenderType,
                             imageUrl = x.galleries.FirstOrDefault().imageUrl,
                             averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
@@ -115,7 +116,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     {
                         id = x.id,
                         name = x.name ?? "",
-                        discountRate = x.discountRate,
+                        discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
                         workingGenderType = (int)x.workingGenderType,
                         imageUrl = x.galleries.FirstOrDefault().imageUrl,
                         averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
@@ -163,7 +164,7 @@ namespace CareGardenApiV1.Repository.Concrete
                         {
                             id = x.id,
                             name = x.name ?? "",
-                            discountRate = x.discountRate,
+                            discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
                             workingGenderType = (int)x.workingGenderType,
                             imageUrl = x.galleries.Any() ? x.galleries.FirstOrDefault(x => x.isProfilePhoto).imageUrl : null,
                             averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
@@ -189,7 +190,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     {
                         id = x.id,
                         name = x.name ?? "",
-                        discountRate = x.discountRate,
+                        discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
                         workingGenderType = (int)x.workingGenderType,
                         imageUrl = x.galleries.FirstOrDefault().imageUrl,
                         averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
@@ -211,7 +212,7 @@ namespace CareGardenApiV1.Repository.Concrete
         {
             using (var context = new CareGardenApiDbContext())
             {
-                IList<BusinessListModel> filteredBusinesses = null;
+
                 Point? searchLocation = null;
                 var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
 
@@ -220,16 +221,17 @@ namespace CareGardenApiV1.Repository.Concrete
                     searchLocation = gf.CreatePoint(new Coordinate(businessExploreModel.latitude.Value, businessExploreModel.longitude.Value));
                 }
 
-                var businessListQueryable = context.Businesses
+                var filteredBusinesses = await context.Businesses
+                    .AsNoTracking()
                     .Where(x => x.isActive && x.verified)
                     .WhereIf((WorkingGenderType)businessExploreModel.workingGenderType != Enums.WorkingGenderType.All, x => x.workingGenderType == businessExploreModel.workingGenderType)
                     .WhereIf(businessExploreModel.serviceId.HasValue, x => x.services.Any(x => x.serviceId == businessExploreModel.serviceId))
-                    .WhereIf(businessExploreModel.offers > 0, x => x.discountRate == businessExploreModel.offers)
+                    .WhereIf(businessExploreModel.offers > 0, x => x.discounts.Any(x => x.isActive && x.rate == businessExploreModel.offers))
                     .Select(x => new BusinessListModel
                     {
                         id = x.id,
                         name = x.name ?? "",
-                        discountRate = x.discountRate,
+                        discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
                         workingGenderType = (int)x.workingGenderType,
                         imageUrl = x.galleries.FirstOrDefault().imageUrl,
                         averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
@@ -242,35 +244,15 @@ namespace CareGardenApiV1.Repository.Concrete
                         workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null,
                         appointmentPeopleCount = x.appointmentPeopleCount,
                         appointmentTimeInterval = x.appointmentTimeInterval,
-                        appointments = businessExploreModel.availableDate.HasValue && x.appointments.Any() ? x.appointments.Where(x => x.startDate.Value.Date == businessExploreModel.availableDate.Value).ToList() : null
-                    });
-
-
-                switch (businessExploreModel.sortByType)
-                {
-                    case Enums.SortByType.Recommended:
-                        businessListQueryable = businessListQueryable.OrderByDescending(x => x.appointments.Count());
-                        break;
-                    case Enums.SortByType.MostPopular:
-                        businessListQueryable = businessListQueryable.OrderByDescending(x => x.countRating);
-                        break;
-                    case Enums.SortByType.Newest:
-                        businessListQueryable = businessListQueryable.OrderByDescending(x => x.createDate);
-                        break;
-                    case Enums.SortByType.TopRated:
-                        businessListQueryable = businessListQueryable.OrderByDescending(x => x.averageRating);
-                        break;
-                    case Enums.SortByType.Nearest:
-                        businessListQueryable = businessListQueryable.OrderBy(x => x.distance);
-                        break;
-                    default:
-                        businessListQueryable = businessListQueryable.OrderBy(x => x.distance);
-                        break;
-                }
-
-                filteredBusinesses = await businessListQueryable
-                            .AsNoTracking()
-                            .ToListAsync();
+                        appointments = businessExploreModel.availableDate.HasValue && x.appointments.Any() ? x.appointments.Where(x => x.startDate.Value.Date == businessExploreModel.availableDate.Value).Select(x => new Appointment { businessService = x.businessService }).ToList() : null
+                    })
+                    .OrderByDescendingIf(businessExploreModel.sortByType == SortByType.Recommended, x => x.appointments?.Count())
+                    .OrderByDescendingIf(businessExploreModel.sortByType == SortByType.MostPopular, x => x.countRating)
+                    .OrderByDescendingIf(businessExploreModel.sortByType == SortByType.Newest, x => x.createDate)
+                    .OrderByDescendingIf(businessExploreModel.sortByType == SortByType.TopRated, x => x.averageRating)
+                    .OrderByIf(businessExploreModel.sortByType == SortByType.Nearest, x => x.distance)
+                    .ToAsyncEnumerable()
+                    .ToListAsync();
 
                 filteredBusinesses.ToList().ForEach(x =>
                 {
@@ -290,9 +272,9 @@ namespace CareGardenApiV1.Repository.Concrete
                             return;
                         }
 
-                        var dailyAppointmentCount = HelperMethods.GetDailyAppointmentCount(x.appointments, x.workingInfo, x.officialDayAvailable, businessExploreModel.availableDate.Value, x.appointmentPeopleCount, x.appointmentTimeInterval);
+                        var isGetAvailableAppointmentDay = HelperMethods.IsAvailableAppointmentDay(x.appointments, x.workingInfo, x.officialDayAvailable, businessExploreModel.availableDate.Value);
 
-                        if (x.appointments != null && x.appointments.Count() >= dailyAppointmentCount)
+                        if (!isGetAvailableAppointmentDay)
                         {
                             filteredBusinesses.Remove(x);
                             return;
@@ -301,6 +283,7 @@ namespace CareGardenApiV1.Repository.Concrete
 
                     x.isOpen = HelperMethods.GetBusinessOpen(x.workingInfo, x.officialDayAvailable);
                     x.distance = Math.Round(x.distance, 1);
+                    x.averageRating = Math.Round(x.distance, 1);
                 });
 
                 return businessExploreModel.page.HasValue && businessExploreModel.take.HasValue
@@ -329,8 +312,7 @@ namespace CareGardenApiV1.Repository.Concrete
                         workingGenderType = x.workingGenderType,
                         latitude = x.latitude,
                         longitude = x.longitude,
-                        discountRate = x.discountRate,
-                        officialDayAvailable = x.officialHolidayAvailable,
+                        discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
                         averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
                         countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
                         businessWorkingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null,
@@ -361,7 +343,7 @@ namespace CareGardenApiV1.Repository.Concrete
                         workingGenderType = x.workingGenderType,
                         latitude = x.latitude,
                         longitude = x.longitude,
-                        discountRate = x.discountRate,
+                        discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
                         officialDayAvailable = x.officialHolidayAvailable,
                         isFeatured = x.isFeatured,
                         hasPromotion = x.hasPromotion,
@@ -397,7 +379,7 @@ namespace CareGardenApiV1.Repository.Concrete
                         {
                             id = x.id,
                             name = x.name ?? "",
-                            discountRate = x.discountRate,
+                            discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
                             workingGenderType = (int)x.workingGenderType,
                             imageUrl = x.galleries.Any() ? x.galleries.FirstOrDefault(x => x.isProfilePhoto).imageUrl : null,
                             averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
@@ -422,7 +404,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     {
                         id = x.id,
                         name = x.name,
-                        discountRate = x.discountRate,
+                        discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
                         workingGenderType = (int)x.workingGenderType,
                         imageUrl = x.galleries.Any() ? x.galleries.FirstOrDefault(x => x.isProfilePhoto).imageUrl : null,
                         averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,

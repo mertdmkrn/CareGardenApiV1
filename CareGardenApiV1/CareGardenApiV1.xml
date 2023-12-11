@@ -790,7 +790,7 @@
         </member>
         <member name="M:CareGardenApiV1.Controller.DiscountController.DeleteByBusinessId(System.String)">
              <summary>
-             Get Worker By Busimess Id
+             Delete Discount
              </summary>
              <remarks>
              **Sample request body:**

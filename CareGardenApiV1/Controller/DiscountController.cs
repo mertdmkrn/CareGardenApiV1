@@ -236,7 +236,7 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
-        /// Get Worker By Busimess Id
+        /// Delete Discount
         /// </summary>
         /// <remarks>
         /// **Sample request body:**
@@ -274,8 +274,8 @@ namespace CareGardenApiV1.Controller
 
 
                 response.Data = await _discountService.DeleteDiscountAsync(discount);
+                response.Message = Resource.Resource.KayitSilindi;
                 return Ok(response);
-
             }
             catch (Exception ex)
             {

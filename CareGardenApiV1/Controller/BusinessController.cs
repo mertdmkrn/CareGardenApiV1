@@ -231,6 +231,8 @@ namespace CareGardenApiV1.Controller
 
                 var businessDetail = await _businessService.GetBusinessDetailByIdAsync(id.ToGuid());
                 businessDetail.isOpen = HelperMethods.GetBusinessOpen(businessDetail.businessWorkingInfo, businessDetail.officialDayAvailable);
+                businessDetail.averageRating = Math.Round(businessDetail.averageRating, 1);
+                
                 var services = new List<Services>();
 
                 if (_memoryCache.TryGetValue("services", out object list))
@@ -280,7 +282,7 @@ namespace CareGardenApiV1.Controller
 
                     foreach (var item in businessDetail.businessServices.Where(x => x.isPopular))
                     {
-                        item.discountPrice = activeDiscount.serviceIds.IsNullOrEmpty() || activeDiscount.serviceIds.Contains(item.serviceId.Value.ToString())
+                        item.discountPrice = activeDiscount != null && (activeDiscount.serviceIds.IsNullOrEmpty() || activeDiscount.serviceIds.Contains(item.serviceId.Value.ToString()))
                                              ? item.price * discountMultiplier
                                              : item.price;
 
@@ -298,10 +300,10 @@ namespace CareGardenApiV1.Controller
 
                     foreach (var item in items)
                     {
-                        item.discountPrice = activeDiscount.serviceIds.IsNullOrEmpty() || activeDiscount.serviceIds.Contains(item.serviceId.Value.ToString())
-                                                         ? item.price * discountMultiplier
-                                                         : item.price;
-                        
+                        item.discountPrice = activeDiscount != null && (activeDiscount.serviceIds.IsNullOrEmpty() || activeDiscount.serviceIds.Contains(item.serviceId.Value.ToString()))
+                                             ? item.price * discountMultiplier
+                                             : item.price;
+
                         businessServiceInfo.businessServices.Add(item);
                     }
 

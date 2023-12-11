@@ -16,8 +16,8 @@ namespace CareGardenApiV1.Model
         public Guid? businessId { get; set; }
         public string serviceIds { get; set; } = string.Empty;
         public bool isActive { get; set; }
-        public string description { get; set; }
-        public string descriptionEn { get; set; }
+        public string description { get; set; } = string.Empty;
+        public string descriptionEn { get; set; } = string.Empty;
 
         public double rate { get; set; }
         public DiscountType type { get; set; }

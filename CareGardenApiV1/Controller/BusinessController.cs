@@ -14,6 +14,7 @@ using Microsoft.Extensions.Caching.Memory;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
+using System.Linq;
 using System.Security.Claims;
 
 namespace CareGardenApiV1.Controller
@@ -232,7 +233,7 @@ namespace CareGardenApiV1.Controller
                 var businessDetail = await _businessService.GetBusinessDetailByIdAsync(id.ToGuid());
                 businessDetail.isOpen = HelperMethods.GetBusinessOpen(businessDetail.businessWorkingInfo, businessDetail.officialDayAvailable);
                 businessDetail.averageRating = Math.Round(businessDetail.averageRating, 1);
-                
+
                 var services = new List<Services>();
 
                 if (_memoryCache.TryGetValue("services", out object list))
@@ -251,7 +252,7 @@ namespace CareGardenApiV1.Controller
                 var discountMultiplier = 1.0;
                 Discount activeDiscount = null;
 
-                foreach (var item in businessDetail.discounts.OrderBy(x=>x.rate))
+                foreach (var item in businessDetail.discounts.OrderBy(x => x.rate))
                 {
                     if (item.type == Enums.DiscountType.AllDay)
                     {
@@ -282,7 +283,9 @@ namespace CareGardenApiV1.Controller
 
                     foreach (var item in businessDetail.businessServices.Where(x => x.isPopular))
                     {
-                        item.discountPrice = activeDiscount != null && (activeDiscount.serviceIds.IsNullOrEmpty() || activeDiscount.serviceIds.Contains(item.serviceId.Value.ToString()))
+                        bool isDiscountAvailable = activeDiscount != null && (activeDiscount.serviceIds.IsNullOrEmpty() || activeDiscount.serviceIds.Contains(item.serviceId.Value.ToString()));
+
+                        item.discountPrice = isDiscountAvailable
                                              ? item.price * discountMultiplier
                                              : item.price;
 
@@ -300,7 +303,9 @@ namespace CareGardenApiV1.Controller
 
                     foreach (var item in items)
                     {
-                        item.discountPrice = activeDiscount != null && (activeDiscount.serviceIds.IsNullOrEmpty() || activeDiscount.serviceIds.Contains(item.serviceId.Value.ToString()))
+                        bool isDiscountAvailable = activeDiscount != null && (activeDiscount.serviceIds.IsNullOrEmpty() || activeDiscount.serviceIds.Contains(item.serviceId.Value.ToString()));
+
+                        item.discountPrice = isDiscountAvailable
                                              ? item.price * discountMultiplier
                                              : item.price;
 

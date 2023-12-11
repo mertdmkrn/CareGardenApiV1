@@ -216,6 +216,7 @@ namespace CareGardenApiV1.Controller
 
                 discount.description = updateDiscount.description;
                 discount.descriptionEn = updateDiscount.descriptionEn;
+                discount.serviceIds = updateDiscount.serviceIds;
                 discount.isActive = updateDiscount.isActive;
                 discount.rate = updateDiscount.rate;
                 discount.type = updateDiscount.type;

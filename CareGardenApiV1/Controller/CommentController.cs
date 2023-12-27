@@ -1,17 +1,12 @@
 ﻿using CareGardenApiV1.Handler.Abstract;
-using CareGardenApiV1.Handler.Concrete;
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Repository.Abstract;
-using CareGardenApiV1.Service.Abstract;
-using CareGardenApiV1.Service.Concrete;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
-using System.IdentityModel.Tokens.Jwt;
-using System.IO;
 using System.Security.Claims;
 
 namespace CareGardenApiV1.Controller
@@ -46,7 +41,7 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetBySessionUser()
         {
             ResponseModel<List<Comment>> response = new ResponseModel<List<Comment>>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+            Resource.Resource.Culture = new CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
@@ -71,7 +66,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -92,7 +87,7 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetByBusinessId([FromBody] Guid businessId)
         {
             ResponseModel<List<Comment>> response = new ResponseModel<List<Comment>>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+            Resource.Resource.Culture = new CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
@@ -103,7 +98,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -128,7 +123,7 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Search([FromBody] CommentSearchModel searchModel)
         {
             ResponseModel<List<Comment>> response = new ResponseModel<List<Comment>>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+            Resource.Resource.Culture = new CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
@@ -139,7 +134,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -160,7 +155,7 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetStatisticsByBusinessId([FromBody] Guid businessId)
         {
             ResponseModel<Dictionary<string, dynamic>> response = new ResponseModel<Dictionary<string, dynamic>>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+            Resource.Resource.Culture = new CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
@@ -171,7 +166,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -203,7 +198,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -289,7 +284,6 @@ namespace CareGardenApiV1.Controller
                 if (comment.businessId.HasValue)
                 {
                     BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(comment.businessId.Value));
-
                 }
 
                 return Ok(response);
@@ -299,7 +293,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -375,7 +369,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -422,7 +416,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }

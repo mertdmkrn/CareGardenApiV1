@@ -1,20 +1,9 @@
 ﻿using CareGardenApiV1.Handler.Abstract;
-using CareGardenApiV1.Handler.Concrete;
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
-using CareGardenApiV1.Model.RequestModel;
-using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
-using CareGardenApiV1.Service.Abstract;
-using CareGardenApiV1.Service.Concrete;
-using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
-using System.Globalization;
-using System.IdentityModel.Tokens.Jwt;
-using System.IO;
-using System.Security.Claims;
 
 namespace CareGardenApiV1.Controller
 {
@@ -64,7 +53,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
 
@@ -99,7 +88,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
 
@@ -135,7 +124,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
 
@@ -190,7 +179,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -256,7 +245,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -281,7 +270,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = Resource.Resource.KayitSilinemedi + " Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }

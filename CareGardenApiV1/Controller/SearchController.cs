@@ -1,23 +1,15 @@
 ﻿using CareGardenApiV1.Handler.Abstract;
-using CareGardenApiV1.Handler.Concrete;
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
-using CareGardenApiV1.Service.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Nest;
 using NetTopologySuite.Geometries;
-using System.Globalization;
-using System.IdentityModel.Tokens.Jwt;
-using System.IO;
-using System.Linq;
-using System.Security.Claims;
-using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace CareGardenApiV1.Controller
 {
@@ -26,30 +18,21 @@ namespace CareGardenApiV1.Controller
     public class SearchController : ControllerBase
     {
         private readonly IBusinessService _businessService;
-        private readonly IBusinessWorkingInfoService _businessWorkingInfoService;
-        private readonly IBusinessGalleryService _businessGalleryService;
         private readonly IServicesService _servicesService;
         private readonly IMemoryCache _memoryCache;
-        private readonly IFileHandler _fileHandler;
         private readonly ILoggerHandler _loggerHandler;
         private readonly IElasticClient _elasticClient;
 
         public SearchController(
             IBusinessService businessService,
-            IBusinessWorkingInfoService businessWorkingInfoService,
-            IBusinessGalleryService businessGalleryService,
             IServicesService servicesService,
             IMemoryCache memoryCache,
-            IFileHandler fileHandler,
             ILoggerHandler loggerHandler,
             IElasticClient elasticClient)
         {
             _businessService = businessService;
-            _businessWorkingInfoService = businessWorkingInfoService;
-            _businessGalleryService = businessGalleryService;
             _servicesService = servicesService;
             _memoryCache = memoryCache;
-            _fileHandler = fileHandler;
             _loggerHandler = loggerHandler;
             _elasticClient = elasticClient;
         }
@@ -126,7 +109,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
 
@@ -153,7 +136,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
 

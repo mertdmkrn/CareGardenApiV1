@@ -1,15 +1,10 @@
 ﻿using CareGardenApiV1.Handler.Abstract;
-using CareGardenApiV1.Handler.Concrete;
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
 using CareGardenApiV1.Repository.Abstract;
-using CareGardenApiV1.Service.Abstract;
-using CareGardenApiV1.Service.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace CareGardenApiV1.Controller
 {
@@ -68,7 +63,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -100,7 +95,7 @@ namespace CareGardenApiV1.Controller
                 if (response.Data == null)
                 {
                     response.HasError = true;
-                    response.Message = businessId + " id " + Resource.Resource.KayitBulunamadi;
+                    response.Message = $"{businessId} id {Resource.Resource.KayitBulunamadi}";
                     return Ok(response);
                 }
 
@@ -111,7 +106,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -143,7 +138,7 @@ namespace CareGardenApiV1.Controller
                 if (response.Data == null)
                 {
                     response.HasError = true;
-                    response.Message = id + " id " + Resource.Resource.KayitBulunamadi;
+                    response.Message = $"{id} id {Resource.Resource.KayitBulunamadi}";
                     return Ok(response);
                 }
 
@@ -154,7 +149,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -212,7 +207,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = Resource.Resource.KayitYapilamadi + " Exception => " + ex.Message;
+                response.Message = $"{Resource.Resource.KayitYapilamadi} Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -267,7 +262,7 @@ namespace CareGardenApiV1.Controller
                 if (campaign == null)
                 {
                     response.HasError = true;
-                    response.Message += campaign.id + " id " + Resource.Resource.KayitBulunamadi;
+                    response.Message += $"{updateCampaign.id} id {Resource.Resource.KayitBulunamadi}";
                     return Ok(response);
                 }
 
@@ -287,7 +282,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = Resource.Resource.GuncellemeYapilamadi + " Exception => " + ex.Message;
+                response.Message = $"{Resource.Resource.GuncellemeYapilamadi} Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -322,7 +317,7 @@ namespace CareGardenApiV1.Controller
                 if (campaign == null)
                 {
                     response.HasError = true;
-                    response.Message += id + " id " + Resource.Resource.KayitBulunamadi;
+                    response.Message += $"{id} id {Resource.Resource.KayitBulunamadi}";
                     return Ok(response);
                 }
 
@@ -335,7 +330,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = Resource.Resource.KayitSilinemedi + " Exception => " + ex.Message;
+                response.Message = $"{Resource.Resource.KayitSilinemedi} Exception => {ex.Message}";
                 return Ok(response);
             }
         }

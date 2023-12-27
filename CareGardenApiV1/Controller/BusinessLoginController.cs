@@ -1,18 +1,12 @@
 ﻿using CareGardenApiV1.Handler.Abstract;
-using CareGardenApiV1.Handler.Concrete;
 using CareGardenApiV1.Handler.Model;
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
-using CareGardenApiV1.Service.Concrete;
 using Hangfire;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
-using OneSignalApi.Model;
-using System;
 using System.Security.Claims;
 
 namespace CareGardenApiV1.Controller
@@ -86,7 +80,7 @@ namespace CareGardenApiV1.Controller
                 if (systemBusiness != null)
                 {
                     response.HasError = true;
-                    response.Message += Resource.Resource.GirdiginizTelefonNumarasinaAitSirketKayitli + " " + Resource.Resource.SifreYenilemeMesaji;
+                    response.Message += $"{Resource.Resource.GirdiginizTelefonNumarasinaAitSirketKayitli} {Resource.Resource.SifreYenilemeMesaji}";
                     return Ok(response);
                 }
 
@@ -114,7 +108,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = Resource.Resource.OnayKoduGonderilemedi + " Exception => " + ex.Message;
+                response.Message = $"{Resource.Resource.OnayKoduGonderilemedi} Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -174,7 +168,7 @@ namespace CareGardenApiV1.Controller
                 var mailRequest = new MailRequest()
                 {
                     ToEmailList = new List<string> { email },
-                    Subject = "CareGarden " + Resource.Resource.SifreYenileme,
+                    Subject = $"CareGarden {Resource.Resource.SifreYenileme}",
                     Body = mailMessage.Replace("{content}", content)
                 };
 
@@ -191,7 +185,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = Resource.Resource.OnayKoduGonderilemedi + " Exception => " + ex.Message + " " + AppDomain.CurrentDomain.BaseDirectory; 
+                response.Message = $"{Resource.Resource.OnayKoduGonderilemedi} Exception => {ex.Message}"; 
                 return Ok(response);
             }
        
@@ -278,7 +272,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = Resource.Resource.OnayKoduGonderilemedi + " Exception => " + ex.Message;
+                response.Message = $"{Resource.Resource.OnayKoduGonderilemedi} Exception => {ex.Message}";
                 return Ok(response);
             }
 
@@ -414,7 +408,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = Resource.Resource.KayitYapilamadi + " Exception => " + ex.Message;
+                response.Message = $"{Resource.Resource.KayitYapilamadi} Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -488,7 +482,6 @@ namespace CareGardenApiV1.Controller
 
                 response.Data = _tokenHandler.CreateAccessToken(DateTime.Now.AddDays(60), claims);
                 response.Message = Resource.Resource.GirisBasarili;
-                _loggerHandler.LogMessage(business.name + " " + Resource.Resource.GirisBasarili);
 
                 return Ok(response);
             }
@@ -496,7 +489,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = Resource.Resource.GirisYapilamadi + " Exception => " + ex.Message;
+                response.Message = $"{Resource.Resource.GirisYapilamadi} Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -589,7 +582,7 @@ namespace CareGardenApiV1.Controller
                 if (systemConfirmationInfo == null || !systemConfirmationInfo.code.IsNull("").Equals(updateBusiness.verifiedCode))
                 {
                     response.HasError = true;
-                    response.Message = Resource.Resource.OnayKoduDogrulanamadi + " " + Resource.Resource.SifreYenilemedi;
+                    response.Message = $"{Resource.Resource.OnayKoduDogrulanamadi} {Resource.Resource.SifreYenilemedi}";
                     return Ok(response);
                 }
 
@@ -612,7 +605,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = Resource.Resource.KayitYapilamadi + " Exception => " + ex.Message;
+                response.Message = $"{Resource.Resource.KayitYapilamadi} Exception => {ex.Message}";
                 return Ok(response);
             }
         }

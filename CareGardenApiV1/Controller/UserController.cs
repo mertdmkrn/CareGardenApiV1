@@ -1,5 +1,4 @@
 ﻿using CareGardenApiV1.Handler.Abstract;
-using CareGardenApiV1.Handler.Concrete;
 using CareGardenApiV1.Handler.Model;
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
@@ -7,18 +6,11 @@ using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
-using CareGardenApiV1.Service.Concrete;
-using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using NetTopologySuite.Geometries;
-using RestSharp;
 using System.Globalization;
-using System.IdentityModel.Tokens.Jwt;
-using System.IO;
 using System.Security.Claims;
-using System.Text.Json.Nodes;
 
 namespace CareGardenApiV1.Controller
 {
@@ -62,7 +54,7 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetById([FromBody] string id)
         {
             ResponseModel<UserResponseModel> response = new ResponseModel<UserResponseModel>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+            Resource.Resource.Culture = new CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
@@ -81,7 +73,7 @@ namespace CareGardenApiV1.Controller
                 if (response.Data == null)
                 {
                     response.HasError = true;
-                    response.Message += id + " id " + Resource.Resource.KullaniciBulunamadi;
+                    response.Message += $"{id} id {Resource.Resource.KullaniciBulunamadi}";
                     return Ok(response);
                 }
 
@@ -92,7 +84,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
 
@@ -106,7 +98,7 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Get()
         {
             ResponseModel<UserResponseModel> response = new ResponseModel<UserResponseModel>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+            Resource.Resource.Culture = new CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
@@ -128,7 +120,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -140,7 +132,7 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> SendFeedBack([FromForm] MailRequest email)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+            Resource.Resource.Culture = new CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
@@ -174,7 +166,7 @@ namespace CareGardenApiV1.Controller
                 var userName = HelperMethods.GetClaimInfo(Request, ClaimTypes.Name);
                 var userEmail = HelperMethods.GetClaimInfo(Request, ClaimTypes.Email);
 
-                email.Body = "<p>" + email.Body + "</p><p>Gönderen: " + userName + " - " + userEmail + "</p>";
+                email.Body = $"<p>{email.Body}</p><p>Gönderen: {userName} - {userEmail}</p>";
                 email.ToEmailList = await _userService.GetAdminEmailListAsync();
 
                 await _mailHandler.SendEmailAsync(email);
@@ -188,7 +180,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = Resource.Resource.OnayKoduGonderilemedi + " Exception => " + ex.Message;
+                response.Message = $"{Resource.Resource.OnayKoduGonderilemedi} Exception => {ex.Message}";
                 return Ok(response);
             }
 
@@ -202,7 +194,7 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> SetProfilePhoto(IFormFile file)
         {
             ResponseModel<string> response = new ResponseModel<string>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+            Resource.Resource.Culture = new CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
@@ -223,12 +215,12 @@ namespace CareGardenApiV1.Controller
                     return Ok(response);
                 }
 
-                string fileName = user.fullName.ToLower().TurkishChrToEnglishChr().Replace(" ", "-") + "-" + DateTime.Now.ToString("ddMMhhmmss") + "." + file.FileName.Split(".").LastOrDefault();
+                string fileName = $"{user?.fullName.ToLower().TurkishChrToEnglishChr().Replace(" ", "-")} - {DateTime.Now.ToString("ddMMhhmmss")}.{file.FileName.Split(".").LastOrDefault()}";
                 await _fileHandler.UploadFile(file, "UserImages", fileName);
                 user.imageUrl = await _fileHandler.UploadFreeImageServer(file);
 
                 if (user.imageUrl.IsNullOrEmpty())
-                    user.imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, "StaticFiles/UploadedFiles/UserImages/" + fileName);
+                    user.imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, $"StaticFiles/UploadedFiles/UserImages/{fileName}");
 
                 await _userService.UpdateUserAsync(user);
 
@@ -242,7 +234,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -255,7 +247,7 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Delete([FromBody] string id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+            Resource.Resource.Culture = new CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
@@ -276,7 +268,7 @@ namespace CareGardenApiV1.Controller
                 if (user == null)
                 {
                     response.HasError = true;
-                    response.Message = id + " id " + Resource.Resource.KullaniciBulunamadi;
+                    response.Message = $"{id} id {Resource.Resource.KullaniciBulunamadi}";
                     return Ok(response);
                 }
 
@@ -288,7 +280,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = Resource.Resource.KayitSilinemedi + " Exception => " + ex.Message;
+                response.Message = $"{Resource.Resource.KayitSilinemedi} Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -301,7 +293,7 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetPopularBusiness([FromBody] BusinessSearchModel businessSearchModel)
         {
             ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+            Resource.Resource.Culture = new CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
@@ -328,7 +320,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = Resource.Resource.KayitBulunamadi + " Exception => " + ex.Message;
+                response.Message = $"{Resource.Resource.KayitBulunamadi} Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -341,7 +333,7 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetFavoriteBusiness([FromBody] BusinessSearchModel businessSearchModel)
         {
             ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+            Resource.Resource.Culture = new CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
@@ -370,7 +362,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = Resource.Resource.KayitSilinemedi + " Exception => " + ex.Message;
+                response.Message = $"{Resource.Resource.KayitBulunamadi} Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -384,7 +376,7 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetNearByBusiness([FromBody] BusinessSearchModel businessSearchModel)
         {
             ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+            Resource.Resource.Culture = new CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
@@ -416,7 +408,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = Resource.Resource.KayitSilinemedi + " Exception => " + ex.Message;
+                response.Message = $"{Resource.Resource.KayitBulunamadi} Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -442,7 +434,7 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Update([FromBody] User updateUser)
         {
             ResponseModel<UserResponseModel> response = new ResponseModel<UserResponseModel>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+            Resource.Resource.Culture = new CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
@@ -514,7 +506,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = Resource.Resource.GuncellemeYapilamadi + " Exception => " + ex.Message;
+                response.Message = $"{Resource.Resource.GuncellemeYapilamadi} Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -537,7 +529,7 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> ChangePassword([FromBody] PasswordChangeModel updateUser)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+            Resource.Resource.Culture = new CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
@@ -618,7 +610,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = Resource.Resource.GuncellemeYapilamadi + " Exception => " + ex.Message;
+                response.Message = $"{Resource.Resource.GuncellemeYapilamadi} Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -640,7 +632,7 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> UpdateLocation([FromBody] User updateUser)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+            Resource.Resource.Culture = new CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
@@ -690,7 +682,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = Resource.Resource.GuncellemeYapilamadi + " Exception => " + ex.Message;
+                response.Message = $"{Resource.Resource.GuncellemeYapilamadi} Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -705,7 +697,7 @@ namespace CareGardenApiV1.Controller
         {
             var culture = Request.Headers["Language"].ToString().IsNull("en");
             ResponseModel<FaqResponseModel> response = new ResponseModel<FaqResponseModel>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(culture);
+            Resource.Resource.Culture = new CultureInfo(culture);
 
             try
             {
@@ -733,7 +725,7 @@ namespace CareGardenApiV1.Controller
             catch (Exception ex)
             {
                 response.HasError = true;
-                response.Message = "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }

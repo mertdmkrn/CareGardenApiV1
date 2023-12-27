@@ -8,22 +8,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
-using CareGardenApiV1.Model;
-using Microsoft.Extensions.Configuration;
 using CareGardenApiV1.Handler.Model;
 using CareGardenApiV1.Handler.Concrete;
-using System.Text.Json.Serialization;
-using Microsoft.Extensions.FileProviders;
-using System.IO;
 using Serilog;
 using Serilog.Formatting.Compact;
 using Hangfire;
 using Hangfire.PostgreSql;
 using HangfireBasicAuthenticationFilter;
 using CareGardenApiV1.Hangfire;
-using System.Globalization;
-using System;
-using Npgsql;
 using CareGardenApiV1.Middleware;
 using CareGardenApiV1.Helpers;
 using AspNetCoreRateLimit;
@@ -33,7 +25,7 @@ internal class Program
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        var currentPath = Path.Combine(AppContext.BaseDirectory.Replace("bin\\Debug\\net7.0\\", ""));
+        var currentPath = Path.Combine(AppContext.BaseDirectory.Replace("bin\\Debug\\net8.0\\", ""));
 
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Logger(lc => lc

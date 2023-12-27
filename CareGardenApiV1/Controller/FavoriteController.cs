@@ -1,15 +1,10 @@
 ﻿using CareGardenApiV1.Handler.Abstract;
-using CareGardenApiV1.Handler.Concrete;
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
 using CareGardenApiV1.Repository.Abstract;
-using CareGardenApiV1.Service.Abstract;
-using CareGardenApiV1.Service.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
-using System.IdentityModel.Tokens.Jwt;
-using System.IO;
 using System.Security.Claims;
 
 namespace CareGardenApiV1.Controller
@@ -39,7 +34,7 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Get()
         {
             ResponseModel<List<Favorite>> response = new ResponseModel<List<Favorite>>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+            Resource.Resource.Culture = new CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
@@ -61,7 +56,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -82,7 +77,7 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Add([FromBody] Guid businessId)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+            Resource.Resource.Culture = new CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
@@ -113,7 +108,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -136,7 +131,7 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Delete([FromBody] Guid businessId)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
+            Resource.Resource.Culture = new CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             try
             {
@@ -161,7 +156,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }

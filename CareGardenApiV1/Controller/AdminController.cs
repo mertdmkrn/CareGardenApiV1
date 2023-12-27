@@ -1,5 +1,4 @@
 ﻿using CareGardenApiV1.Handler.Abstract;
-using CareGardenApiV1.Handler.Concrete;
 using CareGardenApiV1.Handler.Model;
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
@@ -7,15 +6,13 @@ using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
-using CareGardenApiV1.Service.Concrete;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
-using Org.BouncyCastle.Asn1.X500;
-using System;
 using System.Security.Claims;
+using System.Text;
 
 namespace CareGardenApiV1.Controller
 {
@@ -188,9 +185,13 @@ namespace CareGardenApiV1.Controller
                 var addingUserName = HelperMethods.GetClaimInfo(Request, ClaimTypes.Name);
                 string mailMessage = HelperMethods.GetMailTemplate();
 
-                string content =  user.fullName + " " + "<a href='https://mertdmkrn.github.io/cg-admin/'>CG Admin</a>'e hoşgeldin. Giriş Bilgilerin; <br><br>" +
-                                  "Email : " + user.email + "<br>Şifre : " + user.password + "<br><br> " +
-                                  "<p style='text-align:right; font-size:11.5px; padding-right:10px'>Sisteme Ekleyen : " + addingUserName + "</p>";
+                StringBuilder builder = new StringBuilder();
+                builder.Append(user.fullName)
+                       .Append(" <a href='https://mertdmkrn.github.io/cg-admin/'>CG Admin</a>'e hoşgeldin. Giriş Bilgilerin; <br><br>")
+                       .Append("Email : ").Append(user.email).Append("<br>Şifre : ").Append(user.password).Append("<br><br> ")
+                       .Append("<p style='text-align:right; font-size:11.5px; padding-right:10px'>Sisteme Ekleyen : ").Append(addingUserName).Append("</p>");
+
+                string content = builder.ToString();
 
                 user.role = "Admin";
 
@@ -212,7 +213,7 @@ namespace CareGardenApiV1.Controller
             catch (Exception ex)
             {
                 response.HasError = true;
-                response.Message = Resource.Resource.KayitYapilamadi + " Exception => " + ex.Message;
+                response.Message = $"{Resource.Resource.KayitYapilamadi} Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -247,7 +248,7 @@ namespace CareGardenApiV1.Controller
             catch (Exception ex)
             {
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -327,7 +328,7 @@ namespace CareGardenApiV1.Controller
             catch (Exception ex)
             {
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -416,7 +417,7 @@ namespace CareGardenApiV1.Controller
             catch (Exception ex)
             {
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -460,7 +461,7 @@ namespace CareGardenApiV1.Controller
             catch (Exception ex)
             {
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -502,7 +503,7 @@ namespace CareGardenApiV1.Controller
             catch (Exception ex)
             {
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -526,7 +527,7 @@ namespace CareGardenApiV1.Controller
             catch (Exception ex)
             {
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -551,7 +552,7 @@ namespace CareGardenApiV1.Controller
             catch (Exception ex)
             {
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -576,7 +577,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }

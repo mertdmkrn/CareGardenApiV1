@@ -1,20 +1,14 @@
 ﻿using CareGardenApiV1.Handler.Abstract;
-using CareGardenApiV1.Handler.Concrete;
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
-using CareGardenApiV1.Service.Concrete;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using System.Globalization;
-using System.IdentityModel.Tokens.Jwt;
-using System.IO;
-using System.Linq;
 using System.Security.Claims;
 
 namespace CareGardenApiV1.Controller
@@ -89,7 +83,7 @@ namespace CareGardenApiV1.Controller
                 if (response.Data == null)
                 {
                     response.HasError = true;
-                    response.Message += id + " id " + Resource.Resource.SirketBulunamadi;
+                    response.Message = $"{id} id {Resource.Resource.SirketBulunamadi}";
                     return Ok(response);
                 }
 
@@ -103,7 +97,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
 
@@ -144,7 +138,7 @@ namespace CareGardenApiV1.Controller
                 if (response.Data == null)
                 {
                     response.HasError = true;
-                    response.Message += id + " id " + Resource.Resource.SirketBulunamadi;
+                    response.Message = $"{id} id {Resource.Resource.SirketBulunamadi}";
                     return Ok(response);
                 }
 
@@ -158,7 +152,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
 
@@ -195,7 +189,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -270,10 +264,13 @@ namespace CareGardenApiV1.Controller
                         activeDiscount = item;
                     }
 
-                    item.title = string.Format(Resource.Resource.Indirim, item.rate)
-                            + (item.type == Enums.DiscountType.WeekDay
-                                ? " " + Resource.Resource.HaftaIci
-                                : item.type == Enums.DiscountType.WeekEnd ? " " + Resource.Resource.HaftaSonu : "");
+                    var typeText = item.type == Enums.DiscountType.WeekDay 
+                                     ? Resource.Resource.HaftaIci 
+                                     : item.type == Enums.DiscountType.WeekEnd
+                                       ? Resource.Resource.HaftaSonu
+                                       : string.Empty;
+
+                    item.title = $"{string.Format(Resource.Resource.Indirim, item.rate)} {typeText}";
                 }
 
                 if (businessDetail.businessServices.Any(x => x.isPopular))
@@ -299,7 +296,7 @@ namespace CareGardenApiV1.Controller
                 {
                     BusinessServicesInfo businessServiceInfo = new BusinessServicesInfo();
                     var service = services.FirstOrDefault(x => x.id == items.Key.Value);
-                    businessServiceInfo.serviceName = service != null ? (culture == "en" ? service.nameEn : service.name) : "";
+                    businessServiceInfo.serviceName = service != null ? (culture == "en" ? service.nameEn : service.name) : string.Empty;
 
                     foreach (var item in items)
                     {
@@ -323,7 +320,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
 
@@ -359,7 +356,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -400,14 +397,14 @@ namespace CareGardenApiV1.Controller
 
                 List<BusinessGallery> businessGalleries = new List<BusinessGallery>();
 
-                string fileName = businessFileInfoModel.file.FileName.Split(".").FirstOrDefault() + "-" + DateTime.Now.ToString("ddMMhhmmss") + "." + businessFileInfoModel.file.FileName.Split(".").LastOrDefault();
+                string fileName = $"{businessFileInfoModel.file.FileName.Split(".").FirstOrDefault()}-{DateTime.Now.ToString("ddMMhhmmss")}.{businessFileInfoModel.file.FileName.Split(".").LastOrDefault()}";
                 string businessName = business.name.ToLower().TurkishChrToEnglishChr().Replace(" ", "-");
-                await _fileHandler.UploadFile(businessFileInfoModel.file, "BusinessImages/" + businessName, fileName);
+                await _fileHandler.UploadFile(businessFileInfoModel.file, $"BusinessImages/{businessName}", fileName);
 
                 string imageUrl = await _fileHandler.UploadFreeImageServer(businessFileInfoModel.file);
 
                 if (imageUrl.IsNullOrEmpty())
-                    imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, "StaticFiles/UploadedFiles/BusinessImages/" + businessName + "/" + fileName);
+                    imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, $"StaticFiles/UploadedFiles/BusinessImages/{businessName}/{fileName}");
 
                 BusinessGallery businessGallery = new BusinessGallery
                 {
@@ -427,7 +424,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -512,7 +509,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -607,7 +604,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -646,14 +643,14 @@ namespace CareGardenApiV1.Controller
                     return Ok(response);
                 }
 
-                string fileName = businessFileInfoModel.file.FileName.Split(".").FirstOrDefault() + "-" + DateTime.Now.ToString("ddMMhhmmss") + "." + businessFileInfoModel.file.FileName.Split(".").LastOrDefault();
+                string fileName = $"{businessFileInfoModel.file.FileName.Split(".").FirstOrDefault()}-{DateTime.Now.ToString("ddMMhhmmss")}.{businessFileInfoModel.file.FileName.Split(".").LastOrDefault()}";
                 string businessName = business.name.ToLower().TurkishChrToEnglishChr().Replace(" ", "-");
-                await _fileHandler.UploadFile(businessFileInfoModel.file, "BusinessImages/" + businessName, fileName);
+                await _fileHandler.UploadFile(businessFileInfoModel.file, $"BusinessImages/{businessName}", fileName);
 
                 string imageUrl = await _fileHandler.UploadFreeImageServer(businessFileInfoModel.file);
 
                 if (imageUrl.IsNullOrEmpty())
-                    imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, "StaticFiles/UploadedFiles/BusinessImages/" + businessName + "/" + fileName);
+                    imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, $"StaticFiles/UploadedFiles/BusinessImages/{businessName}/{fileName}");
 
                 var businessGallery = new BusinessGallery
                 {
@@ -673,7 +670,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -711,7 +708,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message += "Exception => " + ex.Message;
+                response.Message = $"Exception => {ex.Message}";
                 return Ok(response);
             }
         }
@@ -736,7 +733,7 @@ namespace CareGardenApiV1.Controller
             {
                 _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = Resource.Resource.KayitSilinemedi + " Exception => " + ex.Message;
+                response.Message = $"{Resource.Resource.KayitSilinemedi} Exception => {ex.Message}";
                 return Ok(response);
             }
         }

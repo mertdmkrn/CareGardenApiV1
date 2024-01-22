@@ -495,6 +495,7 @@ namespace CareGardenApiV1.Controller
                 user.gender = updateUser.gender;
                 user.city = updateUser.city;
                 user.services = updateUser.services.TrimEnd(';');
+                user.password = null;
 
                 await _userService.UpdateUserAsync(user);
                 response.Data = await _userService.GetUserResponseModelById(user.id);
@@ -665,6 +666,7 @@ namespace CareGardenApiV1.Controller
 
                 user.latitude = updateUser.latitude.HasValue ? updateUser.latitude : user.latitude;
                 user.longitude = updateUser.longitude.HasValue ? updateUser.longitude : user.latitude;
+                user.password = null;
 
                 if (updateUser.latitude > 0 && updateUser.longitude > 0)
                 {

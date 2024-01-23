@@ -1521,6 +1521,11 @@
               Looks up a localized string similar to Elastic indexleme işlemi arkaplanda başlamıştır..
             </summary>
         </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ElasticSunucusuAktifDegil">
+            <summary>
+              Looks up a localized string similar to Elastic server is not active..
+            </summary>
+        </member>
         <member name="P:CareGardenApiV1.Resource.Resource.GecerliBirIsimGiriniz">
             <summary>
               Looks up a localized string similar to Geçerli bir isim giriniz..

@@ -164,9 +164,7 @@ namespace CareGardenApiV1.Controller
         /// <remarks>
         /// **Sample request body:**
         ///
-        ///     { 
         ///        "00000000-0000-0000-0000-000000000000"
-        ///     }
         ///
         /// </remarks>
         /// <returns></returns>
@@ -233,12 +231,15 @@ namespace CareGardenApiV1.Controller
                 item.title = $"{string.Format(Resource.Resource.Indirim, item.rate)} {typeText}";
             }
 
-            if (businessDetail.businessServices.Any(x => x.isPopular))
+            var popularServices = businessDetail.businessServices.Where(x => x.isPopular);
+
+            if (popularServices.Any())
             {
                 BusinessServicesInfo businessServiceInfo = new BusinessServicesInfo();
                 businessServiceInfo.serviceName = Resource.Resource.PopulerServisler;
+                businessServiceInfo.className = "popular";
 
-                foreach (var item in businessDetail.businessServices.Where(x => x.isPopular))
+                foreach (var item in popularServices)
                 {
                     bool isDiscountAvailable = activeDiscount != null && (activeDiscount.serviceIds.IsNullOrEmpty() || activeDiscount.serviceIds.Contains(item.serviceId.Value.ToString()));
 
@@ -257,6 +258,7 @@ namespace CareGardenApiV1.Controller
                 BusinessServicesInfo businessServiceInfo = new BusinessServicesInfo();
                 var service = services.FirstOrDefault(x => x.id == items.Key.Value);
                 businessServiceInfo.serviceName = service != null ? (culture == "en" ? service.nameEn : service.name) : string.Empty;
+                businessServiceInfo.className = service != null ? service.className : string.Empty;
 
                 foreach (var item in items)
                 {

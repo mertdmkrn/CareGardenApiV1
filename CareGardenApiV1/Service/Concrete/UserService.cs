@@ -1,4 +1,5 @@
 ﻿using CareGardenApiV1.Model;
+using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Repository.Concrete;
@@ -35,11 +36,6 @@ namespace CareGardenApiV1.Service.Concrete
             return await _userRepository.GetUserResponseModelById(id);
         }
 
-        public async Task<List<User>> GetUsersAsync()
-        {
-            return await _userRepository.GetUsersAsync();
-        }
-
         public async Task<User> SaveUserAsync(User user)
         {
             return await _userRepository.SaveUserAsync(user);
@@ -64,10 +60,14 @@ namespace CareGardenApiV1.Service.Concrete
             return await _userRepository.GetAdminEmailListAsync();
         }
 
-
         public async Task<User> GetUserByTelephoneNumberAsync(string telephoneNumber)
         {
             return await _userRepository.GetUserByTelephoneNumberAsync(telephoneNumber);
+        }
+
+        public async Task<List<UserAdminResponseModel>> GetUsersAsync(UserSearchAdminModel userSearchAdminModel)
+        {
+            return await _userRepository.GetUsersAsync(userSearchAdminModel);
         }
     }
 }

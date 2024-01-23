@@ -44,33 +44,21 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetByBusinessId([FromBody] Discount discount)
         {
             ResponseModel<List<Discount>> response = new ResponseModel<List<Discount>>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (!discount.businessId.HasValue)
             {
-                if (!discount.businessId.HasValue)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
-                    response.Message = Resource.Resource.KayitBulunamadi;
-                    return Ok(response);
-                }
-
-
-                response.Data = discount.isActive
-                        ? await _discountService.GetActiveDiscountsByBusinessIdAsync(discount.businessId)
-                        : await _discountService.GetDiscountsByBusinessIdAsync(discount.businessId);
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
+                response.Message = Resource.Resource.KayitBulunamadi;
                 return Ok(response);
             }
+
+
+            response.Data = discount.isActive
+                    ? await _discountService.GetActiveDiscountsByBusinessIdAsync(discount.businessId)
+                    : await _discountService.GetDiscountsByBusinessIdAsync(discount.businessId);
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -94,54 +82,42 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Save([FromBody] Discount discount)
         {
             ResponseModel<Discount> response = new ResponseModel<Discount>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (!discount.businessId.HasValue)
             {
-                if (!discount.businessId.HasValue)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
-                }
-
-                if (discount.description.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("description", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-
-                if (discount.descriptionEn.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("descriptionEn", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (discount.rate <= 0)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("rate", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (response.HasError)
-                {
-                    response.Message = Resource.Resource.KayitYapilamadi;
-                    return Ok(response);
-                }
-
-                response.Data = await _discountService.SaveDiscountAsync(discount);
-                response.Message = Resource.Resource.KayitBasarili;
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
+            }
+
+            if (discount.description.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("description", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+
+            if (discount.descriptionEn.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("descriptionEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (discount.rate <= 0)
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("rate", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.KayitYapilamadi;
                 return Ok(response);
             }
+
+            response.Data = await _discountService.SaveDiscountAsync(discount);
+            response.Message = Resource.Resource.KayitBasarili;
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -165,64 +141,52 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Update([FromBody] Discount updateDiscount)
         {
             ResponseModel<Discount> response = new ResponseModel<Discount>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (updateDiscount.description.IsNullOrEmpty())
             {
-                if (updateDiscount.description.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("description", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-
-                if (updateDiscount.descriptionEn.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("descriptionEn", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (updateDiscount.rate <= 0)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("rate", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (response.HasError)
-                {
-                    response.Message = Resource.Resource.KayitYapilamadi;
-                    return Ok(response);
-                }
-
-
-                var discount = await _discountService.GetDiscountByIdAsync(updateDiscount.id);
-
-                if (discount == null)
-                {
-                    response.Message = Resource.Resource.KayitBulunamadi;
-                    return Ok(response);
-                }
-
-                discount.description = updateDiscount.description;
-                discount.descriptionEn = updateDiscount.descriptionEn;
-                discount.serviceIds = updateDiscount.serviceIds;
-                discount.isActive = updateDiscount.isActive;
-                discount.rate = updateDiscount.rate;
-                discount.type = updateDiscount.type;
-
-                response.Data = await _discountService.UpdateDiscountAsync(discount);
-                response.Message = Resource.Resource.KayitBasarili;
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("description", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+
+            if (updateDiscount.descriptionEn.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("descriptionEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (updateDiscount.rate <= 0)
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("rate", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.KayitYapilamadi;
                 return Ok(response);
             }
+
+
+            var discount = await _discountService.GetDiscountByIdAsync(updateDiscount.id);
+
+            if (discount == null)
+            {
+                response.Message = Resource.Resource.KayitBulunamadi;
+                return Ok(response);
+            }
+
+            discount.description = updateDiscount.description;
+            discount.descriptionEn = updateDiscount.descriptionEn;
+            discount.serviceIds = updateDiscount.serviceIds;
+            discount.isActive = updateDiscount.isActive;
+            discount.rate = updateDiscount.rate;
+            discount.type = updateDiscount.type;
+
+            response.Data = await _discountService.UpdateDiscountAsync(discount);
+            response.Message = Resource.Resource.KayitBasarili;
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -241,37 +205,26 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> DeleteByBusinessId([FromBody] string? id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (id.IsNullOrEmpty() || !id.IsGuid())
             {
-                if (id.IsNullOrEmpty() || !id.IsGuid())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
-                    response.Message = Resource.Resource.KayitBulunamadi;
-                    return Ok(response);
-                }
-
-                var discount = await _discountService.GetDiscountByIdAsync(id.ToGuid());
-
-                if (discount == null)
-                {
-                    response.Message = Resource.Resource.KayitBulunamadi;
-                    return Ok(response);
-                }
-
-                response.Data = await _discountService.DeleteDiscountAsync(discount);
-                response.Message = Resource.Resource.KayitSilindi;
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
+                response.Message = Resource.Resource.KayitBulunamadi;
                 return Ok(response);
             }
+
+            var discount = await _discountService.GetDiscountByIdAsync(id.ToGuid());
+
+            if (discount == null)
+            {
+                response.Message = Resource.Resource.KayitBulunamadi;
+                return Ok(response);
+            }
+
+            response.Data = await _discountService.DeleteDiscountAsync(discount);
+            response.Message = Resource.Resource.KayitSilindi;
+            return Ok(response);
         }
     }
 }

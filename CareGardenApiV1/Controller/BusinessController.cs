@@ -64,43 +64,30 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetInfoById([FromBody] string id)
         {
             ResponseModel<Business> response = new ResponseModel<Business>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (!id.IsGuid())
             {
-                if (!id.IsGuid())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                    response.Message += Resource.Resource.IdParametreHatasi;
-                }
-
-                if (response.HasError)
-                    return Ok(response);
-
-                response.Data = await _businessService.GetBusinessByIdAsync(id.ToGuid());
-
-                if (response.Data == null)
-                {
-                    response.HasError = true;
-                    response.Message = $"{id} id {Resource.Resource.SirketBulunamadi}";
-                    return Ok(response);
-                }
-
-                response.Data.password = null;
-                response.Data.retryPassword = null;
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                response.Message += Resource.Resource.IdParametreHatasi;
+            }
+
+            if (response.HasError)
+                return Ok(response);
+
+            response.Data = await _businessService.GetBusinessByIdAsync(id.ToGuid());
+
+            if (response.Data == null)
+            {
+                response.HasError = true;
+                response.Message = $"{id} id {Resource.Resource.SirketBulunamadi}";
                 return Ok(response);
             }
 
+            response.Data.password = null;
+            response.Data.retryPassword = null;
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -119,43 +106,30 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetById([FromBody] string id)
         {
             ResponseModel<Business> response = new ResponseModel<Business>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (!id.IsGuid())
             {
-                if (!id.IsGuid())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                    response.Message += Resource.Resource.IdParametreHatasi;
-                }
-
-                if (response.HasError)
-                    return Ok(response);
-
-                response.Data = await _businessService.GetBusinessAllByIdAsync(id.ToGuid());
-
-                if (response.Data == null)
-                {
-                    response.HasError = true;
-                    response.Message = $"{id} id {Resource.Resource.SirketBulunamadi}";
-                    return Ok(response);
-                }
-
-                response.Data.password = null;
-                response.Data.retryPassword = null;
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                response.Message += Resource.Resource.IdParametreHatasi;
+            }
+
+            if (response.HasError)
+                return Ok(response);
+
+            response.Data = await _businessService.GetBusinessAllByIdAsync(id.ToGuid());
+
+            if (response.Data == null)
+            {
+                response.HasError = true;
+                response.Message = $"{id} id {Resource.Resource.SirketBulunamadi}";
                 return Ok(response);
             }
 
+            response.Data.password = null;
+            response.Data.retryPassword = null;
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -168,30 +142,19 @@ namespace CareGardenApiV1.Controller
             ResponseModel<Business> response = new ResponseModel<Business>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            var business = await HelperMethods.GetSessionBusiness(Request, _businessService);
+
+            if (business == null)
             {
-                var business = await HelperMethods.GetSessionBusiness(Request, _businessService);
-
-                if (business == null)
-                {
-                    response.HasError = true;
-                    response.Message = Resource.Resource.SirketBulunamadi;
-                    return Ok(response);
-                }
-
-                business.password = null;
-                response.Data = business;
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.Message = Resource.Resource.SirketBulunamadi;
                 return Ok(response);
             }
+
+            business.password = null;
+            response.Data = business;
+
+            return Ok(response);
         }
 
 
@@ -212,118 +175,106 @@ namespace CareGardenApiV1.Controller
         {
             var culture = Request.Headers["Language"].ToString().IsNull("en");
             ResponseModel<BusinessDetailModel> response = new ResponseModel<BusinessDetailModel>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(culture);
 
-            try
+            if (!id.IsGuid())
             {
-                if (!id.IsGuid())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                    response.Message += Resource.Resource.IdParametreHatasi;
-                    return Ok(response);
-                }
-
-                var businessDetail = await _businessService.GetBusinessDetailByIdAsync(id.ToGuid());
-                businessDetail.isOpen = HelperMethods.GetBusinessOpen(businessDetail.businessWorkingInfo, businessDetail.officialDayAvailable);
-                businessDetail.averageRating = Math.Round(businessDetail.averageRating, 1);
-
-                var services = new List<Services>();
-
-                if (_memoryCache.TryGetValue("services", out object list))
-                {
-                    services = (List<Services>)list;
-                }
-                else
-                {
-                    services = await _servicesService.GetServicesAsync();
-                    _memoryCache.Set("services", services, new MemoryCacheEntryOptions
-                    {
-                        Priority = CacheItemPriority.Normal
-                    });
-                }
-
-                var discountMultiplier = 1.0;
-                Discount activeDiscount = null;
-
-                foreach (var item in businessDetail.discounts.OrderBy(x => x.rate))
-                {
-                    if (item.type == Enums.DiscountType.AllDay)
-                    {
-                        discountMultiplier = 1 - (item.rate / 100);
-                        activeDiscount = item;
-                    }
-                    else if (item.type == Enums.DiscountType.WeekDay && DateTime.Today.DayOfWeek >= DayOfWeek.Monday && DateTime.Today.DayOfWeek <= DayOfWeek.Friday)
-                    {
-                        discountMultiplier = 1 - (item.rate / 100);
-                        activeDiscount = item;
-                    }
-                    else if (item.type == Enums.DiscountType.WeekEnd && (DateTime.Today.DayOfWeek == DayOfWeek.Saturday || DateTime.Today.DayOfWeek == DayOfWeek.Sunday))
-                    {
-                        discountMultiplier = 1 - (item.rate / 100);
-                        activeDiscount = item;
-                    }
-
-                    var typeText = item.type == Enums.DiscountType.WeekDay 
-                                     ? Resource.Resource.HaftaIci 
-                                     : item.type == Enums.DiscountType.WeekEnd
-                                       ? Resource.Resource.HaftaSonu
-                                       : string.Empty;
-
-                    item.title = $"{string.Format(Resource.Resource.Indirim, item.rate)} {typeText}";
-                }
-
-                if (businessDetail.businessServices.Any(x => x.isPopular))
-                {
-                    BusinessServicesInfo businessServiceInfo = new BusinessServicesInfo();
-                    businessServiceInfo.serviceName = Resource.Resource.PopulerServisler;
-
-                    foreach (var item in businessDetail.businessServices.Where(x => x.isPopular))
-                    {
-                        bool isDiscountAvailable = activeDiscount != null && (activeDiscount.serviceIds.IsNullOrEmpty() || activeDiscount.serviceIds.Contains(item.serviceId.Value.ToString()));
-
-                        item.discountPrice = isDiscountAvailable
-                                             ? item.price * discountMultiplier
-                                             : item.price;
-
-                        businessServiceInfo.businessServices.Add(item);
-                    }
-
-                    businessDetail.businessServicesInfos.Add(businessServiceInfo);
-                }
-
-                foreach (var items in businessDetail.businessServices.GroupBy(x => x.serviceId))
-                {
-                    BusinessServicesInfo businessServiceInfo = new BusinessServicesInfo();
-                    var service = services.FirstOrDefault(x => x.id == items.Key.Value);
-                    businessServiceInfo.serviceName = service != null ? (culture == "en" ? service.nameEn : service.name) : string.Empty;
-
-                    foreach (var item in items)
-                    {
-                        bool isDiscountAvailable = activeDiscount != null && (activeDiscount.serviceIds.IsNullOrEmpty() || activeDiscount.serviceIds.Contains(item.serviceId.Value.ToString()));
-
-                        item.discountPrice = isDiscountAvailable
-                                             ? item.price * discountMultiplier
-                                             : item.price;
-
-                        businessServiceInfo.businessServices.Add(item);
-                    }
-
-                    businessDetail.businessServicesInfos.Add(businessServiceInfo);
-                }
-
-                response.Data = businessDetail;
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                response.Message += Resource.Resource.IdParametreHatasi;
                 return Ok(response);
             }
 
+            var businessDetail = await _businessService.GetBusinessDetailByIdAsync(id.ToGuid());
+            businessDetail.isOpen = HelperMethods.GetBusinessOpen(businessDetail.businessWorkingInfo, businessDetail.officialDayAvailable);
+            businessDetail.averageRating = Math.Round(businessDetail.averageRating, 1);
+
+            var services = new List<Services>();
+
+            if (_memoryCache.TryGetValue("services", out object list))
+            {
+                services = (List<Services>)list;
+            }
+            else
+            {
+                services = await _servicesService.GetServicesAsync();
+                _memoryCache.Set("services", services, new MemoryCacheEntryOptions
+                {
+                    Priority = CacheItemPriority.Normal
+                });
+            }
+
+            var discountMultiplier = 1.0;
+            Discount activeDiscount = null;
+
+            foreach (var item in businessDetail.discounts.OrderBy(x => x.rate))
+            {
+                if (item.type == Enums.DiscountType.AllDay)
+                {
+                    discountMultiplier = 1 - (item.rate / 100);
+                    activeDiscount = item;
+                }
+                else if (item.type == Enums.DiscountType.WeekDay && DateTime.Today.DayOfWeek >= DayOfWeek.Monday && DateTime.Today.DayOfWeek <= DayOfWeek.Friday)
+                {
+                    discountMultiplier = 1 - (item.rate / 100);
+                    activeDiscount = item;
+                }
+                else if (item.type == Enums.DiscountType.WeekEnd && (DateTime.Today.DayOfWeek == DayOfWeek.Saturday || DateTime.Today.DayOfWeek == DayOfWeek.Sunday))
+                {
+                    discountMultiplier = 1 - (item.rate / 100);
+                    activeDiscount = item;
+                }
+
+                var typeText = item.type == Enums.DiscountType.WeekDay
+                                 ? Resource.Resource.HaftaIci
+                                 : item.type == Enums.DiscountType.WeekEnd
+                                   ? Resource.Resource.HaftaSonu
+                                   : string.Empty;
+
+                item.title = $"{string.Format(Resource.Resource.Indirim, item.rate)} {typeText}";
+            }
+
+            if (businessDetail.businessServices.Any(x => x.isPopular))
+            {
+                BusinessServicesInfo businessServiceInfo = new BusinessServicesInfo();
+                businessServiceInfo.serviceName = Resource.Resource.PopulerServisler;
+
+                foreach (var item in businessDetail.businessServices.Where(x => x.isPopular))
+                {
+                    bool isDiscountAvailable = activeDiscount != null && (activeDiscount.serviceIds.IsNullOrEmpty() || activeDiscount.serviceIds.Contains(item.serviceId.Value.ToString()));
+
+                    item.discountPrice = isDiscountAvailable
+                                         ? item.price * discountMultiplier
+                                         : item.price;
+
+                    businessServiceInfo.businessServices.Add(item);
+                }
+
+                businessDetail.businessServicesInfos.Add(businessServiceInfo);
+            }
+
+            foreach (var items in businessDetail.businessServices.GroupBy(x => x.serviceId))
+            {
+                BusinessServicesInfo businessServiceInfo = new BusinessServicesInfo();
+                var service = services.FirstOrDefault(x => x.id == items.Key.Value);
+                businessServiceInfo.serviceName = service != null ? (culture == "en" ? service.nameEn : service.name) : string.Empty;
+
+                foreach (var item in items)
+                {
+                    bool isDiscountAvailable = activeDiscount != null && (activeDiscount.serviceIds.IsNullOrEmpty() || activeDiscount.serviceIds.Contains(item.serviceId.Value.ToString()));
+
+                    item.discountPrice = isDiscountAvailable
+                                         ? item.price * discountMultiplier
+                                         : item.price;
+
+                    businessServiceInfo.businessServices.Add(item);
+                }
+
+                businessDetail.businessServicesInfos.Add(businessServiceInfo);
+            }
+
+            response.Data = businessDetail;
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -334,31 +285,19 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetBusinessNames()
         {
             ResponseModel<List<Tuple<string, string>>> response = new ResponseModel<List<Tuple<string, string>>>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            var businessSelectListDictionary = await _businessService.GetBusinessSelectListAsync();
+
+            if (businessSelectListDictionary == null)
             {
-                var businessSelectListDictionary = await _businessService.GetBusinessSelectListAsync();
-
-                if (businessSelectListDictionary == null)
-                {
-                    response.HasError = true;
-                    response.Message = Resource.Resource.KayitBulunamadi;
-                    return Ok(response);
-                }
-
-                response.Data = businessSelectListDictionary;
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.Message = Resource.Resource.KayitBulunamadi;
                 return Ok(response);
             }
+
+            response.Data = businessSelectListDictionary;
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -369,64 +308,53 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> SetProfilePhoto([FromForm] BusinessFileInfoModel businessFileInfoModel)
         {
             ResponseModel<BusinessGallery> response = new ResponseModel<BusinessGallery>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (businessFileInfoModel.file == null)
             {
-                if (businessFileInfoModel.file == null)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("files", Resource.Resource.BuAlaniBosBirakmayiniz));
-                    response.Message = Resource.Resource.BuAlaniBosBirakmayiniz;
-                    return Ok(response);
-                }
-
-                var business = await HelperMethods.GetSessionBusiness(Request, _businessService);
-
-                if (business == null && businessFileInfoModel.businessId.HasValue)
-                {
-                    business = await _businessService.GetBusinessByIdAsync(businessFileInfoModel.businessId.Value);
-                }
-
-                if (business == null)
-                {
-                    response.HasError = true;
-                    response.Message = Resource.Resource.SirketBulunamadi;
-                    return Ok(response);
-                }
-
-                List<BusinessGallery> businessGalleries = new List<BusinessGallery>();
-
-                string fileName = $"{businessFileInfoModel.file.FileName.Split(".").FirstOrDefault()}-{DateTime.Now.ToString("ddMMhhmmss")}.{businessFileInfoModel.file.FileName.Split(".").LastOrDefault()}";
-                string businessName = business.name.ToLower().TurkishChrToEnglishChr().Replace(" ", "-");
-                await _fileHandler.UploadFile(businessFileInfoModel.file, $"BusinessImages/{businessName}", fileName);
-
-                string imageUrl = await _fileHandler.UploadFreeImageServer(businessFileInfoModel.file);
-
-                if (imageUrl.IsNullOrEmpty())
-                    imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, $"StaticFiles/UploadedFiles/BusinessImages/{businessName}/{fileName}");
-
-                BusinessGallery businessGallery = new BusinessGallery
-                {
-                    imageUrl = imageUrl,
-                    businessId = business.id,
-                    size = null,
-                    isProfilePhoto = true,
-                };
-
-                response.Message = Resource.Resource.ResimYuklemeBasarili;
-                response.Data = await _businessGalleryService.SaveBusinessGalleryAsync(businessGallery);
-                BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("files", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.Message = Resource.Resource.BuAlaniBosBirakmayiniz;
                 return Ok(response);
             }
+
+            var business = await HelperMethods.GetSessionBusiness(Request, _businessService);
+
+            if (business == null && businessFileInfoModel.businessId.HasValue)
+            {
+                business = await _businessService.GetBusinessByIdAsync(businessFileInfoModel.businessId.Value);
+            }
+
+            if (business == null)
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.SirketBulunamadi;
+                return Ok(response);
+            }
+
+            List<BusinessGallery> businessGalleries = new List<BusinessGallery>();
+
+            string fileName = $"{businessFileInfoModel.file.FileName.Split(".").FirstOrDefault()}-{DateTime.Now.ToString("ddMMhhmmss")}.{businessFileInfoModel.file.FileName.Split(".").LastOrDefault()}";
+            string businessName = business.name.ToLower().TurkishChrToEnglishChr().Replace(" ", "-");
+            await _fileHandler.UploadFile(businessFileInfoModel.file, $"BusinessImages/{businessName}", fileName);
+
+            string imageUrl = await _fileHandler.UploadFreeImageServer(businessFileInfoModel.file);
+
+            if (imageUrl.IsNullOrEmpty())
+                imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, $"StaticFiles/UploadedFiles/BusinessImages/{businessName}/{fileName}");
+
+            BusinessGallery businessGallery = new BusinessGallery
+            {
+                imageUrl = imageUrl,
+                businessId = business.id,
+                size = null,
+                isProfilePhoto = true,
+            };
+
+            response.Message = Resource.Resource.ResimYuklemeBasarili;
+            response.Data = await _businessGalleryService.SaveBusinessGalleryAsync(businessGallery);
+            BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -456,62 +384,50 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Update(Business updateBusiness)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
-            {
-                var business = await HelperMethods.GetSessionBusiness(Request, _businessService)
+            var business = await HelperMethods.GetSessionBusiness(Request, _businessService)
                                ?? await _businessService.GetBusinessByIdAsync(updateBusiness.id);
 
-                if (business == null)
-                {
-                    response.HasError = true;
-                    response.Message = Resource.Resource.SirketBulunamadi;
-                    return Ok(response);
-                }
-
-                business.name = updateBusiness.name.IsNull(business.name);
-                business.address = updateBusiness.address.IsNull(business.address);
-                business.telephone = updateBusiness.telephone.IsNull(business.telephone);
-                business.latitude = updateBusiness.latitude.IsNull(business.latitude);
-                business.longitude = updateBusiness.longitude.IsNull(business.longitude);
-                business.city = updateBusiness.city.IsNull(business.city);
-                business.province = updateBusiness.province.IsNull(business.province);
-                business.district = updateBusiness.district.IsNull(business.district);
-                business.description = updateBusiness.description.IsNull(business.description);
-                business.descriptionEn = updateBusiness.descriptionEn.IsNull(business.descriptionEn);
-                business.isFeatured = updateBusiness.isFeatured;
-                business.hasPromotion = updateBusiness.hasPromotion;
-
-                if (updateBusiness.latitude > 0 && updateBusiness.longitude > 0)
-                {
-                    var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
-                    business.location = gf.CreatePoint(new NetTopologySuite.Geometries.Coordinate(updateBusiness.latitude, updateBusiness.longitude));
-                }
-
-                var sessionUserRole = HelperMethods.GetClaimInfo(Request, ClaimTypes.Role);
-
-                if (sessionUserRole.IsNotNullOrEmpty() && sessionUserRole.Equals("Admin"))
-                {
-                    business.isActive = updateBusiness.isActive;
-                    business.verified = updateBusiness.verified;
-                }
-
-                await _businessService.UpdateBusinessAsync(business);
-                BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
-                response.Message = Resource.Resource.KayitBasarili;
-                response.Data = true;
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
+            if (business == null)
             {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.Message = Resource.Resource.SirketBulunamadi;
                 return Ok(response);
             }
+
+            business.name = updateBusiness.name.IsNull(business.name);
+            business.address = updateBusiness.address.IsNull(business.address);
+            business.telephone = updateBusiness.telephone.IsNull(business.telephone);
+            business.latitude = updateBusiness.latitude.IsNull(business.latitude);
+            business.longitude = updateBusiness.longitude.IsNull(business.longitude);
+            business.city = updateBusiness.city.IsNull(business.city);
+            business.province = updateBusiness.province.IsNull(business.province);
+            business.district = updateBusiness.district.IsNull(business.district);
+            business.description = updateBusiness.description.IsNull(business.description);
+            business.descriptionEn = updateBusiness.descriptionEn.IsNull(business.descriptionEn);
+            business.isFeatured = updateBusiness.isFeatured;
+            business.hasPromotion = updateBusiness.hasPromotion;
+
+            if (updateBusiness.latitude > 0 && updateBusiness.longitude > 0)
+            {
+                var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
+                business.location = gf.CreatePoint(new NetTopologySuite.Geometries.Coordinate(updateBusiness.latitude, updateBusiness.longitude));
+            }
+
+            var sessionUserRole = HelperMethods.GetClaimInfo(Request, ClaimTypes.Role);
+
+            if (sessionUserRole.IsNotNullOrEmpty() && sessionUserRole.Equals("Admin"))
+            {
+                business.isActive = updateBusiness.isActive;
+                business.verified = updateBusiness.verified;
+            }
+
+            await _businessService.UpdateBusinessAsync(business);
+            BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
+            response.Message = Resource.Resource.KayitBasarili;
+            response.Data = true;
+
+            return Ok(response);
         }
 
 
@@ -543,70 +459,58 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> SaveWorkingInfo(BusinessWorkInfoModel businessWorkInfoModel)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (businessWorkInfoModel.businessWorkingInfo == null)
             {
-                if (businessWorkInfoModel.businessWorkingInfo == null)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("businessWorkingInfo", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (businessWorkInfoModel.appointmentPeopleCount == 0)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("appointmentPeopleCount", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (businessWorkInfoModel.appointmentTimeInterval == 0)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("appointmentTimeInterval", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (response.HasError)
-                {
-                    response.Message = Resource.Resource.KayitSilinemedi;
-                    return Ok(response);
-                }
-
-                var business = await HelperMethods.GetSessionBusiness(Request, _businessService)
-                               ?? await _businessService.GetBusinessByIdAsync(businessWorkInfoModel.businessId);
-
-                if (business == null)
-                {
-                    response.HasError = true;
-                    response.Message = Resource.Resource.SirketBulunamadi;
-                    return Ok(response);
-                }
-
-                business.officialHolidayAvailable = businessWorkInfoModel.officialHolidayAvailable;
-                business.appointmentPeopleCount = businessWorkInfoModel.appointmentPeopleCount;
-                business.appointmentTimeInterval = businessWorkInfoModel.appointmentTimeInterval;
-                business.workingGenderType = businessWorkInfoModel.workingGenderType;
-
-                await _businessService.UpdateBusinessAsync(business);
-
-                businessWorkInfoModel.businessWorkingInfo.businessId = business.id;
-                businessWorkInfoModel.businessWorkingInfo.officialHolidayAvailable = business.officialHolidayAvailable;
-                await _businessWorkingInfoService.DeleteBusinessWorkingInfoByBusinessIdAsync(business.id);
-                await _businessWorkingInfoService.SaveBusinessWorkingInfoAsync(businessWorkInfoModel.businessWorkingInfo);
-                BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
-
-                response.Message = Resource.Resource.KayitBasarili;
-                response.Data = true;
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("businessWorkingInfo", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (businessWorkInfoModel.appointmentPeopleCount == 0)
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("appointmentPeopleCount", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (businessWorkInfoModel.appointmentTimeInterval == 0)
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("appointmentTimeInterval", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.KayitSilinemedi;
                 return Ok(response);
             }
+
+            var business = await HelperMethods.GetSessionBusiness(Request, _businessService)
+                           ?? await _businessService.GetBusinessByIdAsync(businessWorkInfoModel.businessId);
+
+            if (business == null)
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.SirketBulunamadi;
+                return Ok(response);
+            }
+
+            business.officialHolidayAvailable = businessWorkInfoModel.officialHolidayAvailable;
+            business.appointmentPeopleCount = businessWorkInfoModel.appointmentPeopleCount;
+            business.appointmentTimeInterval = businessWorkInfoModel.appointmentTimeInterval;
+            business.workingGenderType = businessWorkInfoModel.workingGenderType;
+
+            await _businessService.UpdateBusinessAsync(business);
+
+            businessWorkInfoModel.businessWorkingInfo.businessId = business.id;
+            businessWorkInfoModel.businessWorkingInfo.officialHolidayAvailable = business.officialHolidayAvailable;
+            await _businessWorkingInfoService.DeleteBusinessWorkingInfoByBusinessIdAsync(business.id);
+            await _businessWorkingInfoService.SaveBusinessWorkingInfoAsync(businessWorkInfoModel.businessWorkingInfo);
+            BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
+
+            response.Message = Resource.Resource.KayitBasarili;
+            response.Data = true;
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -617,62 +521,50 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> AddGalleryPhoto([FromForm] BusinessFileInfoModel businessFileInfoModel)
         {
             ResponseModel<BusinessGallery> response = new ResponseModel<BusinessGallery>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (businessFileInfoModel.file == null)
             {
-                if (businessFileInfoModel.file == null)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("file", Resource.Resource.BuAlaniBosBirakmayiniz));
-                    response.Message = Resource.Resource.BuAlaniBosBirakmayiniz;
-                    return Ok(response);
-                }
-
-                var business = await HelperMethods.GetSessionBusiness(Request, _businessService);
-
-                if (business == null && businessFileInfoModel.businessId.HasValue)
-                {
-                    business = await _businessService.GetBusinessByIdAsync(businessFileInfoModel.businessId.Value);
-                }
-
-                if (business == null)
-                {
-                    response.HasError = true;
-                    response.Message = Resource.Resource.SirketBulunamadi;
-                    return Ok(response);
-                }
-
-                string fileName = $"{businessFileInfoModel.file.FileName.Split(".").FirstOrDefault()}-{DateTime.Now.ToString("ddMMhhmmss")}.{businessFileInfoModel.file.FileName.Split(".").LastOrDefault()}";
-                string businessName = business.name.ToLower().TurkishChrToEnglishChr().Replace(" ", "-");
-                await _fileHandler.UploadFile(businessFileInfoModel.file, $"BusinessImages/{businessName}", fileName);
-
-                string imageUrl = await _fileHandler.UploadFreeImageServer(businessFileInfoModel.file);
-
-                if (imageUrl.IsNullOrEmpty())
-                    imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, $"StaticFiles/UploadedFiles/BusinessImages/{businessName}/{fileName}");
-
-                var businessGallery = new BusinessGallery
-                {
-                    imageUrl = imageUrl,
-                    businessId = business.id,
-                    size = null
-                };
-
-                response.Message = Resource.Resource.ResimYuklemeBasarili;
-                response.Data = await _businessGalleryService.SaveBusinessGalleryAsync(businessGallery);
-                BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("file", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.Message = Resource.Resource.BuAlaniBosBirakmayiniz;
                 return Ok(response);
             }
+
+            var business = await HelperMethods.GetSessionBusiness(Request, _businessService);
+
+            if (business == null && businessFileInfoModel.businessId.HasValue)
+            {
+                business = await _businessService.GetBusinessByIdAsync(businessFileInfoModel.businessId.Value);
+            }
+
+            if (business == null)
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.SirketBulunamadi;
+                return Ok(response);
+            }
+
+            string fileName = $"{businessFileInfoModel.file.FileName.Split(".").FirstOrDefault()}-{DateTime.Now.ToString("ddMMhhmmss")}.{businessFileInfoModel.file.FileName.Split(".").LastOrDefault()}";
+            string businessName = business.name.ToLower().TurkishChrToEnglishChr().Replace(" ", "-");
+            await _fileHandler.UploadFile(businessFileInfoModel.file, $"BusinessImages/{businessName}", fileName);
+
+            string imageUrl = await _fileHandler.UploadFreeImageServer(businessFileInfoModel.file);
+
+            if (imageUrl.IsNullOrEmpty())
+                imageUrl = string.Format("{0}://{1}/{2}", HttpContext.Request.Scheme, HttpContext.Request.Host, $"StaticFiles/UploadedFiles/BusinessImages/{businessName}/{fileName}");
+
+            var businessGallery = new BusinessGallery
+            {
+                imageUrl = imageUrl,
+                businessId = business.id,
+                size = null
+            };
+
+            response.Message = Resource.Resource.ResimYuklemeBasarili;
+            response.Data = await _businessGalleryService.SaveBusinessGalleryAsync(businessGallery);
+            BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -683,34 +575,22 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> DeleteGalleryPhoto([FromBody] string id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (!id.IsGuid())
             {
-                if (!id.IsGuid())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                    response.Message += Resource.Resource.IdParametreHatasi;
-                }
-
-                if (response.HasError)
-                    return Ok(response);
-
-                await _businessGalleryService.DeleteBusinessGalleryByIdAsync(id.ToGuid());
-                response.Message = Resource.Resource.KayitSilindi;
-                response.Data = true;
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
-                return Ok(response);
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                response.Message += Resource.Resource.IdParametreHatasi;
             }
+
+            if (response.HasError)
+                return Ok(response);
+
+            await _businessGalleryService.DeleteBusinessGalleryByIdAsync(id.ToGuid());
+            response.Message = Resource.Resource.KayitSilindi;
+            response.Data = true;
+
+            return Ok(response);
         }
 
 
@@ -722,20 +602,9 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Delete([FromBody] Business business)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
-            {
-                response.Data = await _businessService.DeleteBusinessAsync(business);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
-                response.HasError = true;
-                response.Message = $"{Resource.Resource.KayitSilinemedi} Exception => {ex.Message}";
-                return Ok(response);
-            }
+            response.Data = await _businessService.DeleteBusinessAsync(business);
+            return Ok(response);
         }
     }
 }

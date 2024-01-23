@@ -3,6 +3,7 @@ using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Model;
 using Microsoft.EntityFrameworkCore;
 using CareGardenApiV1.Model.ResponseModel;
+using CareGardenApiV1.Model.RequestModel;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -144,6 +145,42 @@ namespace CareGardenApiV1.Repository.Concrete
                     .Select(x => x.email)
                     .AsNoTracking()
                     .ToListAsync();
+            }
+        }
+
+        public async Task<List<UserAdminResponseModel>> GetUsersAsync(UserSearchAdminModel userSearchAdminModel)
+        {
+            using (var context = new CareGardenApiDbContext())
+            {
+                var list = await context.Users
+                .AsNoTracking()
+                .WhereIf(userSearchAdminModel.email.IsNotNullOrEmpty(), x => x.email.Equals(userSearchAdminModel.email))
+                .WhereIf(userSearchAdminModel.gender != Enums.Gender.Nothing, x => x.gender.Equals(userSearchAdminModel.gender))
+                .WhereIf(userSearchAdminModel.role.IsNotNullOrEmpty(), x => x.role.Equals(userSearchAdminModel.role))
+                .WhereIf(userSearchAdminModel.city.IsNotNullOrEmpty(), x => x.city.Equals(userSearchAdminModel.city))
+                .Select(x => new UserAdminResponseModel
+                {
+                    id = x.id,
+                    fullName = x.fullName,
+                    telephone = x.telephone,
+                    email = x.email,
+                    city = x.city,
+                    imageUrl = x.imageUrl,
+                    gender = (int)x.gender,
+                    birthDate = x.birthDate,
+                    createDate = x.createDate,
+                    isBan = x.isBan,
+                    complains = x.complains
+                })
+                .Skip(userSearchAdminModel.page * userSearchAdminModel.take)
+                .Take(userSearchAdminModel.take)
+                .ToListAsync();
+
+                var pageCount = list.Count;
+
+                list.ForEach(x => { x.itemCount = pageCount; });
+
+                return list;
             }
         }
     }

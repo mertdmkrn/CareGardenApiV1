@@ -13,7 +13,8 @@
         {
             Women,
             Men,
-            Unspecified
+            Unspecified,
+            Nothing
         }
 
         public enum ConfirmationType

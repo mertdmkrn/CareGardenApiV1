@@ -32,31 +32,19 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetById([FromBody] string id)
         {
             ResponseModel<BusinessProperties> response = new ResponseModel<BusinessProperties>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (!id.IsGuid())
             {
-                if (!id.IsGuid())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                    response.Message += Resource.Resource.IdParametreHatasi;
-                }
-
-                if (response.HasError)
-                    return Ok(response);
-
-                response.Data = await _businessPropertiesService.GetBusinessPropertiesByIdAsync(id.ToGuid());
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
-                return Ok(response);
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                response.Message += Resource.Resource.IdParametreHatasi;
             }
 
+            if (response.HasError)
+                return Ok(response);
+
+            response.Data = await _businessPropertiesService.GetBusinessPropertiesByIdAsync(id.ToGuid());
+            return Ok(response);
         }
 
         /// <summary>
@@ -67,31 +55,19 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetByBusinessId([FromBody] string businessId)
         {
             ResponseModel<List<BusinessProperties>> response = new ResponseModel<List<BusinessProperties>>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (!businessId.IsGuid())
             {
-                if (!businessId.IsGuid())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
-                    response.Message += Resource.Resource.IdParametreHatasi;
-                }
-
-                if (response.HasError)
-                    return Ok(response);
-
-                response.Data = await _businessPropertiesService.GetBusinessPropertiesByBusinessIdAsync(businessId.ToGuid());
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
-                return Ok(response);
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
+                response.Message += Resource.Resource.IdParametreHatasi;
             }
 
+            if (response.HasError)
+                return Ok(response);
+
+            response.Data = await _businessPropertiesService.GetBusinessPropertiesByBusinessIdAsync(businessId.ToGuid());
+            return Ok(response);
         }
 
 
@@ -103,31 +79,19 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetByBusinessIdWithKey([FromBody] string businessId, string key)
         {
             ResponseModel<BusinessProperties> response = new ResponseModel<BusinessProperties>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (!businessId.IsGuid())
             {
-                if (!businessId.IsGuid())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
-                    response.Message += Resource.Resource.IdParametreHatasi;
-                }
-
-                if (response.HasError)
-                    return Ok(response);
-
-                response.Data = await _businessPropertiesService.GetBusinessPropertiesByBusinessIdAndKeyAsync(businessId.ToGuid(), key);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
-                return Ok(response);
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
+                response.Message += Resource.Resource.IdParametreHatasi;
             }
 
+            if (response.HasError)
+                return Ok(response);
+
+            response.Data = await _businessPropertiesService.GetBusinessPropertiesByBusinessIdAndKeyAsync(businessId.ToGuid(), key);
+            return Ok(response);
         }
 
         /// <summary>
@@ -148,40 +112,29 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Save(BusinessProperties businessProperties)
         {
             ResponseModel<BusinessProperties> response = new ResponseModel<BusinessProperties>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (businessProperties.key.IsNullOrEmpty())
             {
-                if (businessProperties.key.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("key", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (businessProperties.value.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("value", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (response.HasError)
-                {
-                    response.Message = Resource.Resource.GuncellemeYapilamadi;
-                    return Ok(response);
-                }
-
-                response.Data = await _businessPropertiesService.SaveBusinessPropertiesAsync(businessProperties);
-                response.Message = Resource.Resource.KayitBasarili;
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("key", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (businessProperties.value.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("value", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.GuncellemeYapilamadi;
                 return Ok(response);
             }
+
+            response.Data = await _businessPropertiesService.SaveBusinessPropertiesAsync(businessProperties);
+            response.Message = Resource.Resource.KayitBasarili;
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -203,51 +156,40 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Update(BusinessProperties updateBusinessProperties)
         {
             ResponseModel<BusinessProperties> response = new ResponseModel<BusinessProperties>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (updateBusinessProperties.key.IsNullOrEmpty())
             {
-                if (updateBusinessProperties.key.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("key", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (updateBusinessProperties.value.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("value", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (response.HasError)
-                {
-                    response.Message = Resource.Resource.GuncellemeYapilamadi;
-                    return Ok(response);
-                }
-
-                var businessProperties = await _businessPropertiesService.GetBusinessPropertiesByIdAsync(updateBusinessProperties.id);
-
-                if (businessProperties == null)
-                {
-                    response.Message = updateBusinessProperties.id + " " + Resource.Resource.KayitBulunamadi;
-                    return Ok(response);
-                }
-
-                businessProperties.key = updateBusinessProperties.key;
-                businessProperties.value = updateBusinessProperties.value;
-
-                response.Data = await _businessPropertiesService.UpdateBusinessPropertiesAsync(businessProperties);
-                response.Message = Resource.Resource.KayitBasarili;
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("key", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (updateBusinessProperties.value.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("value", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.GuncellemeYapilamadi;
                 return Ok(response);
             }
+
+            var businessProperties = await _businessPropertiesService.GetBusinessPropertiesByIdAsync(updateBusinessProperties.id);
+
+            if (businessProperties == null)
+            {
+                response.Message = updateBusinessProperties.id + " " + Resource.Resource.KayitBulunamadi;
+                return Ok(response);
+            }
+
+            businessProperties.key = updateBusinessProperties.key;
+            businessProperties.value = updateBusinessProperties.value;
+
+            response.Data = await _businessPropertiesService.UpdateBusinessPropertiesAsync(businessProperties);
+            response.Message = Resource.Resource.KayitBasarili;
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -258,21 +200,10 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Delete([FromBody] BusinessProperties businessProperties)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
-            {
-                response.Data = await _businessPropertiesService.DeleteBusinessPropertiesAsync(businessProperties);
-                response.Message = Resource.Resource.KayitSilindi;
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
-                response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
-                return Ok(response);
-            }
+            response.Data = await _businessPropertiesService.DeleteBusinessPropertiesAsync(businessProperties);
+            response.Message = Resource.Resource.KayitSilindi;
+            return Ok(response);
         }
     }
 }

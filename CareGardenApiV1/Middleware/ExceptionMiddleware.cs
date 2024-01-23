@@ -1,5 +1,7 @@
 ﻿using CareGardenApiV1.Handler.Abstract;
+using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
+using System.Globalization;
 using System.Text.Json;
 
 namespace CareGardenApiV1.Middleware
@@ -7,18 +9,17 @@ namespace CareGardenApiV1.Middleware
     public class ExceptionMiddleware : IMiddleware
     {
         private readonly ILoggerHandler _loggerHandler;
-        private readonly IHostEnvironment _env;
 
-        public ExceptionMiddleware(ILoggerHandler loggerHandler, IHostEnvironment env)
+        public ExceptionMiddleware(ILoggerHandler loggerHandler)
         {
             _loggerHandler = loggerHandler;
-            _env = env;
         }
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try
             {
+                Resource.Resource.Culture = new CultureInfo(context.Request.Headers["Language"].ToString().IsNull("en"));
                 await next(context);
             }
             catch (Exception ex)
@@ -30,13 +31,12 @@ namespace CareGardenApiV1.Middleware
 
         private async Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
-            ResponseModel<string> response = new ResponseModel<string>();
+            ResponseModel<bool> response = new ResponseModel<bool>();
+            response.Message = $"Exception : {ex.Message} | {context.Request.Path}";
             response.HasError = true;
-            response.Message = "StatusCode : " + context.Response.StatusCode + ". " + ex.Message;
-            response.Data = ex.StackTrace;
 
-            var json = JsonSerializer.Serialize(response);
-            await context.Response.WriteAsync(json);
+            context.Response.StatusCode = 200;
+            await context.Response.WriteAsJsonAsync(response);
         }
     }
 }

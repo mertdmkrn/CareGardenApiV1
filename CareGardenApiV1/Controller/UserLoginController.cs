@@ -45,66 +45,56 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> SendTelephoneConfirmationCode([FromBody] string telephoneNumber)
         {
             ResponseModel<int> response = new ResponseModel<int>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
             int confirmationCode = new Random().Next(1000, 10000);
 
-            try
-            {
-                if (telephoneNumber.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("telephoneNumber", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (!telephoneNumber.IsValidTelephoneNumber())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("telephoneNumber", Resource.Resource.GecerliTelefonMesaji));
-                }
-
-
-                if (response.HasError)
-                {
-                    response.Message = Resource.Resource.OnayKoduGonderilemedi;
-                    response.HasError = true;
-                    return Ok(response);
-                }
-
-                var systemUser = await _userService.GetUserByTelephoneNumberAsync(telephoneNumber);
-
-                if (systemUser != null)
-                {
-                    response.HasError = true;
-                    response.Message += $"{Resource.Resource.GirdiginizTelefonNumarasinaAitKullaniciKayitli} {Resource.Resource.SifreYenilemeMesaji}";
-                    return Ok(response);
-                }
-
-                var systemConfirmationInfo = await _contirmationService.GetConfirmationInfo(telephoneNumber);
-
-                if (systemConfirmationInfo != null && systemConfirmationInfo.createDate.DifferenceBetweenDates(DateTime.Now, Enums.DateType.Minute) < 1)
-                {
-                    response.Message = Resource.Resource.BirDakikaIcindeOnayKoduMesaji;
-                    response.HasError = true;
-                    return Ok(response);
-                }
-
-                string smsMessage = string.Format(Resource.Resource.OnayMesaji, confirmationCode);
-
-                //var sendSms = await _smsHandler.SendSmsAsync(smsMessage, telephoneNumber);
-
-                await _contirmationService.SaveConfirmationInfoAsync(telephoneNumber, confirmationCode.ToString());
-
-                response.Message = $"{Resource.Resource.OnayKoduGonderildi} {smsMessage}";
-                response.Data = confirmationCode;
-
-                return Ok(response);
-            }
-            catch (Exception ex)
+            if (telephoneNumber.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.Message = $"{Resource.Resource.OnayKoduGonderilemedi} Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("telephoneNumber", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (!telephoneNumber.IsValidTelephoneNumber())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("telephoneNumber", Resource.Resource.GecerliTelefonMesaji));
+            }
+
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.OnayKoduGonderilemedi;
+                response.HasError = true;
                 return Ok(response);
             }
+
+            var systemUser = await _userService.GetUserByTelephoneNumberAsync(telephoneNumber);
+
+            if (systemUser != null)
+            {
+                response.HasError = true;
+                response.Message += $"{Resource.Resource.GirdiginizTelefonNumarasinaAitKullaniciKayitli} {Resource.Resource.SifreYenilemeMesaji}";
+                return Ok(response);
+            }
+
+            var systemConfirmationInfo = await _contirmationService.GetConfirmationInfo(telephoneNumber);
+
+            if (systemConfirmationInfo != null && systemConfirmationInfo.createDate.DifferenceBetweenDates(DateTime.Now, Enums.DateType.Minute) < 1)
+            {
+                response.Message = Resource.Resource.BirDakikaIcindeOnayKoduMesaji;
+                response.HasError = true;
+                return Ok(response);
+            }
+
+            string smsMessage = string.Format(Resource.Resource.OnayMesaji, confirmationCode);
+
+            //var sendSms = await _smsHandler.SendSmsAsync(smsMessage, telephoneNumber);
+
+            await _contirmationService.SaveConfirmationInfoAsync(telephoneNumber, confirmationCode.ToString());
+
+            response.Message = $"{Resource.Resource.OnayKoduGonderildi} {smsMessage}";
+            response.Data = confirmationCode;
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -115,75 +105,63 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> SendEmailConfirmationCode([FromBody] string email)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
             int confirmationCode = new Random().Next(1000, 10000);
 
-            try
+            if (email.IsNullOrEmpty())
             {
-                if (email.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (!email.IsValidEmail())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.GecerliMailMesaji));
-                }
-
-                if (response.HasError)
-                {
-                    response.Message = Resource.Resource.OnayKoduGonderilemedi;
-                    return Ok(response);
-                }
-
-                var user = await _userService.GetUserByEmailAsync(email);
-
-                if (user == null)
-                {
-                    response.HasError = true;
-                    response.Message += Resource.Resource.GirdiginizMaileAitKullaniciBulunamadi;
-                    return Ok(response);
-                }
-
-                var systemConfirmationInfo = await _contirmationService.GetConfirmationInfo(email);
-
-                if (systemConfirmationInfo != null && Math.Abs(systemConfirmationInfo.createDate.DifferenceBetweenDates(DateTime.Now, Enums.DateType.Minute)) < 1)
-                {
-                    response.Message = Resource.Resource.BirDakikaIcindeOnayKoduMesaji;
-                    response.HasError = true;
-                    return Ok(response);
-                }
-
-                string mailMessage = HelperMethods.GetMailTemplate();
-
-                string content = string.Format(Resource.Resource.SifreYenilemeMailMesaji, confirmationCode);
-
-                var mailRequest = new MailRequest()
-                {
-                    ToEmailList = new List<string> { email },
-                    Subject = $"CareGarden {Resource.Resource.SifreYenileme}",
-                    Body = mailMessage.Replace("{content}", content)
-                };
-
-                BackgroundJob.Enqueue(() => _mailHandler.SendEmailAsync(mailRequest));
-
-                await _contirmationService.SaveConfirmationInfoAsync(email, confirmationCode.ToString());
-
-                response.Message = Resource.Resource.OnayKoduGonderildi;
-                response.Data = true;
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"{Resource.Resource.OnayKoduGonderilemedi} Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (!email.IsValidEmail())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.GecerliMailMesaji));
+            }
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.OnayKoduGonderilemedi;
                 return Ok(response);
             }
 
+            var user = await _userService.GetUserByEmailAsync(email);
+
+            if (user == null)
+            {
+                response.HasError = true;
+                response.Message += Resource.Resource.GirdiginizMaileAitKullaniciBulunamadi;
+                return Ok(response);
+            }
+
+            var systemConfirmationInfo = await _contirmationService.GetConfirmationInfo(email);
+
+            if (systemConfirmationInfo != null && Math.Abs(systemConfirmationInfo.createDate.DifferenceBetweenDates(DateTime.Now, Enums.DateType.Minute)) < 1)
+            {
+                response.Message = Resource.Resource.BirDakikaIcindeOnayKoduMesaji;
+                response.HasError = true;
+                return Ok(response);
+            }
+
+            string mailMessage = HelperMethods.GetMailTemplate();
+
+            string content = string.Format(Resource.Resource.SifreYenilemeMailMesaji, confirmationCode);
+
+            var mailRequest = new MailRequest()
+            {
+                ToEmailList = new List<string> { email },
+                Subject = $"CareGarden {Resource.Resource.SifreYenileme}",
+                Body = mailMessage.Replace("{content}", content)
+            };
+
+            BackgroundJob.Enqueue(() => _mailHandler.SendEmailAsync(mailRequest));
+
+            await _contirmationService.SaveConfirmationInfoAsync(email, confirmationCode.ToString());
+
+            response.Message = Resource.Resource.OnayKoduGonderildi;
+            response.Data = true;
+
+            return Ok(response);
         }
 
 
@@ -204,73 +182,61 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> VerifyConfirmationCode([FromBody] ConfirmationInfo confirmationInfo)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
             int confirmationCode = new Random().Next(1000, 10000);
 
-            try
+            if (confirmationInfo.target.IsNullOrEmpty())
             {
-                if (confirmationInfo.target.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("target", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (confirmationInfo.code.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("code", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (!confirmationInfo.target.IsValidEmail() && !confirmationInfo.target.IsValidTelephoneNumber())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("target", Resource.Resource.GecerliMailTelefonMesaji));
-                }
-
-                if (response.HasError)
-                {
-                    response.Message = Resource.Resource.OnayKoduDogrulanamadi;
-                    return Ok(response);
-                }
-
-                var systemConfirmationInfo = await _contirmationService.GetConfirmationInfo(confirmationInfo.target);
-
-                if (systemConfirmationInfo == null)
-                {
-                    response.HasError = true;
-                    response.Message += Resource.Resource.OnayKoduDogrulanamadi;
-                    return Ok(response);
-                }
-
-                if (systemConfirmationInfo.code != confirmationInfo.code)
-                {
-                    response.Message = Resource.Resource.OnayKoduDogrulanamadi;
-                    response.HasError = true;
-                    return Ok(response);
-                }
-
-                if (systemConfirmationInfo.createDate.DifferenceBetweenDates(DateTime.Now, Enums.DateType.Minute) > 1)
-                {
-                    response.Message = Resource.Resource.OnayKoduZamanAsiminaUgradi;
-                    response.HasError = true;
-                    return Ok(response);
-                }
-
-                response.Message = Resource.Resource.OnayKoduDogrulandi;
-                systemConfirmationInfo.createDate = systemConfirmationInfo.createDate.Value.AddDays(-1);
-                await _contirmationService.SaveConfirmationInfoAsync(systemConfirmationInfo);
-                response.Data = true;
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"{Resource.Resource.OnayKoduGonderilemedi} Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("target", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (confirmationInfo.code.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("code", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (!confirmationInfo.target.IsValidEmail() && !confirmationInfo.target.IsValidTelephoneNumber())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("target", Resource.Resource.GecerliMailTelefonMesaji));
+            }
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.OnayKoduDogrulanamadi;
                 return Ok(response);
             }
 
+            var systemConfirmationInfo = await _contirmationService.GetConfirmationInfo(confirmationInfo.target);
+
+            if (systemConfirmationInfo == null)
+            {
+                response.HasError = true;
+                response.Message += Resource.Resource.OnayKoduDogrulanamadi;
+                return Ok(response);
+            }
+
+            if (systemConfirmationInfo.code != confirmationInfo.code)
+            {
+                response.Message = Resource.Resource.OnayKoduDogrulanamadi;
+                response.HasError = true;
+                return Ok(response);
+            }
+
+            if (systemConfirmationInfo.createDate.DifferenceBetweenDates(DateTime.Now, Enums.DateType.Minute) > 1)
+            {
+                response.Message = Resource.Resource.OnayKoduZamanAsiminaUgradi;
+                response.HasError = true;
+                return Ok(response);
+            }
+
+            response.Message = Resource.Resource.OnayKoduDogrulandi;
+            systemConfirmationInfo.createDate = systemConfirmationInfo.createDate.Value.AddDays(-1);
+            await _contirmationService.SaveConfirmationInfoAsync(systemConfirmationInfo);
+            response.Data = true;
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -293,93 +259,90 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Save([FromBody] User user)
         {
             ResponseModel<Token> response = new ResponseModel<Token>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (user.email.IsNullOrEmpty())
             {
-                if (user.email.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
 
-                if (!user.email.IsNullOrEmpty() && !user.email.IsValidEmail())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.GecerliMailMesaji));
-                }
+            if (!user.email.IsNullOrEmpty() && !user.email.IsValidEmail())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.GecerliMailMesaji));
+            }
 
-                if (!user.telephone.IsValidTelephoneNumber())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("telephoneNumber", Resource.Resource.GecerliTelefonMesaji));
-                }
+            if (!user.telephone.IsValidTelephoneNumber())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("telephoneNumber", Resource.Resource.GecerliTelefonMesaji));
+            }
 
-                if (user.password.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
+            if (user.password.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
 
 
-                if (user.retryPassword.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
+            if (user.retryPassword.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
 
-                if (user.password.IsNotNullOrEmpty() && !user.password.Length.Between(8, 20))
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.Sifre8KarakterOlmali));
-                }
+            if (user.password.IsNotNullOrEmpty() && !user.password.Length.Between(8, 20))
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.Sifre8KarakterOlmali));
+            }
 
-                if (user.retryPassword.IsNotNullOrEmpty() && !user.retryPassword.Length.Between(8, 20))
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.Sifre8KarakterOlmali));
-                }
+            if (user.retryPassword.IsNotNullOrEmpty() && !user.retryPassword.Length.Between(8, 20))
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.Sifre8KarakterOlmali));
+            }
 
 
-                if (!user.password.IsNullOrEmpty() && !user.password.Equals(user.retryPassword))
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.SifrelerEsitOlmali));
-                    response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.SifrelerEsitOlmali));
-                }
+            if (!user.password.IsNullOrEmpty() && !user.password.Equals(user.retryPassword))
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.SifrelerEsitOlmali));
+                response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.SifrelerEsitOlmali));
+            }
 
-                if (user.fullName.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("fullName", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
+            if (user.fullName.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("fullName", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
 
-                if (!user.fullName.IsNullOrEmpty() && !user.fullName.IsValidFullName())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("fullName", Resource.Resource.GecerliBirIsimGiriniz));
-                }
+            if (!user.fullName.IsNullOrEmpty() && !user.fullName.IsValidFullName())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("fullName", Resource.Resource.GecerliBirIsimGiriniz));
+            }
 
-                if (response.HasError)
-                {
-                    response.Message = Resource.Resource.KayitYapilamadi;
-                    return Ok(response);
-                }
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.KayitYapilamadi;
+                return Ok(response);
+            }
 
-                var systemUser = await _userService.GetUserByEmailAsync(user.email);
+            var systemUser = await _userService.GetUserByEmailAsync(user.email);
 
-                if (systemUser != null)
-                {
-                    response.HasError = true;
-                    response.Message += Resource.Resource.GirdiginizMaileAitKullaniciKayitli;
-                    return Ok(response);
-                }
+            if (systemUser != null)
+            {
+                response.HasError = true;
+                response.Message += Resource.Resource.GirdiginizMaileAitKullaniciKayitli;
+                return Ok(response);
+            }
 
-                user = await _userService.SaveUserAsync(user);
+            user = await _userService.SaveUserAsync(user);
 
-                response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.KayitBasarili;
 
-                var claims = new List<Claim>() {
+            var claims = new List<Claim>() {
                     new Claim(ClaimTypes.Name, user.fullName),
                     new Claim(ClaimTypes.PrimarySid, user.id.ToString()),
                     new Claim(ClaimTypes.Email, user.email),
@@ -387,17 +350,9 @@ namespace CareGardenApiV1.Controller
                     new Claim(ClaimTypes.Role, user.role)
                 };
 
-                response.Data = _tokenHandler.CreateAccessToken(DateTime.Now.AddDays(60), claims);
+            response.Data = _tokenHandler.CreateAccessToken(DateTime.Now.AddDays(60), claims);
 
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
-                response.HasError = true;
-                response.Message = $"{Resource.Resource.KayitYapilamadi} Exception => {ex.Message}";
-                return Ok(response);
-            }
+            return Ok(response);
         }
 
         /// <summary>
@@ -419,48 +374,46 @@ namespace CareGardenApiV1.Controller
             ResponseModel<Token> response = new ResponseModel<Token>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (loginUser.email.IsNullOrEmpty())
             {
-                if (loginUser.email.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
 
-                if (!loginUser.email.IsNullOrEmpty() && !loginUser.email.IsValidEmail())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.GecerliMailMesaji));
-                }
+            if (!loginUser.email.IsNullOrEmpty() && !loginUser.email.IsValidEmail())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.GecerliMailMesaji));
+            }
 
-                if (loginUser.password.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
+            if (loginUser.password.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
 
-                if (loginUser.password.IsNotNullOrEmpty() && !loginUser.password.Length.Between(8, 20))
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.Sifre8KarakterOlmali));
-                }
+            if (loginUser.password.IsNotNullOrEmpty() && !loginUser.password.Length.Between(8, 20))
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.Sifre8KarakterOlmali));
+            }
 
-                if (response.HasError)
-                {
-                    response.Message = Resource.Resource.GirisYapilamadi;
-                    return Ok(response);
-                }
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.GirisYapilamadi;
+                return Ok(response);
+            }
 
-                var user = await _userService.GetUserByEmailAndPasswordAsync(loginUser.email, loginUser.password);
+            var user = await _userService.GetUserByEmailAndPasswordAsync(loginUser.email, loginUser.password);
 
-                if (user == null)
-                {
-                    response.HasError = true;
-                    response.Message = Resource.Resource.GirilenBilgilereAitKullaniciBulunamadi;
-                    return Ok(response);
-                }
+            if (user == null)
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.GirilenBilgilereAitKullaniciBulunamadi;
+                return Ok(response);
+            }
 
-                var claims = new List<Claim>() {
+            var claims = new List<Claim>() {
                     new Claim(ClaimTypes.Name, user.fullName),
                     new Claim(ClaimTypes.PrimarySid, user.id.ToString()),
                     new Claim(ClaimTypes.Email, user.email),
@@ -468,19 +421,11 @@ namespace CareGardenApiV1.Controller
                     new Claim(ClaimTypes.Role, user.role)
                 };
 
-                response.Data = _tokenHandler.CreateAccessToken(DateTime.Now.AddDays(60), claims);
-                response.Message = Resource.Resource.GirisBasarili;
-                _loggerHandler.LogMessage($"{user.fullName} {Resource.Resource.GirisBasarili}");
+            response.Data = _tokenHandler.CreateAccessToken(DateTime.Now.AddDays(60), claims);
+            response.Message = Resource.Resource.GirisBasarili;
+            _loggerHandler.LogMessage($"{user.fullName} {Resource.Resource.GirisBasarili}");
 
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
-                response.HasError = true;
-                response.Message = $"{Resource.Resource.GirisYapilamadi} Exception => {ex.Message}";
-                return Ok(response);
-            }
+            return Ok(response);
         }
 
         /// <summary>
@@ -502,81 +447,78 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> PasswordReset([FromBody] PasswordResetModel updateUser)
         {
             ResponseModel<Token> response = new ResponseModel<Token>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (updateUser.email.IsNullOrEmpty())
             {
-                if (updateUser.email.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
 
-                if (updateUser.password.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
+            if (updateUser.password.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
 
-                if (updateUser.retryPassword.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
+            if (updateUser.retryPassword.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
 
-                if (updateUser.password.IsNotNullOrEmpty() && !updateUser.password.Length.Between(8, 20))
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.Sifre8KarakterOlmali));
-                }
+            if (updateUser.password.IsNotNullOrEmpty() && !updateUser.password.Length.Between(8, 20))
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.Sifre8KarakterOlmali));
+            }
 
-                if (updateUser.retryPassword.IsNotNullOrEmpty() && !updateUser.retryPassword.Length.Between(8, 20))
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.Sifre8KarakterOlmali));
-                }
+            if (updateUser.retryPassword.IsNotNullOrEmpty() && !updateUser.retryPassword.Length.Between(8, 20))
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.Sifre8KarakterOlmali));
+            }
 
-                if (!updateUser.password.Equals(updateUser.retryPassword))
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.SifrelerEsitOlmali));
-                    response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.SifrelerEsitOlmali));
-                }
+            if (!updateUser.password.Equals(updateUser.retryPassword))
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.SifrelerEsitOlmali));
+                response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.SifrelerEsitOlmali));
+            }
 
-                if (updateUser.verifiedCode.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("verifiedCode", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
+            if (updateUser.verifiedCode.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("verifiedCode", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
 
-                if (response.HasError)
-                {
-                    response.Message = Resource.Resource.SifreYenilemedi;
-                    return Ok(response);
-                }
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.SifreYenilemedi;
+                return Ok(response);
+            }
 
-                var user = await _userService.GetUserByEmailAsync(updateUser.email);
+            var user = await _userService.GetUserByEmailAsync(updateUser.email);
 
-                if (user == null)
-                {
-                    response.HasError = true;
-                    response.Message = Resource.Resource.GirilenBilgilereAitKullaniciBulunamadi;
-                    return Ok(response);
-                }
+            if (user == null)
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.GirilenBilgilereAitKullaniciBulunamadi;
+                return Ok(response);
+            }
 
-                var systemConfirmationInfo = await _contirmationService.GetConfirmationInfo(updateUser.email);
+            var systemConfirmationInfo = await _contirmationService.GetConfirmationInfo(updateUser.email);
 
-                if (systemConfirmationInfo == null || !systemConfirmationInfo.code.IsNull("").Equals(updateUser.verifiedCode))
-                {
-                    response.HasError = true;
-                    response.Message = $"{Resource.Resource.OnayKoduDogrulanamadi} {Resource.Resource.SifreYenilemedi}";
-                    return Ok(response);
-                }
+            if (systemConfirmationInfo == null || !systemConfirmationInfo.code.IsNull("").Equals(updateUser.verifiedCode))
+            {
+                response.HasError = true;
+                response.Message = $"{Resource.Resource.OnayKoduDogrulanamadi} {Resource.Resource.SifreYenilemedi}";
+                return Ok(response);
+            }
 
-                user.password = updateUser.password;
-                await _userService.UpdateUserAsync(user);
+            user.password = updateUser.password;
+            await _userService.UpdateUserAsync(user);
 
-                var claims = new List<Claim>() {
+            var claims = new List<Claim>() {
                     new Claim(ClaimTypes.Name, user.fullName),
                     new Claim(ClaimTypes.PrimarySid, user.id.ToString()),
                     new Claim(ClaimTypes.Email, user.email),
@@ -584,18 +526,10 @@ namespace CareGardenApiV1.Controller
                     new Claim(ClaimTypes.Role, user.role)
                 };
 
-                response.Data = _tokenHandler.CreateAccessToken(DateTime.Now.AddDays(60), claims);
-                response.Message = Resource.Resource.SifreYenilemeBasarili;
+            response.Data = _tokenHandler.CreateAccessToken(DateTime.Now.AddDays(60), claims);
+            response.Message = Resource.Resource.SifreYenilemeBasarili;
 
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
-                response.HasError = true;
-                response.Message = $"{Resource.Resource.KayitYapilamadi} Exception => {ex.Message}";
-                return Ok(response);
-            }
+            return Ok(response);
         }
 
         /// <summary>
@@ -615,50 +549,47 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> AdminLogin([FromBody] User loginUser)
         {
             ResponseModel<Token> response = new ResponseModel<Token>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (loginUser.email.IsNullOrEmpty())
             {
-                if (loginUser.email.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
 
-                if (!loginUser.email.IsNullOrEmpty() && !loginUser.email.IsValidEmail())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.GecerliMailMesaji));
-                }
+            if (!loginUser.email.IsNullOrEmpty() && !loginUser.email.IsValidEmail())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.GecerliMailMesaji));
+            }
 
-                if (loginUser.password.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
+            if (loginUser.password.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
 
-                if (loginUser.password.IsNotNullOrEmpty() && !loginUser.password.Length.Between(8, 20))
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.Sifre8KarakterOlmali));
-                }
+            if (loginUser.password.IsNotNullOrEmpty() && !loginUser.password.Length.Between(8, 20))
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.Sifre8KarakterOlmali));
+            }
 
-                if (response.HasError)
-                {
-                    response.Message = Resource.Resource.GirisYapilamadi;
-                    return Ok(response);
-                }
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.GirisYapilamadi;
+                return Ok(response);
+            }
 
-                var user = await _userService.GetAdminByEmailAndPasswordAsync(loginUser.email, loginUser.password);
+            var user = await _userService.GetAdminByEmailAndPasswordAsync(loginUser.email, loginUser.password);
 
-                if (user == null)
-                {
-                    response.HasError = true;
-                    response.Message = Resource.Resource.GirilenBilgilereAitKullaniciBulunamadi;
-                    return Ok(response);
-                }
+            if (user == null)
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.GirilenBilgilereAitKullaniciBulunamadi;
+                return Ok(response);
+            }
 
-                var claims = new List<Claim>() {
+            var claims = new List<Claim>() {
                     new Claim(ClaimTypes.Name, user.fullName),
                     new Claim(ClaimTypes.PrimarySid, user.id.ToString()),
                     new Claim(ClaimTypes.Email, user.email),
@@ -666,19 +597,11 @@ namespace CareGardenApiV1.Controller
                     new Claim(ClaimTypes.Role, user.role)
                 };
 
-                response.Data = _tokenHandler.CreateAccessToken(DateTime.Now.AddDays(60), claims);
-                response.Message = Resource.Resource.GirisBasarili;
-                _loggerHandler.LogMessage(user.fullName + " " + Resource.Resource.GirisBasarili);
+            response.Data = _tokenHandler.CreateAccessToken(DateTime.Now.AddDays(60), claims);
+            response.Message = Resource.Resource.GirisBasarili;
+            _loggerHandler.LogMessage(user.fullName + " " + Resource.Resource.GirisBasarili);
 
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
-                response.HasError = true;
-                response.Message = $"{Resource.Resource.GirisYapilamadi} Exception => {ex.Message}";
-                return Ok(response);
-            }
+            return Ok(response);
         }
     }
 }

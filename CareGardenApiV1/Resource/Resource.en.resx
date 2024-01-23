@@ -126,6 +126,9 @@
   <data name="ElasticIndexlemeIslemiBasladi" xml:space="preserve">
     <value>Elastic indexing process started in the background.</value>
   </data>
+  <data name="ElasticSunucusuAktifDegil" xml:space="preserve">
+    <value />
+  </data>
   <data name="GecerliBirIsimGiriniz" xml:space="preserve">
     <value>Please enter a valid fullname.</value>
   </data>

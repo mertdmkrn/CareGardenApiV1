@@ -39,33 +39,21 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetAll()
         {
             ResponseModel<List<Campaign>> response = new ResponseModel<List<Campaign>>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (_memoryCache.TryGetValue(cacheKey, out object list))
             {
-                if (_memoryCache.TryGetValue(cacheKey, out object list))
-                {
-                    response.Data = (List<Campaign>)list;
-                }
-                else
-                {
-                    response.Data = await _campaignService.GetCampaignsAsync();
-                    _memoryCache.Set(cacheKey, response.Data, new MemoryCacheEntryOptions
-                    {
-                        Priority = CacheItemPriority.Normal
-                    });
-                }
-
-                return Ok(response);
-
+                response.Data = (List<Campaign>)list;
             }
-            catch (Exception ex)
+            else
             {
-                _loggerHandler.LogMessage(ex);
-                response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
-                return Ok(response);
+                response.Data = await _campaignService.GetCampaignsAsync();
+                _memoryCache.Set(cacheKey, response.Data, new MemoryCacheEntryOptions
+                {
+                    Priority = CacheItemPriority.Normal
+                });
             }
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -76,39 +64,27 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetByBusinessId([FromBody] string businessId)
         {
             ResponseModel<List<Campaign>> response = new ResponseModel<List<Campaign>>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (!businessId.IsGuid())
             {
-                if (!businessId.IsGuid())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                    response.Message = Resource.Resource.IdParametreHatasi;
-                }
-
-                if (response.HasError)
-                    return Ok(response);
-
-                response.Data = await _campaignService.GetCampaignByBusinessIdAsync(businessId.ToGuidNullable());
-
-                if (response.Data == null)
-                {
-                    response.HasError = true;
-                    response.Message = $"{businessId} id {Resource.Resource.KayitBulunamadi}";
-                    return Ok(response);
-                }
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                response.Message = Resource.Resource.IdParametreHatasi;
+            }
+
+            if (response.HasError)
+                return Ok(response);
+
+            response.Data = await _campaignService.GetCampaignByBusinessIdAsync(businessId.ToGuidNullable());
+
+            if (response.Data == null)
+            {
+                response.HasError = true;
+                response.Message = $"{businessId} id {Resource.Resource.KayitBulunamadi}";
                 return Ok(response);
             }
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -119,39 +95,27 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetById([FromBody] string id)
         {
             ResponseModel<Campaign> response = new ResponseModel<Campaign>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (!id.IsGuid())
             {
-                if (!id.IsGuid())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                    response.Message = Resource.Resource.IdParametreHatasi;
-                }
-
-                if (response.HasError)
-                    return Ok(response);
-
-                response.Data = await _campaignService.GetCampaignByIdAsync(id.ToGuid());
-
-                if (response.Data == null)
-                {
-                    response.HasError = true;
-                    response.Message = $"{id} id {Resource.Resource.KayitBulunamadi}";
-                    return Ok(response);
-                }
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                response.Message = Resource.Resource.IdParametreHatasi;
+            }
+
+            if (response.HasError)
+                return Ok(response);
+
+            response.Data = await _campaignService.GetCampaignByIdAsync(id.ToGuid());
+
+            if (response.Data == null)
+            {
+                response.HasError = true;
+                response.Message = $"{id} id {Resource.Resource.KayitBulunamadi}";
                 return Ok(response);
             }
+
+            return Ok(response);
         }
 
 
@@ -175,41 +139,30 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Save([FromBody] Campaign campaign)
         {
             ResponseModel<Campaign> response = new ResponseModel<Campaign>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
-            
-            try
+
+            if (campaign.path.IsNullOrEmpty())
             {
-                if (campaign.path.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("path", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (campaign.url.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("url", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (response.HasError)
-                {
-                    response.Message = Resource.Resource.KayitYapilamadi;
-                    return Ok(response);
-                }
-
-                campaign = await _campaignService.SaveCampaignAsync(campaign);
-                response.Data = campaign;
-                _memoryCache.Remove(cacheKey);
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"{Resource.Resource.KayitYapilamadi} Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("path", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (campaign.url.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("url", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.KayitYapilamadi;
                 return Ok(response);
             }
+
+            campaign = await _campaignService.SaveCampaignAsync(campaign);
+            response.Data = campaign;
+            _memoryCache.Remove(cacheKey);
+
+            return Ok(response);
         }
 
 
@@ -235,56 +188,45 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Update([FromBody] Campaign updateCampaign)
         {
             ResponseModel<Campaign> response = new ResponseModel<Campaign>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (updateCampaign.path.IsNullOrEmpty())
             {
-                if (updateCampaign.path.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("path", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (updateCampaign.url.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("url", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (response.HasError)
-                {
-                    response.Message = Resource.Resource.GuncellemeYapilamadi;
-                    return Ok(response);
-                }
-
-                Campaign campaign = await _campaignService.GetCampaignByIdAsync(updateCampaign.id);
-
-                if (campaign == null)
-                {
-                    response.HasError = true;
-                    response.Message += $"{updateCampaign.id} id {Resource.Resource.KayitBulunamadi}";
-                    return Ok(response);
-                }
-
-                campaign.path = updateCampaign.path;
-                campaign.url = updateCampaign.url;
-                campaign.businessId = updateCampaign.businessId;
-                campaign.isActive = updateCampaign.isActive;
-                campaign.sortOrder = updateCampaign.sortOrder;
-
-                campaign = await _campaignService.UpdateCampaignAsync(campaign);
-                response.Data = campaign;
-                _memoryCache.Remove(cacheKey);
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"{Resource.Resource.GuncellemeYapilamadi} Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("path", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (updateCampaign.url.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("url", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.GuncellemeYapilamadi;
                 return Ok(response);
             }
+
+            Campaign campaign = await _campaignService.GetCampaignByIdAsync(updateCampaign.id);
+
+            if (campaign == null)
+            {
+                response.HasError = true;
+                response.Message += $"{updateCampaign.id} id {Resource.Resource.KayitBulunamadi}";
+                return Ok(response);
+            }
+
+            campaign.path = updateCampaign.path;
+            campaign.url = updateCampaign.url;
+            campaign.businessId = updateCampaign.businessId;
+            campaign.isActive = updateCampaign.isActive;
+            campaign.sortOrder = updateCampaign.sortOrder;
+
+            campaign = await _campaignService.UpdateCampaignAsync(campaign);
+            response.Data = campaign;
+            _memoryCache.Remove(cacheKey);
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -296,43 +238,32 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Delete([FromBody] string id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (!id.IsGuid())
             {
-                if (!id.IsGuid())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                }
-
-                if (response.HasError)
-                {
-                    response.Message = Resource.Resource.KayitSilinemedi;
-                    return Ok(response);
-                }
-
-                Campaign campaign = await _campaignService.GetCampaignByIdAsync(id.ToGuid());
-
-                if (campaign == null)
-                {
-                    response.HasError = true;
-                    response.Message += $"{id} id {Resource.Resource.KayitBulunamadi}";
-                    return Ok(response);
-                }
-
-                response.Data = await _campaignService.DeleteCampaignAsync(campaign);
-                _memoryCache.Remove(cacheKey);
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"{Resource.Resource.KayitSilinemedi} Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+            }
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.KayitSilinemedi;
                 return Ok(response);
             }
+
+            Campaign campaign = await _campaignService.GetCampaignByIdAsync(id.ToGuid());
+
+            if (campaign == null)
+            {
+                response.HasError = true;
+                response.Message += $"{id} id {Resource.Resource.KayitBulunamadi}";
+                return Ok(response);
+            }
+
+            response.Data = await _campaignService.DeleteCampaignAsync(campaign);
+            _memoryCache.Remove(cacheKey);
+
+            return Ok(response);
         }
     }
 }

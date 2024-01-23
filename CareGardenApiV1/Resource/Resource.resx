@@ -126,6 +126,9 @@
   <data name="ElasticIndexlemeIslemiBasladi" xml:space="preserve">
     <value>Elastic indexleme işlemi arkaplanda başlamıştır.</value>
   </data>
+  <data name="ElasticSunucusuAktifDegil" xml:space="preserve">
+    <value>Elastic server is not active.</value>
+  </data>
   <data name="GecerliBirIsimGiriniz" xml:space="preserve">
     <value>Geçerli bir isim giriniz.</value>
   </data>

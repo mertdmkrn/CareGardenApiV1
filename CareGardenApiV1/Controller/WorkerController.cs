@@ -44,29 +44,17 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetById([FromBody] string? id)
         {
             ResponseModel<Worker> response = new ResponseModel<Worker>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (id.IsNullOrEmpty() || !id.IsGuid())
             {
-                if (id.IsNullOrEmpty() || !id.IsGuid())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                    response.Message = Resource.Resource.KayitBulunamadi;
-                    return Ok(response);
-                }
-
-                response.Data = await _workerService.GetWorkerByIdAsync(id.ToGuid());
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                response.Message = Resource.Resource.KayitBulunamadi;
                 return Ok(response);
             }
+
+            response.Data = await _workerService.GetWorkerByIdAsync(id.ToGuid());
+            return Ok(response);
         }
 
         /// <summary>
@@ -85,29 +73,17 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetByBusinessId([FromBody] string? businessId)
         {
             ResponseModel<List<Worker>> response = new ResponseModel<List<Worker>>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (businessId.IsNullOrEmpty() || !businessId.IsGuid())
             {
-                if (businessId.IsNullOrEmpty() || !businessId.IsGuid())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
-                    response.Message = Resource.Resource.KayitBulunamadi;
-                    return Ok(response);
-                }
-
-                response.Data = await _workerService.GetWorkersByBusinessIdAsync(businessId.ToGuid());
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
+                response.Message = Resource.Resource.KayitBulunamadi;
                 return Ok(response);
             }
+
+            response.Data = await _workerService.GetWorkersByBusinessIdAsync(businessId.ToGuid());
+            return Ok(response);
         }
 
         /// <summary>
@@ -126,29 +102,17 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetByBusinessServiceId([FromBody] string? businessServiceId)
         {
             ResponseModel<List<Worker>> response = new ResponseModel<List<Worker>>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (businessServiceId.IsNullOrEmpty() || !businessServiceId.IsGuid())
             {
-                if (businessServiceId.IsNullOrEmpty() || !businessServiceId.IsGuid())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("businessServiceId", Resource.Resource.IdParametreHatasi));
-                    response.Message = Resource.Resource.KayitBulunamadi;
-                    return Ok(response);
-                }
-
-                response.Data = await _workerService.GetWorkersByBusinessServiceIdAsync(businessServiceId.ToGuid());
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("businessServiceId", Resource.Resource.IdParametreHatasi));
+                response.Message = Resource.Resource.KayitBulunamadi;
                 return Ok(response);
             }
+
+            response.Data = await _workerService.GetWorkersByBusinessServiceIdAsync(businessServiceId.ToGuid());
+            return Ok(response);
         }
 
         /// <summary>
@@ -171,53 +135,42 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Save([FromBody] Worker worker)
         {
             ResponseModel<Worker> response = new ResponseModel<Worker>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (worker.name.IsNullOrEmpty())
             {
-                if (worker.name.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("name", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (worker.title.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("replyId", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (!worker.businessId.HasValue)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (worker.serviceIds.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("serviceIds", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (response.HasError)
-                {
-                    response.Message = Resource.Resource.KayitYapilamadi;
-                    return Ok(response);
-                }
-
-                worker.createdUserId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid).ToGuid();
-
-                response.Data = await _workerService.SaveWorkerAsync(worker);
-                response.Message = Resource.Resource.KayitBasarili;
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("name", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (worker.title.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("replyId", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (!worker.businessId.HasValue)
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (worker.serviceIds.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("serviceIds", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.KayitYapilamadi;
                 return Ok(response);
             }
+
+            worker.createdUserId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid).ToGuid();
+
+            response.Data = await _workerService.SaveWorkerAsync(worker);
+            response.Message = Resource.Resource.KayitBasarili;
+            return Ok(response);
         }
 
         /// <summary>
@@ -243,68 +196,57 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Update([FromBody] Worker updateWorker)
         {
             ResponseModel<Worker> response = new ResponseModel<Worker>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (updateWorker.name.IsNullOrEmpty())
             {
-                if (updateWorker.name.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("name", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (updateWorker.title.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("replyId", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (!updateWorker.businessId.HasValue)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (updateWorker.serviceIds.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("serviceIds", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (response.HasError)
-                {
-                    response.Message = Resource.Resource.KayitYapilamadi;
-                    return Ok(response);
-                }
-
-                Worker worker = await _workerService.GetWorkerByIdAsync(updateWorker.id);
-
-                if (worker == null)
-                {
-                    response.Message = Resource.Resource.KayitBulunamadi;
-                    return Ok(response);
-                }
-
-                worker.name = updateWorker.name;
-                worker.title = updateWorker.title;
-                worker.path = updateWorker.path;
-                worker.businessId = updateWorker.businessId;
-                worker.serviceIds = updateWorker.serviceIds;
-                worker.createdUserId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid).ToGuid();
-                worker.isActive = updateWorker.isActive;
-                worker.isAvailable = updateWorker.isAvailable;
-     
-                response.Data = await _workerService.UpdateWorkerAsync(worker);
-                response.Message = Resource.Resource.KayitBasarili;
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("name", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (updateWorker.title.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("replyId", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (!updateWorker.businessId.HasValue)
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (updateWorker.serviceIds.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("serviceIds", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.KayitYapilamadi;
                 return Ok(response);
             }
+
+            Worker worker = await _workerService.GetWorkerByIdAsync(updateWorker.id);
+
+            if (worker == null)
+            {
+                response.Message = Resource.Resource.KayitBulunamadi;
+                return Ok(response);
+            }
+
+            worker.name = updateWorker.name;
+            worker.title = updateWorker.title;
+            worker.path = updateWorker.path;
+            worker.businessId = updateWorker.businessId;
+            worker.serviceIds = updateWorker.serviceIds;
+            worker.createdUserId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid).ToGuid();
+            worker.isActive = updateWorker.isActive;
+            worker.isAvailable = updateWorker.isAvailable;
+
+            response.Data = await _workerService.UpdateWorkerAsync(worker);
+            response.Message = Resource.Resource.KayitBasarili;
+            return Ok(response);
         }
 
         /// <summary>
@@ -323,31 +265,19 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Delete([FromBody] string? id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (id.IsNullOrEmpty() || !id.IsGuid())
             {
-                if (id.IsNullOrEmpty() || !id.IsGuid())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                    response.Message = Resource.Resource.KayitBulunamadi;
-                    return Ok(response);
-                }
-
-                response.Data = await _workerService.DeleteWorkerAsync(id.ToGuid());
-                response.Message = Resource.Resource.KayitSilindi;
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                response.Message = Resource.Resource.KayitBulunamadi;
                 return Ok(response);
             }
+
+            response.Data = await _workerService.DeleteWorkerAsync(id.ToGuid());
+            response.Message = Resource.Resource.KayitSilindi;
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -366,29 +296,17 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> DeleteByBusinessId([FromBody] string? businessId)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (businessId.IsNullOrEmpty() || !businessId.IsGuid())
             {
-                if (businessId.IsNullOrEmpty() || !businessId.IsGuid())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
-                    response.Message = Resource.Resource.KayitBulunamadi;
-                    return Ok(response);
-                }
-
-                response.Data = await _workerService.DeleteWorkersByBusinessIdAsync(businessId.ToGuid());
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
+                response.Message = Resource.Resource.KayitBulunamadi;
                 return Ok(response);
             }
+
+            response.Data = await _workerService.DeleteWorkersByBusinessIdAsync(businessId.ToGuid());
+            return Ok(response);
         }
     }
 }

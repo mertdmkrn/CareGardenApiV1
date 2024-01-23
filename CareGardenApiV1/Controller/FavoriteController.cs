@@ -34,31 +34,19 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Get()
         {
             ResponseModel<List<Favorite>> response = new ResponseModel<List<Favorite>>();
-            Resource.Resource.Culture = new CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
+
+            if (userId.IsNullOrEmpty())
             {
-                var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
-
-                if (userId.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.Message = Resource.Resource.KullaniciBulunamadi;
-                    return Ok(response);
-                }
-
-                response.Data = await _favoriteService.GetFavoritesByUserIdAsync(userId.ToGuid());
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.Message = Resource.Resource.KullaniciBulunamadi;
                 return Ok(response);
             }
+
+            response.Data = await _favoriteService.GetFavoritesByUserIdAsync(userId.ToGuid());
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -77,40 +65,28 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Add([FromBody] Guid businessId)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
-            Resource.Resource.Culture = new CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
+
+            if (userId.IsNullOrEmpty())
             {
-                var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
-
-                if (userId.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.Message = Resource.Resource.KullaniciBulunamadi;
-                    return Ok(response);
-                }
-
-                Favorite favorite = new Favorite()
-                {
-                    userId = userId.ToGuidNullable(),
-                    businessId = businessId,
-                };
-
-                await _favoriteService.SaveFavoriteAsync(favorite);
-
-                response.Data = true;
-                response.Message = Resource.Resource.KayitBasarili;
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.Message = Resource.Resource.KullaniciBulunamadi;
                 return Ok(response);
             }
+
+            Favorite favorite = new Favorite()
+            {
+                userId = userId.ToGuidNullable(),
+                businessId = businessId,
+            };
+
+            await _favoriteService.SaveFavoriteAsync(favorite);
+
+            response.Data = true;
+            response.Message = Resource.Resource.KayitBasarili;
+
+            return Ok(response);
         }
 
 
@@ -131,34 +107,22 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Delete([FromBody] Guid businessId)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
-            Resource.Resource.Culture = new CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
+
+            if (userId.IsNullOrEmpty())
             {
-                var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
-
-                if (userId.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.Message = Resource.Resource.KullaniciBulunamadi;
-                    return Ok(response);
-                }
-
-                await _favoriteService.DeleteFavoriteByBusinessIdAndUserIdAsync(userId.ToGuid(), businessId);
-
-                response.Data = true;
-                response.Message = Resource.Resource.KayitSilindi;
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.Message = Resource.Resource.KullaniciBulunamadi;
                 return Ok(response);
             }
+
+            await _favoriteService.DeleteFavoriteByBusinessIdAndUserIdAsync(userId.ToGuid(), businessId);
+
+            response.Data = true;
+            response.Message = Resource.Resource.KayitSilindi;
+
+            return Ok(response);
         }
     }
 }

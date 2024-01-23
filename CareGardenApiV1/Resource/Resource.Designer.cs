@@ -88,6 +88,15 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Elastic server is not active..
+        /// </summary>
+        public static string ElasticSunucusuAktifDegil {
+            get {
+                return ResourceManager.GetString("ElasticSunucusuAktifDegil", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Geçerli bir isim giriniz..
         /// </summary>
         public static string GecerliBirIsimGiriniz {

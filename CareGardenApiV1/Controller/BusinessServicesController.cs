@@ -30,39 +30,27 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetById([FromBody] string id)
         {
             ResponseModel<BusinessServiceModel> response = new ResponseModel<BusinessServiceModel>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (!id.IsGuid())
             {
-                if (!id.IsGuid())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                    response.Message = Resource.Resource.IdParametreHatasi;
-                }
-
-                if (response.HasError)
-                    return Ok(response);
-
-                response.Data = await _businessServicesService.GetBusinessServiceByIdAsync(id.ToGuid());
-
-                if (response.Data == null)
-                {
-                    response.HasError = true;
-                    response.Message = $"{id} id {Resource.Resource.KayitBulunamadi}";
-                    return Ok(response);
-                }
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                response.Message = Resource.Resource.IdParametreHatasi;
+            }
+
+            if (response.HasError)
+                return Ok(response);
+
+            response.Data = await _businessServicesService.GetBusinessServiceByIdAsync(id.ToGuid());
+
+            if (response.Data == null)
+            {
+                response.HasError = true;
+                response.Message = $"{id} id {Resource.Resource.KayitBulunamadi}";
                 return Ok(response);
             }
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -73,39 +61,27 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetByServiceId([FromBody] string serviceId)
         {
             ResponseModel<List<BusinessServiceModel>> response = new ResponseModel<List<BusinessServiceModel>>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (!serviceId.IsGuid())
             {
-                if (!serviceId.IsGuid())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("serviceId", Resource.Resource.IdParametreHatasi));
-                    response.Message = Resource.Resource.IdParametreHatasi;
-                }
-
-                if (response.HasError)
-                    return Ok(response);
-
-                response.Data = await _businessServicesService.GetBusinessServicesByServiceIdAsync(serviceId.ToGuid());
-
-                if (response.Data == null)
-                {
-                    response.HasError = true;
-                    response.Message = $"{serviceId} id {Resource.Resource.KayitBulunamadi}";
-                    return Ok(response);
-                }
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("serviceId", Resource.Resource.IdParametreHatasi));
+                response.Message = Resource.Resource.IdParametreHatasi;
+            }
+
+            if (response.HasError)
+                return Ok(response);
+
+            response.Data = await _businessServicesService.GetBusinessServicesByServiceIdAsync(serviceId.ToGuid());
+
+            if (response.Data == null)
+            {
+                response.HasError = true;
+                response.Message = $"{serviceId} id {Resource.Resource.KayitBulunamadi}";
                 return Ok(response);
             }
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -116,39 +92,27 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetByBusinessId([FromBody] string businessId)
         {
             ResponseModel<List<BusinessServiceModel>> response = new ResponseModel<List<BusinessServiceModel>>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (!businessId.IsGuid())
             {
-                if (!businessId.IsGuid())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("serviceId", Resource.Resource.IdParametreHatasi));
-                    response.Message = Resource.Resource.IdParametreHatasi;
-                }
-
-                if (response.HasError)
-                    return Ok(response);
-
-                response.Data = await _businessServicesService.GetBusinessServicesByBusinessIdAsync(businessId.ToGuid());
-
-                if (response.Data == null)
-                {
-                    response.HasError = true;
-                    response.Message = $"{businessId} id {Resource.Resource.KayitBulunamadi}";
-                    return Ok(response);
-                }
-
-                return Ok(response);
-
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("serviceId", Resource.Resource.IdParametreHatasi));
+                response.Message = Resource.Resource.IdParametreHatasi;
+            }
+
+            if (response.HasError)
+                return Ok(response);
+
+            response.Data = await _businessServicesService.GetBusinessServicesByBusinessIdAsync(businessId.ToGuid());
+
+            if (response.Data == null)
+            {
+                response.HasError = true;
+                response.Message = $"{businessId} id {Resource.Resource.KayitBulunamadi}";
                 return Ok(response);
             }
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -176,77 +140,67 @@ namespace CareGardenApiV1.Controller
         {
             ResponseModel<BusinessServiceModel> response = new ResponseModel<BusinessServiceModel>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
-            
-            try
+
+            if (!businessService.serviceId.HasValue)
             {
-                if (!businessService.serviceId.HasValue)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("serviceId", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (!businessService.businessId.HasValue)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (businessService.name.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("name", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (businessService.nameEn.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("nameEn", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (businessService.spot.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("spot", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (businessService.spotEn.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("spotEn", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (businessService.minDuration <= 0)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("minDuration", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (businessService.price <= 0)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("price", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (response.HasError)
-                {
-                    response.Message = Resource.Resource.KayitYapilamadi;
-                    return Ok(response);
-                }
-
-                businessService.maxDuration = businessService.maxDuration.IsNull(businessService.minDuration);
-
-                response.Message = Resource.Resource.KayitBasarili;
-                response.Data = await _businessServicesService.SaveBusinessServiceAsync(businessService);
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"{Resource.Resource.KullaniciBulunamadi} id {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("serviceId", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (!businessService.businessId.HasValue)
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (businessService.name.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("name", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (businessService.nameEn.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("nameEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (businessService.spot.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("spot", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (businessService.spotEn.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("spotEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (businessService.minDuration <= 0)
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("minDuration", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (businessService.price <= 0)
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("price", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.KayitYapilamadi;
                 return Ok(response);
             }
+
+            businessService.maxDuration = businessService.maxDuration.IsNull(businessService.minDuration);
+
+            response.Message = Resource.Resource.KayitBasarili;
+            response.Data = await _businessServicesService.SaveBusinessServiceAsync(businessService);
+
+            return Ok(response);
         }
 
 
@@ -276,98 +230,86 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Update([FromBody] BusinessServiceModel updateBusinessService)
         {
             ResponseModel<BusinessServiceModel> response = new ResponseModel<BusinessServiceModel>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (!updateBusinessService.serviceId.HasValue)
             {
-
-                if (!updateBusinessService.serviceId.HasValue)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("serviceId", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (!updateBusinessService.businessId.HasValue)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (updateBusinessService.name.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("name", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (updateBusinessService.nameEn.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("nameEn", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (updateBusinessService.spot.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("spot", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (updateBusinessService.spotEn.IsNullOrEmpty())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("spotEn", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (updateBusinessService.minDuration <= 0)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("minDuration", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-                if (updateBusinessService.price <= 0)
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("price", Resource.Resource.BuAlaniBosBirakmayiniz));
-                }
-
-
-                if (response.HasError)
-                {
-                    response.Message = Resource.Resource.GuncellemeYapilamadi;
-                    return Ok(response);
-                }
-
-                BusinessServiceModel businessService = await _businessServicesService.GetBusinessServiceByIdAsync(updateBusinessService.id);
-
-                if (businessService == null)
-                {
-                    response.HasError = true;
-                    response.Message += $"{updateBusinessService.id} id {Resource.Resource.KayitBulunamadi}";
-                    return Ok(response);
-                }
-
-                businessService.serviceId = updateBusinessService.serviceId;
-                businessService.businessId = updateBusinessService.businessId;
-                businessService.name = updateBusinessService.name;
-                businessService.nameEn = updateBusinessService.nameEn;
-                businessService.spot = updateBusinessService.spot;
-                businessService.spotEn = updateBusinessService.spotEn;
-                businessService.minDuration = updateBusinessService.minDuration;
-                businessService.maxDuration = updateBusinessService.maxDuration.IsNull(updateBusinessService.minDuration);
-                businessService.price = updateBusinessService.price;
-                businessService.isPopular = updateBusinessService.isPopular;
-
-                response.Message = Resource.Resource.KayitBasarili;
-                response.Data = await _businessServicesService.UpdateBusinessServiceAsync(businessService);
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"{Resource.Resource.GuncellemeYapilamadi} Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("serviceId", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (!updateBusinessService.businessId.HasValue)
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (updateBusinessService.name.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("name", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (updateBusinessService.nameEn.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("nameEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (updateBusinessService.spot.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("spot", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (updateBusinessService.spotEn.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("spotEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (updateBusinessService.minDuration <= 0)
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("minDuration", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (updateBusinessService.price <= 0)
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("price", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.GuncellemeYapilamadi;
                 return Ok(response);
             }
+
+            BusinessServiceModel businessService = await _businessServicesService.GetBusinessServiceByIdAsync(updateBusinessService.id);
+
+            if (businessService == null)
+            {
+                response.HasError = true;
+                response.Message += $"{updateBusinessService.id} id {Resource.Resource.KayitBulunamadi}";
+                return Ok(response);
+            }
+
+            businessService.serviceId = updateBusinessService.serviceId;
+            businessService.businessId = updateBusinessService.businessId;
+            businessService.name = updateBusinessService.name;
+            businessService.nameEn = updateBusinessService.nameEn;
+            businessService.spot = updateBusinessService.spot;
+            businessService.spotEn = updateBusinessService.spotEn;
+            businessService.minDuration = updateBusinessService.minDuration;
+            businessService.maxDuration = updateBusinessService.maxDuration.IsNull(updateBusinessService.minDuration);
+            businessService.price = updateBusinessService.price;
+            businessService.isPopular = updateBusinessService.isPopular;
+
+            response.Message = Resource.Resource.KayitBasarili;
+            response.Data = await _businessServicesService.UpdateBusinessServiceAsync(businessService);
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -378,35 +320,24 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Delete([FromBody] string id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
-            try
+            if (!id.IsGuid())
             {
-                if (!id.IsGuid())
-                {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                }
-
-                if (response.HasError)
-                {
-                    response.Message = Resource.Resource.KayitSilinemedi;
-                    return Ok(response);
-                }
-
-                await _businessServicesService.DeleteBusinessServiceAsync(id.ToGuid());
-
-                response.Message = Resource.Resource.KayitSilindi;
-                response.Data = true;
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _loggerHandler.LogMessage(ex);
                 response.HasError = true;
-                response.Message = $"{Resource.Resource.KayitSilinemedi} Exception => {ex.Message}";
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+            }
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.KayitSilinemedi;
                 return Ok(response);
             }
+
+            await _businessServicesService.DeleteBusinessServiceAsync(id.ToGuid());
+
+            response.Message = Resource.Resource.KayitSilindi;
+            response.Data = true;
+            return Ok(response);
         }
     }
 }

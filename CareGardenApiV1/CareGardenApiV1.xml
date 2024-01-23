@@ -20,6 +20,25 @@
              </remarks>
              <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.AdminController.GetUsers(CareGardenApiV1.Model.RequestModel.UserSearchAdminModel)">
+             <summary>
+             Get Users.
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "email": "mertdmkrn37@gmail.com",
+                    "gender": 3,
+                    "city": "İstanbul",
+                    "role": "ADMIN",
+                    "page": 0,
+                    "take": 20
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.AdminController.Save(CareGardenApiV1.Model.User)">
              <summary>
              Save Admin.

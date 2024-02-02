@@ -20,7 +20,6 @@ namespace CareGardenApiV1.Controller
         private readonly ITokenHandler _tokenHandler;
         private readonly ISmsHandler _smsHandler;
         private readonly IMailHandler _mailHandler;
-        private readonly ILoggerHandler _loggerHandler;
         private readonly IElasticHandler _elasticHandler;
 
         public BusinessLoginController(
@@ -29,7 +28,6 @@ namespace CareGardenApiV1.Controller
             ITokenHandler tokenHandler,
             ISmsHandler smsHandler,
             IMailHandler mailHandler,
-            ILoggerHandler loggerHandler,
             IElasticHandler elasticHandler)
         {
             _businessService = businessService;
@@ -37,7 +35,6 @@ namespace CareGardenApiV1.Controller
             _tokenHandler = tokenHandler;
             _smsHandler = smsHandler;
             _mailHandler = mailHandler;
-            _loggerHandler = loggerHandler;
             _elasticHandler = elasticHandler;
         }
 

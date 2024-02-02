@@ -20,20 +20,17 @@ namespace CareGardenApiV1.Controller
         private readonly IBusinessService _businessService;
         private readonly IServicesService _servicesService;
         private readonly IMemoryCache _memoryCache;
-        private readonly ILoggerHandler _loggerHandler;
         private readonly IElasticClient _elasticClient;
 
         public SearchController(
             IBusinessService businessService,
             IServicesService servicesService,
             IMemoryCache memoryCache,
-            ILoggerHandler loggerHandler,
             IElasticClient elasticClient)
         {
             _businessService = businessService;
             _servicesService = servicesService;
             _memoryCache = memoryCache;
-            _loggerHandler = loggerHandler;
             _elasticClient = elasticClient;
         }
 

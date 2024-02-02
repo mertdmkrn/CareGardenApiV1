@@ -13,17 +13,10 @@ namespace CareGardenApiV1.Controller
     public class DiscountController : ControllerBase
     {
         private readonly IDiscountService _discountService;
-        private readonly IFileHandler _fileHandler;
-        private readonly ILoggerHandler _loggerHandler;
 
-        public DiscountController(
-            IDiscountService discountService,
-            IFileHandler fileHandler,
-            ILoggerHandler loggerHandler)
+        public DiscountController(IDiscountService discountService)
         {
             _discountService = discountService;
-            _fileHandler = fileHandler;
-            _loggerHandler = loggerHandler;
         }
 
 

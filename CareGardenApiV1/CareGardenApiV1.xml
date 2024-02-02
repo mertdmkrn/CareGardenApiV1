@@ -289,9 +289,7 @@
              <remarks>
              **Sample request body:**
             
-                 { 
                     "00000000-0000-0000-0000-000000000000"
-                 }
             
              </remarks>
              <returns></returns>
@@ -663,7 +661,7 @@
         </member>
         <member name="M:CareGardenApiV1.Controller.CommentController.Search(CareGardenApiV1.Model.RequestModel.CommentSearchModel)">
              <summary>
-             Get Comment By Business Id
+             Search Comments
              </summary>
              <remarks>
              **Sample request body:**
@@ -750,7 +748,7 @@
         </member>
         <member name="M:CareGardenApiV1.Controller.DefinitionController.PrivacyPolicy">
             <summary>
-            Get Cities
+            Get Privacy Policy
             </summary>
             <returns></returns>
         </member>
@@ -823,7 +821,7 @@
         </member>
         <member name="M:CareGardenApiV1.Controller.FavoriteController.Get">
             <summary>
-            Get Favorite Businesses
+            Get Favorite Businesses By Session User
             </summary>
             <returns></returns>
         </member>

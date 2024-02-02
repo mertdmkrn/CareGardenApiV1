@@ -13,17 +13,14 @@ namespace CareGardenApiV1.Controller
     public class ServicesController : ControllerBase
     {
         private readonly IServicesService _servicesService;
-        private readonly ILoggerHandler _loggerHandler;
         private readonly IMemoryCache _memoryCache;
         private const string cacheKey = "services";
 
         public ServicesController(
             IServicesService servicesService,
-            ILoggerHandler loggerHandler,
             IMemoryCache memoryCache)
         {
             _servicesService = servicesService;
-            _loggerHandler = loggerHandler;
             _memoryCache = memoryCache;
         }
 

@@ -19,6 +19,7 @@ using CareGardenApiV1.Hangfire;
 using CareGardenApiV1.Middleware;
 using CareGardenApiV1.Helpers;
 using AspNetCoreRateLimit;
+using System.Reflection;
 
 internal class Program
 {
@@ -62,8 +63,10 @@ internal class Program
 
         builder.Services.AddSwaggerGen(c =>
         {
-            var filePath = Path.Combine(currentPath + "CareGardenApiV1.xml");
-            c.IncludeXmlComments(filePath);
+            var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "CareGarden API", Version = "v1" });
 
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {

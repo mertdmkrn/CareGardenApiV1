@@ -28,7 +28,6 @@ namespace CareGardenApiV1.Controller
         private readonly IMemoryCache _memoryCache;
         private readonly IMailHandler _mailHandler;
         private readonly IElasticHandler _elasticHandler;
-        private readonly ILoggerHandler _loggerHandler;
 
         public AdminController(
             IBusinessService businessService,
@@ -37,7 +36,6 @@ namespace CareGardenApiV1.Controller
             IFileHandler fileHandler,
             IMemoryCache memoryCache,
             IMailHandler mailHandler,
-            ILoggerHandler loggerHandler,
             IElasticHandler elasticHandler)
         {
             _businessService = businessService;
@@ -46,7 +44,6 @@ namespace CareGardenApiV1.Controller
             _fileHandler = fileHandler;
             _memoryCache = memoryCache;
             _mailHandler = mailHandler;
-            _loggerHandler = loggerHandler;
             _elasticHandler = elasticHandler;
         }
 

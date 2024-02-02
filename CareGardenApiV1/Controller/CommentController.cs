@@ -17,19 +17,13 @@ namespace CareGardenApiV1.Controller
     public class CommentController : ControllerBase
     {
         private readonly ICommentService _commentService;
-        private readonly IFileHandler _fileHandler;
-        private readonly ILoggerHandler _loggerHandler;
         private readonly IElasticHandler _elasticHandler;
 
         public CommentController(
             ICommentService commentService,
-            IFileHandler fileHandler,
-            ILoggerHandler loggerHandler,
             IElasticHandler elasticHandler)
         {
             _commentService = commentService;
-            _fileHandler = fileHandler;
-            _loggerHandler = loggerHandler;
             _elasticHandler = elasticHandler;
         }
 
@@ -81,7 +75,7 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
-        /// Get Comment By Business Id
+        /// Search Comments
         /// </summary>
         /// <remarks>
         /// **Sample request body:**

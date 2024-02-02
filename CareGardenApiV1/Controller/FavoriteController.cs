@@ -15,19 +15,15 @@ namespace CareGardenApiV1.Controller
     public class FavoriteController : ControllerBase
     {
         private readonly IFavoriteService _favoriteService;
-        private readonly ILoggerHandler _loggerHandler;
 
-        public FavoriteController(
-            IFavoriteService favoriteService,
-            ILoggerHandler loggerHandler)
+        public FavoriteController(IFavoriteService favoriteService)
         {
             _favoriteService = favoriteService;
-            _loggerHandler = loggerHandler;
         }
 
 
         /// <summary>
-        /// Get Favorite Businesses
+        /// Get Favorite Businesses By Session User
         /// </summary>
         /// <returns></returns>
         [HttpPost("get")]

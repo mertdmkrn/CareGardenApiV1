@@ -11,14 +11,10 @@ namespace CareGardenApiV1.Controller
     public class BusinessServicesController : ControllerBase
     {
         private readonly IBusinessServicesService _businessServicesService;
-        private readonly ILoggerHandler _loggerHandler;
 
-        public BusinessServicesController(
-            IBusinessServicesService businessServicesService,
-            ILoggerHandler loggerHandler)
+        public BusinessServicesController(IBusinessServicesService businessServicesService)
         {
             _businessServicesService = businessServicesService;
-            _loggerHandler = loggerHandler;
         }
 
 

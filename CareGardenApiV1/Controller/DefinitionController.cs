@@ -23,7 +23,7 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
-        /// Get Cities
+        /// Get Privacy Policy
         /// </summary>
         /// <returns></returns>
         [HttpPost]

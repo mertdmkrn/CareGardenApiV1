@@ -13,20 +13,14 @@ namespace CareGardenApiV1.Controller
     public class CampaignController : ControllerBase
     {
         private readonly ICampaignService _campaignService;
-        private readonly IFileHandler _fileHandler;
-        private readonly ILoggerHandler _loggerHandler;
         private readonly IMemoryCache _memoryCache;
         private const string cacheKey = "campaigns";
 
         public CampaignController(
             ICampaignService campaignService,
-            IFileHandler fileHandler,
-            ILoggerHandler loggerHandler,
             IMemoryCache memoryCache)
         {
             _campaignService = campaignService;
-            _fileHandler = fileHandler;
-            _loggerHandler = loggerHandler;
             _memoryCache = memoryCache;
         }
 

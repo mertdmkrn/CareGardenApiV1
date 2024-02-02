@@ -25,7 +25,6 @@ namespace CareGardenApiV1.Controller
         private readonly IFileHandler _fileHandler;
         private readonly IMemoryCache _memoryCache;
         private readonly IMailHandler _mailHandler;
-        private readonly ILoggerHandler _loggerHandler;
 
         public UserController(
             IUserService userService,
@@ -33,8 +32,7 @@ namespace CareGardenApiV1.Controller
             IFaqService faqService,
             IFileHandler fileHandler,
             IMemoryCache memoryCache,
-            IMailHandler mailHandler,
-            ILoggerHandler loggerHandler)
+            IMailHandler mailHandler)
         {
             _userService = userService;
             _businessService = businessService;
@@ -42,9 +40,7 @@ namespace CareGardenApiV1.Controller
             _fileHandler = fileHandler;
             _memoryCache = memoryCache;
             _mailHandler = mailHandler;
-            _loggerHandler = loggerHandler;
         }
-
 
         /// <summary>
         /// Get User By Id

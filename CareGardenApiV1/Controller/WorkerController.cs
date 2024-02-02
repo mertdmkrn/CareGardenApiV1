@@ -14,19 +14,11 @@ namespace CareGardenApiV1.Controller
     public class WorkerController : ControllerBase
     {
         private readonly IWorkerService _workerService;
-        private readonly IFileHandler _fileHandler;
-        private readonly ILoggerHandler _loggerHandler;
 
-        public WorkerController(
-            IWorkerService workerService,
-            IFileHandler fileHandler,
-            ILoggerHandler loggerHandler)
+        public WorkerController(IWorkerService workerService)
         {
             _workerService = workerService;
-            _fileHandler = fileHandler;
-            _loggerHandler = loggerHandler;
         }
-
 
         /// <summary>
         /// Get Worker By Id

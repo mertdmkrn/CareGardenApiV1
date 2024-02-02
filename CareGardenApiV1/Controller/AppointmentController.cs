@@ -19,20 +19,17 @@ namespace CareGardenApiV1.Controller
         private readonly IBusinessWorkingInfoService _businessWorkingInfoService;
         private readonly IBusinessServicesService _businessServicesService;
         private readonly IWorkerService _workerService;
-        private readonly ILoggerHandler _loggerHandler;
 
         public AppointmentController(
             IAppointmentService appointmentService,
             IBusinessWorkingInfoService businessWorkingInfoService,
             IBusinessServicesService businessServicesService,
-            IWorkerService workerService,
-            ILoggerHandler loggerHandler)
+            IWorkerService workerService)
         {
             _appointmentService = appointmentService;
             _businessWorkingInfoService = businessWorkingInfoService;
             _businessServicesService = businessServicesService;
             _workerService = workerService;
-            _loggerHandler = loggerHandler;
         }
 
 

@@ -206,7 +206,7 @@ namespace CareGardenApiV1.Controller
 
             var sessionUserId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid).IsNull(Guid.Empty.ToString());
 
-            if (appointment.startDate.DifferenceBetweenDates(DateTimeOffset.UtcNow.UtcDateTime, Enums.DateType.Hour) < 9 && appointment.userId == sessionUserId.ToGuid())
+            if (appointment.startDate.DifferenceBetweenDates(DateTimeOffset.UtcNow.UtcDateTime, DateType.Hour) < 9 && appointment.userId == sessionUserId.ToGuid())
             {
                 if (!appointmentChangeModel.isForceDelete.HasValue || (appointmentChangeModel.isForceDelete.HasValue && !appointmentChangeModel.isForceDelete.Value))
                 {

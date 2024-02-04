@@ -2,7 +2,7 @@
 using CareGardenApiV1.Model.RequestModel;
 using NetTopologySuite.Geometries;
 using System.Text.Json.Serialization;
-using static CareGardenApiV1.Helpers.Enums;
+using CareGardenApiV1.Helpers;
 
 namespace CareGardenApiV1.Model.ResponseModel
 {

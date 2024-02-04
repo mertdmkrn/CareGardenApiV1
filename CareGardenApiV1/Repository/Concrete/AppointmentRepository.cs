@@ -87,7 +87,7 @@ namespace CareGardenApiV1.Repository.Concrete
             }
         }
 
-        public async Task<bool> ChangeStatusAsync(Guid id, Enums.AppointmentStatus status)
+        public async Task<bool> ChangeStatusAsync(Guid id, AppointmentStatus status)
         {
             using (var context = new CareGardenApiDbContext())
             {

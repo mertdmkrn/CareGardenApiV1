@@ -3,7 +3,7 @@ using OneSignalApi.Model;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using static CareGardenApiV1.Helpers.Enums;
+using CareGardenApiV1.Helpers;
 
 namespace CareGardenApiV1.Model
 {

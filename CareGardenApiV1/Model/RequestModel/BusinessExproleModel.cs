@@ -1,6 +1,6 @@
-﻿using System.Globalization;
+﻿using CareGardenApiV1.Helpers;
+using System.Globalization;
 using System.Text.Json.Serialization;
-using static CareGardenApiV1.Helpers.Enums;
 
 namespace CareGardenApiV1.Model.RequestModel
 {

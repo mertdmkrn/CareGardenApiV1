@@ -2,7 +2,7 @@
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Model;
 using Microsoft.EntityFrameworkCore;
-using static CareGardenApiV1.Helpers.Enums;
+using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model.RequestModel;
 
 namespace CareGardenApiV1.Repository.Concrete
@@ -24,7 +24,7 @@ namespace CareGardenApiV1.Repository.Concrete
             {
                 return await context.Comments
                     .Include(x => x.reply)
-                    .Where(x => x.businessId == businessId && x.commentType == Enums.CommentType.User)
+                    .Where(x => x.businessId == businessId && x.commentType == CommentType.User)
                     .OrderByDescending(x => x.updateDate)
                     .AsNoTracking()
                     .ToListAsync();
@@ -37,7 +37,7 @@ namespace CareGardenApiV1.Repository.Concrete
             {
                 return await context.Comments
                     .Include(x => x.reply)
-                    .Where(x => x.userId == userId && x.commentType == Enums.CommentType.User)
+                    .Where(x => x.userId == userId && x.commentType == CommentType.User)
                     .OrderByDescending(x => x.updateDate)
                     .AsNoTracking()
                     .ToListAsync();
@@ -132,7 +132,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 var pointList = await context.Comments
                     .AsNoTracking()
                     .Where(x => x.businessId == businessId)
-                    .Where(x => x.commentType == Enums.CommentType.User)
+                    .Where(x => x.commentType == CommentType.User)
                     .Select(x => x.point)
                     .ToListAsync();
 
@@ -159,7 +159,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 var pointList = await context.Comments
                     .AsNoTracking()
                     .Where(x => x.userId == userId)
-                    .Where(x => x.commentType == Enums.CommentType.User)
+                    .Where(x => x.commentType == CommentType.User)
                     .Select(x => x.point)
                     .ToListAsync();
 

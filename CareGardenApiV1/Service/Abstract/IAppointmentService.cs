@@ -12,6 +12,6 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<Appointment> SaveAppointmentAsync(Appointment appointment);
         Task<Appointment> UpdateAppointmentAsync(Appointment appointment);
         Task<bool> DeleteAppointmentAsync(Appointment appointment);
-        Task<bool> ChangeStatusAsync(Guid id, Enums.AppointmentStatus status);
+        Task<bool> ChangeStatusAsync(Guid id, AppointmentStatus status);
     }
 }

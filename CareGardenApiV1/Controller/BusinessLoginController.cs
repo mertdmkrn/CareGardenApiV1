@@ -80,7 +80,7 @@ namespace CareGardenApiV1.Controller
 
             var systemConfirmationInfo = await _contirmationService.GetConfirmationInfo(telephoneNumber);
 
-            if (systemConfirmationInfo != null && systemConfirmationInfo.createDate.DifferenceBetweenDates(DateTime.Now, Enums.DateType.Minute) < 1)
+            if (systemConfirmationInfo != null && systemConfirmationInfo.createDate.DifferenceBetweenDates(DateTime.Now, DateType.Minute) < 1)
             {
                 response.Message = Resource.Resource.BirDakikaIcindeOnayKoduMesaji;
                 response.HasError = true;
@@ -138,7 +138,7 @@ namespace CareGardenApiV1.Controller
 
             var systemConfirmationInfo = await _contirmationService.GetConfirmationInfo(email);
 
-            if (systemConfirmationInfo != null && Math.Abs(systemConfirmationInfo.createDate.DifferenceBetweenDates(DateTime.Now, Enums.DateType.Minute)) < 1)
+            if (systemConfirmationInfo != null && Math.Abs(systemConfirmationInfo.createDate.DifferenceBetweenDates(DateTime.Now, DateType.Minute)) < 1)
             {
                 response.Message = Resource.Resource.BirDakikaIcindeOnayKoduMesaji;
                 response.HasError = true;
@@ -224,7 +224,7 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
-            if (systemConfirmationInfo.createDate.DifferenceBetweenDates(DateTime.Now, Enums.DateType.Minute) > 1)
+            if (systemConfirmationInfo.createDate.DifferenceBetweenDates(DateTime.Now, DateType.Minute) > 1)
             {
                 response.Message = Resource.Resource.OnayKoduZamanAsiminaUgradi;
                 response.HasError = true;

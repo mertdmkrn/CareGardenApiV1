@@ -2,8 +2,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using NetTopologySuite.Geometries;
-using static CareGardenApiV1.Helpers.Enums;
 using Microsoft.EntityFrameworkCore;
+using CareGardenApiV1.Helpers;
 
 namespace CareGardenApiV1.Model
 {

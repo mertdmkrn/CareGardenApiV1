@@ -1,6 +1,6 @@
 ﻿using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
-using static CareGardenApiV1.Helpers.Enums;
+using CareGardenApiV1.Helpers;
 
 namespace CareGardenApiV1.Repository.Abstract
 {

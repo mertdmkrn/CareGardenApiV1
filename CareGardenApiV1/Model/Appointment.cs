@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using static CareGardenApiV1.Helpers.Enums;
+using CareGardenApiV1.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 

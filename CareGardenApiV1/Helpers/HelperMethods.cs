@@ -315,7 +315,7 @@ namespace CareGardenApiV1.Helpers
         {
             List<WorkerAvailableTimeModel> workerAvailableTimeModels = new List<WorkerAvailableTimeModel>();
 
-            var dateDifferenceDays = (int)startDate.DifferenceBetweenDates(endDate, Enums.DateType.Day);
+            var dateDifferenceDays = (int)startDate.DifferenceBetweenDates(endDate, DateType.Day);
 
             for (int i = 0; i < dateDifferenceDays; i++)
             {
@@ -344,7 +344,7 @@ namespace CareGardenApiV1.Helpers
                     .Add(endWorkTime);
 
                 var serviceDurationMinutes = businessService.maxDuration.IsNull(businessService.minDuration);
-                var numberOfAppointmentsPerDay = (int)Math.Ceiling(dayStartDate.DifferenceBetweenDates(dayEndDate, Enums.DateType.Minute) / serviceDurationMinutes);
+                var numberOfAppointmentsPerDay = (int)Math.Ceiling(dayStartDate.DifferenceBetweenDates(dayEndDate, DateType.Minute) / serviceDurationMinutes);
 
                 for (int j = 0; j < numberOfAppointmentsPerDay; j++)
                 {

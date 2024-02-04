@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.DataProtection.XmlEncryption;
 using OneSignalApi.Model;
 using CareGardenApiV1.Model.RequestModel;
 using Nest;
-using static CareGardenApiV1.Helpers.Enums;
+using CareGardenApiV1.Helpers;
 using System.Linq;
 
 namespace CareGardenApiV1.Repository.Concrete
@@ -93,8 +93,8 @@ namespace CareGardenApiV1.Repository.Concrete
                             discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
                             workingGenderType = (int)x.workingGenderType,
                             imageUrl = x.galleries.FirstOrDefault().imageUrl,
-                            averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
-                            countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
+                            averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == CommentType.User).Average(x => x.point) : 0,
+                            countRating = x.comments.Where(x => x.commentType == CommentType.User).Count(),
                             distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0,
                             isFeatured = x.isFeatured,
                             hasPromotion = x.hasPromotion,
@@ -119,8 +119,8 @@ namespace CareGardenApiV1.Repository.Concrete
                         discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
                         workingGenderType = (int)x.workingGenderType,
                         imageUrl = x.galleries.FirstOrDefault().imageUrl,
-                        averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
-                        countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
+                        averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == CommentType.User).Average(x => x.point) : 0,
+                        countRating = x.comments.Where(x => x.commentType == CommentType.User).Count(),
                         distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0,
                         isFeatured = x.isFeatured,
                         hasPromotion = x.hasPromotion,
@@ -167,8 +167,8 @@ namespace CareGardenApiV1.Repository.Concrete
                             discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
                             workingGenderType = (int)x.workingGenderType,
                             imageUrl = x.galleries.Any() ? x.galleries.FirstOrDefault(x => x.isProfilePhoto).imageUrl : null,
-                            averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
-                            countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
+                            averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == CommentType.User).Average(x => x.point) : 0,
+                            countRating = x.comments.Where(x => x.commentType == CommentType.User).Count(),
                             distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0,
                             isFeatured = x.isFeatured,
                             hasPromotion = x.hasPromotion,
@@ -193,8 +193,8 @@ namespace CareGardenApiV1.Repository.Concrete
                         discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
                         workingGenderType = (int)x.workingGenderType,
                         imageUrl = x.galleries.FirstOrDefault().imageUrl,
-                        averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
-                        countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
+                        averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == CommentType.User).Average(x => x.point) : 0,
+                        countRating = x.comments.Where(x => x.commentType == CommentType.User).Count(),
                         distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0,
                         isFeatured = x.isFeatured,
                         hasPromotion = x.hasPromotion,
@@ -224,7 +224,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 var filteredBusinesses = await context.Businesses
                     .AsNoTracking()
                     .Where(x => x.isActive && x.verified)
-                    .WhereIf((WorkingGenderType)businessExploreModel.workingGenderType != Enums.WorkingGenderType.All, x => x.workingGenderType == businessExploreModel.workingGenderType)
+                    .WhereIf((WorkingGenderType)businessExploreModel.workingGenderType != WorkingGenderType.All, x => x.workingGenderType == businessExploreModel.workingGenderType)
                     .WhereIf(businessExploreModel.serviceId.HasValue, x => x.services.Any(x => x.serviceId == businessExploreModel.serviceId))
                     .WhereIf(businessExploreModel.offers > 0, x => x.discounts.Any(x => x.isActive && x.rate == businessExploreModel.offers))
                     .Select(x => new BusinessListModel
@@ -234,8 +234,8 @@ namespace CareGardenApiV1.Repository.Concrete
                         discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
                         workingGenderType = (int)x.workingGenderType,
                         imageUrl = x.galleries.FirstOrDefault().imageUrl,
-                        averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
-                        countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
+                        averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == CommentType.User).Average(x => x.point) : 0,
+                        countRating = x.comments.Where(x => x.commentType == CommentType.User).Count(),
                         distance = searchLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(searchLocation)) * Constants.DistanceValue : 0,
                         isFeatured = x.isFeatured,
                         hasPromotion = x.hasPromotion,
@@ -313,8 +313,8 @@ namespace CareGardenApiV1.Repository.Concrete
                         latitude = x.latitude,
                         longitude = x.longitude,
                         discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
-                        averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
-                        countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
+                        averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == CommentType.User).Average(x => x.point) : 0,
+                        countRating = x.comments.Where(x => x.commentType == CommentType.User).Count(),
                         businessWorkingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null,
                         discounts = x.discounts.Where(x => x.isActive).ToList(),
                         assets = x.galleries,
@@ -347,8 +347,8 @@ namespace CareGardenApiV1.Repository.Concrete
                         officialDayAvailable = x.officialHolidayAvailable,
                         isFeatured = x.isFeatured,
                         hasPromotion = x.hasPromotion,
-                        averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
-                        countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
+                        averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == CommentType.User).Average(x => x.point) : 0,
+                        countRating = x.comments.Where(x => x.commentType == CommentType.User).Count(),
                         businessWorkingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null,
                         assets = x.galleries.ToList(),
                         businessServices = x.services.ToList()
@@ -382,8 +382,8 @@ namespace CareGardenApiV1.Repository.Concrete
                             discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
                             workingGenderType = (int)x.workingGenderType,
                             imageUrl = x.galleries.Any() ? x.galleries.FirstOrDefault(x => x.isProfilePhoto).imageUrl : null,
-                            averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
-                            countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
+                            averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == CommentType.User).Average(x => x.point) : 0,
+                            countRating = x.comments.Where(x => x.commentType == CommentType.User).Count(),
                             distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0,
                             isFeatured = x.isFeatured,
                             hasPromotion = x.hasPromotion,
@@ -407,8 +407,8 @@ namespace CareGardenApiV1.Repository.Concrete
                         discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
                         workingGenderType = (int)x.workingGenderType,
                         imageUrl = x.galleries.Any() ? x.galleries.FirstOrDefault(x => x.isProfilePhoto).imageUrl : null,
-                        averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == Enums.CommentType.User).Average(x => x.point) : 0,
-                        countRating = x.comments.Where(x => x.commentType == Enums.CommentType.User).Count(),
+                        averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == CommentType.User).Average(x => x.point) : 0,
+                        countRating = x.comments.Where(x => x.commentType == CommentType.User).Count(),
                         distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0,
                         isFeatured = x.isFeatured,
                         hasPromotion = x.hasPromotion,
@@ -468,13 +468,17 @@ namespace CareGardenApiV1.Repository.Concrete
         {
             using (var context = new CareGardenApiDbContext())
             {
-                var list = await context.Businesses
+                var query = context.Businesses
                     .AsNoTracking()
                     .WhereIf(searchAdminModel.city.IsNotNullOrEmpty(), x => x.city == searchAdminModel.city)
                     .WhereIf(searchAdminModel.name.IsNotNullOrEmpty(), x => x.name == searchAdminModel.name)
                     .WhereIf(searchAdminModel.isOnlyActive, x => x.isActive == true)
                     .WhereIf(searchAdminModel.isOnlyNotActive, x => x.isActive == false)
-                    .WhereIf((WorkingGenderType)searchAdminModel.workingGenderType != Enums.WorkingGenderType.All, x => x.workingGenderType == searchAdminModel.workingGenderType)
+                    .WhereIf((WorkingGenderType)searchAdminModel.workingGenderType != WorkingGenderType.All, x => x.workingGenderType == searchAdminModel.workingGenderType);
+
+                var totalCount = await query.CountAsync();
+
+                var list = await query
                     .Select(x => new BusinessPagingListModel
                     {
                         id = x.id,
@@ -491,9 +495,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     .Take(searchAdminModel.take)
                     .ToListAsync();
 
-                var pageCount = list.Count;
-
-                list.ForEach(x => { x.itemCount = pageCount; });
+                list.ForEach(x => { x.itemCount = totalCount; });
 
                 return list;
             }

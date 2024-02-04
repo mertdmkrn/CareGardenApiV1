@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using static CareGardenApiV1.Helpers.Enums;
+using CareGardenApiV1.Helpers;
 
 namespace CareGardenApiV1.Helpers
 {

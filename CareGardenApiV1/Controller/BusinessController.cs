@@ -203,25 +203,25 @@ namespace CareGardenApiV1.Controller
 
             foreach (var item in businessDetail.discounts.OrderBy(x => x.rate))
             {
-                if (item.type == Enums.DiscountType.AllDay)
+                if (item.type == DiscountType.AllDay)
                 {
                     discountMultiplier = 1 - (item.rate / 100);
                     activeDiscount = item;
                 }
-                else if (item.type == Enums.DiscountType.WeekDay && DateTime.Today.DayOfWeek >= DayOfWeek.Monday && DateTime.Today.DayOfWeek <= DayOfWeek.Friday)
+                else if (item.type == DiscountType.WeekDay && DateTime.Today.DayOfWeek >= DayOfWeek.Monday && DateTime.Today.DayOfWeek <= DayOfWeek.Friday)
                 {
                     discountMultiplier = 1 - (item.rate / 100);
                     activeDiscount = item;
                 }
-                else if (item.type == Enums.DiscountType.WeekEnd && (DateTime.Today.DayOfWeek == DayOfWeek.Saturday || DateTime.Today.DayOfWeek == DayOfWeek.Sunday))
+                else if (item.type == DiscountType.WeekEnd && (DateTime.Today.DayOfWeek == DayOfWeek.Saturday || DateTime.Today.DayOfWeek == DayOfWeek.Sunday))
                 {
                     discountMultiplier = 1 - (item.rate / 100);
                     activeDiscount = item;
                 }
 
-                var typeText = item.type == Enums.DiscountType.WeekDay
+                var typeText = item.type == DiscountType.WeekDay
                                  ? Resource.Resource.HaftaIci
-                                 : item.type == Enums.DiscountType.WeekEnd
+                                 : item.type == DiscountType.WeekEnd
                                    ? Resource.Resource.HaftaSonu
                                    : string.Empty;
 

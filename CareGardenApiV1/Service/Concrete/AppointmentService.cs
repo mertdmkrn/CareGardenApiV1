@@ -45,7 +45,7 @@ namespace CareGardenApiV1.Service.Concrete
         {
             return await _appointmentRepository.UpdateAppointmentAsync(appointment);
         }
-        public async Task<bool> ChangeStatusAsync(Guid id, Enums.AppointmentStatus status)
+        public async Task<bool> ChangeStatusAsync(Guid id, AppointmentStatus status)
         {
             return await _appointmentRepository.ChangeStatusAsync(id, status);
         }

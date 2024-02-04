@@ -199,17 +199,17 @@ namespace CareGardenApiV1.Controller
             if (userRole.Equals("Business"))
             {
                 comment.businessId = id.ToGuidNullable();
-                comment.commentType = Enums.CommentType.Business;
+                comment.commentType = CommentType.Business;
             }
             else
             {
                 comment.userId = id.ToGuidNullable();
-                comment.commentType = Enums.CommentType.User;
+                comment.commentType = CommentType.User;
             }
 
             await _commentService.SaveCommentAsync(comment);
 
-            if (comment.replyId.HasValue && comment.commentType == Enums.CommentType.Business)
+            if (comment.replyId.HasValue && comment.commentType == CommentType.Business)
             {
                 await _commentService.UpdateCommentReplyIdAsync(comment.replyId.Value, comment.id);
             }

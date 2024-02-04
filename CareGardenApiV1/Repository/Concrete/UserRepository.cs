@@ -97,7 +97,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 user.password = user.password.HashString();
                 user.createDate = DateTime.Now;
                 user.updateDate = user.createDate;
-                user.gender = Enums.Gender.Unspecified;
+                user.gender = Gender.Unspecified;
                 user.role = user.role.IsNull("User");
 
                 await context.Users.AddAsync(user);
@@ -152,33 +152,37 @@ namespace CareGardenApiV1.Repository.Concrete
         {
             using (var context = new CareGardenApiDbContext())
             {
-                var list = await context.Users
+                var query = context.Users
                 .AsNoTracking()
                 .WhereIf(userSearchAdminModel.email.IsNotNullOrEmpty(), x => x.email.Equals(userSearchAdminModel.email))
-                .WhereIf(userSearchAdminModel.gender != Enums.Gender.Nothing, x => x.gender.Equals(userSearchAdminModel.gender))
+                .WhereIf(userSearchAdminModel.gender != Gender.Nothing, x => x.gender.Equals(userSearchAdminModel.gender))
                 .WhereIf(userSearchAdminModel.role.IsNotNullOrEmpty(), x => x.role.Equals(userSearchAdminModel.role))
-                .WhereIf(userSearchAdminModel.city.IsNotNullOrEmpty(), x => x.city.Equals(userSearchAdminModel.city))
-                .Select(x => new UserAdminResponseModel
-                {
-                    id = x.id,
-                    fullName = x.fullName,
-                    telephone = x.telephone,
-                    email = x.email,
-                    city = x.city,
-                    imageUrl = x.imageUrl,
-                    gender = (int)x.gender,
-                    birthDate = x.birthDate,
-                    createDate = x.createDate,
-                    isBan = x.isBan,
-                    complains = x.complains
-                })
-                .Skip(userSearchAdminModel.page * userSearchAdminModel.take)
-                .Take(userSearchAdminModel.take)
-                .ToListAsync();
+                .WhereIf(userSearchAdminModel.city.IsNotNullOrEmpty(), x => x.city.Equals(userSearchAdminModel.city));
 
-                var pageCount = list.Count;
+                var totalCount = await query.CountAsync();
 
-                list.ForEach(x => { x.itemCount = pageCount; });
+                var list = await query
+                    .Select(x => new UserAdminResponseModel
+                    {
+                        id = x.id,
+                        fullName = x.fullName,
+                        telephone = x.telephone,
+                        email = x.email,
+                        city = x.city,
+                        imageUrl = x.imageUrl,
+                        gender = (int)x.gender,
+                        birthDate = x.birthDate,
+                        createDate = x.createDate,
+                        isBan = x.isBan,
+                        complains = x.complains
+                    })
+                    .OrderByDescending(x => x.createDate)
+                    .ThenByDescending(x => x.fullName)
+                    .Skip(userSearchAdminModel.page * userSearchAdminModel.take)
+                    .Take(userSearchAdminModel.take)
+                    .ToListAsync();
+
+                list.ForEach(x => { x.itemCount = totalCount; });
 
                 return list;
             }

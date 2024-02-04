@@ -56,6 +56,12 @@
              </remarks>
              <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.AdminController.DeleteUser(System.Guid)">
+            <summary>
+            Delete User
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.AdminController.UploadFile(Microsoft.AspNetCore.Http.IFormFile)">
             <summary>
             It is used to upload a new file and get a url.
@@ -1742,6 +1748,11 @@
         <member name="P:CareGardenApiV1.Resource.Resource.SirketBulunamadi">
             <summary>
               Looks up a localized string similar to Şirket bulunamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.YetkinizYok">
+            <summary>
+              Looks up a localized string similar to Yetkiniz yok..
             </summary>
         </member>
     </members>

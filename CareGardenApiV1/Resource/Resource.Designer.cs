@@ -491,5 +491,14 @@ namespace CareGardenApiV1.Resource {
                 return ResourceManager.GetString("SirketBulunamadi", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yetkiniz yok..
+        /// </summary>
+        public static string YetkinizYok {
+            get {
+                return ResourceManager.GetString("YetkinizYok", resourceCulture);
+            }
+        }
     }
 }

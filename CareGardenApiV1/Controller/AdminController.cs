@@ -230,6 +230,32 @@ namespace CareGardenApiV1.Controller
             return Ok(response);
         }
 
+        /// <summary>
+        /// Delete User
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("deleteuser")]
+        public async Task<IActionResult> DeleteUser([FromBody] Guid userId)
+        {
+            ResponseModel<bool> response = new ResponseModel<bool>();
+
+            var userEmail = HelperMethods.GetClaimInfo(Request, ClaimTypes.Email);
+
+            if (userEmail.IsNullOrEmpty() || !userEmail.Equals("mertdmkrn37@gmail.com"))
+            { 
+                response.HasError = true;
+                response.Data = false;
+                response.Message = Resource.Resource.YetkinizYok;
+            }
+
+            User user = new User{ id = userId };
+
+            response.Data = await _userService.DeleteUserAsync(user);
+            response.Message = Resource.Resource.KayitSilindi;
+
+            return Ok(response);
+        }
+
 
         /// <summary>
         /// It is used to upload a new file and get a url.

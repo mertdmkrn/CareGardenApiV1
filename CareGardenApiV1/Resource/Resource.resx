@@ -261,4 +261,7 @@
   <data name="SirketBulunamadi" xml:space="preserve">
     <value>Şirket bulunamadı.</value>
   </data>
+  <data name="YetkinizYok" xml:space="preserve">
+    <value>Yetkiniz yok.</value>
+  </data>
 </root>

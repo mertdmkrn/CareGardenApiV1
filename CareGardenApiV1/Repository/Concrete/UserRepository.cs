@@ -173,6 +173,7 @@ namespace CareGardenApiV1.Repository.Concrete
                         gender = (int)x.gender,
                         birthDate = x.birthDate,
                         createDate = x.createDate,
+                        role = x.role,
                         isBan = x.isBan,
                         complains = x.complains
                     })

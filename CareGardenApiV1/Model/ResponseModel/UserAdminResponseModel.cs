@@ -8,6 +8,7 @@
         public string telephone { get; set; }
         public string city { get; set; }
         public string imageUrl { get; set; }
+        public string role { get; set; }
         public int gender { get; set; }
         public DateTime? createDate { get; set; }
         public DateTime? birthDate { get; set; }

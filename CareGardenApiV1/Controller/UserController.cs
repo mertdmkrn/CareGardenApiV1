@@ -581,7 +581,7 @@ namespace CareGardenApiV1.Controller
                 });
             }
 
-            fagResponseModel.categories = fagResponseModel.faqs.Select(x => culture == "en" ? x.categoryEn : x.category).ToList();
+            fagResponseModel.categories = fagResponseModel.faqs.Select(x => culture == "en" ? x.categoryEn : x.category).Distinct().ToList();
 
             response.Data = fagResponseModel;
 

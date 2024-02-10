@@ -256,7 +256,6 @@ namespace CareGardenApiV1.Controller
             return Ok(response);
         }
 
-
         /// <summary>
         /// It is used to upload a new file and get a url.
         /// </summary>

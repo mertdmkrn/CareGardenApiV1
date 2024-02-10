@@ -392,7 +392,7 @@ namespace CareGardenApiV1.Controller
             user.birthDate = updateUser.birthDate;
             user.gender = updateUser.gender;
             user.city = updateUser.city;
-            user.services = updateUser.services.TrimEnd(';');
+            user.services = updateUser.services?.TrimEnd(';');
             user.password = string.Empty;
 
             await _userService.UpdateUserAsync(user);

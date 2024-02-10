@@ -516,7 +516,7 @@ namespace CareGardenApiV1.Controller
             }
 
             user.password = updateUser.password;
-            await _userService.UpdateUserAsync(user);
+            await _userService.UpdateUserAsync(user, true);
 
             var claims = new List<Claim>() {
                     new Claim(ClaimTypes.Name, user.fullName),

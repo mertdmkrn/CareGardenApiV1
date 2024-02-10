@@ -12,7 +12,7 @@ namespace CareGardenApiV1.Service.Abstract
         Task<User> GetUserByTelephoneNumberAsync(string telephoneNumber);
         Task<List<UserAdminResponseModel>> GetUsersAsync(UserSearchAdminModel userSearchAdminModel);
         Task<User> SaveUserAsync(User user);
-        Task<User> UpdateUserAsync(User user);
+        Task<User> UpdateUserAsync(User user, bool isPasswordChanged = false);
         Task<User> GetUserById(Guid id);
         Task<UserResponseModel> GetUserResponseModelById(Guid id);
         Task<bool> DeleteUserAsync(User user);

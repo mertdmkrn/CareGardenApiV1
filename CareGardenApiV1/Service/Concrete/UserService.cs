@@ -41,9 +41,9 @@ namespace CareGardenApiV1.Service.Concrete
             return await _userRepository.SaveUserAsync(user);
         }
 
-        public async Task<User> UpdateUserAsync(User user)
+        public async Task<User> UpdateUserAsync(User user, bool isPasswordChanged = false)
         {
-            return await _userRepository.UpdateUserAsync(user);
+            return await _userRepository.UpdateUserAsync(user, isPasswordChanged);
         }
         public async Task<bool> DeleteUserAsync(User user)
         {

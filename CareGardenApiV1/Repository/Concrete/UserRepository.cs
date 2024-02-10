@@ -73,13 +73,13 @@ namespace CareGardenApiV1.Repository.Concrete
             }
         }
 
-        public async Task<User> UpdateUserAsync(User user)
+        public async Task<User> UpdateUserAsync(User user, bool isPasswordChanged = false)
         {
             using (var context = new CareGardenApiDbContext())
             {
                 user.updateDate = DateTime.Now;
 
-                if (user.password.IsNotNullOrEmpty())
+                if (isPasswordChanged)
                 {
                     user.password = user.password.HashString();
                 }

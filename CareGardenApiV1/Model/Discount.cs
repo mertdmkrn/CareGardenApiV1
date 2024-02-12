@@ -17,6 +17,8 @@ namespace CareGardenApiV1.Model
         public string serviceIds { get; set; } = string.Empty;
         public bool isActive { get; set; }
         public string description { get; set; } = string.Empty;
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string descriptionEn { get; set; } = string.Empty;
 
         public double rate { get; set; }

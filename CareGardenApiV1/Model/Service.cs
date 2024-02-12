@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace CareGardenApiV1.Model
 {
@@ -19,6 +20,8 @@ namespace CareGardenApiV1.Model
         [MaxLength(100)]
         public string? name { get; set; }
 
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [MaxLength(100)]
         public string? nameEn { get; set; }
 

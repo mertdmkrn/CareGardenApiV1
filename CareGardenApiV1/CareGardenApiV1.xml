@@ -925,6 +925,94 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.SettingController.GetAll">
+             <summary>
+             Get All Settings
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.SettingController.GetById(System.String)">
+             <summary>
+             Get Setting By Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.SettingController.GetByName(System.String)">
+             <summary>
+             Get Setting By Name
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "MailSubject"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.SettingController.Save(CareGardenApiV1.Model.Setting)">
+             <summary>
+             Save Setting
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "name" : "Title",
+                    "description" : "Mobil uygulama başlık.",
+                    "type" : 0,
+                    "value" : "CareGarden"
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.SettingController.Update(CareGardenApiV1.Model.Setting)">
+             <summary>
+             Update Worker
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id": "00000000-0000-0000-0000-000000000000",
+                    "value": "Care Garden"
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.SettingController.Delete(System.String)">
+             <summary>
+             Delete Setting By Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.UserController.GetById(System.String)">
             <summary>
             Get User By Id
@@ -1492,6 +1580,18 @@
             <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.CareGardenV23.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV24">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV24.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV24.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV24.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:CareGardenApiV1.Resource.Resource">

@@ -13,15 +13,19 @@ namespace CareGardenApiV1.Model
 
         [MaxLength(150)]
         public string? question { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [MaxLength(150)]
         public string? questionEn { get; set; }
       
         public string? answer { get; set; }
         public string? answerEn { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [MaxLength(30)]
         public string? category { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [MaxLength(30)]
         public string? categoryEn { get; set; }
         public int sortOrder { get; set; }

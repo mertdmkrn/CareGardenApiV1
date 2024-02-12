@@ -87,6 +87,11 @@ namespace CareGardenApiV1.Helpers
             return resultNum;
         }
 
+        public static bool ToBoolean(this string value)
+        {
+            return value.IsNull("").ToLower() == "true";
+        }
+
 
         public static bool Between(this int number, int start, int end)
         {
@@ -195,5 +200,9 @@ namespace CareGardenApiV1.Helpers
             }).ToString();
         }
 
+        public static string GetLangugeValue(string language, string trValue, string enValue)
+        {
+            return language.Equals("tr", StringComparison.OrdinalIgnoreCase) ? trValue.IsNull(enValue) : enValue.IsNull(trValue);
+        }
     }
 }

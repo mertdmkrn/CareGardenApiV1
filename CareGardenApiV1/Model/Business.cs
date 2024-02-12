@@ -34,6 +34,8 @@ namespace CareGardenApiV1.Model
         public string? name { get; set; }
 
         public string? description { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? descriptionEn { get; set; }
 
         [MaxLength(80)]

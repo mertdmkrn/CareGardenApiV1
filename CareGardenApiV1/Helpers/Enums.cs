@@ -102,4 +102,13 @@
         Popular,
         Worst
     }
+
+    public enum SettingType
+    {
+        String,
+        ListString,
+        Integer,
+        ListInteger,
+        Boolean
+    }
 }

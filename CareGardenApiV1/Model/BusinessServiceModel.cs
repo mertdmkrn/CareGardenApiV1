@@ -18,10 +18,14 @@ namespace CareGardenApiV1.Model
 
         [MaxLength(100)]
         public string? name { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [MaxLength(100)]
         public string? nameEn { get; set; }
 
-        public string? spot { get; set; }   
+        public string? spot { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? spotEn { get; set; }   
 
         public int minDuration { get; set; }

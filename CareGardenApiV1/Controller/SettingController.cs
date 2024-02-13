@@ -62,9 +62,7 @@ namespace CareGardenApiV1.Controller
         /// <remarks>
         /// **Sample request body:**
         ///
-        ///     { 
-        ///        "00000000-0000-0000-0000-000000000000"
-        ///     }
+        /// "00000000-0000-0000-0000-000000000000"
         ///
         /// </remarks>
         /// <returns></returns>
@@ -99,10 +97,8 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <remarks>
         /// **Sample request body:**
-        ///
-        ///     { 
-        ///        "MailSubject"
-        ///     }
+        /// 
+        /// "MailSubject"
         ///
         /// </remarks>
         /// <returns></returns>
@@ -154,7 +150,7 @@ namespace CareGardenApiV1.Controller
             {
                 ResponseModel<List<string>> response = new();
                 response.Data = new List<string>();
-                var valuesArr = setting.value.Split(';', StringSplitOptions.RemoveEmptyEntries);
+                var valuesArr = setting.value.Split('~', StringSplitOptions.RemoveEmptyEntries);
 
                 foreach (var values in valuesArr)
                 {
@@ -175,7 +171,7 @@ namespace CareGardenApiV1.Controller
             {
                 ResponseModel<List<int>> response = new();
 
-                response.Data = setting.value.Split('|', StringSplitOptions.RemoveEmptyEntries)
+                response.Data = setting.value.Split('~', StringSplitOptions.RemoveEmptyEntries)
                                     .Select(x => x.ToInt(0))
                                     .ToList();
 
@@ -314,9 +310,7 @@ namespace CareGardenApiV1.Controller
         /// <remarks>
         /// **Sample request body:**
         ///
-        ///     { 
-        ///        "00000000-0000-0000-0000-000000000000"
-        ///     }
+        /// "00000000-0000-0000-0000-000000000000"
         ///
         /// </remarks>
         /// <returns></returns>

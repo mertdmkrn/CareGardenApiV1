@@ -26,14 +26,6 @@ namespace CareGardenApiV1.Controller
         /// <summary>
         /// Get All Settings
         /// </summary>
-        /// <remarks>
-        /// **Sample request body:**
-        ///
-        ///     { 
-        ///        "00000000-0000-0000-0000-000000000000"
-        ///     }
-        ///
-        /// </remarks>
         /// <returns></returns>
         [HttpPost("getall")]
         public async Task<IActionResult> GetAll()

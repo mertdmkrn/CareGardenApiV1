@@ -20,13 +20,14 @@ using CareGardenApiV1.Middleware;
 using CareGardenApiV1.Helpers;
 using AspNetCoreRateLimit;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
+using CareGardenApiV1.Repository;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        var currentPath = Path.Combine(AppContext.BaseDirectory.Replace("bin\\Debug\\net8.0\\", ""));
 
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Logger(lc => lc
@@ -105,6 +106,11 @@ internal class Program
                     ClockSkew = TimeSpan.Zero
                 }
         );
+
+        builder.Services.AddDbContext<CareGardenApiDbContext>(options =>
+        {
+            options.UseNpgsql(builder.Configuration["ConnectionStrings:AWSPostgreSQL"], x => x.UseNetTopologySuite());
+        }, ServiceLifetime.Singleton);
 
         builder.Services.AddTransient<ExceptionMiddleware>();
         builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));

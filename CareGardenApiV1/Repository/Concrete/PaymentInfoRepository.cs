@@ -7,78 +7,64 @@ namespace CareGardenApiV1.Repository.Concrete
 {
     public class PaymentInfoRepository : IPaymentInfoRepository
     {
+        private readonly CareGardenApiDbContext _context;
+
+        public PaymentInfoRepository(CareGardenApiDbContext context)
+        {
+            _context = context;
+        }
+
         public async Task<PaymentInfo> GetPaymentInfoByIdAsync(Guid id)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                return await context.PaymentInfos
-                    .FirstOrDefaultAsync(x => x.id == id);
-            }
+            return await _context.PaymentInfos
+                .FirstOrDefaultAsync(x => x.id == id);
         }
 
         public async Task<List<PaymentInfo>> GetPaymentInfosByBusinessIdAsync(Guid businessId)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                return await context.PaymentInfos
-                    .Where(x => x.businessId == businessId)
-                    .OrderByDescending(x => x.date)
-                    .AsNoTracking()
-                    .ToListAsync();
-            }
+            return await _context.PaymentInfos
+                .Where(x => x.businessId == businessId)
+                .OrderByDescending(x => x.date)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<List<PaymentInfo>> GetPaymentInfosByIsPaidAsync(bool isPaid)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                return await context.PaymentInfos
-                    .Where(x => x.isPaid == isPaid)
-                    .OrderByDescending(x => x.date)
-                    .AsNoTracking()
-                    .ToListAsync();
-            }
+            return await _context.PaymentInfos
+                .Where(x => x.isPaid == isPaid)
+                .OrderByDescending(x => x.date)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<PaymentInfo> SavePaymentInfoAsync(PaymentInfo paymentInfo)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                await context.PaymentInfos.AddAsync(paymentInfo);
-                await context.SaveChangesAsync();
-                return paymentInfo;
-            }
+            await _context.PaymentInfos.AddAsync(paymentInfo);
+            await _context.SaveChangesAsync();
+            return paymentInfo;
         }
 
         public async Task<PaymentInfo> UpdatePaymentInfoAsync(PaymentInfo paymentInfo)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                context.PaymentInfos.Update(paymentInfo);
-                await context.SaveChangesAsync();
-                return paymentInfo;
-            }
+            _context.PaymentInfos.Update(paymentInfo);
+            await _context.SaveChangesAsync();
+            return paymentInfo;
         }
 
         public async Task<bool> DeletePaymentInfoAsync(PaymentInfo paymentInfo)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                context.PaymentInfos.Remove(paymentInfo);
-                await context.SaveChangesAsync();
-                return true;
-            }
+            _context.PaymentInfos.Remove(paymentInfo);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> DeletePaymentInfoByBusinessIdAsync(Guid businessId)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                await context.PaymentInfos
-                    .Where(x => x.businessId == businessId)
-                    .ExecuteDeleteAsync();
-                return true;
-            }
+            await _context.PaymentInfos
+                .Where(x => x.businessId == businessId)
+                .ExecuteDeleteAsync();
+            return true;
         }
     }
 }

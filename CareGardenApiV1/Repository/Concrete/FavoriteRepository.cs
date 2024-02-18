@@ -8,87 +8,70 @@ namespace CareGardenApiV1.Repository.Concrete
 {
     public class FavoriteRepository : IFavoriteRepository
     {
+        private readonly CareGardenApiDbContext _context;
+
+        public FavoriteRepository(CareGardenApiDbContext context)
+        {
+            _context = context;
+        }
+
         public async Task<Favorite> GetFavoriteByIdAsync(Guid id)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                return await context.Favorites
-                    .FirstOrDefaultAsync(x => x.id == id);
-            }
+            return await _context.Favorites
+                .FirstOrDefaultAsync(x => x.id == id);
         }
 
         public async Task<List<Favorite>> GetFavoritesByUserIdAsync(Guid userId)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                return await context.Favorites
-                    .Where(x => x.userId == userId)
-                    .AsNoTracking()
-                    .ToListAsync();
-            }
+            return await _context.Favorites
+                .Where(x => x.userId == userId)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<Favorite> SaveFavoriteAsync(Favorite favorite)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                await context.Favorites.AddAsync(favorite);
-                await context.SaveChangesAsync();
-                return favorite;
-            }
+            await _context.Favorites.AddAsync(favorite);
+            await _context.SaveChangesAsync();
+            return favorite;
         }
 
         public async Task<Favorite> UpdateFavoriteAsync(Favorite favorite)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                context.Favorites.Update(favorite);
-                await context.SaveChangesAsync();
-                return favorite;
-            }
+            _context.Favorites.Update(favorite);
+            await _context.SaveChangesAsync();
+            return favorite;
         }
 
         public async Task<bool> DeleteFavoriteAsync(Favorite favorite)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                context.Favorites.Remove(favorite);
-                await context.SaveChangesAsync();
-                return true;
-            }
+            _context.Favorites.Remove(favorite);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> DeleteFavoriteByUserIdAsync(Guid userId)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                await context.Favorites
-                    .Where(x => x.userId == userId)
-                    .ExecuteDeleteAsync();
-                return true;
-            }
+            await _context.Favorites
+                .Where(x => x.userId == userId)
+                .ExecuteDeleteAsync();
+            return true;
         }
 
         public async Task<bool> DeleteFavoriteByBusinessIdAsync(Guid businessId)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                await context.Favorites
-                    .Where(x => x.businessId == businessId)
-                    .ExecuteDeleteAsync();
-                return true;
-            }
-        }
-        public async Task<bool> DeleteFavoriteByBusinessIdAndUserIdAsync(Guid userId, Guid businessId)
-        {
-            using (var context = new CareGardenApiDbContext())
-            {
-                await context.Favorites
-                    .Where(x => x.userId == userId && x.businessId == businessId)
-                    .ExecuteDeleteAsync();
-                return true;
-            }
+            await _context.Favorites
+                .Where(x => x.businessId == businessId)
+                .ExecuteDeleteAsync();
+            return true;
         }
 
+        public async Task<bool> DeleteFavoriteByBusinessIdAndUserIdAsync(Guid userId, Guid businessId)
+        {
+            await _context.Favorites
+                .Where(x => x.userId == userId && x.businessId == businessId)
+                .ExecuteDeleteAsync();
+            return true;
+        }
     }
 }

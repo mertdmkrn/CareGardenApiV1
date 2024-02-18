@@ -8,48 +8,43 @@ namespace CareGardenApiV1.Repository.Concrete
 {
     public class ConfirmationRepository : IConfirmationRepository
     {
+        private readonly CareGardenApiDbContext _context;
+
+        public ConfirmationRepository(CareGardenApiDbContext context)
+        {
+            _context = context;
+        }
+
         public async Task<ConfirmationInfo> GetConfirmationInfo(string target)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                return await context.ConfirmationInfos
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.target.Equals(target));
-            }
+            return await _context.ConfirmationInfos
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.target.Equals(target));
         }
 
         public async Task<ConfirmationInfo> SaveConfirmationInfoAsync(ConfirmationInfo confirmationInfo)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                confirmationInfo.createDate = DateTime.Now;
+            confirmationInfo.createDate = DateTime.Now;
 
-                await context.ConfirmationInfos.AddAsync(confirmationInfo);
-                await context.SaveChangesAsync();
-                return confirmationInfo;
-            }
+            await _context.ConfirmationInfos.AddAsync(confirmationInfo);
+            await _context.SaveChangesAsync();
+            return confirmationInfo;
         }
 
         public async Task<ConfirmationInfo> UpdateConfirmationInfoAsync(ConfirmationInfo confirmationInfo)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                confirmationInfo.createDate = DateTime.Now;
+            confirmationInfo.createDate = DateTime.Now;
 
-                context.ConfirmationInfos.Update(confirmationInfo);
-                await context.SaveChangesAsync();
-                return confirmationInfo;
-            }
+            _context.ConfirmationInfos.Update(confirmationInfo);
+            await _context.SaveChangesAsync();
+            return confirmationInfo;
         }
 
         public async Task<bool> DeleteConfirmationInfoAsync(ConfirmationInfo confirmationInfo)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                context.ConfirmationInfos.Remove(confirmationInfo);
-                await context.SaveChangesAsync();
-                return true;
-            }
+            _context.ConfirmationInfos.Remove(confirmationInfo);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
     }

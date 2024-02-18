@@ -7,87 +7,70 @@ namespace CareGardenApiV1.Repository.Concrete
 {
     public class BusinessGalleryRepository : IBusinessGalleryRepository
     {
+        private readonly CareGardenApiDbContext _context;
+
+        public BusinessGalleryRepository(CareGardenApiDbContext context)
+        {
+            _context = context;
+        }
+
         public async Task<BusinessGallery> GetBusinessGalleryByIdAsync(Guid id)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                return await context.BusinessGalleries
-                    .FirstOrDefaultAsync(x => x.id == id);
-            }
+            return await _context.BusinessGalleries
+                .FirstOrDefaultAsync(x => x.id == id);
         }
 
         public async Task<List<BusinessGallery>> GetBusinessGalleriesByBusinessIdAsync(Guid businessId)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                return await context.BusinessGalleries
-                    .Where(x => x.businessId == businessId)
-                    .OrderBy(x => x.size)
-                    .AsNoTracking()
-                    .ToListAsync();
-            }
+            return await _context.BusinessGalleries
+                .Where(x => x.businessId == businessId)
+                .OrderBy(x => x.size)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<BusinessGallery> SaveBusinessGalleryAsync(BusinessGallery businessGallery)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                await context.BusinessGalleries.AddAsync(businessGallery);
-                await context.SaveChangesAsync();
-                return businessGallery;
-            }
+            await _context.BusinessGalleries.AddAsync(businessGallery);
+            await _context.SaveChangesAsync();
+            return businessGallery;
         }
 
         public async Task<List<BusinessGallery>> SaveBusinessGalleriesAsync(List<BusinessGallery> businessGalleries)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                await context.BusinessGalleries.AddRangeAsync(businessGalleries);
-                await context.SaveChangesAsync();
-                return businessGalleries;
-            }
+            await _context.BusinessGalleries.AddRangeAsync(businessGalleries);
+            await _context.SaveChangesAsync();
+            return businessGalleries;
         }
 
         public async Task<BusinessGallery> UpdateBusinessGalleryAsync(BusinessGallery businessGallery)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                context.BusinessGalleries.Update(businessGallery);
-                await context.SaveChangesAsync();
-                return businessGallery;
-            }
+            _context.BusinessGalleries.Update(businessGallery);
+            await _context.SaveChangesAsync();
+            return businessGallery;
         }
 
         public async Task<bool> DeleteBusinessGalleryAsync(BusinessGallery businessGallery)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                context.BusinessGalleries.Remove(businessGallery);
-                await context.SaveChangesAsync();
-                return true;
-            }
+            _context.BusinessGalleries.Remove(businessGallery);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> DeleteBusinessGalleryByBusinessIdAsync(Guid businessId)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                await context.BusinessGalleries
-                    .Where(x => x.businessId == businessId)
-                    .ExecuteDeleteAsync();
-                return true;
-            }
+            await _context.BusinessGalleries
+                .Where(x => x.businessId == businessId)
+                .ExecuteDeleteAsync();
+            return true;
         }
 
         public async Task<bool> DeleteBusinessGalleryByIdAsync(Guid id)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                await context.BusinessGalleries
-                    .Where(x => x.id == id)
-                    .ExecuteDeleteAsync();
-                return true;
-            }
+            await _context.BusinessGalleries
+                .Where(x => x.id == id)
+                .ExecuteDeleteAsync();
+            return true;
         }
     }
 }

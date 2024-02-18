@@ -8,87 +8,70 @@ namespace CareGardenApiV1.Repository.Concrete
 {
     public class BusinessServicesRepository : IBusinessServicesRepository
     {
+        private readonly CareGardenApiDbContext _context;
+
+        public BusinessServicesRepository(CareGardenApiDbContext context)
+        {
+            _context = context;
+        }
+
         public async Task<BusinessServiceModel> GetBusinessServiceByIdAsync(Guid id)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                return await context.BusinessServices
-                    .FirstOrDefaultAsync(x => x.id == id);
-            }
+            return await _context.BusinessServices
+                .FirstOrDefaultAsync(x => x.id == id);
         }
 
         public async Task<List<BusinessServiceModel>> GetBusinessServicesByServiceIdAsync(Guid serviceId)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                return await context.BusinessServices
-                    .Where(x => x.serviceId == serviceId)
-                    .AsNoTracking()
-                    .ToListAsync();
-            }
+            return await _context.BusinessServices
+                .Where(x => x.serviceId == serviceId)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<List<BusinessServiceModel>> GetBusinessServicesByBusinessIdAsync(Guid businessId)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                return await context.BusinessServices
-                    .Where(x => x.businessId == businessId)
-                    .AsNoTracking()
-                    .ToListAsync();
-            }
+            return await _context.BusinessServices
+                .Where(x => x.businessId == businessId)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<List<BusinessServiceModel>> SaveBusinessServicesAsync(List<BusinessServiceModel> businessServices)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                await context.BusinessServices.AddRangeAsync(businessServices);
-                await context.SaveChangesAsync();
-                return businessServices;
-            }
+            await _context.BusinessServices.AddRangeAsync(businessServices);
+            await _context.SaveChangesAsync();
+            return businessServices;
         }
 
         public async Task<BusinessServiceModel> SaveBusinessServiceAsync(BusinessServiceModel businessService)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                await context.BusinessServices.AddAsync(businessService);
-                await context.SaveChangesAsync();
-                return businessService;
-            }
+            await _context.BusinessServices.AddAsync(businessService);
+            await _context.SaveChangesAsync();
+            return businessService;
         }
 
         public async Task<BusinessServiceModel> UpdateBusinessServiceAsync(BusinessServiceModel businessService)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                context.BusinessServices.Update(businessService);
-                await context.SaveChangesAsync();
-                return businessService;
-            }
+            _context.BusinessServices.Update(businessService);
+            await _context.SaveChangesAsync();
+            return businessService;
         }
 
         public async Task<bool> DeleteBusinessServiceAsync(Guid id)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                await context.BusinessServices
-                    .Where(x => x.id == id)
-                    .ExecuteDeleteAsync();
-                return true;
-            }
+            await _context.BusinessServices
+                .Where(x => x.id == id)
+                .ExecuteDeleteAsync();
+            return true;
         }
 
         public async Task<bool> DeleteBusinessServiceByBusinessIdAsync(Guid businessId)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                await context.BusinessServices
-                    .Where(x => x.businessId == businessId)
-                    .ExecuteDeleteAsync();
-                return true;
-            }
+            await _context.BusinessServices
+                .Where(x => x.businessId == businessId)
+                .ExecuteDeleteAsync();
+            return true;
         }
     }
 }

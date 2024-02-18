@@ -12,7 +12,7 @@ namespace CareGardenApiV1.Service.Concrete
 
         public CommentService(ICommentRepository commentRepository)
         {
-            _commentRepository = new CommentRepository();
+            _commentRepository = commentRepository;
         }
 
         public async Task<bool> DeleteCommentAsync(Comment comment)

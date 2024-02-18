@@ -9,134 +9,105 @@ namespace CareGardenApiV1.Repository.Concrete
 {
     public class DiscountRepository : IDiscountRepository
     {
+        private readonly CareGardenApiDbContext _context;
+
+        public DiscountRepository(CareGardenApiDbContext context)
+        {
+            _context = context;
+        }
+
         public async Task<List<Campaign>> GetCampaignsAsync()
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                return await context.Campaigns
-                    .OrderBy(x => x.sortOrder)
-                    .AsNoTracking()
-                    .ToListAsync();
-            }
+            return await _context.Campaigns
+                .OrderBy(x => x.sortOrder)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<Campaign> SaveCampaignAsync(Campaign campaign)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                campaign.createDate = DateTime.Now;
-                campaign.updateDate = campaign.createDate;
+            campaign.createDate = DateTime.Now;
+            campaign.updateDate = campaign.createDate;
 
-                await context.Campaigns.AddAsync(campaign);
-                await context.SaveChangesAsync();
-                return campaign;
-            }
+            await _context.Campaigns.AddAsync(campaign);
+            await _context.SaveChangesAsync();
+            return campaign;
         }
 
         public async Task<Campaign> UpdateCampaignAsync(Campaign campaign)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                campaign.updateDate = DateTime.Now;
+            campaign.updateDate = DateTime.Now;
 
-                context.Campaigns.Update(campaign);
-                await context.SaveChangesAsync();
-                return campaign;
-            }
+            _context.Campaigns.Update(campaign);
+            await _context.SaveChangesAsync();
+            return campaign;
         }
 
         public async Task<bool> DeleteCampaignAsync(Campaign campaign)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                context.Campaigns.Remove(campaign);
-                await context.SaveChangesAsync();
-                return true;
-            }
+            _context.Campaigns.Remove(campaign);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<List<Campaign>> GetCampaignByBusinessIdAsync(Guid? businessId)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                return await context.Campaigns
-                    .Where(x => x.businessId == businessId)
-                    .OrderBy(x => x.sortOrder)
-                    .AsNoTracking()
-                    .ToListAsync();
-            }
+            return await _context.Campaigns
+                .Where(x => x.businessId == businessId)
+                .OrderBy(x => x.sortOrder)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
 
         public async Task<Campaign> GetCampaignByIdAsync(Guid id)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                return await context.Campaigns
-                    .FirstOrDefaultAsync(x => x.id == id);
-            }
+            return await _context.Campaigns
+                .FirstOrDefaultAsync(x => x.id == id);
         }
 
         public async Task<Discount> GetDiscountByIdAsync(Guid id)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                return await context.Discounts
-                    .FirstOrDefaultAsync(x => x.id == id);
-            }
+            return await _context.Discounts
+                .FirstOrDefaultAsync(x => x.id == id);
         }
 
         public async Task<List<Discount>> GetDiscountsByBusinessIdAsync(Guid? businessId)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                return await context.Discounts
-                    .Where(x => x.businessId == businessId)
-                    .AsNoTracking()
-                    .ToListAsync();
-            }
+            return await _context.Discounts
+                .Where(x => x.businessId == businessId)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<List<Discount>> GetActiveDiscountsByBusinessIdAsync(Guid? businessId)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                return await context.Discounts
-                    .Where(x => x.businessId == businessId)
-                    .Where(x => x.isActive == true)
-                    .AsNoTracking()
-                    .ToListAsync();
-            }
+            return await _context.Discounts
+                .Where(x => x.businessId == businessId)
+                .Where(x => x.isActive == true)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<Discount> SaveDiscountAsync(Discount discount)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                await context.Discounts.AddAsync(discount);
-                await context.SaveChangesAsync();
-                return discount;
-            }
+            await _context.Discounts.AddAsync(discount);
+            await _context.SaveChangesAsync();
+            return discount;
         }
 
         public async Task<Discount> UpdateDiscountAsync(Discount discount)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                context.Discounts.Update(discount);
-                await context.SaveChangesAsync();
-                return discount;
-            }
+            _context.Discounts.Update(discount);
+            await _context.SaveChangesAsync();
+            return discount;
         }
 
         public async Task<bool> DeleteDiscountAsync(Discount discount)
         {
-            using (var context = new CareGardenApiDbContext())
-            {
-                context.Discounts.Remove(discount);
-                await context.SaveChangesAsync();
-                return true;
-            }
+            _context.Discounts.Remove(discount);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

@@ -926,18 +926,10 @@
             <returns></returns>
         </member>
         <member name="M:CareGardenApiV1.Controller.SettingController.GetAll">
-             <summary>
-             Get All Settings
-             </summary>
-             <remarks>
-             **Sample request body:**
-            
-                 { 
-                    "00000000-0000-0000-0000-000000000000"
-                 }
-            
-             </remarks>
-             <returns></returns>
+            <summary>
+            Get All Settings
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:CareGardenApiV1.Controller.SettingController.GetById(System.String)">
              <summary>
@@ -946,9 +938,7 @@
              <remarks>
              **Sample request body:**
             
-                 { 
-                    "00000000-0000-0000-0000-000000000000"
-                 }
+             "00000000-0000-0000-0000-000000000000"
             
              </remarks>
              <returns></returns>
@@ -959,10 +949,8 @@
              </summary>
              <remarks>
              **Sample request body:**
-            
-                 { 
-                    "MailSubject"
-                 }
+             
+             "MailSubject"
             
              </remarks>
              <returns></returns>
@@ -1006,9 +994,7 @@
              <remarks>
              **Sample request body:**
             
-                 { 
-                    "00000000-0000-0000-0000-000000000000"
-                 }
+             "00000000-0000-0000-0000-000000000000"
             
              </remarks>
              <returns></returns>

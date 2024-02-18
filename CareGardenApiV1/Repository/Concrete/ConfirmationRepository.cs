@@ -18,7 +18,7 @@ namespace CareGardenApiV1.Repository.Concrete
         public async Task<ConfirmationInfo> GetConfirmationInfo(string target)
         {
             return await _context.ConfirmationInfos
-                .AsNoTracking()
+                .OrderByDescending(x => x.createDate)
                 .FirstOrDefaultAsync(x => x.target.Equals(target));
         }
 

@@ -18,7 +18,7 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<IList<BusinessListModel>> GetBusinessNearByDistanceAsync(BusinessSearchModel businessSearchModel);
         Task<IList<BusinessListModel>> GetBusinessByUserFavorites(BusinessSearchModel businessSearchModel);
         Task<IList<BusinessListModel>> GetBusinessByPopularAsync(BusinessSearchModel businessSearchModel);
-        Task<IList<BusinessListModel>> ExploreBusinesses(BusinessExproleModel businessExploreModel);
+        Task<IList<BusinessListModel>> ExploreBusinesses(BusinessExploreModel businessExploreModel);
         Task<Business> SaveBusinessAsync(Business business);
         Task<Business> UpdateBusinessAsync(Business business);
         Task<bool> DeleteBusinessAsync(Business business);

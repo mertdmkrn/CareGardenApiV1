@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace CareGardenApiV1.Model.RequestModel
 {
-    public class BusinessExproleModel
+    public class BusinessExploreModel
     {
         public double? latitude { get; set; }
         public double? longitude { get; set; }

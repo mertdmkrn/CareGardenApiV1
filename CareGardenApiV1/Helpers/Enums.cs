@@ -39,7 +39,6 @@
         MostPopular,
         Nearest,
         TopRated,
-        FirstAvailableTime,
         Newest
     }
 

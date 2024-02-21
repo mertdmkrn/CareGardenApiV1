@@ -852,7 +852,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.SearchController.SearchBusiness(CareGardenApiV1.Model.RequestModel.BusinessExproleModel)">
+        <member name="M:CareGardenApiV1.Controller.SearchController.SearchBusiness(CareGardenApiV1.Model.RequestModel.BusinessExploreModel)">
             <summary>
             Get Search
             </summary>

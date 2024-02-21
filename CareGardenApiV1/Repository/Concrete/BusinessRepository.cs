@@ -184,7 +184,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 .ToListAsync();
         }
 
-        public async Task<IList<BusinessListModel>> ExploreBusinesses(BusinessExproleModel businessExploreModel)
+        public async Task<IList<BusinessListModel>> ExploreBusinesses(BusinessExploreModel businessExploreModel)
         {
             Point? searchLocation = null;
             var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);

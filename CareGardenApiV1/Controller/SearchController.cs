@@ -106,11 +106,11 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost]
         [Route("user/searchbusiness")]
-        public async Task<IActionResult> SearchBusiness([FromBody] BusinessExproleModel businessExproleModel)
+        public async Task<IActionResult> SearchBusiness([FromBody] BusinessExploreModel BusinessExploreModel)
         {
             ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
 
-            response.Data = await _businessService.ExploreBusinesses(businessExproleModel);
+            response.Data = await _businessService.ExploreBusinesses(BusinessExploreModel);
             return Ok(response);
         }
 

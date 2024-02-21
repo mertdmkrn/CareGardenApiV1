@@ -24,7 +24,7 @@ namespace CareGardenApiV1.Service.Concrete
             return await _businessRepository.DeleteBusinessAsync(business);
         }
 
-        public async Task<IList<BusinessListModel>> ExploreBusinesses(BusinessExproleModel businessExploreModel)
+        public async Task<IList<BusinessListModel>> ExploreBusinesses(BusinessExploreModel businessExploreModel)
         {
             return await _businessRepository.ExploreBusinesses(businessExploreModel);
         }

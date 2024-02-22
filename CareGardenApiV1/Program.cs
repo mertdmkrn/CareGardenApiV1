@@ -110,7 +110,7 @@ internal class Program
         builder.Services.AddDbContext<CareGardenApiDbContext>(options =>
         {
             options.UseNpgsql(builder.Configuration["ConnectionStrings:AWSPostgreSQL"], x => x.UseNetTopologySuite());
-        }, ServiceLifetime.Scoped);
+        });
 
         builder.Services.AddTransient<ExceptionMiddleware>();
         builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));

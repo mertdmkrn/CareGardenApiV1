@@ -144,6 +144,9 @@
   <data name="GeriBildirimGonderildi" xml:space="preserve">
     <value>Thank you for your feedback.</value>
   </data>
+  <data name="GeriBildirimGonderilemedi" xml:space="preserve">
+    <value>The feedback could not be sent.</value>
+  </data>
   <data name="GirdiginizMaileAitKullaniciBulunamadi" xml:space="preserve">
     <value>The user for the e-mail you entered could not be found.</value>
   </data>

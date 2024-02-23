@@ -144,6 +144,9 @@
   <data name="GeriBildirimGonderildi" xml:space="preserve">
     <value>Thank you for your feedback.</value>
   </data>
+  <data name="GeriBildirimGonderilemedi" xml:space="preserve">
+    <value>Geri bildirim gönderilemedi.</value>
+  </data>
   <data name="GirdiginizMaileAitKullaniciBulunamadi" xml:space="preserve">
     <value>Girdiğiniz maile ait kullanıcı bulunamadı.</value>
   </data>

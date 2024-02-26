@@ -15,6 +15,7 @@ namespace CareGardenApiV1.Controller
 {
     [ApiController]
     [Authorize]
+    [Route("user")]
     public class SearchController : ControllerBase
     {
         private readonly IBusinessService _businessService;
@@ -38,14 +39,13 @@ namespace CareGardenApiV1.Controller
         /// Get Search By Keyword
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("user/searchbusinessbykeyword")]
+        [HttpPost("searchbusinessbykeyword")]
         public async Task<IActionResult> SearchBusinessByKeyword([FromBody] KeywordSearchModel keywordSearchModel)
         {
             var culture = Request.Headers["Language"].ToString().IsNull("en");
             ResponseModel<KeywordSearchResponseModel> response = new ResponseModel<KeywordSearchResponseModel>();
 
-            if (keywordSearchModel.keyword.IsNullOrEmpty() || keywordSearchModel.keyword.Length < 3)
+            if (keywordSearchModel.keyWord.IsNullOrEmpty() || keywordSearchModel.keyWord.Length < 3)
             {
                 response.HasError = true;
                 response.ValidationErrors.Add(new ValidationError("keyword", Resource.Resource.BuAlaniBosBirakmayiniz));
@@ -73,11 +73,11 @@ namespace CareGardenApiV1.Controller
             }
 
             keywordSearchResponse.services = services.Where(x => culture.Equals("en")
-                ? x.nameEn.ToLower(Resource.Resource.Culture).Contains(keywordSearchModel.keyword.ToLower(Resource.Resource.Culture))
-                : x.name.ToLower(Resource.Resource.Culture).Contains(keywordSearchModel.keyword.ToLower(Resource.Resource.Culture)))
+                ? x.nameEn.ToLower(Resource.Resource.Culture).Contains(keywordSearchModel.keyWord.ToLower(Resource.Resource.Culture))
+                : x.name.ToLower(Resource.Resource.Culture).Contains(keywordSearchModel.keyWord.ToLower(Resource.Resource.Culture)))
                 .OrderBy(x => x.sortOrder).ToList();
 
-            var businessDetails = await GetSearchBusinessWithElastic(keywordSearchModel.keyword.ToLower(Resource.Resource.Culture));
+            var businessDetails = await GetSearchBusinessWithElastic(keywordSearchModel.keyWord.ToLower(Resource.Resource.Culture));
 
             Point? userLocation = null;
             var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
@@ -93,7 +93,7 @@ namespace CareGardenApiV1.Controller
                                                 .ThenByDescending(x => x.averageRating)
                                                 .ToList();
 
-            keywordSearchResponse.keyword = keywordSearchModel.keyword;
+            keywordSearchResponse.keyWord = keywordSearchModel.keyWord;
 
             response.Data = keywordSearchResponse;
 
@@ -104,13 +104,54 @@ namespace CareGardenApiV1.Controller
         /// Get Search
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        [Route("user/searchbusiness")]
+        [HttpPost("searchbusiness")]
         public async Task<IActionResult> SearchBusiness([FromBody] BusinessExploreModel BusinessExploreModel)
         {
             ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
 
             response.Data = await _businessService.ExploreBusinesses(BusinessExploreModel);
+            return Ok(response);
+        }
+
+
+        /// <summary>
+        /// Get Search Location
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("searchlocation")]
+        public async Task<IActionResult> SearchLocation([FromBody] StringSearchModel searchModel)
+        {
+            ResponseModel<IEnumerable<LocationInfo>> response = new ResponseModel<IEnumerable<LocationInfo>>();
+
+            if (searchModel.keyWord.IsNullOrEmpty()  || searchModel.keyWord.Length < 3)
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("keyword", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.Message = Resource.Resource.BuAlaniBosBirakmayiniz;
+            }
+
+            if (response.HasError)
+                return Ok(response);
+
+
+            var locationList = Constants.LocationInfos.Where(x => x.baseName.StartsWith(searchModel.keyWord, StringComparison.OrdinalIgnoreCase)).ToList();
+            locationList.AddRange(Constants.LocationInfos.Where(x => x.name.StartsWith(searchModel.keyWord, StringComparison.OrdinalIgnoreCase)));
+
+            response.Data = locationList;
+
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Get Locations
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("getlocations")]
+        public async Task<IActionResult> GetLocations()
+        {
+            ResponseModel<List<LocationInfo>> response = new ResponseModel<List<LocationInfo>>();
+            response.Data = Constants.LocationInfos;
+
             return Ok(response);
         }
 

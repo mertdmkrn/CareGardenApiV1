@@ -858,6 +858,18 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.SearchController.SearchLocation(CareGardenApiV1.Model.RequestModel.StringSearchModel)">
+            <summary>
+            Get Search Location
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.SearchController.GetLocations">
+            <summary>
+            Get Locations
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.ServicesController.GetAll">
             <summary>
             Get Services

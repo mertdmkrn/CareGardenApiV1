@@ -195,37 +195,37 @@ namespace CareGardenApiV1.Repository.Concrete
             }
 
             var filteredBusinesses = await _context.Businesses
-                .AsNoTracking()
-                .Where(x => x.isActive && x.verified)
-                .WhereIf((WorkingGenderType)businessExploreModel.workingGenderType != WorkingGenderType.All, x => x.workingGenderType == businessExploreModel.workingGenderType)
-                .WhereIf(businessExploreModel.serviceId.HasValue, x => x.services.Any(x => x.serviceId == businessExploreModel.serviceId))
-                .WhereIf(businessExploreModel.offers > 0, x => x.discounts.Any(x => x.isActive && x.rate == businessExploreModel.offers))
-                .Select(x => new BusinessListModel
-                {
-                    id = x.id,
-                    name = x.name ?? "",
-                    discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
-                    workingGenderType = (int)x.workingGenderType,
-                    imageUrl = x.galleries.FirstOrDefault().imageUrl,
-                    averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == CommentType.User).Average(x => x.point) : 0,
-                    countRating = x.comments.Where(x => x.commentType == CommentType.User).Count(),
-                    distance = searchLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(searchLocation)) * Constants.DistanceValue : 0,
-                    isFeatured = x.isFeatured,
-                    hasPromotion = x.hasPromotion,
-                    officialDayAvailable = x.officialHolidayAvailable,
-                    createDate = x.createDate,
-                    workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null,
-                    appointmentPeopleCount = x.appointmentPeopleCount,
-                    appointmentTimeInterval = x.appointmentTimeInterval,
-                    appointments = businessExploreModel.availableDate.HasValue && x.appointments.Any() ? x.appointments.Where(x => x.startDate.Value.Date == businessExploreModel.availableDate.Value).Select(x => new Appointment { businessService = x.businessService }).ToList() : null
-                })
-                .OrderByDescendingIf(businessExploreModel.sortByType == SortByType.Recommended, x => x.appointments?.Count())
-                .OrderByDescendingIf(businessExploreModel.sortByType == SortByType.MostPopular, x => x.countRating)
-                .OrderByDescendingIf(businessExploreModel.sortByType == SortByType.Newest, x => x.createDate)
-                .OrderByDescendingIf(businessExploreModel.sortByType == SortByType.TopRated, x => x.averageRating)
-                .OrderByIf(businessExploreModel.sortByType == SortByType.Nearest, x => x.distance)
-                .ToAsyncEnumerable()
-                .ToListAsync();
+             .AsNoTracking()
+             .Where(x => x.isActive && x.verified)
+             .WhereIf((WorkingGenderType)businessExploreModel.workingGenderType != WorkingGenderType.All, x => x.workingGenderType == businessExploreModel.workingGenderType)
+             .WhereIf(businessExploreModel.serviceId.HasValue, x => x.services.Any(x => x.serviceId == businessExploreModel.serviceId))
+             .WhereIf(businessExploreModel.offers > 0, x => x.discounts.Any(x => x.isActive && x.rate == businessExploreModel.offers))
+             .Select(x => new BusinessListModel
+             {
+                 id = x.id,
+                 name = x.name ?? "",
+                 discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
+                 workingGenderType = (int)x.workingGenderType,
+                 imageUrl = x.galleries.FirstOrDefault().imageUrl,
+                 averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == CommentType.User).Average(x => x.point) : 0,
+                 countRating = x.comments.Where(x => x.commentType == CommentType.User).Count(),
+                 distance = searchLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(searchLocation)) * Constants.DistanceValue : 0,
+                 isFeatured = x.isFeatured,
+                 hasPromotion = x.hasPromotion,
+                 officialDayAvailable = x.officialHolidayAvailable,
+                 createDate = x.createDate,
+                 workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null,
+                 appointmentPeopleCount = x.appointmentPeopleCount,
+                 appointmentTimeInterval = x.appointmentTimeInterval,
+                 appointments = businessExploreModel.availableDate.HasValue && x.appointments.Any() ? x.appointments.Where(x => x.startDate.Value.Date == businessExploreModel.availableDate.Value).Select(x => new Appointment { businessService = x.businessService }).ToList() : null
+             })
+             .OrderByDescendingIf(businessExploreModel.sortByType == SortByType.Recommended, x => x.appointments?.Count())
+             .OrderByDescendingIf(businessExploreModel.sortByType == SortByType.MostPopular, x => x.countRating)
+             .OrderByDescendingIf(businessExploreModel.sortByType == SortByType.Newest, x => x.createDate)
+             .OrderByDescendingIf(businessExploreModel.sortByType == SortByType.TopRated, x => x.averageRating)
+             .OrderByIf(businessExploreModel.sortByType == SortByType.Nearest, x => x.distance)
+             .ToAsyncEnumerable()
+             .ToListAsync();
 
             filteredBusinesses.ToList().ForEach(x =>
             {
@@ -265,6 +265,43 @@ namespace CareGardenApiV1.Repository.Concrete
                         .Take(businessExploreModel.take.Value)
                         .ToList()
                     : filteredBusinesses;
+
+            //return await _context.Businesses
+            //    .AsNoTracking()
+            //    .Where(x => x.isActive && x.verified)
+            //    .WhereIf((WorkingGenderType)businessExploreModel.workingGenderType != WorkingGenderType.All, x => x.workingGenderType == businessExploreModel.workingGenderType)
+            //    .WhereIf(businessExploreModel.serviceId.HasValue, x => x.services.Any(x => x.serviceId == businessExploreModel.serviceId))
+            //    .WhereIf(businessExploreModel.offers > 0, x => x.discounts.Any(x => x.isActive && x.rate == businessExploreModel.offers))
+            //    .Select(x => new BusinessListModel
+            //    {
+            //        id = x.id,
+            //        name = x.name ?? "",
+            //        discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
+            //        workingGenderType = (int)x.workingGenderType,
+            //        imageUrl = x.galleries.FirstOrDefault().imageUrl,
+            //        averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == CommentType.User).Average(x => x.point) : 0,
+            //        countRating = x.comments.Where(x => x.commentType == CommentType.User).Count(),
+            //        distance = searchLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(searchLocation)) * Constants.DistanceValue : 0,
+            //        isFeatured = x.isFeatured,
+            //        hasPromotion = x.hasPromotion,
+            //        officialDayAvailable = x.officialHolidayAvailable,
+            //        createDate = x.createDate,
+            //        workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null,
+            //        appointmentPeopleCount = x.appointmentPeopleCount,
+            //        appointmentTimeInterval = x.appointmentTimeInterval,
+            //        appointments = businessExploreModel.availableDate.HasValue && x.appointments.Any() ? x.appointments.Where(x => x.startDate.Value.Date == businessExploreModel.availableDate.Value).Select(x => new Appointment { businessService = x.businessService }).ToList() : null
+            //    })
+            //    .Where(x => x.distance < businessExploreModel.isWithinKilometer)
+            //    .Where(x => HelperMethods.GetBusinessOpenSpecialDateExpression())
+            //    .OrderByDescendingIf(businessExploreModel.sortByType == SortByType.Recommended, x => $"{x.isRecommended}{x.averageRating}")
+            //    .OrderByDescendingIf(businessExploreModel.sortByType == SortByType.MostPopular, x => x.countRating)
+            //    .OrderByDescendingIf(businessExploreModel.sortByType == SortByType.Newest, x => x.createDate)
+            //    .OrderByDescendingIf(businessExploreModel.sortByType == SortByType.TopRated, x => x.averageRating)
+            //    .OrderByIf(businessExploreModel.sortByType == SortByType.Nearest, x => x.distance)
+            //    .Skip(businessExploreModel.page.Value * businessExploreModel.take.Value)
+            //    .Take(businessExploreModel.take.Value)
+            //    .ToAsyncEnumerable()
+            //    .ToListAsync();
         }
 
         public async Task<BusinessDetailModel> GetBusinessDetailByIdAsync(Guid id)

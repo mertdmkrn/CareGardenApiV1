@@ -12,8 +12,8 @@ namespace CareGardenApiV1.Model.RequestModel
         public Guid? serviceId { get; set; }
         public DayZone dayZone { get; set; }
         public int offers { get; set; }
-        public int? page { get; set; }
-        public int? take { get; set; }
+        public int? page { get; set; } = 0;
+        public int? take { get; set; } = 5;
         public int isWithinKilometer { get; set; } = 200;
         public WorkingGenderType workingGenderType { get; set; }
         public SortByType sortByType { get; set; }

@@ -107,15 +107,15 @@ internal class Program
                 }
         );
 
-        builder.Services.AddDbContext<CareGardenApiDbContext>(options =>
-        {
-            options.UseNpgsql(builder.Configuration["ConnectionStrings:AWSPostgreSQL"], x => x.UseNetTopologySuite());
-        }, ServiceLifetime.Scoped);
-
         builder.Services.AddTransient<ExceptionMiddleware>();
         builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
         configureInjection(builder);
+
+        builder.Services.AddDbContext<CareGardenApiDbContext>(options =>
+        {
+            options.UseNpgsql(builder.Configuration["ConnectionStrings:AWSPostgreSQL"], x => x.UseNetTopologySuite());
+        });
 
         builder.Services.AddHangfire(x => x.UsePostgreSqlStorage(builder.Configuration["ConnectionStrings:AWSHangfirePostgreSQL"]));
         builder.Services.AddHangfireServer();
@@ -164,45 +164,46 @@ internal class Program
         builder.Services.AddSingleton<IMailHandler, MailHandler>();
         builder.Services.AddSingleton<ISmsHandler, SmsHandler>();
         builder.Services.AddSingleton<IFileHandler, FileHandler>();
-        builder.Services.AddSingleton<ILoggerHandler, LoggerHandler>();
-        builder.Services.AddSingleton<IElasticHandler, ElasticHandler>();
 
-        builder.Services.AddSingleton<IBusinessRepository, BusinessRepository>();
-        builder.Services.AddSingleton<IBusinessGalleryRepository, BusinessGalleryRepository>();
-        builder.Services.AddSingleton<IBusinessPropertiesRepository, BusinessPropertiesRepository>();
-        builder.Services.AddSingleton<IBusinessServicesRepository, BusinessServicesRepository>();
-        builder.Services.AddSingleton<IBusinessWorkingInfoRepository, BusinessWorkingInfoRepository>();
-        builder.Services.AddSingleton<ICampaignRepository, CampaignRepository>();
-        builder.Services.AddSingleton<ICommentRepository, CommentRepository>();
-        builder.Services.AddSingleton<IComplainRepository, ComplainRepository>();
-        builder.Services.AddSingleton<IConfirmationRepository, ConfirmationRepository>();
-        builder.Services.AddSingleton<IFavoriteRepository, FavoriteRepository>();
-        builder.Services.AddSingleton<IPaymentInfoRepository, PaymentInfoRepository>();
-        builder.Services.AddSingleton<IServicesRepository, ServicesRepository>();
-        builder.Services.AddSingleton<IUserRepository, UserRepository>();
-        builder.Services.AddSingleton<IFaqRepository, FaqRepository>();
-        builder.Services.AddSingleton<IWorkerRepository, WorkerRepository>();
-        builder.Services.AddSingleton<IAppointmentRepository, AppointmentRepository>();
-        builder.Services.AddSingleton<IDiscountRepository, DiscountRepository>();
-        builder.Services.AddSingleton<ISettingRepository, SettingRepository>();
+        builder.Services.AddScoped<ILoggerHandler, LoggerHandler>();
+        builder.Services.AddScoped<IElasticHandler, ElasticHandler>();
 
-        builder.Services.AddSingleton<IBusinessService, BusinessService>();
-        builder.Services.AddSingleton<IBusinessGalleryService, BusinessGalleryService>();
-        builder.Services.AddSingleton<IBusinessPropertiesService, BusinessPropertiesService>();
-        builder.Services.AddSingleton<IBusinessServicesService, BusinessServicesService>();
-        builder.Services.AddSingleton<IBusinessWorkingInfoService, BusinessWorkingInfoService>();
-        builder.Services.AddSingleton<ICampaignService, CampaignService>();
-        builder.Services.AddSingleton<ICommentService, CommentService>();
-        builder.Services.AddSingleton<IComplainService, ComplainService>();
-        builder.Services.AddSingleton<IConfirmationService, ConfirmationService>();
-        builder.Services.AddSingleton<IFavoriteService, FavoriteService>();
-        builder.Services.AddSingleton<IPaymentInfoService, PaymentInfoService>();
-        builder.Services.AddSingleton<IServicesService, ServicesService>();
-        builder.Services.AddSingleton<IUserService, UserService>();
-        builder.Services.AddSingleton<IFaqService, FaqService>();
-        builder.Services.AddSingleton<IWorkerService, WorkerService>();
-        builder.Services.AddSingleton<IAppointmentService, AppointmentService>();
-        builder.Services.AddSingleton<IDiscountService, DiscountService>();
-        builder.Services.AddSingleton<ISettingService, SettingService>();
+        builder.Services.AddScoped<IBusinessRepository, BusinessRepository>();
+        builder.Services.AddScoped<IBusinessGalleryRepository, BusinessGalleryRepository>();
+        builder.Services.AddScoped<IBusinessPropertiesRepository, BusinessPropertiesRepository>();
+        builder.Services.AddScoped<IBusinessServicesRepository, BusinessServicesRepository>();
+        builder.Services.AddScoped<IBusinessWorkingInfoRepository, BusinessWorkingInfoRepository>();
+        builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
+        builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+        builder.Services.AddScoped<IComplainRepository, ComplainRepository>();
+        builder.Services.AddScoped<IConfirmationRepository, ConfirmationRepository>();
+        builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
+        builder.Services.AddScoped<IPaymentInfoRepository, PaymentInfoRepository>();
+        builder.Services.AddScoped<IServicesRepository, ServicesRepository>();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IFaqRepository, FaqRepository>();
+        builder.Services.AddScoped<IWorkerRepository, WorkerRepository>();
+        builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+        builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
+        builder.Services.AddScoped<ISettingRepository, SettingRepository>();
+
+        builder.Services.AddScoped<IBusinessService, BusinessService>();
+        builder.Services.AddScoped<IBusinessGalleryService, BusinessGalleryService>();
+        builder.Services.AddScoped<IBusinessPropertiesService, BusinessPropertiesService>();
+        builder.Services.AddScoped<IBusinessServicesService, BusinessServicesService>();
+        builder.Services.AddScoped<IBusinessWorkingInfoService, BusinessWorkingInfoService>();
+        builder.Services.AddScoped<ICampaignService, CampaignService>();
+        builder.Services.AddScoped<ICommentService, CommentService>();
+        builder.Services.AddScoped<IComplainService, ComplainService>();
+        builder.Services.AddScoped<IConfirmationService, ConfirmationService>();
+        builder.Services.AddScoped<IFavoriteService, FavoriteService>();
+        builder.Services.AddScoped<IPaymentInfoService, PaymentInfoService>();
+        builder.Services.AddScoped<IServicesService, ServicesService>();
+        builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IFaqService, FaqService>();
+        builder.Services.AddScoped<IWorkerService, WorkerService>();
+        builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+        builder.Services.AddScoped<IDiscountService, DiscountService>();
+        builder.Services.AddScoped<ISettingService, SettingService>();
     }
 }

@@ -46,6 +46,7 @@ namespace CareGardenApiV1.Model.ResponseModel
         public bool isFeatured { get; set; }
         public bool hasPromotion { get; set; }
         public bool isOpen { get; set; }
+        public byte isRecommended { get; set; }
         public DateTime? createDate { get; set; }
 
         [JsonIgnore]

@@ -118,7 +118,7 @@ namespace CareGardenApiV1.Controller
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.OnayKoduGonderilemedi;
+                response.Message = Resource.Resource.GeriBildirimGonderilemedi;
                 return Ok(response);
             }
 

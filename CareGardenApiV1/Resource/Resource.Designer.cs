@@ -142,6 +142,15 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Geri bildirim gönderilemedi..
+        /// </summary>
+        public static string GeriBildirimGonderilemedi {
+            get {
+                return ResourceManager.GetString("GeriBildirimGonderilemedi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Girdiğiniz maile ait kullanıcı bulunamadı..
         /// </summary>
         public static string GirdiginizMaileAitKullaniciBulunamadi {

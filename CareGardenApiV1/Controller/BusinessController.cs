@@ -580,7 +580,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("updategalleryphoto")]
-        public async Task<IActionResult> UpdateGalleryPhoto([FromForm] BusinessGallery updateBusinessGallery)
+        public async Task<IActionResult> UpdateGalleryPhoto([FromBody] BusinessGallery updateBusinessGallery)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
 

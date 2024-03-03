@@ -554,6 +554,7 @@ namespace CareGardenApiV1.Controller
                 businessId = business.id,
                 isProfilePhoto = businessFileInfoModel.isProfilePhoto,
                 isSliderPhoto = businessFileInfoModel.isSliderPhoto,
+                sortOrder = businessFileInfoModel.sortOrder,
                 size = null
             };
 

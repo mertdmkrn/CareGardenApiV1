@@ -17,7 +17,7 @@ namespace CareGardenApiV1.Repository.Concrete
         public async Task<BusinessGallery> GetBusinessGalleryByIdAsync(Guid id)
         {
             return await _context.BusinessGalleries
-                .FirstOrDefaultAsync(x => x.id == id);
+                .FindAsync(id);
         }
 
         public async Task<List<BusinessGallery>> GetBusinessGalleriesByBusinessIdAsync(Guid businessId)

@@ -51,9 +51,7 @@ namespace CareGardenApiV1.Controller
         /// <remarks>
         /// **Sample request body:**
         ///
-        ///     { 
-        ///        "00000000-0000-0000-0000-000000000000"
-        ///     }
+        /// "00000000-0000-0000-0000-000000000000"
         ///
         /// </remarks>
         /// <returns></returns>
@@ -93,9 +91,7 @@ namespace CareGardenApiV1.Controller
         /// <remarks>
         /// **Sample request body:**
         ///
-        ///     { 
-        ///        "00000000-0000-0000-0000-000000000000"
-        ///     }
+        /// "00000000-0000-0000-0000-000000000000"
         ///
         /// </remarks>
         /// <returns></returns>
@@ -161,7 +157,7 @@ namespace CareGardenApiV1.Controller
         /// <remarks>
         /// **Sample request body:**
         ///
-        ///        "00000000-0000-0000-0000-000000000000"
+        /// "00000000-0000-0000-0000-000000000000"
         ///
         /// </remarks>
         /// <returns></returns>
@@ -556,12 +552,59 @@ namespace CareGardenApiV1.Controller
             {
                 imageUrl = imageUrl,
                 businessId = business.id,
+                isProfilePhoto = businessFileInfoModel.isProfilePhoto,
+                isSliderPhoto = businessFileInfoModel.isSliderPhoto,
                 size = null
             };
 
             response.Message = Resource.Resource.ResimYuklemeBasarili;
             response.Data = await _businessGalleryService.SaveBusinessGalleryAsync(businessGallery);
             BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
+
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Update Gallery Photo
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "id" : "00000000-0000-0000-0000-000000000000",
+        ///        "isSliderPhoto" : true,
+        ///        "isProfilePhoto" : true,
+        ///        "sortOrder" : 1
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost("updategalleryphoto")]
+        public async Task<IActionResult> UpdateGalleryPhoto([FromForm] BusinessGallery updateBusinessGallery)
+        {
+            ResponseModel<bool> response = new ResponseModel<bool>();
+
+            var businessGallery = await _businessGalleryService.GetBusinessGalleryByIdAsync(updateBusinessGallery.id);
+
+            if (businessGallery == null)
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.KayitBulunamadi;
+                return Ok(response);
+            }
+
+            businessGallery.isSliderPhoto = updateBusinessGallery.isSliderPhoto;
+            businessGallery.isProfilePhoto = updateBusinessGallery.isProfilePhoto;
+            businessGallery.sortOrder = updateBusinessGallery.sortOrder;
+
+            response.Data = await _businessGalleryService.UpdateBusinessGalleryAsync(businessGallery);
+
+            if (businessGallery.businessId.HasValue)
+            {
+                BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(businessGallery.businessId.Value));
+            }
+
+            response.Message = Resource.Resource.KayitBasarili;
 
             return Ok(response);
         }

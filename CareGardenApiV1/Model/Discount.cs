@@ -23,6 +23,7 @@ namespace CareGardenApiV1.Model
 
         public double rate { get; set; }
         public DiscountType type { get; set; }
+        public string? colorCode { get; set; } = string.Empty;
 
         [NotMapped]
         public string title { get; set; } = string.Empty;

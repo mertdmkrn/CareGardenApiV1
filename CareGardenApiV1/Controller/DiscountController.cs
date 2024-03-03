@@ -66,7 +66,8 @@ namespace CareGardenApiV1.Controller
         ///        "description": "Bugün tüm servislerde",
         ///        "descriptionEn": "Every services today",
         ///        "rate": 20,
-        ///        "type": 0
+        ///        "type": 0,
+        ///        "colorCode": "#335657"
         ///     }
         ///
         /// </remarks>
@@ -125,7 +126,8 @@ namespace CareGardenApiV1.Controller
         ///        "description": "Bugün tüm servislerde",
         ///        "descriptionEn": "Every services today",
         ///        "rate": 20,
-        ///        "type": 0
+        ///        "type": 0,
+        ///        "colorCode": "#335657"
         ///     }
         ///
         /// </remarks>
@@ -175,6 +177,7 @@ namespace CareGardenApiV1.Controller
             discount.isActive = updateDiscount.isActive;
             discount.rate = updateDiscount.rate;
             discount.type = updateDiscount.type;
+            discount.colorCode = updateDiscount.colorCode;
 
             response.Data = await _discountService.UpdateDiscountAsync(discount);
             response.Message = Resource.Resource.KayitBasarili;

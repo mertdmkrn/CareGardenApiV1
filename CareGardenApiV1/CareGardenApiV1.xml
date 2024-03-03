@@ -261,9 +261,7 @@
              <remarks>
              **Sample request body:**
             
-                 { 
-                    "00000000-0000-0000-0000-000000000000"
-                 }
+             "00000000-0000-0000-0000-000000000000"
             
              </remarks>
              <returns></returns>
@@ -275,9 +273,7 @@
              <remarks>
              **Sample request body:**
             
-                 { 
-                    "00000000-0000-0000-0000-000000000000"
-                 }
+             "00000000-0000-0000-0000-000000000000"
             
              </remarks>
              <returns></returns>
@@ -295,7 +291,7 @@
              <remarks>
              **Sample request body:**
             
-                    "00000000-0000-0000-0000-000000000000"
+             "00000000-0000-0000-0000-000000000000"
             
              </remarks>
              <returns></returns>
@@ -368,6 +364,23 @@
             Add Gallery Photo
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.UpdateGalleryPhoto(CareGardenApiV1.Model.BusinessGallery)">
+             <summary>
+             Update Gallery Photo
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "isSliderPhoto" : true,
+                    "isProfilePhoto" : true,
+                    "sortOrder" : 1
+                 }
+            
+             </remarks>
+             <returns></returns>
         </member>
         <member name="M:CareGardenApiV1.Controller.BusinessController.DeleteGalleryPhoto(System.String)">
             <summary>
@@ -786,7 +799,8 @@
                     "description": "Bugün tüm servislerde",
                     "descriptionEn": "Every services today",
                     "rate": 20,
-                    "type": 0
+                    "type": 0,
+                    "colorCode": "#335657",
                  }
             
              </remarks>
@@ -1592,6 +1606,18 @@
         <member name="M:CareGardenApiV1.Migrations.CareGardenV24.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV25">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV25.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV25.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV25.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="T:CareGardenApiV1.Resource.Resource">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -1651,6 +1677,11 @@
         <member name="P:CareGardenApiV1.Resource.Resource.GeriBildirimGonderildi">
             <summary>
               Looks up a localized string similar to Thank you for your feedback..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.GeriBildirimGonderilemedi">
+            <summary>
+              Looks up a localized string similar to Geri bildirim gönderilemedi..
             </summary>
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.GirdiginizMaileAitKullaniciBulunamadi">

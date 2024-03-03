@@ -18,6 +18,8 @@ namespace CareGardenApiV1.Model
         public string? size { get; set; }
 
         public bool isProfilePhoto { get; set; }
+        public bool isSliderPhoto { get; set; }
+        public int sortOrder { get; set; }
 
         public Guid? businessId { get; set; }
 

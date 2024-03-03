@@ -8,7 +8,7 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<List<BusinessGallery>> GetBusinessGalleriesByBusinessIdAsync(Guid businessId);
         Task<BusinessGallery> SaveBusinessGalleryAsync(BusinessGallery businessGallery);
         Task<List<BusinessGallery>> SaveBusinessGalleriesAsync(List<BusinessGallery> businessGalleries);
-        Task<BusinessGallery> UpdateBusinessGalleryAsync(BusinessGallery businessGallery);
+        Task<bool> UpdateBusinessGalleryAsync(BusinessGallery businessGallery);
         Task<bool> DeleteBusinessGalleryAsync(BusinessGallery businessGallery);
         Task<bool> DeleteBusinessGalleryByBusinessIdAsync(Guid businessId);
         Task<bool> DeleteBusinessGalleryByIdAsync(Guid id);

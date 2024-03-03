@@ -43,11 +43,11 @@ namespace CareGardenApiV1.Repository.Concrete
             return businessGalleries;
         }
 
-        public async Task<BusinessGallery> UpdateBusinessGalleryAsync(BusinessGallery businessGallery)
+        public async Task<bool> UpdateBusinessGalleryAsync(BusinessGallery businessGallery)
         {
             _context.BusinessGalleries.Update(businessGallery);
             await _context.SaveChangesAsync();
-            return businessGallery;
+            return true;
         }
 
         public async Task<bool> DeleteBusinessGalleryAsync(BusinessGallery businessGallery)

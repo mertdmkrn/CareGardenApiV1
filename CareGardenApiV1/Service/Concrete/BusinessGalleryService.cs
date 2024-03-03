@@ -49,7 +49,7 @@ namespace CareGardenApiV1.Service.Concrete
              return await _businessGalleryRepository.SaveBusinessGalleryAsync(businessGallery);
         }
 
-        public async Task<BusinessGallery> UpdateBusinessGalleryAsync(BusinessGallery businessGallery)
+        public async Task<bool> UpdateBusinessGalleryAsync(BusinessGallery businessGallery)
         {
              return await _businessGalleryRepository.UpdateBusinessGalleryAsync(businessGallery);
         }

@@ -2,6 +2,7 @@
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
+using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
@@ -93,9 +94,18 @@ namespace CareGardenApiV1.Controller
         [HttpPost("search")]
         public async Task<IActionResult> Search([FromBody] CommentSearchModel searchModel)
         {
-            ResponseModel<List<Comment>> response = new ResponseModel<List<Comment>>();
+            ResponseModel<List<CommentSearchResponseModel>> response = new ResponseModel<List<CommentSearchResponseModel>>();
+            var language = Request.Headers["Language"].ToString().IsNull("en");
 
-            response.Data = await _commentService.GetSearchCommentsAsync(searchModel);
+            var comments = await _commentService.GetSearchCommentsAsync(searchModel);
+
+            comments.ConvertAll(x => x.dayInfo = x.updateDate.HasValue
+                                                                    ? x.updateDate.Value.GetRelativeDate(language)
+                                                                    : x.createDate.HasValue
+                                                                      ? x.createDate.Value.GetRelativeDate(language)
+                                                                      : string.Empty);
+
+            response.Data = comments;
             return Ok(response);
         }
 

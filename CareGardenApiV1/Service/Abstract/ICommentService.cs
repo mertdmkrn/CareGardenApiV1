@@ -1,5 +1,6 @@
 ﻿using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
+using CareGardenApiV1.Model.ResponseModel;
 
 namespace CareGardenApiV1.Repository.Abstract
 {
@@ -8,7 +9,7 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<Comment> GetCommentByIdAsync(Guid id);
         Task<List<Comment>> GetCommentsByBusinessIdAsync(Guid businessId);
         Task<List<Comment>> GetCommentsByUserIdAsync(Guid userId);
-        Task<List<Comment>> GetSearchCommentsAsync(CommentSearchModel searchModel);
+        Task<List<CommentSearchResponseModel>> GetSearchCommentsAsync(CommentSearchModel searchModel);
         Task<Comment> SaveCommentAsync(Comment comment);
         Task<Comment> UpdateCommentAsync(Comment comment);
         Task<bool> DeleteCommentAsync(Comment comment);

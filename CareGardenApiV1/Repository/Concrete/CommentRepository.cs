@@ -4,6 +4,7 @@ using CareGardenApiV1.Model;
 using Microsoft.EntityFrameworkCore;
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model.RequestModel;
+using CareGardenApiV1.Model.ResponseModel;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -148,7 +149,7 @@ namespace CareGardenApiV1.Repository.Concrete
             return retVal;
         }
 
-        public async Task<List<Comment>> GetSearchCommentsAsync(CommentSearchModel searchModel)
+        public async Task<List<CommentSearchResponseModel>> GetSearchCommentsAsync(CommentSearchModel searchModel)
         {
             return await _context.Comments
                 .AsNoTracking()
@@ -159,6 +160,19 @@ namespace CareGardenApiV1.Repository.Concrete
                 .WhereIf(searchModel.filterType == CommentFilterType.Rate3, x => ((int)x.point) == 3)
                 .WhereIf(searchModel.filterType == CommentFilterType.Rate4, x => ((int)x.point) == 4)
                 .WhereIf(searchModel.filterType == CommentFilterType.Rate5, x => ((int)x.point) == 5)
+                .Select(x => new CommentSearchResponseModel
+                {
+                    id = x.id,
+                    createDate = x.createDate,
+                    updateDate = x.updateDate,
+                    comment = x.comment,
+                    point = x.point,
+                    userName = x.user.fullName,
+                    userImageUrl = x.user.imageUrl,
+                    serviceInfos = string.Empty,
+                    staffInfos = string.Empty,
+                    reply = x.reply
+                })
                 .OrderByDescendingIf(searchModel.orderType == CommentOrderType.Lastest, x => x.createDate)
                 .OrderByIf(searchModel.orderType == CommentOrderType.Oldest, x => x.createDate)
                 .OrderByDescendingIf(searchModel.orderType == CommentOrderType.Popular, x => x.point)

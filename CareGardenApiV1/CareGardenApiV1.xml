@@ -800,7 +800,7 @@
                     "descriptionEn": "Every services today",
                     "rate": 20,
                     "type": 0,
-                    "colorCode": "#335657",
+                    "colorCode": "#335657"
                  }
             
              </remarks>
@@ -819,7 +819,8 @@
                     "description": "Bugün tüm servislerde",
                     "descriptionEn": "Every services today",
                     "rate": 20,
-                    "type": 0
+                    "type": 0,
+                    "colorCode": "#335657"
                  }
             
              </remarks>

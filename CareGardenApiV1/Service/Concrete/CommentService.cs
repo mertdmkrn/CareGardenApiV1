@@ -1,5 +1,6 @@
 ﻿using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
+using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Repository.Concrete;
 using OneSignalApi.Model;
@@ -75,7 +76,7 @@ namespace CareGardenApiV1.Service.Concrete
             return await _commentRepository.GetCommentStatisticsByUserId(userId);
         }
 
-        public async Task<List<Comment>> GetSearchCommentsAsync(CommentSearchModel searchModel)
+        public async Task<List<CommentSearchResponseModel>> GetSearchCommentsAsync(CommentSearchModel searchModel)
         {
             return await _commentRepository.GetSearchCommentsAsync(searchModel);
         }

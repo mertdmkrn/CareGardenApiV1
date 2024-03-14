@@ -121,13 +121,19 @@ namespace CareGardenApiV1.Controller
                 response.ValidationErrors.Add(new ValidationError("value", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
 
+            if (!businessProperties.businessId.HasValue)
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
             if (response.HasError)
             {
                 response.Message = Resource.Resource.KayitYapilamadi;
                 return Ok(response);
             }
 
-            var data = await _businessPropertiesService.GetBusinessPropertiesByBusinessIdAndKeyAsync(businessProperties.id, businessProperties.key);
+            var data = await _businessPropertiesService.GetBusinessPropertiesByBusinessIdAndKeyAsync(businessProperties.businessId.Value, businessProperties.key);
 
             if (data != null)
             {
@@ -190,7 +196,7 @@ namespace CareGardenApiV1.Controller
 
             if (businessProperties.key != updateBusinessProperties.key)
             {
-                var data = await _businessPropertiesService.GetBusinessPropertiesByBusinessIdAndKeyAsync(businessProperties.id, updateBusinessProperties.key);
+                var data = await _businessPropertiesService.GetBusinessPropertiesByBusinessIdAndKeyAsync(businessProperties.businessId.Value, updateBusinessProperties.key);
 
                 if (data != null)
                 {

@@ -171,7 +171,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     userImageUrl = x.user.imageUrl,
                     serviceInfos = string.Empty,
                     staffInfos = string.Empty,
-                    reply = x.reply
+                    reply = x.reply.comment
                 })
                 .OrderByDescendingIf(searchModel.orderType == CommentOrderType.Lastest, x => x.createDate)
                 .OrderByIf(searchModel.orderType == CommentOrderType.Oldest, x => x.createDate)

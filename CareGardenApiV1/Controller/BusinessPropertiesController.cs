@@ -123,7 +123,16 @@ namespace CareGardenApiV1.Controller
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.GuncellemeYapilamadi;
+                response.Message = Resource.Resource.KayitYapilamadi;
+                return Ok(response);
+            }
+
+            var data = await _businessPropertiesService.GetBusinessPropertiesByBusinessIdAndKeyAsync(businessProperties.id, businessProperties.key);
+
+            if (data != null)
+            {
+                response.HasError = true;
+                response.Message = string.Format(Resource.Resource.KayitZatenMevcut, businessProperties.key);
                 return Ok(response);
             }
 
@@ -177,6 +186,18 @@ namespace CareGardenApiV1.Controller
             {
                 response.Message = updateBusinessProperties.id + " " + Resource.Resource.KayitBulunamadi;
                 return Ok(response);
+            }
+
+            if (businessProperties.key != updateBusinessProperties.key)
+            {
+                var data = await _businessPropertiesService.GetBusinessPropertiesByBusinessIdAndKeyAsync(businessProperties.id, updateBusinessProperties.key);
+
+                if (data != null)
+                {
+                    response.HasError = true;
+                    response.Message = string.Format(Resource.Resource.KayitZatenMevcut, businessProperties.key);
+                    return Ok(response);
+                }
             }
 
             businessProperties.key = updateBusinessProperties.key;

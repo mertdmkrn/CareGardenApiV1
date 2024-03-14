@@ -16,6 +16,7 @@ namespace CareGardenApiV1.Controller
     public class BusinessLoginController : ControllerBase
     {
         private readonly IBusinessService _businessService;
+        private readonly IBusinessPropertiesService _businessPropertiesService;
         private readonly IConfirmationService _contirmationService;
         private readonly ITokenHandler _tokenHandler;
         private readonly ISmsHandler _smsHandler;
@@ -24,6 +25,7 @@ namespace CareGardenApiV1.Controller
 
         public BusinessLoginController(
             IBusinessService businessService,
+            IBusinessPropertiesService businessPropertiesService,
             IConfirmationService contirmationService,
             ITokenHandler tokenHandler,
             ISmsHandler smsHandler,
@@ -31,6 +33,7 @@ namespace CareGardenApiV1.Controller
             IElasticHandler elasticHandler)
         {
             _businessService = businessService;
+            _businessPropertiesService = businessPropertiesService;
             _contirmationService = contirmationService;
             _tokenHandler = tokenHandler;
             _smsHandler = smsHandler;
@@ -359,6 +362,7 @@ namespace CareGardenApiV1.Controller
             }
 
             BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
+            BackgroundJob.Enqueue(() => _businessPropertiesService.SaveStaticBusinessPropertiesAsync(business.id));
 
             return Ok(response);
         }

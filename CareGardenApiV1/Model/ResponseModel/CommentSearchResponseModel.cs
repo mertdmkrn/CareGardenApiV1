@@ -12,6 +12,6 @@
         public string? staffInfos { get; set; } 
         public string? serviceInfos { get; set; }
         public double point { get; set; }
-        public Comment? reply { get; set; }
+        public string reply { get; set; }
     }
 }

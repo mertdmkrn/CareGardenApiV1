@@ -370,6 +370,7 @@ namespace CareGardenApiV1.Controller
         ///        "description": "Tesettür saç kesim, bakım, boya, kalıcı makyaj, microblading, manikür, pedikür, kaynak saç.",
         ///        "descriptionEn": "Hijab haircut, care, coloring, permanent makeup, microblading, manicure, pedicure, hair welding.",
         ///        "isFeatured": true,
+        ///        "logoUrl": "safdsf.jpg",
         ///        "hasPromotion": true
         ///     }
         ///
@@ -400,6 +401,7 @@ namespace CareGardenApiV1.Controller
             business.district = updateBusiness.district.IsNull(business.district);
             business.description = updateBusiness.description.IsNull(business.description);
             business.descriptionEn = updateBusiness.descriptionEn.IsNull(business.descriptionEn);
+            business.logoUrl = updateBusiness.logoUrl.IsNull(business.logoUrl);
             business.isFeatured = updateBusiness.isFeatured;
             business.hasPromotion = updateBusiness.hasPromotion;
 

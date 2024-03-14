@@ -80,6 +80,8 @@ namespace CareGardenApiV1.Model
         public bool verified { get; set; }
         public bool isFeatured { get; set; }
         public bool hasPromotion { get; set; }
+        [MaxLength(200)]
+        public string? logoUrl { get; set; }
 
         public virtual ICollection<Comment> comments { get; set; }
         public virtual ICollection<BusinessGallery> galleries { get; set; }

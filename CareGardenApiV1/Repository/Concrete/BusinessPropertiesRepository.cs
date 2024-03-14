@@ -65,5 +65,12 @@ namespace CareGardenApiV1.Repository.Concrete
                 .ExecuteDeleteAsync();
             return true;
         }
+
+        public async Task<bool> SaveBusinessPropertiesListAsync(List<BusinessProperties> businessPropertiesList)
+        {
+            await _context.BusinessProperties.AddRangeAsync(businessPropertiesList);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

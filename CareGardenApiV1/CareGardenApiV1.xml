@@ -327,6 +327,7 @@
                     "description": "Tesettür saç kesim, bakım, boya, kalıcı makyaj, microblading, manikür, pedikür, kaynak saç.",
                     "descriptionEn": "Hijab haircut, care, coloring, permanent makeup, microblading, manicure, pedicure, hair welding.",
                     "isFeatured": true,
+                    "logoUrl": "safdsf.jpg",
                     "hasPromotion": true
                  }
             
@@ -1619,6 +1620,18 @@
         <member name="M:CareGardenApiV1.Migrations.CareGardenV25.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV26">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV26.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV26.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV26.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="T:CareGardenApiV1.Resource.Resource">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -1783,6 +1796,11 @@
         <member name="P:CareGardenApiV1.Resource.Resource.KayitYapilamadi">
             <summary>
               Looks up a localized string similar to Kayıt yapılamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.KayitZatenMevcut">
+            <summary>
+              Looks up a localized string similar to {0} kaydı zaten mevcut..
             </summary>
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.KullaniciBulunamadi">

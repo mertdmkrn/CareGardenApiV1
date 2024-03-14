@@ -207,6 +207,9 @@
   <data name="KayitYapilamadi" xml:space="preserve">
     <value>Kayıt yapılamadı.</value>
   </data>
+  <data name="KayitZatenMevcut" xml:space="preserve">
+    <value>{0} kaydı zaten mevcut.</value>
+  </data>
   <data name="KullaniciBulunamadi" xml:space="preserve">
     <value>Kullanıcı bulunamadi.</value>
   </data>

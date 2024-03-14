@@ -331,6 +331,15 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} kaydı zaten mevcut..
+        /// </summary>
+        public static string KayitZatenMevcut {
+            get {
+                return ResourceManager.GetString("KayitZatenMevcut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Kullanıcı bulunamadi..
         /// </summary>
         public static string KullaniciBulunamadi {

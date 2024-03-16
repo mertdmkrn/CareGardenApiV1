@@ -14,7 +14,7 @@ namespace CareGardenApiV1.Model.RequestModel
         public int offers { get; set; }
         public int? page { get; set; } = 0;
         public int? take { get; set; } = 5;
-        public int isWithinKilometer { get; set; } = 200;
+        public int? isWithinKilometer { get; set; }
         public WorkingGenderType workingGenderType { get; set; }
         public SortByType sortByType { get; set; }
     }

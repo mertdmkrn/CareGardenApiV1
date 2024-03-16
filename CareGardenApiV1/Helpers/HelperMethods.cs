@@ -299,10 +299,8 @@ namespace CareGardenApiV1.Helpers
             if (startHours.IsNullOrEmpty() || endHours.IsNullOrEmpty())
                 return false;
 
-
             var todayWorksMinutes = appointments.Sum(x => x.businessService.maxDuration);
             
-
             var endStartTimeDifference = endHours.Replace(":", "").ToInt() - startHours.Replace(":", "").ToInt();
 
             var sumWorkMinutes = (endStartTimeDifference / 100) * 60;

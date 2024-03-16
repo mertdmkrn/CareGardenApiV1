@@ -4,6 +4,7 @@ using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -18,17 +19,20 @@ namespace CareGardenApiV1.Controller
         private readonly IAppointmentService _appointmentService;
         private readonly IBusinessWorkingInfoService _businessWorkingInfoService;
         private readonly IBusinessServicesService _businessServicesService;
+        private readonly IBusinessService _businessService;
         private readonly IWorkerService _workerService;
 
         public AppointmentController(
             IAppointmentService appointmentService,
             IBusinessWorkingInfoService businessWorkingInfoService,
             IBusinessServicesService businessServicesService,
+            IBusinessService businessService,
             IWorkerService workerService)
         {
             _appointmentService = appointmentService;
             _businessWorkingInfoService = businessWorkingInfoService;
             _businessServicesService = businessServicesService;
+            _businessService = businessService;
             _workerService = workerService;
         }
 
@@ -166,6 +170,9 @@ namespace CareGardenApiV1.Controller
 
             response.Data = await _appointmentService.SaveAppointmentAsync(appointment);
             response.Message = Resource.Resource.KayitBasarili;
+
+            BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(appointment.businessId.Value));
+
             return Ok(response);
         }
 
@@ -222,6 +229,9 @@ namespace CareGardenApiV1.Controller
 
             response.Data = await _appointmentService.DeleteAppointmentAsync(appointment);
             response.Message = Resource.Resource.KayitSilindi;
+
+            BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(appointment.businessId.Value));
+
             return Ok(response);
         }
 

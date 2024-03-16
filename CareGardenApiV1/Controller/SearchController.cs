@@ -72,12 +72,14 @@ namespace CareGardenApiV1.Controller
                 });
             }
 
-            keywordSearchResponse.services = services.Where(x => culture.Equals("en")
+            keywordSearchResponse.services = services
+                .Where(x => culture.Equals("en")
                 ? x.nameEn.ToLower(Resource.Resource.Culture).Contains(keywordSearchModel.keyWord.ToLower(Resource.Resource.Culture))
                 : x.name.ToLower(Resource.Resource.Culture).Contains(keywordSearchModel.keyWord.ToLower(Resource.Resource.Culture)))
-                .OrderBy(x => x.sortOrder).ToList();
+                .OrderBy(x => x.sortOrder)
+                .ToList();
 
-            var businessDetails = await GetSearchBusinessWithElastic(keywordSearchModel.keyWord.ToLower(Resource.Resource.Culture));
+            //var businessDetails = await GetSearchBusinessWithElastic(keywordSearchModel.keyWord.ToLower(Resource.Resource.Culture));
 
             Point? userLocation = null;
             var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
@@ -87,11 +89,21 @@ namespace CareGardenApiV1.Controller
                 userLocation = gf.CreatePoint(new Coordinate(keywordSearchModel.latitude.Value, keywordSearchModel.longitude.Value));
             }
 
-            keywordSearchResponse.businesses = businessDetails
-                                                .Select(x => new BusinessListModel(x, gf, userLocation))
-                                                .OrderBy(x => x.distance)
-                                                .ThenByDescending(x => x.averageRating)
-                                                .ToList();
+            var businessList = await _businessService.GetBusinessListForCache();
+
+            keywordSearchResponse.businesses = businessList
+                .Where(x => x.name.ToLower(Resource.Resource.Culture).Contains(keywordSearchModel.keyWord.ToLower(Resource.Resource.Culture)))
+                .Select(x =>
+                {
+                    x.isOpen = HelperMethods.GetBusinessOpen(x.workingInfo, x.officialDayAvailable);
+                    x.distance = userLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue : 0;
+                    x.averageRating = Math.Round(x.averageRating, 1);
+                    return x;
+                })
+                .OrderBy(x => x.distance)
+                .ThenByDescending(x => x.averageRating)
+                .ToList();
+
 
             keywordSearchResponse.keyWord = keywordSearchModel.keyWord;
 
@@ -123,7 +135,7 @@ namespace CareGardenApiV1.Controller
         {
             ResponseModel<IEnumerable<LocationInfo>> response = new ResponseModel<IEnumerable<LocationInfo>>();
 
-            if (searchModel.keyWord.IsNullOrEmpty()  || searchModel.keyWord.Length < 3)
+            if (searchModel.keyWord.IsNullOrEmpty() || searchModel.keyWord.Length < 3)
             {
                 response.HasError = true;
                 response.ValidationErrors.Add(new ValidationError("keyword", Resource.Resource.BuAlaniBosBirakmayiniz));

@@ -4,6 +4,7 @@ using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
+using CareGardenApiV1.Service.Concrete;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,13 +19,16 @@ namespace CareGardenApiV1.Controller
     public class CommentController : ControllerBase
     {
         private readonly ICommentService _commentService;
+        private readonly IBusinessService _businessService;
         private readonly IElasticHandler _elasticHandler;
 
         public CommentController(
             ICommentService commentService,
+            IBusinessService businessService,
             IElasticHandler elasticHandler)
         {
             _commentService = commentService;
+            _businessService = businessService;
             _elasticHandler = elasticHandler;
         }
 
@@ -230,6 +234,7 @@ namespace CareGardenApiV1.Controller
             if (comment.businessId.HasValue)
             {
                 BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(comment.businessId.Value));
+                BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(comment.businessId.Value));
             }
 
             return Ok(response);
@@ -282,7 +287,10 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
+
             var comment = await _commentService.GetCommentByIdAsync(updateComment.id);
+            bool isPointChanged = comment.point != updateComment.point;
+
             comment.comment = updateComment.comment.IsNull(comment.comment);
             comment.point = updateComment.point;
 
@@ -291,6 +299,11 @@ namespace CareGardenApiV1.Controller
             if (comment.businessId.HasValue)
             {
                 BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(comment.businessId.Value));
+
+                if(isPointChanged)
+                {
+                    BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(comment.businessId.Value));
+                }
             }
 
             response.Data = true;

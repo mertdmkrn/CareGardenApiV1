@@ -347,7 +347,9 @@ namespace CareGardenApiV1.Controller
 
             response.Message = Resource.Resource.ResimYuklemeBasarili;
             response.Data = await _businessGalleryService.SaveBusinessGalleryAsync(businessGallery);
+
             BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
+            BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(business.id));
 
             return Ok(response);
         }
@@ -420,9 +422,11 @@ namespace CareGardenApiV1.Controller
             }
 
             await _businessService.UpdateBusinessAsync(business);
-            BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
             response.Message = Resource.Resource.KayitBasarili;
             response.Data = true;
+
+            BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
+            BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(business.id));
 
             return Ok(response);
         }
@@ -502,10 +506,12 @@ namespace CareGardenApiV1.Controller
             businessWorkInfoModel.businessWorkingInfo.officialHolidayAvailable = business.officialHolidayAvailable;
             await _businessWorkingInfoService.DeleteBusinessWorkingInfoByBusinessIdAsync(business.id);
             await _businessWorkingInfoService.SaveBusinessWorkingInfoAsync(businessWorkInfoModel.businessWorkingInfo);
-            BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
 
             response.Message = Resource.Resource.KayitBasarili;
             response.Data = true;
+
+            BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
+            BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(business.id));
 
             return Ok(response);
         }
@@ -562,7 +568,13 @@ namespace CareGardenApiV1.Controller
 
             response.Message = Resource.Resource.ResimYuklemeBasarili;
             response.Data = await _businessGalleryService.SaveBusinessGalleryAsync(businessGallery);
+
             BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
+
+            if(businessGallery.isProfilePhoto)
+            {
+                BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(business.id));
+            }
 
             return Ok(response);
         }
@@ -601,13 +613,17 @@ namespace CareGardenApiV1.Controller
             businessGallery.sortOrder = updateBusinessGallery.sortOrder;
 
             response.Data = await _businessGalleryService.UpdateBusinessGalleryAsync(businessGallery);
+            response.Message = Resource.Resource.KayitBasarili;
 
             if (businessGallery.businessId.HasValue)
             {
                 BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(businessGallery.businessId.Value));
-            }
 
-            response.Message = Resource.Resource.KayitBasarili;
+                if (businessGallery.isProfilePhoto)
+                {
+                    BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(businessGallery.businessId.Value));
+                }
+            }
 
             return Ok(response);
         }

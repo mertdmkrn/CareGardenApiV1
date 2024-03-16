@@ -37,17 +37,21 @@ namespace CareGardenApiV1.Model.ResponseModel
 
         public Guid id { get; set; }
         public string name { get; set; }
+        public string logoUrl { get; set; }
         public double distance { get; set; }
         public double averageRating { get; set; }
         public int countRating { get; set; }
         public double discountRate { get; set; }
         public int workingGenderType { get; set; }
-        public string imageUrl { get; set; }
+        public string? imageUrl { get; set; }
         public bool isFeatured { get; set; }
         public bool hasPromotion { get; set; }
         public bool isOpen { get; set; }
         public byte isRecommended { get; set; }
         public DateTime? createDate { get; set; }
+
+        [JsonIgnore]
+        public Point? location { get; set; }
 
         [JsonIgnore]
         public BusinessWorkingInfo workingInfo { get; set; }
@@ -59,9 +63,12 @@ namespace CareGardenApiV1.Model.ResponseModel
         public List<Appointment> appointments { get; set; }
 
         [JsonIgnore]
-        public int appointmentTimeInterval { get; set; }
+        public List<Discount> discounts { get; set; }
 
         [JsonIgnore]
-        public int appointmentPeopleCount { get; set; }
+        public List<Guid?> serviceIds { get; set; }
+
+        [JsonIgnore]
+        public string city { get; set; }
     }
 }

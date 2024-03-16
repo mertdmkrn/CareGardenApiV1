@@ -2,6 +2,8 @@
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
 using CareGardenApiV1.Repository.Abstract;
+using CareGardenApiV1.Service.Concrete;
+using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CareGardenApiV1.Controller
@@ -11,10 +13,11 @@ namespace CareGardenApiV1.Controller
     public class BusinessServicesController : ControllerBase
     {
         private readonly IBusinessServicesService _businessServicesService;
-
-        public BusinessServicesController(IBusinessServicesService businessServicesService)
+        private readonly IBusinessService _businessService;
+        public BusinessServicesController(IBusinessServicesService businessServicesService, IBusinessService businessService)
         {
             _businessServicesService = businessServicesService;
+            _businessService = businessService;
         }
 
 
@@ -196,6 +199,8 @@ namespace CareGardenApiV1.Controller
             response.Message = Resource.Resource.KayitBasarili;
             response.Data = await _businessServicesService.SaveBusinessServiceAsync(businessService);
 
+            BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(businessService.businessId.Value));
+
             return Ok(response);
         }
 
@@ -305,6 +310,8 @@ namespace CareGardenApiV1.Controller
             response.Message = Resource.Resource.KayitBasarili;
             response.Data = await _businessServicesService.UpdateBusinessServiceAsync(businessService);
 
+            BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(businessService.businessId.Value));
+
             return Ok(response);
         }
 
@@ -333,6 +340,7 @@ namespace CareGardenApiV1.Controller
 
             response.Message = Resource.Resource.KayitSilindi;
             response.Data = true;
+
             return Ok(response);
         }
     }

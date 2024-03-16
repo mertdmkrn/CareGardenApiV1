@@ -5,18 +5,22 @@ using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Repository.Concrete;
 using CareGardenApiV1.Service.Abstract;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Caching.Memory;
 using Nest;
 using OneSignalApi.Model;
+using static CareGardenApiV1.Helpers.Constants;
 
 namespace CareGardenApiV1.Service.Concrete
 {
     public class BusinessService : IBusinessService
     {
         private readonly IBusinessRepository _businessRepository;
+        private readonly IMemoryCache _memoryCache;
 
-        public BusinessService(IBusinessRepository businessRepository)
+        public BusinessService(IBusinessRepository businessRepository, IMemoryCache memoryCache)
         {
             _businessRepository = businessRepository;
+            _memoryCache = memoryCache;
         }
 
         public async Task<bool> DeleteBusinessAsync(Business business)
@@ -96,6 +100,46 @@ namespace CareGardenApiV1.Service.Concrete
         public async Task<List<BusinessPagingListModel>> GetBusinessLiteListAsync(BusinessSearchAdminModel searchAdminModel)
         {
             return await _businessRepository.GetBusinessLiteListAsync(searchAdminModel);
+        }
+
+        public async Task<IList<BusinessListModel>> GetBusinessListModelAsync(Guid? id = null)
+        {
+            return await _businessRepository.GetBusinessListModelAsync(id);
+        }
+        
+        public async Task<IList<BusinessListModel>> GetBusinessListForCache()
+        {
+            return await _businessRepository.GetBusinessListForCache();
+        }
+
+        public async Task<bool> UpdateMemoryBusinessList(Guid id)
+        {
+            var businessList = await _businessRepository.GetBusinessListForCache();
+            var businesses = await _businessRepository.GetBusinessListModelAsync(id);
+
+            var business = businesses.FirstOrDefault();
+
+            if (business != null)
+            {
+                var indexOf = businessList.ToList().FindIndex(x => x.id == id);
+
+                if (indexOf != -1 && !businessList[indexOf].Equals(business))
+                {
+                    businessList[indexOf] = business;
+                }
+                else if(indexOf == -1)
+                {
+                    businessList.Add(business);
+                }
+
+                _memoryCache.Set(CacheKeys.BusinessList, businessList, new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpiration = DateTime.Now.AddDays(1),
+                    Priority = CacheItemPriority.High
+                });
+            }
+
+            return true;
         }
     }
 }

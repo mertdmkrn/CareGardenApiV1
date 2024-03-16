@@ -4,9 +4,9 @@ namespace CareGardenApiV1.Helpers
 {
     public static class Constants
     {
-        public static class ImageSizes
+        public static class CacheKeys
         {
-            public static string BusinessListImageSize = "300x212";
+            public static string BusinessList = "BusinessList";
         }
 
         public static List<string> Cities = new List<string>

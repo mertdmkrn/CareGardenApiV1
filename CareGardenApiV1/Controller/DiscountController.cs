@@ -2,6 +2,7 @@
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
 using CareGardenApiV1.Repository.Abstract;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,10 +14,12 @@ namespace CareGardenApiV1.Controller
     public class DiscountController : ControllerBase
     {
         private readonly IDiscountService _discountService;
+        private readonly IBusinessService _businessService;
 
-        public DiscountController(IDiscountService discountService)
+        public DiscountController(IDiscountService discountService, IBusinessService businessService)
         {
             _discountService = discountService;
+            _businessService = businessService;
         }
 
 
@@ -110,6 +113,11 @@ namespace CareGardenApiV1.Controller
 
             response.Data = await _discountService.SaveDiscountAsync(discount);
             response.Message = Resource.Resource.KayitBasarili;
+            
+            if (discount.businessId.HasValue)
+            {
+                BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(discount.businessId.Value));
+            }
 
             return Ok(response);
         }
@@ -182,6 +190,11 @@ namespace CareGardenApiV1.Controller
             response.Data = await _discountService.UpdateDiscountAsync(discount);
             response.Message = Resource.Resource.KayitBasarili;
 
+            if(discount.businessId.HasValue)
+            {
+                BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(discount.businessId.Value));
+            }
+
             return Ok(response);
         }
 
@@ -220,6 +233,12 @@ namespace CareGardenApiV1.Controller
 
             response.Data = await _discountService.DeleteDiscountAsync(discount);
             response.Message = Resource.Resource.KayitSilindi;
+
+            if (discount.businessId.HasValue)
+            {
+                BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(discount.businessId.Value));
+            }
+
             return Ok(response);
         }
     }

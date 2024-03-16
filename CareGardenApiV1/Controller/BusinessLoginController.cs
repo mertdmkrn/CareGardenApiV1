@@ -363,6 +363,7 @@ namespace CareGardenApiV1.Controller
 
             BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
             BackgroundJob.Enqueue(() => _businessPropertiesService.SaveStaticBusinessPropertiesAsync(business.id));
+            BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(business.id));
 
             return Ok(response);
         }

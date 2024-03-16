@@ -11,6 +11,7 @@ namespace CareGardenApiV1.Model.ResponseModel
         public string address { get; set; }
         public string telephone { get; set; }
         public string description { get; set; }
+        public string logoUrl { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string descriptionEn { get; set; }

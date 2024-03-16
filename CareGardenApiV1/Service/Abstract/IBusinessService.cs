@@ -14,6 +14,8 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<Business> GetBusinessByTelephoneNumberAsync(string telephone);
         Task<List<BusinessPagingListModel>> GetBusinessLiteListAsync(BusinessSearchAdminModel searchAdminModel);
         Task<BusinessDetailModel> GetBusinessDetailByIdAsync(Guid id);
+        Task<IList<BusinessListModel>> GetBusinessListModelAsync(Guid? id = null);
+        Task<IList<BusinessListModel>> GetBusinessListForCache();
         Task<IList<BusinessDetailModel>> GetBusinessesAsync();
         Task<IList<BusinessListModel>> GetBusinessNearByDistanceAsync(BusinessSearchModel businessSearchModel);
         Task<IList<BusinessListModel>> GetBusinessByUserFavorites(BusinessSearchModel businessSearchModel);
@@ -22,5 +24,6 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<Business> SaveBusinessAsync(Business business);
         Task<Business> UpdateBusinessAsync(Business business);
         Task<bool> DeleteBusinessAsync(Business business);
+        Task<bool> UpdateMemoryBusinessList(Guid id);
     }
 }

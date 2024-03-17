@@ -85,7 +85,8 @@ namespace CareGardenApiV1.Controller
             Point? userLocation = null;
             var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
 
-            if (keywordSearchModel.latitude.HasValue && keywordSearchModel.longitude.HasValue)
+            if (keywordSearchModel.latitude.HasValue && keywordSearchModel.longitude.HasValue
+            && keywordSearchModel.latitude > 0 && keywordSearchModel.longitude > 0)
             {
                 userLocation = gf.CreatePoint(new Coordinate(keywordSearchModel.latitude.Value, keywordSearchModel.longitude.Value));
             }

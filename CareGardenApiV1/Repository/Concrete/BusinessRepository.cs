@@ -209,7 +209,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 .Select(x =>
                 {
                     x.isOpen = HelperMethods.GetBusinessOpen(x.workingInfo, x.officialDayAvailable);
-                    x.distance = searchLocation != null && x.location != null ? x.location.Distance(gf.CreateGeometry(searchLocation)) * Constants.DistanceValue : 0;
+                    x.distance = searchLocation != null && x.location != null ? Math.Round(x.location.Distance(gf.CreateGeometry(searchLocation)) * Constants.DistanceValue, 1) : 0;
                     x.averageRating = Math.Round(x.averageRating, 1);
                     return x;
                 })

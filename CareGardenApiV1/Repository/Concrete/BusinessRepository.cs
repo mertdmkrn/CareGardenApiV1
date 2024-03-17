@@ -205,6 +205,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 .WhereIf(businessExploreModel.serviceId.HasValue, x => x.serviceIds.Contains(businessExploreModel.serviceId))
                 .WhereIf(businessExploreModel.offers > 0, x => x.discounts != null && x.discounts.Exists(x => x.isActive && x.rate.Equals(businessExploreModel.offers)))
                 .WhereIf(businessExploreModel.availableDate.HasValue, x => HelperMethods.IsAvailableAppointmentDay(x.appointments, x.workingInfo, x.officialDayAvailable, businessExploreModel.availableDate.Value))
+                .WhereIf(!businessExploreModel.city.IsNullOrEmpty(), x => x.city.Equals(businessExploreModel.city))
                 .Select(x =>
                 {
                     x.isOpen = HelperMethods.GetBusinessOpen(x.workingInfo, x.officialDayAvailable);

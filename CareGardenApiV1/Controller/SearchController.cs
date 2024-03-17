@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Nest;
 using NetTopologySuite.Geometries;
+using System.Security.Claims;
 
 namespace CareGardenApiV1.Controller
 {
@@ -125,6 +126,43 @@ namespace CareGardenApiV1.Controller
             return Ok(response);
         }
 
+        /// <summary>
+        /// Get Explore Page Businesses
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "latitude": "41.08611",
+        ///        "longitude": "29.00717",
+        ///        "page": 0,
+        ///        "take": 5
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost("getexplorepagebusinesses")]
+        public async Task<IActionResult> GetExproleBusinesses([FromBody] BusinessExploreModel businessExploreModel)
+        {
+            ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
+
+            businessExploreModel.workingGenderType = WorkingGenderType.All;
+            
+            if(businessExploreModel.latitude.HasValue && businessExploreModel.longitude.HasValue
+            && businessExploreModel.latitude > 0 && businessExploreModel.longitude > 0)
+            {
+                businessExploreModel.sortByType = SortByType.Nearest;
+            }
+            else
+            {
+                businessExploreModel.city = HelperMethods.GetClaimInfo(Request, ClaimTypes.Locality).IsNull("İstanbul");
+                businessExploreModel.sortByType = SortByType.TopRated;
+            }
+
+            response.Data = await _businessService.ExploreBusinesses(businessExploreModel);
+            return Ok(response);
+        }
+
 
         /// <summary>
         /// Get Search Location
@@ -145,9 +183,8 @@ namespace CareGardenApiV1.Controller
             if (response.HasError)
                 return Ok(response);
 
-
-            var locationList = Constants.LocationInfos.Where(x => x.baseName.StartsWith(searchModel.keyWord, StringComparison.OrdinalIgnoreCase)).ToList();
-            locationList.AddRange(Constants.LocationInfos.Where(x => x.name.StartsWith(searchModel.keyWord, StringComparison.OrdinalIgnoreCase)));
+            var locationList = Constants.LocationInfos.Where(x => x.baseName.ToLower(Resource.Resource.Culture).StartsWith(searchModel.keyWord.ToLower(Resource.Resource.Culture))).ToList();
+            locationList.AddRange(Constants.LocationInfos.Where(x => x.name.ToLower(Resource.Resource.Culture).StartsWith(searchModel.keyWord.ToLower(Resource.Resource.Culture))));
 
             response.Data = locationList;
 

@@ -118,11 +118,24 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("searchbusiness")]
-        public async Task<IActionResult> SearchBusiness([FromBody] BusinessExploreModel BusinessExploreModel)
+        public async Task<IActionResult> SearchBusiness([FromBody] BusinessExploreModel businessExploreModel)
         {
             ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
+            
+            if(!businessExploreModel.latitude.HasValue || !businessExploreModel.longitude.HasValue
+            || businessExploreModel.latitude == 0 || businessExploreModel.longitude == 0)
+            {
+                businessExploreModel.city = HelperMethods.GetClaimInfo(Request, ClaimTypes.Locality).IsNull("İstanbul");
+            }
 
-            response.Data = await _businessService.ExploreBusinesses(BusinessExploreModel);
+            response.Data = await _businessService.ExploreBusinesses(businessExploreModel);
+
+            if (response.Data.IsNullOrEmpty())
+            {
+                businessExploreModel.city = "İstanbul";
+                response.Data = await _businessService.ExploreBusinesses(businessExploreModel);
+            }
+
             return Ok(response);
         }
 
@@ -142,7 +155,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("getexplorepagebusinesses")]
-        public async Task<IActionResult> GetExproleBusinesses([FromBody] BusinessExploreModel businessExploreModel)
+        public async Task<IActionResult> GetExprolePageBusinesses([FromBody] BusinessExploreModel businessExploreModel)
         {
             ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
 
@@ -160,6 +173,13 @@ namespace CareGardenApiV1.Controller
             }
 
             response.Data = await _businessService.ExploreBusinesses(businessExploreModel);
+
+            if(response.Data.IsNullOrEmpty())
+            {
+                businessExploreModel.city = "İstanbul";
+                response.Data = await _businessService.ExploreBusinesses(businessExploreModel);
+            }
+
             return Ok(response);
         }
 

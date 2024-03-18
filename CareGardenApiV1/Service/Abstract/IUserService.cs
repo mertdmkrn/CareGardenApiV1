@@ -17,5 +17,6 @@ namespace CareGardenApiV1.Service.Abstract
         Task<UserResponseModel> GetUserResponseModelById(Guid id);
         Task<bool> DeleteUserAsync(User user);
         Task<List<string>> GetAdminEmailListAsync();
+        Task<List<Guid>> GetUserFavoriteBusinessIds(Guid id);
     }
 }

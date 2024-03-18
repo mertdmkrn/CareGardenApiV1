@@ -11,5 +11,8 @@ namespace CareGardenApiV1.Model.RequestModel
         public string? city { get; set; }
         [JsonIgnore]
         public Guid userId{ get; set; } = Guid.Empty;
+
+        [JsonIgnore]
+        public List<Guid> favoriteBusinessIds { get; set; } = new List<Guid>();
     }
 }

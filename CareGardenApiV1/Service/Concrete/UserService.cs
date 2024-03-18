@@ -69,5 +69,10 @@ namespace CareGardenApiV1.Service.Concrete
         {
             return await _userRepository.GetUsersAsync(userSearchAdminModel);
         }
+
+        public async Task<List<Guid>> GetUserFavoriteBusinessIds(Guid id)
+        {
+            return await _userRepository.GetUserFavoriteBusinessIds(id);
+        }
     }
 }

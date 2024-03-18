@@ -49,6 +49,7 @@ namespace CareGardenApiV1.Model.ResponseModel
         public bool isOpen { get; set; }
         public byte isRecommended { get; set; }
         public DateTime? createDate { get; set; }
+        public int resultCount { get; set; }
 
         [JsonIgnore]
         public Point? location { get; set; }

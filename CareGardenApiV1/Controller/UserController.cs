@@ -267,15 +267,14 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
-            businessSearchModel.userId = userId.ToGuid();
+            businessSearchModel.favoriteBusinessIds = await _userService.GetUserFavoriteBusinessIds(userId.ToGuid());
 
-            response.Data = await _businessService.GetBusinessByUserFavorites(businessSearchModel);
-            response.Data.ToList().ForEach(x =>
+            businessSearchModel.favoriteBusinessIds.Add(new Guid("2d2e027e-6e9d-44eb-9871-d4ea169e1cbc"));
+
+            if(!businessSearchModel.favoriteBusinessIds.IsNullOrEmpty())
             {
-                x.isOpen = HelperMethods.GetBusinessOpen(x.workingInfo, x.officialDayAvailable);
-                x.distance = Math.Round(x.distance, 1);
-                x.averageRating = Math.Round(x.averageRating, 1);
-            });
+                response.Data = await _businessService.GetBusinessByUserFavorites(businessSearchModel);
+            }
 
             return Ok(response);
         }
@@ -304,12 +303,6 @@ namespace CareGardenApiV1.Controller
             }
 
             response.Data = await _businessService.GetBusinessNearByDistanceAsync(businessSearchModel);
-            response.Data.ToList().ForEach(x =>
-            {
-                x.isOpen = HelperMethods.GetBusinessOpen(x.workingInfo, x.officialDayAvailable);
-                x.distance = Math.Round(x.distance, 1);
-                x.averageRating = Math.Round(x.averageRating, 1);
-            });
 
             return Ok(response);
         }

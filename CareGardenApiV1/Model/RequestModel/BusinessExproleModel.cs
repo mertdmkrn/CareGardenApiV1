@@ -18,5 +18,6 @@ namespace CareGardenApiV1.Model.RequestModel
         public WorkingGenderType workingGenderType { get; set; }
         public SortByType sortByType { get; set; }
         public string? city { get; set; }
+        public bool isStartPage { get; set; }
     }
 }

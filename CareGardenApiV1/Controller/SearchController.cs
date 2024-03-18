@@ -117,32 +117,6 @@ namespace CareGardenApiV1.Controller
         /// <summary>
         /// Get Search
         /// </summary>
-        /// <returns></returns>
-        [HttpPost("searchbusiness")]
-        public async Task<IActionResult> SearchBusiness([FromBody] BusinessExploreModel businessExploreModel)
-        {
-            ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
-            
-            if(!businessExploreModel.latitude.HasValue || !businessExploreModel.longitude.HasValue
-            || businessExploreModel.latitude == 0 || businessExploreModel.longitude == 0)
-            {
-                businessExploreModel.city = HelperMethods.GetClaimInfo(Request, ClaimTypes.Locality).IsNull("İstanbul");
-            }
-
-            response.Data = await _businessService.ExploreBusinesses(businessExploreModel);
-
-            if (response.Data.IsNullOrEmpty())
-            {
-                businessExploreModel.city = "İstanbul";
-                response.Data = await _businessService.ExploreBusinesses(businessExploreModel);
-            }
-
-            return Ok(response);
-        }
-
-        /// <summary>
-        /// Get Explore Page Businesses
-        /// </summary>
         /// <remarks>
         /// **Sample request body:**
         ///
@@ -150,40 +124,59 @@ namespace CareGardenApiV1.Controller
         ///        "latitude": "41.08611",
         ///        "longitude": "29.00717",
         ///        "page": 0,
-        ///        "take": 5
+        ///        "take": 5,
+        ///        "isStartPage": true
         ///     }
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost("getexplorepagebusinesses")]
-        public async Task<IActionResult> GetExprolePageBusinesses([FromBody] BusinessExploreModel businessExploreModel)
+        [HttpPost("searchbusiness")]
+        public async Task<IActionResult> SearchBusiness([FromBody] BusinessExploreModel businessExploreModel)
         {
             ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
 
-            businessExploreModel.workingGenderType = WorkingGenderType.All;
-            
-            if(businessExploreModel.latitude.HasValue && businessExploreModel.longitude.HasValue
-            && businessExploreModel.latitude > 0 && businessExploreModel.longitude > 0)
+            if(businessExploreModel.isStartPage)
             {
-                businessExploreModel.sortByType = SortByType.Nearest;
+                businessExploreModel.workingGenderType = WorkingGenderType.All;
+
+                if (businessExploreModel.latitude.HasValue && businessExploreModel.longitude.HasValue
+                && businessExploreModel.latitude > 0 && businessExploreModel.longitude > 0)
+                {
+                    businessExploreModel.sortByType = SortByType.Nearest;
+                }
+                else
+                {
+                    businessExploreModel.city = HelperMethods.GetClaimInfo(Request, ClaimTypes.Locality).IsNull("İstanbul");
+                    businessExploreModel.sortByType = SortByType.TopRated;
+                }
+
+                response.Data = await _businessService.ExploreBusinesses(businessExploreModel);
+
+                if (response.Data.IsNullOrEmpty())
+                {
+                    businessExploreModel.city = "İstanbul";
+                    response.Data = await _businessService.ExploreBusinesses(businessExploreModel);
+                }
             }
             else
             {
-                businessExploreModel.city = HelperMethods.GetClaimInfo(Request, ClaimTypes.Locality).IsNull("İstanbul");
-                businessExploreModel.sortByType = SortByType.TopRated;
-            }
+                if ((!businessExploreModel.latitude.HasValue || !businessExploreModel.longitude.HasValue
+                || businessExploreModel.latitude == 0 || businessExploreModel.longitude == 0) && businessExploreModel.city.IsNullOrEmpty())
+                {
+                    businessExploreModel.city = HelperMethods.GetClaimInfo(Request, ClaimTypes.Locality).IsNull("İstanbul");
+                }
 
-            response.Data = await _businessService.ExploreBusinesses(businessExploreModel);
-
-            if(response.Data.IsNullOrEmpty())
-            {
-                businessExploreModel.city = "İstanbul";
                 response.Data = await _businessService.ExploreBusinesses(businessExploreModel);
-            }
 
+                if (response.Data.IsNullOrEmpty() && businessExploreModel.city.IsNullOrEmpty())
+                {
+                    businessExploreModel.city = "İstanbul";
+                    response.Data = await _businessService.ExploreBusinesses(businessExploreModel);
+                }
+            }
+            
             return Ok(response);
         }
-
 
         /// <summary>
         /// Get Search Location

@@ -152,7 +152,7 @@ namespace CareGardenApiV1.Controller
 
                 response.Data = await _businessService.ExploreBusinesses(businessExploreModel);
 
-                if (response.Data.IsNullOrEmpty())
+                if (response.Data.IsNullOrEmpty() && businessExploreModel.city != "İstanbul")
                 {
                     businessExploreModel.city = "İstanbul";
                     response.Data = await _businessService.ExploreBusinesses(businessExploreModel);
@@ -168,7 +168,7 @@ namespace CareGardenApiV1.Controller
 
                 response.Data = await _businessService.ExploreBusinesses(businessExploreModel);
 
-                if (response.Data.IsNullOrEmpty() && businessExploreModel.city.IsNullOrEmpty())
+                if (response.Data.IsNullOrEmpty() && businessExploreModel.city != "İstanbul")
                 {
                     businessExploreModel.city = "İstanbul";
                     response.Data = await _businessService.ExploreBusinesses(businessExploreModel);

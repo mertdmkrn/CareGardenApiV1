@@ -869,14 +869,8 @@
             <returns></returns>
         </member>
         <member name="M:CareGardenApiV1.Controller.SearchController.SearchBusiness(CareGardenApiV1.Model.RequestModel.BusinessExploreModel)">
-            <summary>
-            Get Search
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:CareGardenApiV1.Controller.SearchController.GetExproleBusinesses(CareGardenApiV1.Model.RequestModel.BusinessExploreModel)">
              <summary>
-             Get Explore Page Businesses
+             Get Search
              </summary>
              <remarks>
              **Sample request body:**
@@ -885,7 +879,8 @@
                     "latitude": "41.08611",
                     "longitude": "29.00717",
                     "page": 0,
-                    "take": 5
+                    "take": 5,
+                    "isStartPage": true
                  }
             
              </remarks>

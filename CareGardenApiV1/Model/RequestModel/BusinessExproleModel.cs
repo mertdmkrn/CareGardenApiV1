@@ -11,7 +11,7 @@ namespace CareGardenApiV1.Model.RequestModel
         public DateTime? availableDate { get; set; }
         public Guid? serviceId { get; set; }
         public DayZone? dayZone { get; set; }
-        public int? offers { get; set; }
+        public List<int> offers { get; set; } = new List<int>();
         public int? page { get; set; } = 0;
         public int? take { get; set; } = 5;
         public int? isWithinKilometer { get; set; }

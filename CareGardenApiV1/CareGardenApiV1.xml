@@ -284,6 +284,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessListNoCache">
+            <summary>
+            Get Business List No Cache
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessDetailsById(System.String)">
              <summary>
              Get Business Details By Id (Can be used for business detail page.)

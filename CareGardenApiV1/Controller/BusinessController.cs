@@ -150,6 +150,19 @@ namespace CareGardenApiV1.Controller
             return Ok(response);
         }
 
+        /// <summary>
+        /// Get Business List No Cache
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("getbusinesslistnocache")]
+        public async Task<IActionResult> GetBusinessListNoCache()
+        {
+            ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
+            response.Data = await _businessService.GetBusinessListForCache(false);
+
+            return Ok(response);
+        }
+
 
         /// <summary>
         /// Get Business Details By Id (Can be used for business detail page.)

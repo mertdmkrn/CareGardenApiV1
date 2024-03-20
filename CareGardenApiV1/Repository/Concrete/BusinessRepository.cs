@@ -223,11 +223,11 @@ namespace CareGardenApiV1.Repository.Concrete
                 .ToListAsync();
         }
 
-        public async Task<IList<BusinessListModel>> GetBusinessListForCache()
+        public async Task<IList<BusinessListModel>> GetBusinessListForCache(bool cache = true)
         {
             IList<BusinessListModel> businessList = null;
 
-            if (_memoryCache.TryGetValue(CacheKeys.BusinessList, out object list))
+            if (cache && _memoryCache.TryGetValue(CacheKeys.BusinessList, out object list))
             {
                 businessList = (IList<BusinessListModel>)list;
             }

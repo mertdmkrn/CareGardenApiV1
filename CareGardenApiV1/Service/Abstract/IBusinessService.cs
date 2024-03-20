@@ -15,7 +15,7 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<List<BusinessPagingListModel>> GetBusinessLiteListAsync(BusinessSearchAdminModel searchAdminModel);
         Task<BusinessDetailModel> GetBusinessDetailByIdAsync(Guid id);
         Task<IList<BusinessListModel>> GetBusinessListModelAsync(Guid? id = null);
-        Task<IList<BusinessListModel>> GetBusinessListForCache();
+        Task<IList<BusinessListModel>> GetBusinessListForCache(bool cache = true);
         Task<IList<BusinessDetailModel>> GetBusinessesAsync();
         Task<IList<BusinessListModel>> GetBusinessNearByDistanceAsync(BusinessSearchModel businessSearchModel);
         Task<IList<BusinessListModel>> GetBusinessByUserFavorites(BusinessSearchModel businessSearchModel);

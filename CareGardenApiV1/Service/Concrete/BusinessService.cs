@@ -107,9 +107,9 @@ namespace CareGardenApiV1.Service.Concrete
             return await _businessRepository.GetBusinessListModelAsync(id);
         }
         
-        public async Task<IList<BusinessListModel>> GetBusinessListForCache()
+        public async Task<IList<BusinessListModel>> GetBusinessListForCache(bool cache = true)
         {
-            return await _businessRepository.GetBusinessListForCache();
+            return await _businessRepository.GetBusinessListForCache(cache);
         }
 
         public async Task<bool> UpdateMemoryBusinessList(Guid id)

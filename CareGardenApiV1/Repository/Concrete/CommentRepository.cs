@@ -112,14 +112,15 @@ namespace CareGardenApiV1.Repository.Concrete
                 .Select(x => x.point)
                 .ToListAsync();
 
+            List<double> points = new List<double>(){ 1, 2, 3, 4, 5 }; 
             var pointListGroups = pointList.GroupBy(x => x).OrderByDescending(x => x.Key);
 
             retVal.Add("Count", pointList.Count());
-            retVal.Add("Average", Math.Round(pointList.Average(), 1));
+            retVal.Add("Average", Math.Round(pointList.IsNullOrEmpty() ? 0 : pointList.Average(), 1));
 
-            foreach (var item in pointListGroups)
+            foreach (var item in points)
             {
-                retVal.TryAdd(item.Key.ToString(), item.Count());
+                retVal.TryAdd(item.ToString(), pointList.Count(x => x == item));
             }
 
             return retVal;

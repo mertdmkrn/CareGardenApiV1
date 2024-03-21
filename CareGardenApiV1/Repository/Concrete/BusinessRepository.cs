@@ -164,7 +164,6 @@ namespace CareGardenApiV1.Repository.Concrete
 
             var businesses = await GetBusinessListForCache();
 
-            var resultCount = businesses.Count();
 
             var filteredBusinesses = businesses
                 .WhereIf(businessExploreModel.workingGenderType != WorkingGenderType.All, x => x.workingGenderType.Equals((int)businessExploreModel.workingGenderType))
@@ -177,7 +176,6 @@ namespace CareGardenApiV1.Repository.Concrete
                     x.isOpen = HelperMethods.GetBusinessOpen(x.workingInfo, x.officialDayAvailable);
                     x.distance = searchLocation != null && x.location != null ? Math.Round((x.location.Distance(gf.CreateGeometry(searchLocation)) * Constants.DistanceValue), 1) : 0;
                     x.averageRating = Math.Round(x.averageRating, 1);
-                    x.resultCount = resultCount;
                     return x;
                 })
                 .WhereIf(businessExploreModel.isWithinKilometer.HasValue, x => x.distance <= businessExploreModel.isWithinKilometer.Value)
@@ -186,11 +184,19 @@ namespace CareGardenApiV1.Repository.Concrete
                 .OrderByDescendingIf(businessExploreModel.sortByType == SortByType.Newest, x => x.createDate)
                 .OrderByDescendingIf(businessExploreModel.sortByType == SortByType.TopRated, x => x.averageRating)
                 .OrderByIf(businessExploreModel.sortByType == SortByType.Nearest, x => x.distance)
+                .ToList();
+
+            var resultCount = filteredBusinesses.Count();
+
+            return filteredBusinesses
+                .Select(x =>
+                {
+                    x.resultCount = filteredBusinesses.Count;
+                    return x;
+                })
                 .Skip(businessExploreModel.page.Value * businessExploreModel.take.Value)
                 .Take(businessExploreModel.take.Value)
                 .ToList();
-
-            return filteredBusinesses;
         }
 
         public async Task<IList<BusinessListModel>> GetBusinessListModelAsync(Guid? id = null)

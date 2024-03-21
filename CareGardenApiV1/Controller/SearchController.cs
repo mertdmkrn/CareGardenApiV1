@@ -135,7 +135,12 @@ namespace CareGardenApiV1.Controller
         {
             ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
 
-            if(businessExploreModel.isStartPage)
+
+            bool isSendNoLocationInfo = (!businessExploreModel.latitude.HasValue || businessExploreModel.latitude == 0)
+                        && (!businessExploreModel.longitude.HasValue || businessExploreModel.longitude == 0)
+                        && businessExploreModel.city.IsNullOrEmpty();
+
+            if (businessExploreModel.isStartPage)
             {
                 businessExploreModel.workingGenderType = WorkingGenderType.All;
 
@@ -160,15 +165,14 @@ namespace CareGardenApiV1.Controller
             }
             else
             {
-                if ((!businessExploreModel.latitude.HasValue || !businessExploreModel.longitude.HasValue
-                || businessExploreModel.latitude == 0 || businessExploreModel.longitude == 0) && businessExploreModel.city.IsNullOrEmpty())
+                if (isSendNoLocationInfo)
                 {
                     businessExploreModel.city = HelperMethods.GetClaimInfo(Request, ClaimTypes.Locality).IsNull("İstanbul");
                 }
 
                 response.Data = await _businessService.ExploreBusinesses(businessExploreModel);
 
-                if (response.Data.IsNullOrEmpty() && businessExploreModel.city != "İstanbul")
+                if (isSendNoLocationInfo && response.Data.IsNullOrEmpty() && businessExploreModel.city != "İstanbul")
                 {
                     businessExploreModel.city = "İstanbul";
                     response.Data = await _businessService.ExploreBusinesses(businessExploreModel);

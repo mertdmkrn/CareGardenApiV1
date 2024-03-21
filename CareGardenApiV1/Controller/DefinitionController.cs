@@ -4,6 +4,7 @@ using CareGardenApiV1.Repository;
 using Microsoft.AspNetCore.Mvc;
 using HtmlAgilityPack;
 using CareGardenApiV1.Repository.Abstract;
+using Microsoft.EntityFrameworkCore;
 
 namespace CareGardenApiV1.Controller
 {
@@ -34,6 +35,31 @@ namespace CareGardenApiV1.Controller
             response.Data = Constants.Cities;
 
             return Ok(response);
+        }
+
+        /// <summary>
+        /// Get Cities
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("definition/setlocation")]
+        public async Task<IActionResult> SetLocation()
+        {
+            var businesses = await _context.Businesses.Where(x => x.location == null).ToListAsync();
+
+            foreach (var business in businesses)
+            {
+                if (business.latitude > 0 && business.longitude > 0)
+                {
+                    var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
+                    business.location = gf.CreatePoint(new NetTopologySuite.Geometries.Coordinate(business.latitude, business.longitude));
+                }
+            }
+
+            _context.Businesses.UpdateRange(businesses);
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
 
         /// <summary>

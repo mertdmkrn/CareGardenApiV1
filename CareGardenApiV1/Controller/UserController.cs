@@ -238,13 +238,22 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
-            response.Data = await _businessService.GetBusinessByPopularAsync(businessSearchModel);
-            response.Data.ToList().ForEach(x =>
+            bool isSendNoLocationInfo = (!businessSearchModel.latitude.HasValue || businessSearchModel.latitude == 0)
+                                        && (!businessSearchModel.longitude.HasValue || businessSearchModel.longitude == 0)
+                                        && businessSearchModel.city.IsNullOrEmpty();
+
+            if(isSendNoLocationInfo)
             {
-                x.isOpen = HelperMethods.GetBusinessOpen(x.workingInfo, x.officialDayAvailable);
-                x.distance = Math.Round(x.distance, 1);
-                x.averageRating = Math.Round(x.averageRating, 1);
-            });
+                businessSearchModel.city = HelperMethods.GetClaimInfo(Request, ClaimTypes.Locality).IsNull("İstanbul");
+            }
+                
+            response.Data = await _businessService.GetBusinessByPopularAsync(businessSearchModel);
+
+            if(isSendNoLocationInfo && response.Data.IsNullOrEmpty() && businessSearchModel.city != "İstanbul")
+            {
+                businessSearchModel.city = "İstanbul";
+                response.Data = await _businessService.GetBusinessByPopularAsync(businessSearchModel);
+            }
 
             return Ok(response);
         }

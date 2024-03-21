@@ -36,7 +36,7 @@ namespace CareGardenApiV1.Helpers
         {
             try
             {
-                if(emailaddress.IsNullOrEmpty()) return false;
+                if (emailaddress.IsNullOrEmpty()) return false;
                 MailAddress m = new MailAddress(emailaddress);
 
                 return true;
@@ -45,8 +45,8 @@ namespace CareGardenApiV1.Helpers
             {
                 return false;
             }
-        }       
-        
+        }
+
         public static bool IsValidTelephoneNumber(this string telephoneNumber)
         {
             try
@@ -83,7 +83,7 @@ namespace CareGardenApiV1.Helpers
             return await userService.GetUserById(userId.ToGuid());
         }
 
-        public async static Task<UserResponseModel> GetSessionUserResponseModel(HttpRequest request, IUserService userService) 
+        public async static Task<UserResponseModel> GetSessionUserResponseModel(HttpRequest request, IUserService userService)
         {
             var tokenString = request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             var token = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
@@ -96,7 +96,7 @@ namespace CareGardenApiV1.Helpers
             var userId = token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.PrimarySid)?.Value?.ToString();
 
             if (!userId.IsGuid())
-            {  
+            {
                 return null;
             }
 
@@ -186,10 +186,11 @@ namespace CareGardenApiV1.Helpers
             return builder.ToString();
         }
 
-        public static int GetDay(this DateTime date) 
-        { 
-            switch (date.DayOfWeek) {
-                
+        public static int GetDay(this DateTime date)
+        {
+            switch (date.DayOfWeek)
+            {
+
                 case DayOfWeek.Monday: return 1;
                 case DayOfWeek.Tuesday: return 2;
                 case DayOfWeek.Wednesday: return 3;
@@ -197,44 +198,58 @@ namespace CareGardenApiV1.Helpers
                 case DayOfWeek.Friday: return 5;
                 case DayOfWeek.Saturday: return 6;
                 case DayOfWeek.Sunday: return 7;
-                default : return -1;
+                default: return -1;
             }
         }
 
         public static bool GetBusinessOpen(BusinessWorkingInfo workingInfo, bool officialDayAvailable)
         {
-            var now = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, "Turkey Standard Time");
-            var today = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Today, "Turkey Standard Time");
+            try
+            {
+                var now = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, "Turkey Standard Time");
+                var today = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Today, "Turkey Standard Time");
 
-            if (workingInfo == null)
-                return true;
+                if (workingInfo == null)
+                    return true;
 
-            if (officialDayAvailable && Constants.OfficialDays.Exists(x => x.date.Equals(today)))
+                if (officialDayAvailable && Constants.OfficialDays.Exists(x => x.date.Equals(today)))
+                    return false;
+
+                var workHours = workingInfo.GetBusinessWorkInfoHours(today);
+
+                if (workHours.IsNullOrEmpty())
+                    return false;
+
+                var startHours = workHours.Split('-').FirstOrDefault();
+                var endHours = workHours.Split('-').LastOrDefault();
+
+                if (startHours.IsNullOrEmpty() || endHours.IsNullOrEmpty())
+                    return false;
+
+                var startHour = startHours.Split(":")[0].ToInt();
+                var startMinute = startHours.Split(":")[1].ToInt();
+                var businessStartDate = new DateTime(today.Year, today.Month, today.Day, startHour, startMinute, 0);
+
+                var endHour = endHours.Split(":")[0].ToInt();
+                var endMinute = endHours.Split(":")[1].ToInt();
+
+                if (endHour >= 24)
+                {
+                    endHour = 23;
+                    endMinute = 59;
+                }
+
+                var businessEndDate = new DateTime(today.Year, today.Month, today.Day, endHour, endMinute, 0);
+
+                if (now >= businessStartDate && now < businessEndDate)
+                    return true;
+
                 return false;
-
-            var workHours = workingInfo.GetBusinessWorkInfoHours(today);
-
-            if (workHours.IsNullOrEmpty())
+            }
+            catch (Exception)
+            {
                 return false;
-
-            var startHours = workHours.Split('-').FirstOrDefault();
-            var endHours = workHours.Split('-').LastOrDefault();
-
-            if (startHours.IsNullOrEmpty() || endHours.IsNullOrEmpty())
-                return false;
-
-            var startHour = startHours.Split(":")[0].ToInt();
-            var startMinute = startHours.Split(":")[1].ToInt();
-            var businessStartDate = new DateTime(today.Year, today.Month, today.Day, startHour, startMinute, 0);
-            
-            var endHour = endHours.Split(":")[0].ToInt();
-            var endMinute = endHours.Split(":")[1].ToInt();
-            var businessEndDate = new DateTime(today.Year, today.Month, today.Day, endHour, endMinute, 0);
-
-            if (now >= businessStartDate && now < businessEndDate)
-                return true;
-
-            return false;    
+            }
         }
 
         public static bool GetBusinessOpenSpecialDate(BusinessWorkingInfo workingInfo, bool officialDayAvailable, DateTime? specialDate)
@@ -300,7 +315,7 @@ namespace CareGardenApiV1.Helpers
                 return false;
 
             var todayWorksMinutes = appointments.Sum(x => x.businessService.maxDuration);
-            
+
             var endStartTimeDifference = endHours.Replace(":", "").ToInt() - startHours.Replace(":", "").ToInt();
 
             var sumWorkMinutes = (endStartTimeDifference / 100) * 60;

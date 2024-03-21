@@ -772,6 +772,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.DefinitionController.SetLocation">
+            <summary>
+            Get Cities
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.DefinitionController.PrivacyPolicy">
             <summary>
             Get Privacy Policy

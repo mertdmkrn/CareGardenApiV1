@@ -157,10 +157,10 @@ namespace CareGardenApiV1.Repository.Concrete
             return list;
         }
 
-        public async Task<List<Guid>> GetUserFavoriteBusinessIds(Guid id)
+        public async Task<List<Guid?>> GetUserFavoriteBusinessIds(Guid id)
         {
             return await _context.Users
-                .SelectMany(x => x.favorites.Select(x => x.id))
+                .SelectMany(x => x.favorites.Select(x => x.businessId))
                 .ToListAsync();
         }
     }

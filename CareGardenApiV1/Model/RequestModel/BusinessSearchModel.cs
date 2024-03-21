@@ -13,6 +13,6 @@ namespace CareGardenApiV1.Model.RequestModel
         public Guid userId{ get; set; } = Guid.Empty;
 
         [JsonIgnore]
-        public List<Guid> favoriteBusinessIds { get; set; } = new List<Guid>();
+        public List<Guid?> favoriteBusinessIds { get; set; } = new List<Guid?>();
     }
 }

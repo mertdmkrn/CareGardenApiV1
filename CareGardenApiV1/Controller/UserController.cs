@@ -278,8 +278,6 @@ namespace CareGardenApiV1.Controller
 
             businessSearchModel.favoriteBusinessIds = await _userService.GetUserFavoriteBusinessIds(userId.ToGuid());
 
-            businessSearchModel.favoriteBusinessIds.Add(new Guid("2d2e027e-6e9d-44eb-9871-d4ea169e1cbc"));
-
             if(!businessSearchModel.favoriteBusinessIds.IsNullOrEmpty())
             {
                 response.Data = await _businessService.GetBusinessByUserFavorites(businessSearchModel);

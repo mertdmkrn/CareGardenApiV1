@@ -1,6 +1,7 @@
 ﻿using CareGardenApiV1.Handler.Abstract;
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
+using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,7 @@ namespace CareGardenApiV1.Controller
 
 
         /// <summary>
-        /// Get Services
+        /// Get Campaigns
         /// </summary>
         /// <returns></returns>
         [HttpPost("getall")]
@@ -46,6 +47,52 @@ namespace CareGardenApiV1.Controller
                     Priority = CacheItemPriority.Normal
                 });
             }
+
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Get Active Campaigns
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("getactives")]
+        public async Task<IActionResult> GetActives()
+        {
+            ResponseModel<List<CampaingInfo>> response = new ResponseModel<List<CampaingInfo>>();
+            var campaigns = new List<Campaign>();
+            bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
+
+            if (_memoryCache.TryGetValue(cacheKey, out object list))
+            {
+                campaigns = (List<Campaign>)list;
+            }
+            else
+            {
+                campaigns = await _campaignService.GetCampaignsAsync();
+                _memoryCache.Set(cacheKey, campaigns, new MemoryCacheEntryOptions
+                {
+                    Priority = CacheItemPriority.Normal
+                });
+            }
+
+            response.Data = campaigns
+                .Where(x => x.isActive)
+                .Where(x => !x.expireDate.HasValue || x.expireDate > DateTime.Now)
+                .Select(x => new CampaingInfo
+                {
+                    id = x.id,
+                    businessId = x.businessId,
+                    path = x.path,
+                    url = x.url,
+                    title = isTurkish ? x.title : x.titleEn,
+                    about = isTurkish ? x.about : x.aboutEn,
+                    condition = isTurkish ? x.condition : x.conditionEn,
+                    expireDate = x.expireDate,
+                    dayInfo = x.expireDate.GetRelativeDate(Resource.Resource.Culture.ToString()),
+                    sortOrder = x.sortOrder
+                })
+                .OrderBy(x => x.sortOrder)
+                .ToList();  
 
             return Ok(response);
         }
@@ -123,7 +170,15 @@ namespace CareGardenApiV1.Controller
         ///        "path" : "https://www.google.com",
         ///        "url": "https://www.google.com",
         ///        "businessId": "00000000-0000-0000-0000-000000000000",
-        ///        "isActive" : true
+        ///        "title": "Lorem",
+        ///        "titleEn": "Lorem",
+        ///        "about": "Lorem",
+        ///        "aboutEn": "Lorem",
+        ///        "condition": "Lorem",
+        ///        "conditionEn": "Lorem",
+        ///        "expireDate": "2024-05-01",
+        ///        "isActive" : true,
+        ///        "sortOrder" : 1
         ///     }
         ///
         /// </remarks>
@@ -140,10 +195,28 @@ namespace CareGardenApiV1.Controller
                 response.ValidationErrors.Add(new ValidationError("path", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
 
-            if (campaign.url.IsNullOrEmpty())
+            if (campaign.title.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("url", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("title", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (campaign.titleEn.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("titleEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (campaign.condition.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("condition", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (campaign.conditionEn.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("conditionEn", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
 
             if (response.HasError)
@@ -171,6 +244,13 @@ namespace CareGardenApiV1.Controller
         ///        "path" : "https://www.google.com",
         ///        "url": "https://www.google.com",
         ///        "businessId": "00000000-0000-0000-0000-000000000000",
+        ///        "title": "Lorem",
+        ///        "titleEn": "Lorem",
+        ///        "about": "Lorem",
+        ///        "aboutEn": "Lorem",
+        ///        "condition": "Lorem",
+        ///        "conditionEn": "Lorem",
+        ///        "expireDate": "2024-05-01",
         ///        "isActive" : true,
         ///        "sortOrder" : 1
         ///     }
@@ -189,10 +269,28 @@ namespace CareGardenApiV1.Controller
                 response.ValidationErrors.Add(new ValidationError("path", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
 
-            if (updateCampaign.url.IsNullOrEmpty())
+            if (updateCampaign.title.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("url", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("title", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (updateCampaign.titleEn.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("titleEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (updateCampaign.condition.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("condition", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (updateCampaign.conditionEn.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("conditionEn", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
 
             if (response.HasError)
@@ -215,6 +313,13 @@ namespace CareGardenApiV1.Controller
             campaign.businessId = updateCampaign.businessId;
             campaign.isActive = updateCampaign.isActive;
             campaign.sortOrder = updateCampaign.sortOrder;
+            campaign.title = updateCampaign.title.IsNull(campaign.title);
+            campaign.titleEn = updateCampaign.titleEn.IsNull(campaign.titleEn);
+            campaign.about = updateCampaign.titleEn.IsNull(campaign.titleEn);
+            campaign.aboutEn = updateCampaign.titleEn.IsNull(campaign.titleEn);
+            campaign.condition = updateCampaign.titleEn.IsNull(campaign.titleEn);
+            campaign.conditionEn = updateCampaign.titleEn.IsNull(campaign.titleEn);
+            campaign.expireDate = updateCampaign.expireDate.HasValue ? updateCampaign.expireDate : campaign.expireDate;
 
             campaign = await _campaignService.UpdateCampaignAsync(campaign);
             response.Data = campaign;

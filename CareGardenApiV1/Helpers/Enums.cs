@@ -110,4 +110,12 @@
         ListInteger,
         Boolean
     }
+
+    public enum NoticationType
+    {
+        Information,
+        Appointment,
+        Campaign,
+        Business
+    }
 }

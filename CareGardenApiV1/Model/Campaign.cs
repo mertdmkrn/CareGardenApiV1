@@ -17,10 +17,27 @@ namespace CareGardenApiV1.Model
         public string? path { get; set; }
 
         public string? url { get; set; }
+
+        [MaxLength(150)]
+        public string? title { get; set; }
+
+        [MaxLength(150)]
+        public string? titleEn { get; set; }
+
+        [MaxLength(250)]
+        public string? about { get; set; }
+
+        [MaxLength(250)]
+        public string? aboutEn { get; set; }
+
+        public string? condition { get; set; }
+
+        public string? conditionEn { get; set; }
+
         public bool isActive { get; set; }
         public DateTime? createDate { get; set; }
-
         public DateTime? updateDate { get; set; }
+        public DateTime? expireDate { get; set; }
         public int sortOrder { get; set; }
         public Guid? businessId { get; set; }
 

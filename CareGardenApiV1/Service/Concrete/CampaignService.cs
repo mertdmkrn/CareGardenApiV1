@@ -34,7 +34,6 @@ namespace CareGardenApiV1.Service.Concrete
             return await _campaignRepository.GetCampaignsAsync();
         }
 
-
         public async Task<Campaign> SaveCampaignAsync(Campaign campaign)
         {
             return await _campaignRepository.SaveCampaignAsync(campaign);

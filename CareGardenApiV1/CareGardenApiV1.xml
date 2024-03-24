@@ -607,7 +607,13 @@
         </member>
         <member name="M:CareGardenApiV1.Controller.CampaignController.GetAll">
             <summary>
-            Get Services
+            Get Campaigns
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.CampaignController.GetActives">
+            <summary>
+            Get Active Campaigns
             </summary>
             <returns></returns>
         </member>
@@ -634,7 +640,15 @@
                     "path" : "https://www.google.com",
                     "url": "https://www.google.com",
                     "businessId": "00000000-0000-0000-0000-000000000000",
-                    "isActive" : true
+                    "title": "Lorem",
+                    "titleEn": "Lorem",
+                    "about": "Lorem",
+                    "aboutEn": "Lorem",
+                    "condition": "Lorem",
+                    "conditionEn": "Lorem",
+                    "expireDate": "2024-05-01",
+                    "isActive" : true,
+                    "sortOrder" : 1
                  }
             
              </remarks>
@@ -652,6 +666,13 @@
                     "path" : "https://www.google.com",
                     "url": "https://www.google.com",
                     "businessId": "00000000-0000-0000-0000-000000000000",
+                    "title": "Lorem",
+                    "titleEn": "Lorem",
+                    "about": "Lorem",
+                    "aboutEn": "Lorem",
+                    "condition": "Lorem",
+                    "conditionEn": "Lorem",
+                    "expireDate": "2024-05-01",
                     "isActive" : true,
                     "sortOrder" : 1
                  }
@@ -1654,6 +1675,18 @@
             <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.CareGardenV26.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV27">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV27.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV27.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV27.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:CareGardenApiV1.Resource.Resource">

@@ -211,6 +211,7 @@ namespace CareGardenApiV1.Helpers
 
             string todayStr = GetLangugeValue(language, "Bugün", "Today");
             string yesterdayStr = GetLangugeValue(language, "Dün", "Yesterday");
+            string tomorrowStr = GetLangugeValue(language, "Yarın", "Tomorrow");
             string minuteStr = GetLangugeValue(language, "dakika", "minute");
             string hourStr = GetLangugeValue(language, "saat", "hour");
             string dayStr = GetLangugeValue(language, "gün", "day");
@@ -218,44 +219,55 @@ namespace CareGardenApiV1.Helpers
             string monthStr = GetLangugeValue(language, "ay", "month");
             string yearStr = GetLangugeValue(language, "yıl", "year");
             string agoStr = GetLangugeValue(language, "önce", "ago");
+            string leftStr = GetLangugeValue(language, "kaldı", "left");
             string lastMonthStr = GetLangugeValue(language, "Geçen ay", "Last month");
             string lastWeekStr = GetLangugeValue(language, "Geçen hafta", "Last week");
 
-            if (timeDifference.TotalDays < 1)
+            var isOldDate = timeDifference.TotalNanoseconds < 0;
+            var lastWord = isOldDate ? leftStr : agoStr;
+
+            if (Math.Abs(timeDifference.TotalDays) < 1)
             {
-                if (timeDifference.TotalDays < 0)
+                if (Math.Abs(timeDifference.TotalDays) < 0)
                     return todayStr;
 
-                if (timeDifference.TotalHours < 1)
-                    return $"{Math.Floor(timeDifference.TotalMinutes).ToInt()} {minuteStr}{timeDifference.TotalMinutes.addSuffix(language)} {agoStr}";
+                if (Math.Abs(timeDifference.TotalHours) < 1)
+                    return $"{Math.Abs(Math.Floor(timeDifference.TotalMinutes)).ToInt()} {minuteStr}{timeDifference.TotalMinutes.addSuffix(language)} {lastWord}";
 
-                return $"{Math.Floor(timeDifference.TotalHours).ToInt()} {hourStr}{timeDifference.TotalHours.addSuffix(language)} {agoStr}";
+                return $"{Math.Abs(Math.Floor(timeDifference.TotalHours)).ToInt()} {hourStr}{timeDifference.TotalHours.addSuffix(language)} {lastWord}";
             }
 
-            if (timeDifference.TotalDays < 2)
-                return yesterdayStr;
+            if (Math.Abs(timeDifference.TotalDays) < 2)
+                return isOldDate ? tomorrowStr : yesterdayStr;
 
-            if (timeDifference.TotalDays < 7)
-                return $"{Math.Floor(timeDifference.TotalDays).ToInt()} {dayStr}{timeDifference.TotalDays.addSuffix(language)} {agoStr}";
+            if (Math.Abs(timeDifference.TotalDays) < 7)
+                return $"{Math.Abs(Math.Floor(timeDifference.TotalDays)).ToInt()} {dayStr}{timeDifference.TotalDays.addSuffix(language)} {lastWord}";
 
             if (timeDifference.TotalDays < 14)
-                return lastWeekStr;
+                return isOldDate ? $"{Math.Abs(Math.Floor(timeDifference.TotalDays)).ToInt()} {dayStr}{timeDifference.TotalDays.addSuffix(language)} {lastWord}" : lastWeekStr;
 
             if (timeDifference.TotalDays < 30)
-                return $"{Math.Floor(timeDifference.TotalDays / 7).ToInt()} {weekStr}{(timeDifference.TotalDays / 7).addSuffix(language)} {agoStr}";
+                return $"{Math.Floor(timeDifference.TotalDays / 7).ToInt()} {weekStr}{(timeDifference.TotalDays / 7).addSuffix(language)} {lastWord}";
 
             if (timeDifference.TotalDays < 60)
-                return lastMonthStr;
+                return isOldDate ? $"1 {monthStr} {leftStr}" : lastMonthStr;
 
             if (timeDifference.TotalDays < 365)
-                return $"{Math.Floor(timeDifference.TotalDays / 30).ToInt()} {monthStr}{(timeDifference.TotalDays / 30).addSuffix(language)} {agoStr}";
+                return $"{Math.Floor(timeDifference.TotalDays / 30).ToInt()} {monthStr}{(timeDifference.TotalDays / 30).addSuffix(language)} {lastWord}";
 
-            return $"{Math.Floor(timeDifference.TotalDays / 7).ToInt()} {yearStr}{(timeDifference.TotalDays / 365).addSuffix(language)} {agoStr}";
+            return $"{Math.Floor(timeDifference.TotalDays / 7).ToInt()} {yearStr}{(timeDifference.TotalDays / 365).addSuffix(language)} {lastWord}";
+        }
+
+        public static string GetRelativeDate(this DateTime? date, string language)
+        {
+            if (!date.HasValue) return string.Empty;
+
+            return date.Value.GetRelativeDate(language);
         }
 
         private static string addSuffix(this double number, string language = "en")
         {
-            return !language.Equals("tr", StringComparison.OrdinalIgnoreCase) && number >= 2 ? "s" : string.Empty;
+            return !language.Equals("tr", StringComparison.OrdinalIgnoreCase) && Math.Abs(number) >= 2 ? "s" : string.Empty;
         }
     }
 }

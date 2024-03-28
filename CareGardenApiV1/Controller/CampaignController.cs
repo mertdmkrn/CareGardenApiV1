@@ -315,10 +315,10 @@ namespace CareGardenApiV1.Controller
             campaign.sortOrder = updateCampaign.sortOrder;
             campaign.title = updateCampaign.title.IsNull(campaign.title);
             campaign.titleEn = updateCampaign.titleEn.IsNull(campaign.titleEn);
-            campaign.about = updateCampaign.titleEn.IsNull(campaign.titleEn);
-            campaign.aboutEn = updateCampaign.titleEn.IsNull(campaign.titleEn);
-            campaign.condition = updateCampaign.titleEn.IsNull(campaign.titleEn);
-            campaign.conditionEn = updateCampaign.titleEn.IsNull(campaign.titleEn);
+            campaign.about = updateCampaign.about.IsNull(campaign.about);
+            campaign.aboutEn = updateCampaign.aboutEn.IsNull(campaign.aboutEn);
+            campaign.condition = updateCampaign.condition.IsNull(campaign.condition);
+            campaign.conditionEn = updateCampaign.conditionEn.IsNull(campaign.conditionEn);
             campaign.expireDate = updateCampaign.expireDate.HasValue ? updateCampaign.expireDate : campaign.expireDate;
 
             campaign = await _campaignService.UpdateCampaignAsync(campaign);

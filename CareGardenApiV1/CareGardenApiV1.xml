@@ -895,6 +895,100 @@
              <returns></returns>
         </member>
         <!-- Badly formed XML comment ignored for member "M:CareGardenApiV1.Controller.FavoriteController.Delete(System.Guid)" -->
+        <!-- Badly formed XML comment ignored for member "M:CareGardenApiV1.Controller.NotificationController.Get(CareGardenApiV1.Model.RequestModel.NotificationSearchModel)" -->
+        <member name="M:CareGardenApiV1.Controller.NotificationController.Add(CareGardenApiV1.Model.Notification)">
+             <summary>
+             Save Notification (Publish Date is the date the notification will start to appear. If null, it will appear immediately.)
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "userId": "00000000-0000-0000-0000-000000000000",
+                    "businessId": null,
+                    "publishDate": "2024-03-29T08:30:00",
+                    "description": "CareGarden' a hoşgeldin."
+                    "descriptionEn": "Welcome to CareGarden."
+                    "type": 0
+                    "redirectId": null,
+                    "redirectUrl": null
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.NotificationController.SaveAllUsers(CareGardenApiV1.Model.Notification)">
+             <summary>
+             Save Notification All Users (Publish Date is the date the notification will start to appear. If null, it will appear immediately.)
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "publishDate": "2024-03-29T08:30:00",
+                    "description": "CareGarden' a hoşgeldin."
+                    "descriptionEn": "Welcome to CareGarden."
+                    "type": 0
+                    "redirectId": null,
+                    "redirectUrl": null
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.NotificationController.SaveAllBusinesses(CareGardenApiV1.Model.Notification)">
+             <summary>
+             Save Notification All Businesses (Publish Date is the date the notification will start to appear. If null, it will appear immediately.)
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "publishDate": "2024-03-29T08:30:00",
+                    "description": "CareGarden' a hoşgeldin."
+                    "descriptionEn": "Welcome to CareGarden."
+                    "type": 0
+                    "redirectId": null,
+                    "redirectUrl": null
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.NotificationController.SetRead(CareGardenApiV1.Model.RequestModel.IdListSearchModel)">
+             <summary>
+             Notification Set Read
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "ids": [
+                         "00000000-0000-0000-0000-000000000000",
+                         "00000000-0000-0000-0000-000000000001"
+                    ]
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.NotificationController.Delete(CareGardenApiV1.Model.RequestModel.IdListSearchModel)">
+             <summary>
+             Delete Notifications
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "ids": [
+                         "00000000-0000-0000-0000-000000000000",
+                         "00000000-0000-0000-0000-000000000001"
+                    ]
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.SearchController.SearchBusinessByKeyword(CareGardenApiV1.Model.RequestModel.KeywordSearchModel)">
             <summary>
             Get Search By Keyword
@@ -1687,6 +1781,30 @@
             <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.CareGardenV27.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV28">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV28.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV28.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV28.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV29">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV29.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV29.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV29.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:CareGardenApiV1.Resource.Resource">

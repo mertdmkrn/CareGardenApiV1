@@ -2,12 +2,8 @@
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
-using CareGardenApiV1.Repository.Concrete;
 using CareGardenApiV1.Service.Abstract;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Caching.Memory;
-using Nest;
-using OneSignalApi.Model;
 using static CareGardenApiV1.Helpers.Constants;
 
 namespace CareGardenApiV1.Service.Concrete
@@ -140,6 +136,11 @@ namespace CareGardenApiV1.Service.Concrete
             }
 
             return true;
+        }
+
+        public async Task<List<Guid>> GetBusinessIds()
+        {
+            return await _businessRepository.GetBusinessIds();
         }
     }
 }

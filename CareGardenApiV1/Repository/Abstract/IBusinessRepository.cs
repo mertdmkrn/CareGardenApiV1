@@ -24,5 +24,6 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<Business> SaveBusinessAsync(Business business);
         Task<Business> UpdateBusinessAsync(Business business);
         Task<bool> DeleteBusinessAsync(Business business);
+        Task<List<Guid>> GetBusinessIds();
     }
 }

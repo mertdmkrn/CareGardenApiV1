@@ -1,13 +1,8 @@
 ﻿using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
-using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
-using CareGardenApiV1.Repository.Concrete;
 using CareGardenApiV1.Service.Abstract;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Nest;
-using OneSignalApi.Model;
 
 namespace CareGardenApiV1.Service.Concrete
 {

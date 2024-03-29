@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using CareGardenApiV1.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace CareGardenApiV1.Model

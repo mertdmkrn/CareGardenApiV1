@@ -1,6 +1,4 @@
-﻿using CareGardenApiV1.Handler.Model;
-
-namespace CareGardenApiV1.Handler.Abstract
+﻿namespace CareGardenApiV1.Handler.Abstract
 {
     public interface ISmsHandler
     {

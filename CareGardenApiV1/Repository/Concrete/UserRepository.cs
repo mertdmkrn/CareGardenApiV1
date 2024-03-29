@@ -119,6 +119,14 @@ namespace CareGardenApiV1.Repository.Concrete
                 .ToListAsync();
         }
 
+        public async Task<List<Guid>> GetUserIds()
+        {
+            return await _context.Users
+                .AsNoTracking()
+                .Select(x => x.id)
+                .ToListAsync();
+        }
+
         public async Task<List<UserAdminResponseModel>> GetUsersAsync(UserSearchAdminModel userSearchAdminModel)
         {
             var query = _context.Users
@@ -160,7 +168,9 @@ namespace CareGardenApiV1.Repository.Concrete
         public async Task<List<Guid?>> GetUserFavoriteBusinessIds(Guid id)
         {
             return await _context.Users
+                .Where(x => x.id == id)
                 .SelectMany(x => x.favorites.Select(x => x.businessId))
+                .Distinct()
                 .ToListAsync();
         }
     }

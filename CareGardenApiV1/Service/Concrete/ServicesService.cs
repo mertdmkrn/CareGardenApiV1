@@ -1,11 +1,6 @@
 ﻿using CareGardenApiV1.Model;
 using CareGardenApiV1.Repository.Abstract;
-using CareGardenApiV1.Repository.Concrete;
 using CareGardenApiV1.Service.Abstract;
-using Microsoft.Extensions.Caching.Memory;
-using Org.BouncyCastle.Asn1.X509;
-using System.Xml.Linq;
-using static OneSignalApi.Model.UpdateLiveActivityRequest;
 
 namespace CareGardenApiV1.Service.Concrete
 {

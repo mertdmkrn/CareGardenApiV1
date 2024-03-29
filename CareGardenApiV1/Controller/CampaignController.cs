@@ -1,8 +1,8 @@
-﻿using CareGardenApiV1.Handler.Abstract;
-using CareGardenApiV1.Helpers;
+﻿using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
+using CareGardenApiV1.Service.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -14,14 +14,17 @@ namespace CareGardenApiV1.Controller
     public class CampaignController : ControllerBase
     {
         private readonly ICampaignService _campaignService;
+        private readonly IBusinessService _businessService;
         private readonly IMemoryCache _memoryCache;
         private const string cacheKey = "campaigns";
 
         public CampaignController(
             ICampaignService campaignService,
+            IBusinessService businessService,
             IMemoryCache memoryCache)
         {
             _campaignService = campaignService;
+            _businessService = businessService;
             _memoryCache = memoryCache;
         }
 
@@ -75,6 +78,8 @@ namespace CareGardenApiV1.Controller
                 });
             }
 
+            var businesses = await _businessService.GetBusinessListForCache();
+
             response.Data = campaigns
                 .Where(x => x.isActive)
                 .Where(x => !x.expireDate.HasValue || x.expireDate > DateTime.Now)
@@ -82,17 +87,18 @@ namespace CareGardenApiV1.Controller
                 {
                     id = x.id,
                     businessId = x.businessId,
-                    path = x.path,
+                    path = isTurkish ? x.path : x.pathEn.IsNull(x.path),
                     url = x.url,
                     title = isTurkish ? x.title : x.titleEn,
                     about = isTurkish ? x.about : x.aboutEn,
                     condition = isTurkish ? x.condition : x.conditionEn,
                     expireDate = x.expireDate,
                     dayInfo = x.expireDate.GetRelativeDate(Resource.Resource.Culture.ToString()),
-                    sortOrder = x.sortOrder
+                    sortOrder = x.sortOrder,
+                    relatedBusiness = x.businessId.HasValue ? businesses.FirstOrDefault(b => b.id == x.businessId.Value) : null
                 })
                 .OrderBy(x => x.sortOrder)
-                .ToList();  
+                .ToList();
 
             return Ok(response);
         }
@@ -309,6 +315,7 @@ namespace CareGardenApiV1.Controller
             }
 
             campaign.path = updateCampaign.path;
+            campaign.pathEn = updateCampaign.pathEn;
             campaign.url = updateCampaign.url;
             campaign.businessId = updateCampaign.businessId;
             campaign.isActive = updateCampaign.isActive;

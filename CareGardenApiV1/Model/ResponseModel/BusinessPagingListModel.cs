@@ -1,8 +1,4 @@
 ﻿using CareGardenApiV1.Helpers;
-using CareGardenApiV1.Model.RequestModel;
-using NetTopologySuite.Geometries;
-using System.Text.Json.Serialization;
-using CareGardenApiV1.Helpers;
 
 namespace CareGardenApiV1.Model.ResponseModel
 {

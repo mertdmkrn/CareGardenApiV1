@@ -2,7 +2,7 @@
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
 
-namespace CareGardenApiV1.Repository.Abstract
+namespace CareGardenApiV1.Service.Abstract
 {
     public interface ICommentService
     {

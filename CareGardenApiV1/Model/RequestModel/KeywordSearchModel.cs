@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace CareGardenApiV1.Model.RequestModel
+﻿namespace CareGardenApiV1.Model.RequestModel
 {
     public class KeywordSearchModel
     {

@@ -1,6 +1,5 @@
 ﻿using CareGardenApiV1.Model;
 using CareGardenApiV1.Repository.Abstract;
-using CareGardenApiV1.Repository.Concrete;
 using CareGardenApiV1.Service.Abstract;
 
 namespace CareGardenApiV1.Service.Concrete

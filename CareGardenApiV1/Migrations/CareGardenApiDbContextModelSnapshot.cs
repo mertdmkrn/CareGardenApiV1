@@ -344,6 +344,9 @@ namespace CareGardenApiV1.Migrations
                     b.Property<string>("path")
                         .HasColumnType("text");
 
+                    b.Property<string>("pathEn")
+                        .HasColumnType("text");
+
                     b.Property<int>("sortOrder")
                         .HasColumnType("integer");
 
@@ -570,7 +573,7 @@ namespace CareGardenApiV1.Migrations
                     b.Property<Guid?>("businessId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime?>("date")
+                    b.Property<DateTime?>("createDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("description")
@@ -582,6 +585,9 @@ namespace CareGardenApiV1.Migrations
                     b.Property<bool>("isRead")
                         .HasColumnType("boolean");
 
+                    b.Property<DateTime?>("publishDate")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<Guid?>("redirectId")
                         .HasColumnType("uuid");
 
@@ -590,6 +596,9 @@ namespace CareGardenApiV1.Migrations
 
                     b.Property<int>("type")
                         .HasColumnType("integer");
+
+                    b.Property<DateTime?>("updateDate")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<Guid?>("userId")
                         .HasColumnType("uuid");

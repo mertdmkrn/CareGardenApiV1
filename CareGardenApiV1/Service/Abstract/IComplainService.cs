@@ -1,6 +1,6 @@
 ﻿using CareGardenApiV1.Model;
 
-namespace CareGardenApiV1.Repository.Abstract
+namespace CareGardenApiV1.Service.Abstract
 {
     public interface IComplainService
     {

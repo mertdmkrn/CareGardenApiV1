@@ -9,7 +9,6 @@ using CareGardenApiV1.Service.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using System.Globalization;
 using System.Security.Claims;
 
 namespace CareGardenApiV1.Controller

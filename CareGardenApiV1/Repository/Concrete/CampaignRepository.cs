@@ -1,10 +1,6 @@
-﻿using CareGardenApiV1.Helpers;
-using CareGardenApiV1.Repository.Abstract;
+﻿using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Model;
 using Microsoft.EntityFrameworkCore;
-using OneSignalApi.Model;
-using Org.BouncyCastle.Asn1.X509;
-using CareGardenApiV1.Model.ResponseModel;
 
 namespace CareGardenApiV1.Repository.Concrete
 {

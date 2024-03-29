@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OneSignalApi.Model;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using CareGardenApiV1.Helpers;
 
 namespace CareGardenApiV1.Model
 {
@@ -15,6 +13,7 @@ namespace CareGardenApiV1.Model
         public Guid id { get; set; }
 
         public string? path { get; set; }
+        public string? pathEn { get; set; }
 
         public string? url { get; set; }
 

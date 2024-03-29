@@ -2,7 +2,6 @@
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
-using CareGardenApiV1.Repository.Concrete;
 using CareGardenApiV1.Service.Abstract;
 
 namespace CareGardenApiV1.Service.Concrete
@@ -73,6 +72,11 @@ namespace CareGardenApiV1.Service.Concrete
         public async Task<List<Guid?>> GetUserFavoriteBusinessIds(Guid id)
         {
             return await _userRepository.GetUserFavoriteBusinessIds(id);
+        }
+
+        public async Task<List<Guid>> GetUserIds()
+        {
+            return await _userRepository.GetUserIds();
         }
     }
 }

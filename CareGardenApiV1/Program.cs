@@ -186,6 +186,7 @@ internal class Program
         builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
         builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
         builder.Services.AddScoped<ISettingRepository, SettingRepository>();
+        builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 
         builder.Services.AddScoped<IBusinessService, BusinessService>();
         builder.Services.AddScoped<IBusinessGalleryService, BusinessGalleryService>();
@@ -205,5 +206,6 @@ internal class Program
         builder.Services.AddScoped<IAppointmentService, AppointmentService>();
         builder.Services.AddScoped<IDiscountService, DiscountService>();
         builder.Services.AddScoped<ISettingService, SettingService>();
+        builder.Services.AddScoped<INotificationService, NotificationService>();
     }
 }

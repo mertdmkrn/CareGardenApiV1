@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
-using OneSignalApi.Model;
 using System.Text.Json.Serialization;
 
 namespace CareGardenApiV1.Model

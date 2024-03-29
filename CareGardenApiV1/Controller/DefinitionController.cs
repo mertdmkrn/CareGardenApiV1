@@ -2,9 +2,9 @@
 using CareGardenApiV1.Model;
 using CareGardenApiV1.Repository;
 using Microsoft.AspNetCore.Mvc;
-using HtmlAgilityPack;
 using CareGardenApiV1.Repository.Abstract;
 using Microsoft.EntityFrameworkCore;
+using CareGardenApiV1.Service.Abstract;
 
 namespace CareGardenApiV1.Controller
 {

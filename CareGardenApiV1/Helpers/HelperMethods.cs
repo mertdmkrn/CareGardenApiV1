@@ -1,18 +1,11 @@
-﻿using System;
-using System.Net.Mail;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using System.Net.Mail;
 using System.Text.RegularExpressions;
 using CareGardenApiV1.Model;
-using Org.BouncyCastle.Asn1.Ocsp;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using CareGardenApiV1.Service.Concrete;
 using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Repository.Abstract;
-using RestSharp;
 using CareGardenApiV1.Model.ResponseModel;
-using Nest;
-using System.Drawing;
 using System.Text;
 
 namespace CareGardenApiV1.Helpers

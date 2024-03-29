@@ -1,5 +1,4 @@
-﻿using NetTopologySuite.Geometries;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using CareGardenApiV1.Helpers;
 
 namespace CareGardenApiV1.Model.ResponseModel

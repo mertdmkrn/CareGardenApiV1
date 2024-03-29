@@ -1,8 +1,6 @@
-﻿using System.Net.Mail;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using CareGardenApiV1.Helpers;
 
 namespace CareGardenApiV1.Helpers
 {

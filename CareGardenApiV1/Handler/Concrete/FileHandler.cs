@@ -1,9 +1,4 @@
 ﻿using CareGardenApiV1.Handler.Abstract;
-using CareGardenApiV1.Handler.Model;
-using MailKit.Security;
-using Microsoft.Extensions.Options;
-using MimeKit;
-using MailKit.Net.Smtp;
 using CareGardenApiV1.Helpers;
 using RestSharp;
 using System.Text.Json.Nodes;

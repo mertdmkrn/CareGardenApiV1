@@ -1,6 +1,4 @@
-﻿using Hangfire;
-
-namespace CareGardenApiV1.Hangfire
+﻿namespace CareGardenApiV1.Hangfire
 {
     public static class HangfireJobScheduler
     {

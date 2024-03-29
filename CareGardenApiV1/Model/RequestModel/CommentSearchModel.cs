@@ -1,5 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using CareGardenApiV1.Helpers;
+﻿using CareGardenApiV1.Helpers;
 
 namespace CareGardenApiV1.Model.RequestModel
 {

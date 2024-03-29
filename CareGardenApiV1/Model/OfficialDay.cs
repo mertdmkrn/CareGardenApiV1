@@ -1,13 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Converters;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
-using CareGardenApiV1.Helpers;
-
-namespace CareGardenApiV1.Model
-{ 
+﻿namespace CareGardenApiV1.Model
+{
     public class OfficialDay
     {
         public string name { get; set; }

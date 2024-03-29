@@ -1,10 +1,7 @@
 ﻿using CareGardenApiV1.Handler.Abstract;
 using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
-using CareGardenApiV1.Service.Abstract;
-using CareGardenApiV1.Service.Concrete;
 using Nest;
-using NetTopologySuite.Index.HPRtree;
 
 namespace CareGardenApiV1.Handler.Concrete
 {

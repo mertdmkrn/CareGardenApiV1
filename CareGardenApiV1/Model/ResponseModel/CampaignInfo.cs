@@ -12,5 +12,6 @@
         public DateTime? expireDate { get; set; }
         public string? dayInfo { get; set; }
         public int sortOrder { get; set; }
+        public BusinessListModel relatedBusiness { get; set; }
     }
 }

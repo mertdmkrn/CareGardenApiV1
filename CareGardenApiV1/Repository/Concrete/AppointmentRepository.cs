@@ -3,7 +3,6 @@ using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Model;
 using Microsoft.EntityFrameworkCore;
 using CareGardenApiV1.Model.RequestModel;
-using System.Linq;
 
 namespace CareGardenApiV1.Repository.Concrete
 {

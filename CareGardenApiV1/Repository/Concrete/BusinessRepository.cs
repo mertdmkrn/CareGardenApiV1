@@ -4,12 +4,7 @@ using CareGardenApiV1.Model;
 using Microsoft.EntityFrameworkCore;
 using CareGardenApiV1.Model.ResponseModel;
 using NetTopologySuite.Geometries;
-using Microsoft.AspNetCore.DataProtection.XmlEncryption;
-using OneSignalApi.Model;
 using CareGardenApiV1.Model.RequestModel;
-using Nest;
-using CareGardenApiV1.Helpers;
-using System.Linq;
 using Microsoft.Extensions.Caching.Memory;
 using static CareGardenApiV1.Helpers.Constants;
 
@@ -424,6 +419,15 @@ namespace CareGardenApiV1.Repository.Concrete
             _context.Businesses.Remove(business);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+
+        public async Task<List<Guid>> GetBusinessIds()
+        {
+            return await _context.Businesses
+                .AsNoTracking()
+                .Select(x => x.id)
+                .ToListAsync();
         }
     }
 }

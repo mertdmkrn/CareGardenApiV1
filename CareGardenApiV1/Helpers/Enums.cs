@@ -111,7 +111,7 @@
         Boolean
     }
 
-    public enum NoticationType
+    public enum NotificationType
     {
         Information,
         Appointment,

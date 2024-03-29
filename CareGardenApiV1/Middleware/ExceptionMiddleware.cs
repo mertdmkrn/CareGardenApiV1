@@ -2,7 +2,6 @@
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
 using System.Globalization;
-using System.Text.Json;
 
 namespace CareGardenApiV1.Middleware
 {

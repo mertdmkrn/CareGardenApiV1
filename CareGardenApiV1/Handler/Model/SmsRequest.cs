@@ -1,6 +1,4 @@
-﻿using Org.BouncyCastle.Asn1.Ocsp;
-
-namespace CareGardenApiV1.Handler.Model
+﻿namespace CareGardenApiV1.Handler.Model
 {
     public class SmsRequest
     {

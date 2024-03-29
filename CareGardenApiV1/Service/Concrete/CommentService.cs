@@ -2,8 +2,7 @@
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
-using CareGardenApiV1.Repository.Concrete;
-using OneSignalApi.Model;
+using CareGardenApiV1.Service.Abstract;
 
 namespace CareGardenApiV1.Service.Concrete
 {

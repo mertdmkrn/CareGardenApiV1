@@ -2,6 +2,6 @@
 {
     public class IdListSearchModel
     {
-        public List<Guid> ids { get; set; }
+        public List<Guid>? ids { get; set; }
     }
 }

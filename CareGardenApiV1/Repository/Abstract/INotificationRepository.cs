@@ -12,6 +12,7 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<Notification> UpdateNotificationAsync(Notification notification);
         Task<List<Notification>> UpdateNotificationsAsync(List<Notification> notifications);
         Task<bool> UpdateNotificationsReadAsync(List<Guid> notificationIds);
+        Task<bool> UpdateNotificationsReadAsync(Guid? userId, Guid? businessId);
         Task<bool> DeleteNotificationsAsync(List<Guid> notificationIds);
     }
 }

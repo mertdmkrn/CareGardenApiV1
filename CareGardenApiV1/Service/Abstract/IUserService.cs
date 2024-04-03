@@ -19,5 +19,7 @@ namespace CareGardenApiV1.Service.Abstract
         Task<List<string>> GetAdminEmailListAsync();
         Task<List<Guid?>> GetUserFavoriteBusinessIds(Guid id);
         Task<List<Guid>> GetUserIds();
+        Task<bool> UpdateHasNotificationAsync(List<Guid> userIds, bool value);
+
     }
 }

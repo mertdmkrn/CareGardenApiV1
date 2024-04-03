@@ -429,5 +429,14 @@ namespace CareGardenApiV1.Repository.Concrete
                 .Select(x => x.id)
                 .ToListAsync();
         }
+
+        public async Task<bool> UpdateHasNotificationAsync(List<Guid> businessIds, bool value)
+        {
+            await _context.Businesses
+                .Where(x => businessIds.Contains(x.id))
+                .ExecuteUpdateAsync(x => x.SetProperty(y => y.hasNotification, value));
+
+            return true;
+        }
     }
 }

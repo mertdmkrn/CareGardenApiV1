@@ -26,5 +26,6 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<bool> DeleteBusinessAsync(Business business);
         Task<bool> UpdateMemoryBusinessList(Guid id);
         Task<List<Guid>> GetBusinessIds();
+        Task<bool> UpdateHasNotificationAsync(List<Guid> businessIds, bool value);
     }
 }

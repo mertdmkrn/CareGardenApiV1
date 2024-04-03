@@ -907,9 +907,9 @@
                     "userId": "00000000-0000-0000-0000-000000000000",
                     "businessId": null,
                     "publishDate": "2024-03-29T08:30:00",
-                    "description": "CareGarden' a hoşgeldin."
-                    "descriptionEn": "Welcome to CareGarden."
-                    "type": 0
+                    "description": "CareGarden' a hoşgeldin.",
+                    "descriptionEn": "Welcome to CareGarden.",
+                    "type": 0,
                     "redirectId": null,
                     "redirectUrl": null
                  }
@@ -1805,6 +1805,18 @@
             <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.CareGardenV29.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV30">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV30.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV30.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV30.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:CareGardenApiV1.Resource.Resource">

@@ -69,7 +69,6 @@ namespace CareGardenApiV1.Model
         [Column(TypeName = "geometry (point)")]
         public Point? location { get; set; }
 
-
         public DateTime? createDate { get; set; }
         public DateTime? updateDate { get; set; }
         public WorkingGenderType workingGenderType { get; set; }
@@ -82,6 +81,8 @@ namespace CareGardenApiV1.Model
         public bool hasPromotion { get; set; }
         [MaxLength(200)]
         public string? logoUrl { get; set; }
+
+        public bool hasNotification { get; set; }
 
         public virtual ICollection<Comment> comments { get; set; }
         public virtual ICollection<BusinessGallery> galleries { get; set; }

@@ -142,5 +142,10 @@ namespace CareGardenApiV1.Service.Concrete
         {
             return await _businessRepository.GetBusinessIds();
         }
+
+        public async Task<bool> UpdateHasNotificationAsync(List<Guid> businessIds, bool value)
+        {
+            return await _businessRepository.UpdateHasNotificationAsync(businessIds, value);
+        }
     }
 }

@@ -31,6 +31,8 @@ namespace CareGardenApiV1.Repository.Concrete
             notificationSearchResponseModel.resultCount = await query.CountAsync();
             notificationSearchResponseModel.unReadCount = await query.CountAsync(x => !x.isRead);
 
+            var list = await query.ToListAsync();
+
             notificationSearchResponseModel.notifications = await query
                 .Select(x => new NotificationResponseModel
                 {
@@ -41,7 +43,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     redirectId = x.redirectId,
                     redirectUrl = x.redirectUrl,
                     isRead = x.isRead,
-                    dayInfo = x.publishDate.Value.GetRelativeDate(Resource.Resource.Culture.ToString())
+                    dayInfo = x.publishDate.Value.GetRelativeDate(Resource.Resource.Culture.ToString()),
                 })
                 .OrderByDescending(x => x.publishDate)
                 .Skip(notificationSearchModel.page * notificationSearchModel.take)
@@ -53,8 +55,9 @@ namespace CareGardenApiV1.Repository.Concrete
 
         public async Task<Notification> SaveNotificationAsync(Notification notification)
         {
-           notification.createDate = DateTime.Now;
-           notification.updateDate = notification.createDate;
+            notification.createDate = DateTime.Now;
+            notification.updateDate = notification.createDate;
+            notification.publishDate = notification.publishDate.HasValue ? notification.publishDate : notification.createDate;
 
             await _context.Notifications.AddAsync(notification);
             await _context.SaveChangesAsync();
@@ -103,8 +106,18 @@ namespace CareGardenApiV1.Repository.Concrete
         public async Task<bool> UpdateNotificationsReadAsync(List<Guid> notificationIds)
         {
             await _context.Notifications
-             .Where(x => notificationIds.Contains(x.id))
-             .ExecuteUpdateAsync(x => x.SetProperty(y => y.isRead, true));
+                .Where(x => notificationIds.Contains(x.id))
+                .ExecuteUpdateAsync(x => x.SetProperty(y => y.isRead, true));
+
+            return true;
+        }
+
+        public async Task<bool> UpdateNotificationsReadAsync(Guid? userId, Guid? businessId)
+        {
+            await _context.Notifications
+                .WhereIf(businessId.HasValue, x => x.businessId == businessId)
+                .WhereIf(userId.HasValue, x => x.userId == userId)
+                .ExecuteUpdateAsync(x => x.SetProperty(y => y.isRead, true));
 
             return true;
         }

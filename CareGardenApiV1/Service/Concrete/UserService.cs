@@ -78,5 +78,10 @@ namespace CareGardenApiV1.Service.Concrete
         {
             return await _userRepository.GetUserIds();
         }
+
+        public async Task<bool> UpdateHasNotificationAsync(List<Guid> userIds, bool value)
+        {
+            return await _userRepository.UpdateHasNotificationAsync(userIds, value);
+        }
     }
 }

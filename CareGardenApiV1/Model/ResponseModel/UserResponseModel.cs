@@ -14,5 +14,6 @@
         public DateTime? birthDate { get; set; }
         public double latitude { get; set; }
         public double longitude { get; set; }
+        public bool hasNotification { get; set; }
     }
 }

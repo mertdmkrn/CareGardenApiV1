@@ -68,7 +68,21 @@ namespace CareGardenApiV1.Controller
                 }
             }
 
-            response.Data = await _notificationService.SearchNotificationAsync(notificationSearchModel);
+            var model = await _notificationService.SearchNotificationAsync(notificationSearchModel);
+
+            if (model.notifications.Exists(x => x.type == NotificationType.Business && x.redirectId.HasValue)) 
+            { 
+                var businesses = await _businessService.GetBusinessListForCache();
+                model.notifications = model.notifications
+                    .Select(x =>
+                    {
+                        x.relatedBusiness = x.type == NotificationType.Business && x.redirectId.HasValue ? businesses.FirstOrDefault(b => b.id == x.redirectId.Value) : null;
+                        return x;
+                    })
+                    .ToList();
+            }
+
+            response.Data = model;
 
             return Ok(response);
         }
@@ -83,9 +97,9 @@ namespace CareGardenApiV1.Controller
         ///        "userId": "00000000-0000-0000-0000-000000000000",
         ///        "businessId": null,
         ///        "publishDate": "2024-03-29T08:30:00",
-        ///        "description": "CareGarden' a hoşgeldin."
-        ///        "descriptionEn": "Welcome to CareGarden."
-        ///        "type": 0
+        ///        "description": "CareGarden' a hoşgeldin.",
+        ///        "descriptionEn": "Welcome to CareGarden.",
+        ///        "type": 0,
         ///        "redirectId": null,
         ///        "redirectUrl": null
         ///     }
@@ -124,6 +138,15 @@ namespace CareGardenApiV1.Controller
 
             response.Data = await _notificationService.SaveNotificationAsync(notification);
             response.Message = Resource.Resource.KayitBasarili;
+
+            if(notification.userId.HasValue)
+            {
+                await _userService.UpdateHasNotificationAsync(new List<Guid>() { notification.userId.Value }, true);
+            }
+            else if(notification.businessId.HasValue)
+            {
+                await _businessService.UpdateHasNotificationAsync(new List<Guid>() { notification.businessId.Value }, true);
+            }
 
             return Ok(response);
         }
@@ -188,6 +211,7 @@ namespace CareGardenApiV1.Controller
             }
 
             response.Data = await _notificationService.SaveNotificationsAsync(notifications);
+            await _userService.UpdateHasNotificationAsync(userIds, true);
             response.Message = Resource.Resource.KayitBasarili;
 
             return Ok(response);
@@ -252,13 +276,14 @@ namespace CareGardenApiV1.Controller
             }
 
             response.Data = await _notificationService.SaveNotificationsAsync(notifications);
+            await _businessService.UpdateHasNotificationAsync(businessIds, true);
             response.Message = Resource.Resource.KayitBasarili;
 
             return Ok(response);
         }
 
         /// <summary>
-        /// Notification Set Read
+        /// Notification Set Read ({} boş gönderildiğinde session daki kullanıcının tüm bildirimleri okundu yapar.)
         /// </summary>
         /// <remarks>
         /// **Sample request body:**
@@ -277,19 +302,37 @@ namespace CareGardenApiV1.Controller
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
 
+            var id = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
+            var userRole = HelperMethods.GetClaimInfo(Request, ClaimTypes.Role);
+
             if (idListSearchModel.ids.IsNullOrEmpty())
             {
-                response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("d", Resource.Resource.BuAlaniBosBirakmayiniz));
+                if(id.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("ids", Resource.Resource.BuAlaniBosBirakmayiniz));
+                    response.Message = Resource.Resource.KayitYapilamadi;
+                    return Ok(response);
+                }
+                else
+                {
+                    if (userRole.Equals("Business"))
+                    {
+                        response.Data = await _notificationService.UpdateNotificationsReadAsync(null, id.ToGuid());
+                        await _businessService.UpdateHasNotificationAsync(new List<Guid>() { id.ToGuid() }, false);
+                    }
+                    else
+                    {
+                        response.Data = await _notificationService.UpdateNotificationsReadAsync(id.ToGuid(), null);
+                        await _userService.UpdateHasNotificationAsync(new List<Guid>() { id.ToGuid() }, false);
+                    }
+                }
             }
-
-            if (response.HasError)
+            else
             {
-                response.Message = Resource.Resource.KayitYapilamadi;
-                return Ok(response);
+                response.Data = await _notificationService.UpdateNotificationsReadAsync(idListSearchModel.ids);
             }
 
-            response.Data = await _notificationService.UpdateNotificationsReadAsync(idListSearchModel.ids);
             response.Message = Resource.Resource.KayitBasarili;
 
             return Ok(response);
@@ -318,7 +361,7 @@ namespace CareGardenApiV1.Controller
             if (idListSearchModel.ids.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("d", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("ids", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
 
             if (response.HasError)

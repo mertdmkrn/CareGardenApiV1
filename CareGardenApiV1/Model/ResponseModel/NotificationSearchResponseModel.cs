@@ -19,5 +19,7 @@ namespace CareGardenApiV1.Model.ResponseModel
         public Guid? redirectId { get; set; } = Guid.Empty;
         public string? redirectUrl { get; set; }
         public bool isRead { get; set; }
+
+        public BusinessListModel relatedBusiness { get; set; }
     }
 }

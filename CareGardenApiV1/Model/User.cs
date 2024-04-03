@@ -67,6 +67,7 @@ namespace CareGardenApiV1.Model
         [Column(TypeName = "geometry (point)")]
         public Point? location { get; set; }
 
+        public bool hasNotification { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<Comment> comments { get; set; }

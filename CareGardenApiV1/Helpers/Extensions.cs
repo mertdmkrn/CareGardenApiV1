@@ -230,7 +230,7 @@ namespace CareGardenApiV1.Helpers
                     return todayStr;
 
                 if (Math.Abs(timeDifference.TotalHours) < 1)
-                    return $"{Math.Abs(Math.Floor(timeDifference.TotalMinutes)).ToInt()} {minuteStr}{timeDifference.TotalMinutes.addSuffix(language)} {lastWord}";
+                    return $"{Math.Abs(Math.Floor(timeDifference.TotalMinutes).IsNull(1)).ToInt()} {minuteStr}{timeDifference.TotalMinutes.addSuffix(language)} {lastWord}";
 
                 return $"{Math.Abs(Math.Floor(timeDifference.TotalHours)).ToInt()} {hourStr}{timeDifference.TotalHours.addSuffix(language)} {lastWord}";
             }
@@ -241,19 +241,19 @@ namespace CareGardenApiV1.Helpers
             if (Math.Abs(timeDifference.TotalDays) < 7)
                 return $"{Math.Abs(Math.Floor(timeDifference.TotalDays)).ToInt()} {dayStr}{timeDifference.TotalDays.addSuffix(language)} {lastWord}";
 
-            if (timeDifference.TotalDays < 14)
+            if (Math.Abs(timeDifference.TotalDays) < 14)
                 return isOldDate ? $"{Math.Abs(Math.Floor(timeDifference.TotalDays)).ToInt()} {dayStr}{timeDifference.TotalDays.addSuffix(language)} {lastWord}" : lastWeekStr;
 
-            if (timeDifference.TotalDays < 30)
-                return $"{Math.Floor(timeDifference.TotalDays / 7).ToInt()} {weekStr}{(timeDifference.TotalDays / 7).addSuffix(language)} {lastWord}";
+            if (Math.Abs(timeDifference.TotalDays) < 30)
+                return $"{Math.Abs(Math.Floor(timeDifference.TotalDays / 7)).ToInt()} {weekStr}{(timeDifference.TotalDays / 7).addSuffix(language)} {lastWord}";
 
-            if (timeDifference.TotalDays < 60)
+            if (Math.Abs(timeDifference.TotalDays) < 60)
                 return isOldDate ? $"1 {monthStr} {leftStr}" : lastMonthStr;
 
-            if (timeDifference.TotalDays < 365)
-                return $"{Math.Floor(timeDifference.TotalDays / 30).ToInt()} {monthStr}{(timeDifference.TotalDays / 30).addSuffix(language)} {lastWord}";
+            if (Math.Abs(timeDifference.TotalDays) < 365)
+                return $"{Math.Abs(Math.Floor(timeDifference.TotalDays / 30)).ToInt()} {monthStr}{(timeDifference.TotalDays / 30).addSuffix(language)} {lastWord}";
 
-            return $"{Math.Floor(timeDifference.TotalDays / 7).ToInt()} {yearStr}{(timeDifference.TotalDays / 365).addSuffix(language)} {lastWord}";
+            return $"{Math.Abs(Math.Floor(timeDifference.TotalDays / 365)).ToInt()} {yearStr}{(timeDifference.TotalDays / 365).addSuffix(language)} {lastWord}";
         }
 
         public static string GetRelativeDate(this DateTime? date, string language)

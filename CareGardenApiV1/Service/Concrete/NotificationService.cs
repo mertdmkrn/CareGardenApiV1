@@ -49,5 +49,10 @@ namespace CareGardenApiV1.Service.Concrete
         {
             return await _notificationRepository.UpdateNotificationsReadAsync(notificationIds);
         }
+
+        public async Task<bool> UpdateNotificationsReadAsync(Guid? userId, Guid? businessId)
+        {
+            return await _notificationRepository.UpdateNotificationsReadAsync(userId, businessId);
+        }
     }
 }

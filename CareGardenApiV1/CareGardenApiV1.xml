@@ -896,7 +896,7 @@
         </member>
         <!-- Badly formed XML comment ignored for member "M:CareGardenApiV1.Controller.FavoriteController.Delete(System.Guid)" -->
         <!-- Badly formed XML comment ignored for member "M:CareGardenApiV1.Controller.NotificationController.Get(CareGardenApiV1.Model.RequestModel.NotificationSearchModel)" -->
-        <member name="M:CareGardenApiV1.Controller.NotificationController.Add(CareGardenApiV1.Model.Notification)">
+        <member name="M:CareGardenApiV1.Controller.NotificationController.Save(CareGardenApiV1.Model.Notification)">
              <summary>
              Save Notification (Publish Date is the date the notification will start to appear. If null, it will appear immediately.)
              </summary>
@@ -907,8 +907,10 @@
                     "userId": "00000000-0000-0000-0000-000000000000",
                     "businessId": null,
                     "publishDate": "2024-03-29T08:30:00",
+                    "title": "BİLGİLENDİRME",
+                    "titleEn": "INFORMATION",
                     "description": "CareGarden' a hoşgeldin.",
-                    "descriptionEn": "Welcome to CareGarden.",
+                    "description": "CareGarden' a hoşgeldin.",
                     "type": 0,
                     "redirectId": null,
                     "redirectUrl": null
@@ -926,6 +928,8 @@
             
                  { 
                     "publishDate": "2024-03-29T08:30:00",
+                    "title": "BİLGİLENDİRME",
+                    "titleEn": "INFORMATION",
                     "description": "CareGarden' a hoşgeldin."
                     "descriptionEn": "Welcome to CareGarden."
                     "type": 0
@@ -945,6 +949,8 @@
             
                  { 
                     "publishDate": "2024-03-29T08:30:00",
+                    "title": "BİLGİLENDİRME",
+                    "titleEn": "INFORMATION",
                     "description": "CareGarden' a hoşgeldin."
                     "descriptionEn": "Welcome to CareGarden."
                     "type": 0
@@ -957,7 +963,7 @@
         </member>
         <member name="M:CareGardenApiV1.Controller.NotificationController.SetRead(CareGardenApiV1.Model.RequestModel.IdListSearchModel)">
              <summary>
-             Notification Set Read
+             Notification Set Read ({} boş gönderildiğinde session daki kullanıcının tüm bildirimleri okundu yapar.)
              </summary>
              <remarks>
              **Sample request body:**
@@ -1817,6 +1823,18 @@
             <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.CareGardenV30.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV31">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV31.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV31.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV31.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:CareGardenApiV1.Resource.Resource">

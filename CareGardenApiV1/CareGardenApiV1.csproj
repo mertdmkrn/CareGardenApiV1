@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <DocumentationFile>C:\Users\mert.demirkiran\source\repos\CareGardenApiV1\CareGardenApiV1\CareGardenApiV1.xml</DocumentationFile>
+    <DocumentationFile>C:\Users\pc\source\repos\mertdmkrn\CareGardenApiV1\CareGardenApiV1\CareGardenApiV1.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

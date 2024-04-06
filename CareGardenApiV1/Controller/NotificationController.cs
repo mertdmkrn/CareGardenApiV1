@@ -97,8 +97,10 @@ namespace CareGardenApiV1.Controller
         ///        "userId": "00000000-0000-0000-0000-000000000000",
         ///        "businessId": null,
         ///        "publishDate": "2024-03-29T08:30:00",
+        ///        "title": "BİLGİLENDİRME",
+        ///        "titleEn": "INFORMATION",
         ///        "description": "CareGarden' a hoşgeldin.",
-        ///        "descriptionEn": "Welcome to CareGarden.",
+        ///        "description": "CareGarden' a hoşgeldin.",
         ///        "type": 0,
         ///        "redirectId": null,
         ///        "redirectUrl": null
@@ -107,9 +109,21 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("save")]
-        public async Task<IActionResult> Add([FromBody] Notification notification)
+        public async Task<IActionResult> Save([FromBody] Notification notification)
         {
             ResponseModel<Notification> response = new ResponseModel<Notification>();
+
+            if (notification.title.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("title", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (notification.titleEn.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("titleEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
 
             if (notification.description.IsNullOrEmpty())
             {
@@ -160,6 +174,8 @@ namespace CareGardenApiV1.Controller
         ///
         ///     { 
         ///        "publishDate": "2024-03-29T08:30:00",
+        ///        "title": "BİLGİLENDİRME",
+        ///        "titleEn": "INFORMATION",
         ///        "description": "CareGarden' a hoşgeldin."
         ///        "descriptionEn": "Welcome to CareGarden."
         ///        "type": 0
@@ -173,6 +189,18 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> SaveAllUsers([FromBody] Notification notification)
         {
             ResponseModel<List<Notification>> response = new ResponseModel<List<Notification>>();
+
+            if (notification.title.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("title", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (notification.titleEn.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("titleEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
 
             if (notification.description.IsNullOrEmpty())
             {
@@ -225,6 +253,8 @@ namespace CareGardenApiV1.Controller
         ///
         ///     { 
         ///        "publishDate": "2024-03-29T08:30:00",
+        ///        "title": "BİLGİLENDİRME",
+        ///        "titleEn": "INFORMATION",
         ///        "description": "CareGarden' a hoşgeldin."
         ///        "descriptionEn": "Welcome to CareGarden."
         ///        "type": 0
@@ -238,6 +268,18 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> SaveAllBusinesses([FromBody] Notification notification)
         {
             ResponseModel<List<Notification>> response = new ResponseModel<List<Notification>>();
+
+            if (notification.title.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("title", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (notification.titleEn.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("titleEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
 
             if (notification.description.IsNullOrEmpty())
             {

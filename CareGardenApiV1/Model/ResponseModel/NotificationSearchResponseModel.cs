@@ -12,6 +12,7 @@ namespace CareGardenApiV1.Model.ResponseModel
     public class NotificationResponseModel
     {
         public Guid id { get; set; } = Guid.Empty;
+        public string? title { get; set; }
         public string? description { get; set; }
         public DateTime? publishDate { get; set; }
         public string? dayInfo { get; set; }

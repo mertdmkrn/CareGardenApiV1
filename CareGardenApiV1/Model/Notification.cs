@@ -15,6 +15,12 @@ namespace CareGardenApiV1.Model
 
         public DateTime? publishDate { get; set; }
 
+        [MaxLength(100)]
+        public string? title { get; set; }
+
+        [MaxLength(100)]
+        public string? titleEn { get; set; }
+
         public string? description { get; set; }
 
         public string? descriptionEn { get; set; }

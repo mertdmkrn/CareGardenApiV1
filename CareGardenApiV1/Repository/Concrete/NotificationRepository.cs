@@ -37,6 +37,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 .Select(x => new NotificationResponseModel
                 {
                     id = x.id,
+                    title = isTurkish ? x.title : x.titleEn,
                     description = isTurkish ? x.description : x.descriptionEn,
                     publishDate = x.publishDate,
                     type = x.type,

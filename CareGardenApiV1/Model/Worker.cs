@@ -19,7 +19,9 @@ namespace CareGardenApiV1.Model
         public string? path { get; set; }
         public bool isActive { get; set; }
         public bool isAvailable { get; set; }
-        public string serviceIds { get; set; } = string.Empty;
+        public string serviceIds { get; set; } = string.Empty;   
+        [NotMapped]
+        public double point { get; set; }
         public Guid? businessId { get; set; }
         public Guid? createdUserId { get; set; }
 

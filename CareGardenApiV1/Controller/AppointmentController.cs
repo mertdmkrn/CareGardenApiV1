@@ -138,18 +138,6 @@ namespace CareGardenApiV1.Controller
                 response.ValidationErrors.Add(new ValidationError("userId", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
 
-            if (!appointment.workerId.HasValue)
-            {
-                response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("workerId", Resource.Resource.BuAlaniBosBirakmayiniz));
-            }
-
-            if (!appointment.businessServiceId.HasValue)
-            {
-                response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("businessServiceId", Resource.Resource.BuAlaniBosBirakmayiniz));
-            }
-
             if (!appointment.startDate.HasValue)
             {
                 response.HasError = true;

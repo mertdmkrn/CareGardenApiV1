@@ -38,8 +38,6 @@ namespace CareGardenApiV1.Repository.Concrete
                 .AsNoTracking()
                     .WhereIf(searchModel.businessId.IsNotNullOrEmpty(), x => x.businessId.Equals(searchModel.businessId))
                     .WhereIf(searchModel.userId.IsNotNullOrEmpty(), x => x.userId.Equals(searchModel.userId))
-                    .WhereIf(searchModel.workerId.IsNotNullOrEmpty(), x => x.workerId.Equals(searchModel.workerId))
-                    .WhereIf(searchModel.businessServiceId.IsNotNullOrEmpty(), x => x.businessServiceId.Equals(searchModel.businessServiceId))
                     .WhereIf(searchModel.startDate.HasValue, x => x.startDate >= searchModel.startDate)
                     .WhereIf(searchModel.endDate.HasValue, x => x.startDate < searchModel.endDate)
                     .Skip(searchModel.page.Value * searchModel.take.Value)
@@ -52,8 +50,6 @@ namespace CareGardenApiV1.Repository.Concrete
                     .AsNoTracking()
                     .WhereIf(searchModel.businessId.IsNotNullOrEmpty(), x => x.businessId.Equals(searchModel.businessId))
                     .WhereIf(searchModel.userId.IsNotNullOrEmpty(), x => x.userId.Equals(searchModel.userId))
-                    .WhereIf(searchModel.workerId.IsNotNullOrEmpty(), x => x.workerId.Equals(searchModel.workerId))
-                    .WhereIf(searchModel.businessServiceId.IsNotNullOrEmpty(), x => x.businessServiceId.Equals(searchModel.businessServiceId))
                     .WhereIf(searchModel.startDate.HasValue, x => x.startDate >= searchModel.startDate)
                     .WhereIf(searchModel.endDate.HasValue, x => x.startDate < searchModel.endDate)
                     .ToListAsync();

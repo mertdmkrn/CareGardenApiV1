@@ -7,9 +7,14 @@ using Newtonsoft.Json;
 namespace CareGardenApiV1.Model
 {
     [Table("Appointment")]
-    [Index(nameof(userId), nameof(businessId), nameof(workerId), nameof(startDate), nameof(status))]
+    [Index(nameof(userId), nameof(businessId), nameof(startDate), nameof(status))]
     public class Appointment
     {
+        public Appointment()
+        {
+            this.details = new HashSet<AppointmentDetail>();
+        }
+
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid id { get; set; }
 
@@ -21,8 +26,8 @@ namespace CareGardenApiV1.Model
         public AppointmentStatus status { get; set; }
         public Guid? userId { get; set; }
         public Guid? businessId { get; set; }
-        public Guid? workerId { get; set; }
-        public Guid? businessServiceId { get; set; }
+
+        public double totalPrice { get; set; }
 
         [JsonIgnore]
         public Business? business { get; set; }
@@ -30,10 +35,7 @@ namespace CareGardenApiV1.Model
         [JsonIgnore]
         public User? user { get; set; }
 
-        [JsonIgnore]
-        public Worker? worker { get; set; }
+        public virtual ICollection<AppointmentDetail> details { get; set; }
 
-        [JsonIgnore]
-        public BusinessServiceModel? businessService { get; set; }
     }
 }

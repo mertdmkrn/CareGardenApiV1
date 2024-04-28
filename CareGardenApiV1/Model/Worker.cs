@@ -16,12 +16,30 @@ namespace CareGardenApiV1.Model
         public string? name { get; set; }
         [MaxLength(100)]
         public string? title { get; set; }
+        [MaxLength(100)]
+        public string? titleEn { get; set; }
         public string? path { get; set; }
         public bool isActive { get; set; }
         public bool isAvailable { get; set; }
         public string serviceIds { get; set; } = string.Empty;   
         [NotMapped]
         public double point { get; set; }
+        [NotMapped]
+        public double countRating { get; set; }
+        [MaxLength(20)]
+        public string? mondayWorkHours { get; set; }
+        [MaxLength(20)]
+        public string? tuesdayWorkHours { get; set; }
+        [MaxLength(20)]
+        public string? wednesdayWorkHours { get; set; }
+        [MaxLength(20)]
+        public string? thursdayWorkHours { get; set; }
+        [MaxLength(20)]
+        public string? fridayWorkHours { get; set; }
+        [MaxLength(20)]
+        public string? saturdayWorkHours { get; set; }
+        [MaxLength(20)]
+        public string? sundayWorkHours { get; set; }
         public Guid? businessId { get; set; }
         public Guid? createdUserId { get; set; }
 

@@ -1,0 +1,15 @@
+﻿using CareGardenApiV1.Helpers;
+using CareGardenApiV1.Model;
+using CareGardenApiV1.Model.RequestModel;
+
+namespace CareGardenApiV1.Service.Abstract
+{
+    public interface IAppointmentDetailService
+    {
+        Task<AppointmentDetail> GetAppointmentDetailByIdAsync(Guid id);
+        Task<List<AppointmentDetail>> GetAppointmentDetailsByAppointmentDetailSearchModelAsync(AppointmentSearchModel searchModel);
+        Task<AppointmentDetail> SaveAppointmentDetailAsync(AppointmentDetail appointmentDetail);
+        Task<AppointmentDetail> UpdateAppointmentDetailAsync(AppointmentDetail appointmentDetail);
+        Task<bool> DeleteAppointmentDetailAsync(Guid id);
+    }
+}

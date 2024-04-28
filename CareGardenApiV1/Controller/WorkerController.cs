@@ -1,5 +1,6 @@
 ﻿using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
+using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 using Microsoft.AspNetCore.Authorization;
@@ -93,7 +94,7 @@ namespace CareGardenApiV1.Controller
         [HttpPost("getbybusinessserviceid")]
         public async Task<IActionResult> GetByBusinessServiceId([FromBody] string? businessServiceId)
         {
-            ResponseModel<List<Worker>> response = new ResponseModel<List<Worker>>();
+            ResponseModel<List<AppointmentWorkerModel>> response = new ResponseModel<List<AppointmentWorkerModel>>();
 
             if (businessServiceId.IsNullOrEmpty() || !businessServiceId.IsGuid())
             {
@@ -118,7 +119,14 @@ namespace CareGardenApiV1.Controller
         ///        "title" : "Hair Stylist",
         ///        "path" : "mert.jpg",
         ///        "businessId" : "00000000-0000-0000-0000-000000000000",
-        ///        "serviceIds" : "00000000-0000-0000-0000-000000000000;00000000-0000-0000-0000-000000000001"
+        ///        "serviceIds" : "00000000-0000-0000-0000-000000000000;00000000-0000-0000-0000-000000000001",
+        ///        "mondayWorkHours" : "09:00-21:00",
+        ///        "tuesdayWorkHours" : "09:00-21:00",
+        ///        "wednesdayWorkHours" : "09:00-21:00",
+        ///        "thursdayWorkHours" : "09:00-21:00",
+        ///        "fridayWorkHours" : "09:00-21:00",
+        ///        "saturdayWorkHours" : "09:00-13:00",
+        ///        "sundayWorkHours" : null,
         ///     }
         ///     
         /// </remarks>
@@ -178,8 +186,14 @@ namespace CareGardenApiV1.Controller
         ///        "path" : "mert.jpg",
         ///        "businessId" : "00000000-0000-0000-0000-000000000000",
         ///        "serviceIds" : "00000000-0000-0000-0000-000000000000;00000000-0000-0000-0000-000000000001",
-        ///        "isActive" : true,
-        ///        "isAvailable" : false
+        ///        "mondayWorkHours" : "09:00-21:00",
+        ///        "tuesdayWorkHours" : "09:00-21:00",
+        ///        "wednesdayWorkHours" : "09:00-21:00",
+        ///        "thursdayWorkHours" : "09:00-21:00",
+        ///        "fridayWorkHours" : "09:00-21:00",
+        ///        "saturdayWorkHours" : "09:00-13:00",
+        ///        "sundayWorkHours" : null,
+        ///        "isActive" : true
         ///     }
         ///     
         /// </remarks>
@@ -234,7 +248,13 @@ namespace CareGardenApiV1.Controller
             worker.serviceIds = updateWorker.serviceIds;
             worker.createdUserId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid).ToGuid();
             worker.isActive = updateWorker.isActive;
-            worker.isAvailable = updateWorker.isAvailable;
+            worker.mondayWorkHours = updateWorker.mondayWorkHours;
+            worker.tuesdayWorkHours = updateWorker.tuesdayWorkHours;
+            worker.wednesdayWorkHours = updateWorker.wednesdayWorkHours;
+            worker.thursdayWorkHours = updateWorker.thursdayWorkHours;
+            worker.fridayWorkHours = updateWorker.fridayWorkHours;
+            worker.saturdayWorkHours = updateWorker.saturdayWorkHours;
+            worker.sundayWorkHours = updateWorker.sundayWorkHours;
 
             response.Data = await _workerService.UpdateWorkerAsync(worker);
             response.Message = Resource.Resource.KayitBasarili;

@@ -1,6 +1,8 @@
 ﻿using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Model;
 using Microsoft.EntityFrameworkCore;
+using CareGardenApiV1.Model.ResponseModel;
+using CareGardenApiV1.Helpers;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -45,18 +47,28 @@ namespace CareGardenApiV1.Repository.Concrete
                 .ToListAsync();
         }
 
-        public async Task<List<Worker>> GetWorkersByBusinessServiceIdAsync(Guid businessServiceId)
+        public async Task<List<AppointmentWorkerModel>> GetWorkersByBusinessServiceIdAsync(Guid businessServiceId)
         {
+            bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
+
             return await _context.Workers
                 .AsNoTracking()
-                .Where(x => x.serviceIds.Length > x.serviceIds.Replace(businessServiceId.ToString(), "").Length)
+                .Where(x => x.serviceIds.ToLower().Contains(businessServiceId.ToString()))
+                .Select(x => new AppointmentWorkerModel
+                {
+                    id = x.id,
+                    name = x.name,
+                    path = x.path,
+                    title = isTurkish ? x.title : x.titleEn.IsNull(x.title),
+                    isActive = x.isActive
+                })
                 .ToListAsync();
         }
 
         public async Task<Worker> SaveWorkerAsync(Worker worker)
         {
             worker.isActive = true;
-            worker.isAvailable = true;
+
             await _context.Workers.AddAsync(worker);
             await _context.SaveChangesAsync();
             return worker;

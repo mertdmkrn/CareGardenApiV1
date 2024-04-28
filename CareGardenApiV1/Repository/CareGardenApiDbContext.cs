@@ -170,6 +170,7 @@ namespace CareGardenApiV1.Repository
 
         public DbSet<User> Users { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<AppointmentDetail> AppointmentDetails { get; set; }
         public DbSet<Business> Businesses { get; set; }
         public DbSet<BusinessGallery> BusinessGalleries { get; set; }
         public DbSet<BusinessProperties> BusinessProperties { get; set; }

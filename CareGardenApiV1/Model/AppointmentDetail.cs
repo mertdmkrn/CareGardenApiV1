@@ -15,8 +15,8 @@ namespace CareGardenApiV1.Model
         public Guid? appointmentId { get; set; }
         public Guid? workerId { get; set; }
         public Guid? businessServiceId { get; set; }
-
         public double price { get; set; }
+        public DateTime? date { get; set; }
 
         [JsonIgnore]
         public Appointment? appointment { get; set; }

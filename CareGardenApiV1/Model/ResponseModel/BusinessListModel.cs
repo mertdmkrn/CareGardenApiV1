@@ -60,6 +60,9 @@ namespace CareGardenApiV1.Model.ResponseModel
         public bool officialDayAvailable { get; set; }
 
         [JsonIgnore]
+        public int appointmentTimeInterval { get; set; }
+
+        [JsonIgnore]
         public List<Appointment> appointments { get; set; }
 
         [JsonIgnore]

@@ -1422,7 +1422,14 @@
                     "title" : "Hair Stylist",
                     "path" : "mert.jpg",
                     "businessId" : "00000000-0000-0000-0000-000000000000",
-                    "serviceIds" : "00000000-0000-0000-0000-000000000000;00000000-0000-0000-0000-000000000001"
+                    "serviceIds" : "00000000-0000-0000-0000-000000000000;00000000-0000-0000-0000-000000000001",
+                    "mondayWorkHours" : "09:00-21:00",
+                    "tuesdayWorkHours" : "09:00-21:00",
+                    "wednesdayWorkHours" : "09:00-21:00",
+                    "thursdayWorkHours" : "09:00-21:00",
+                    "fridayWorkHours" : "09:00-21:00",
+                    "saturdayWorkHours" : "09:00-13:00",
+                    "sundayWorkHours" : null,
                  }
                  
              </remarks>
@@ -1442,8 +1449,14 @@
                     "path" : "mert.jpg",
                     "businessId" : "00000000-0000-0000-0000-000000000000",
                     "serviceIds" : "00000000-0000-0000-0000-000000000000;00000000-0000-0000-0000-000000000001",
-                    "isActive" : true,
-                    "isAvailable" : false
+                    "mondayWorkHours" : "09:00-21:00",
+                    "tuesdayWorkHours" : "09:00-21:00",
+                    "wednesdayWorkHours" : "09:00-21:00",
+                    "thursdayWorkHours" : "09:00-21:00",
+                    "fridayWorkHours" : "09:00-21:00",
+                    "saturdayWorkHours" : "09:00-13:00",
+                    "sundayWorkHours" : null,
+                    "isActive" : true
                  }
                  
              </remarks>
@@ -1847,6 +1860,18 @@
             <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.CareGardenV32.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV33">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV33.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV33.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV33.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:CareGardenApiV1.Resource.Resource">

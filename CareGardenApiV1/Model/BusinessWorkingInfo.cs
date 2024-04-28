@@ -12,12 +12,19 @@ namespace CareGardenApiV1.Model
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid id { get; set; }
 
+        [MaxLength(20)]
         public string? mondayWorkHours { get; set; }
+        [MaxLength(20)]
         public string? tuesdayWorkHours { get; set; }
+        [MaxLength(20)]
         public string? wednesdayWorkHours { get; set; }
+        [MaxLength(20)]
         public string? thursdayWorkHours { get; set; }
+        [MaxLength(20)]
         public string? fridayWorkHours { get; set; }
+        [MaxLength(20)]
         public string? saturdayWorkHours { get; set; }
+        [MaxLength(20)]
         public string? sundayWorkHours { get; set; }
 
         public Guid? businessId { get; set; }

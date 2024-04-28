@@ -182,7 +182,7 @@ namespace CareGardenApiV1.Controller
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
 
-            if (appointmentChangeModel.id.IsNullOrEmpty() || !appointmentChangeModel.id.IsGuid())
+            if (!appointmentChangeModel.id.HasValue)
             {
                 response.HasError = true;
                 response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
@@ -190,7 +190,7 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
-            Appointment appointment = await _appointmentService.GetAppointmentByIdAsync(appointmentChangeModel.id.ToGuid());
+            Appointment appointment = await _appointmentService.GetAppointmentByIdAsync(appointmentChangeModel.id.Value);
 
             if (appointment == null)
             {
@@ -241,7 +241,7 @@ namespace CareGardenApiV1.Controller
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
 
-            if (appointmentChangeModel.id.IsNullOrEmpty() || !appointmentChangeModel.id.IsGuid())
+            if (!appointmentChangeModel.id.HasValue)
             {
                 response.HasError = true;
                 response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
@@ -249,7 +249,7 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
-            response.Data = await _appointmentService.ChangeStatusAsync(appointmentChangeModel.id.ToGuid(), appointmentChangeModel.status);
+            response.Data = await _appointmentService.ChangeStatusAsync(appointmentChangeModel);
             response.Message = Resource.Resource.KayitBasarili;
             return Ok(response);
         }
@@ -270,7 +270,7 @@ namespace CareGardenApiV1.Controller
         [HttpPost("getworkersprovideservice")]
         public async Task<IActionResult> GetWorkersProvideService([FromBody] AppointmentSearchModel appointmentInfo)
         {
-            ResponseModel<List<Worker>> response = new ResponseModel<List<Worker>>();
+            ResponseModel<List<AppointmentWorkerModel>> response = new ResponseModel<List<AppointmentWorkerModel>>();
 
             if (!appointmentInfo.businessId.HasValue)
             {
@@ -288,10 +288,26 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
-            var workers = await _workerService.GetWorkersByBusinessIdAsync(appointmentInfo.businessId.Value);
-            response.Data = workers.Where(x => x.serviceIds.ToLower().Contains(appointmentInfo.businessServiceId.Value.ToString().ToLower())).ToList();
+            var workers = await _workerService.GetWorkersByBusinessServiceIdAsync(appointmentInfo.businessServiceId.Value);
+
+            setWorkerAvailableDate(workers.Where(x => x.isActive).ToList(), appointmentInfo.businessId.Value);
 
             return Ok(response);
+        }
+
+        private async void setWorkerAvailableDate(List<AppointmentWorkerModel> workers, Guid businessId)
+        {
+            var businesses = await _businessService.GetBusinessListForCache();
+            var business = businesses.FirstOrDefault(x => x.id == businessId);
+
+            if (business == null) return;
+
+            var nowDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now.AddMinutes(business.appointmentTimeInterval), "Turkey Standard Time");
+
+            foreach (var worker in workers)
+            {
+                
+            }
         }
 
         /// <summary>

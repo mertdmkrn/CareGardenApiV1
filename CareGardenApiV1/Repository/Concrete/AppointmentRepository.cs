@@ -77,11 +77,11 @@ namespace CareGardenApiV1.Repository.Concrete
             return appointment;
         }
 
-        public async Task<bool> ChangeStatusAsync(Guid id, AppointmentStatus status)
+        public async Task<bool> ChangeStatusAsync(AppointmentChangeModel changeModel)
         {
             await _context.Appointments
-             .Where(x => x.id == id)
-             .ExecuteUpdateAsync(x => x.SetProperty(y => y.status, status));
+             .Where(x => x.id == changeModel.id)
+             .ExecuteUpdateAsync(x => x.SetProperty(y => y.status, changeModel.status));
 
             return true;
         }

@@ -1,4 +1,5 @@
 ﻿using CareGardenApiV1.Model;
+using CareGardenApiV1.Model.ResponseModel;
 
 namespace CareGardenApiV1.Service.Abstract
 {
@@ -6,7 +7,7 @@ namespace CareGardenApiV1.Service.Abstract
     {
         Task<Worker> GetWorkerByIdAsync(Guid id);
         Task<List<Worker>> GetWorkersByBusinessIdAsync(Guid businessId);
-        Task<List<Worker>> GetWorkersByBusinessServiceIdAsync(Guid businessServiceId);
+        Task<List<AppointmentWorkerModel>> GetWorkersByBusinessServiceIdAsync(Guid businessServiceId);
         Task<Worker> SaveWorkerAsync(Worker worker);
         Task<Worker> UpdateWorkerAsync(Worker worker);
         Task<bool> DeleteWorkerAsync(Guid id);

@@ -1,5 +1,4 @@
-﻿using CareGardenApiV1.Helpers;
-using CareGardenApiV1.Model;
+﻿using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
@@ -7,6 +6,7 @@ using CareGardenApiV1.Service.Abstract;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using CareGardenApiV1.Helpers;
 using System.Security.Claims;
 
 namespace CareGardenApiV1.Controller
@@ -288,89 +288,211 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
+            bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
+
             var workers = await _workerService.GetWorkersByBusinessServiceIdAsync(appointmentInfo.businessServiceId.Value);
 
-            setWorkerAvailableDate(workers.Where(x => x.isActive).ToList(), appointmentInfo.businessId.Value);
+            if (workers.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.KayitBulunamadi;
+                return Ok(response);
+            }
+
+            await setWorkersAvailableDate(workers.Where(x => x.isActive).ToList(), appointmentInfo);
+
+            workers = workers
+                .Where(x => x.availableDate.HasValue)
+                .OrderByDescending(x => x.availableDate)
+                .ThenByDescending(x => x.rating)
+                .ThenByDescending(x => x.name)
+                .ToList();
+
+            if(!workers.IsNullOrEmpty())
+            {
+                workers.Insert(0, new AppointmentWorkerModel
+                {
+                    id = workers[0].id,
+                    name = isTurkish ? "Herhangi Bir Profesyonel" : "Any Professional",
+                    title = isTurkish ? "En Müsait" : "Maximum Availability",
+                    rating = workers[0].rating,
+                    countRating = workers[0].countRating,
+                    availableDate = workers[0].availableDate,
+                    availableDateStr = workers[0].availableDateStr,
+                    isActive = workers[0].isActive,
+                    price = workers[0].price,
+                });
+            }
+            else
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.KayitBulunamadi;
+                return Ok(response);
+            }
+
+            response.Data = workers;
 
             return Ok(response);
         }
 
-        private async void setWorkerAvailableDate(List<AppointmentWorkerModel> workers, Guid businessId)
+        private async Task setWorkersAvailableDate(List<AppointmentWorkerModel> workers, AppointmentSearchModel appointmentInfo)
         {
             var businesses = await _businessService.GetBusinessListForCache();
-            var business = businesses.FirstOrDefault(x => x.id == businessId);
+            var business = businesses.FirstOrDefault(x => x.id == appointmentInfo.businessId);
 
             if (business == null) return;
 
+            var businessService = await _businessServicesService.GetBusinessServicePriceByIdAsync(appointmentInfo.businessServiceId.Value);
+
+            if (businessService == null) return;
+
+            var discounts = business.discounts?
+                .Where(x => x.serviceIds.IsNullOrEmpty() || x.serviceIds.Contains(appointmentInfo.businessServiceId.Value.ToString()));
+
             var nowDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now.AddMinutes(business.appointmentTimeInterval), "Turkey Standard Time");
+            bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
 
             foreach (var worker in workers)
             {
-                
+                var businessStartDate = nowDate;
+                var pastAppointments = business.appointments?
+                    .SelectMany(x => x.details?.Where(d => d.workerId == worker.id));
+
+                while (!worker.availableDate.HasValue)
+                {
+                    bool businessIsOpen = HelperMethods.GetBusinessOpenSpecialDate(business.workingInfo, business.officialDayAvailable, businessStartDate);
+                    if (!businessIsOpen)
+                    {
+                        while (!businessIsOpen)
+                        {
+                            businessStartDate = businessStartDate.AddDays(1);
+                            businessIsOpen = HelperMethods.GetBusinessOpenSpecialDate(business.workingInfo, business.officialDayAvailable, businessStartDate);
+                        }
+                    }
+
+                    var workHours = business.workingInfo.GetBusinessWorkInfoHours(businessStartDate);
+
+                    setWorkerAvailableDate(worker, business.appointmentTimeInterval, businessStartDate, nowDate, pastAppointments);
+
+                    if (!worker.availableDate.HasValue)
+                    {
+                        businessStartDate.AddDays(1);
+                    }
+                }
+
+                worker.availableDateStr = worker.availableDate.Value.ToString((isTurkish ? "dd/MM HH:mm" : "MM/dd h:mm tt"), Resource.Resource.Culture);
+                var activeDiscount = discounts?
+                    .Where(x => x.type == DiscountType.AllDay
+                    || (x.type == DiscountType.WeekDay && worker.availableDate.Value.DayOfWeek >= DayOfWeek.Monday && worker.availableDate.Value.DayOfWeek <= DayOfWeek.Friday)
+                    || (x.type == DiscountType.WeekEnd && worker.availableDate.Value.DayOfWeek == DayOfWeek.Saturday || worker.availableDate.Value.DayOfWeek == DayOfWeek.Sunday))
+                    .OrderBy(x => x.rate)
+                    .FirstOrDefault();
+
+                worker.price = activeDiscount == null ? businessService.price : businessService.price * (1 - (activeDiscount.rate / 100));
             }
         }
 
-        /// <summary>
-        /// Get Worker Available Times
-        /// </summary>
-        /// <remarks>
-        /// **Sample request body:**
-        ///
-        ///     { 
-        ///        "businessId" : "00000000-0000-0000-0000-000000000000",
-        ///        "workerId" : "00000000-0000-0000-0000-000000000000",
-        ///        "businessServiceId" : "00000000-0000-0000-0000-000000000000",
-        ///        "startDate" : "2023-10-13 10:00"
-        ///     }
-        ///     
-        /// </remarks>
-        /// <returns></returns>
-        [HttpPost("getworkeravailabletimes")]
-        public async Task<IActionResult> GetWorkerAvailableTime([FromBody] AppointmentSearchModel appointmentInfo)
+        private void setWorkerAvailableDate(AppointmentWorkerModel worker, int appointmentTimeInterval, DateTime businessStartDate, DateTime nowDate, IEnumerable<AppointmentDetail> pastAppointments)
         {
-            ResponseModel<List<WorkerAvailableTimeModel>> response = new ResponseModel<List<WorkerAvailableTimeModel>>();
+            string workerWorkHours = worker.GetWorkerWorkHours(businessStartDate);
+            if (workerWorkHours.IsNullOrEmpty()) return;
 
-            if (!appointmentInfo.businessId.HasValue)
+            var workingHoursParts = workerWorkHours.Split('-');
+
+            if (workingHoursParts.Length != 2) return;
+
+            if (!TimeSpan.TryParse(workingHoursParts[0], out var startWorkTime) ||
+                !TimeSpan.TryParse(workingHoursParts[1], out var endWorkTime))
+                return;
+
+            var startDate = new DateTime(businessStartDate.Year, businessStartDate.Month, businessStartDate.Day)
+            .Add(startWorkTime);
+            var endDate = new DateTime(businessStartDate.Year, businessStartDate.Month, businessStartDate.Day)
+            .Add(endWorkTime);
+
+            var date = startDate;
+
+            while (true)
             {
-                response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.IdParametreHatasi;
-                return Ok(response);
+                if (date < nowDate)
+                {
+                    date = date.AddMinutes(appointmentTimeInterval);
+                    continue;
+                }
+
+                if (pastAppointments == null || (pastAppointments != null && !pastAppointments.Any(x => x.date == date)))
+                {
+                    worker.availableDate = date;
+                    break;
+                }
+
+                date.AddMinutes(appointmentTimeInterval);
+
+                if (date >= endDate) break;
             }
-
-            if (!appointmentInfo.userId.HasValue)
-            {
-                response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("userId", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.IdParametreHatasi;
-                return Ok(response);
-            }
-
-            if (!appointmentInfo.workerId.HasValue)
-            {
-                response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("workerId", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.IdParametreHatasi;
-                return Ok(response);
-            }
-
-            if (!appointmentInfo.businessServiceId.HasValue)
-            {
-                response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("workerId", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.IdParametreHatasi;
-                return Ok(response);
-            }
-
-            var startDate = appointmentInfo.startDate ?? DateTime.Today;
-            var endDate = startDate.AddDays(15);
-
-            var workerAppointments = await _appointmentService.GetAppointmentsByAppointmentSearchModelAsync(new AppointmentSearchModel { workerId = appointmentInfo.workerId, startDate = startDate, endDate = endDate });
-            var businessWorkingInfo = await _businessWorkingInfoService.GetBusinessWorkingInfosByBusinessIdAsync(appointmentInfo.businessId.Value);
-            var businessService = await _businessServicesService.GetBusinessServiceByIdAsync(appointmentInfo.businessServiceId.Value);
-
-            response.Data = HelperMethods.GetWorkerAvailableTimes(workerAppointments, businessWorkingInfo.FirstOrDefault(), businessService, startDate, endDate);
-            return Ok(response);
         }
+
+        ///// <summary>
+        ///// Get Worker Available Times
+        ///// </summary>
+        ///// <remarks>
+        ///// **Sample request body:**
+        /////
+        /////     { 
+        /////        "businessId" : "00000000-0000-0000-0000-000000000000",
+        /////        "workerId" : "00000000-0000-0000-0000-000000000000",
+        /////        "businessServiceId" : "00000000-0000-0000-0000-000000000000",
+        /////        "startDate" : "2023-10-13 10:00"
+        /////     }
+        /////     
+        ///// </remarks>
+        ///// <returns></returns>
+        //[HttpPost("getworkeravailabletimes")]
+        //public async Task<IActionResult> GetWorkerAvailableTime([FromBody] AppointmentSearchModel appointmentInfo)
+        //{
+        //    ResponseModel<List<WorkerAvailableTimeModel>> response = new ResponseModel<List<WorkerAvailableTimeModel>>();
+
+        //    if (!appointmentInfo.businessId.HasValue)
+        //    {
+        //        response.HasError = true;
+        //        response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
+        //        response.Message = Resource.Resource.IdParametreHatasi;
+        //        return Ok(response);
+        //    }
+
+        //    if (!appointmentInfo.userId.HasValue)
+        //    {
+        //        response.HasError = true;
+        //        response.ValidationErrors.Add(new ValidationError("userId", Resource.Resource.IdParametreHatasi));
+        //        response.Message = Resource.Resource.IdParametreHatasi;
+        //        return Ok(response);
+        //    }
+
+        //    if (!appointmentInfo.workerId.HasValue)
+        //    {
+        //        response.HasError = true;
+        //        response.ValidationErrors.Add(new ValidationError("workerId", Resource.Resource.IdParametreHatasi));
+        //        response.Message = Resource.Resource.IdParametreHatasi;
+        //        return Ok(response);
+        //    }
+
+        //    if (!appointmentInfo.businessServiceId.HasValue)
+        //    {
+        //        response.HasError = true;
+        //        response.ValidationErrors.Add(new ValidationError("workerId", Resource.Resource.IdParametreHatasi));
+        //        response.Message = Resource.Resource.IdParametreHatasi;
+        //        return Ok(response);
+        //    }
+
+        //    var startDate = appointmentInfo.startDate ?? DateTime.Today;
+        //    var endDate = startDate.AddDays(15);
+
+        //    var workerAppointments = await _appointmentService.GetAppointmentsByAppointmentSearchModelAsync(new AppointmentSearchModel { workerId = appointmentInfo.workerId, startDate = startDate, endDate = endDate });
+        //    var businessWorkingInfo = await _businessWorkingInfoService.GetBusinessWorkingInfosByBusinessIdAsync(appointmentInfo.businessId.Value);
+        //    var businessService = await _businessServicesService.GetBusinessServiceByIdAsync(appointmentInfo.businessServiceId.Value);
+
+        //    response.Data = HelperMethods.GetWorkerAvailableTimes(workerAppointments, businessWorkingInfo.FirstOrDefault(), businessService, startDate, endDate);
+        //    return Ok(response);
+        //}
     }
 }

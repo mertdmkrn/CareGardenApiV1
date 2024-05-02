@@ -60,7 +60,14 @@ namespace CareGardenApiV1.Repository.Concrete
                     name = x.name,
                     path = x.path,
                     title = isTurkish ? x.title : x.titleEn.IsNull(x.title),
-                    isActive = x.isActive
+                    isActive = x.isActive,
+                    mondayWorkHours = x.mondayWorkHours,
+                    tuesdayWorkHours = x.tuesdayWorkHours,
+                    wednesdayWorkHours = x.wednesdayWorkHours,
+                    thursdayWorkHours = x.thursdayWorkHours,
+                    fridayWorkHours = x.fridayWorkHours,
+                    saturdayWorkHours = x.saturdayWorkHours,
+                    sundayWorkHours = x.sundayWorkHours
                 })
                 .ToListAsync();
         }

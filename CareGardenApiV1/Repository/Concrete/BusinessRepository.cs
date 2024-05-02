@@ -215,10 +215,11 @@ namespace CareGardenApiV1.Repository.Concrete
                     isFeatured = x.isFeatured,
                     hasPromotion = x.hasPromotion,
                     officialDayAvailable = x.officialHolidayAvailable,
+                    appointmentTimeInterval = x.appointmentTimeInterval,
                     createDate = x.createDate,
                     workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null,
                     serviceIds = x.services.Any() ? x.services.Select(x => x.serviceId).Distinct().ToList() : null,
-                    discounts = x.discounts.Any() ? x.discounts.Select(x => new Discount { isActive = x.isActive, rate = x.rate }).ToList() : null,
+                    discounts = x.discounts.Any() ? x.discounts.Select(x => new Discount { isActive = x.isActive, rate = x.rate, serviceIds = x.serviceIds, type = x.type }).ToList() : null,
                     appointments = x.appointments.Any() ? x.appointments.Where(x => x.startDate >= DateTime.Today.AddMonths(-2)).Select(x => new Appointment { startDate = x.startDate, endDate = x.endDate, details = x.details.Select(d => new AppointmentDetail { workerId = d.workerId, businessServiceId = d.businessServiceId}).ToList() }).ToList() : null
                 })
                 .ToListAsync();

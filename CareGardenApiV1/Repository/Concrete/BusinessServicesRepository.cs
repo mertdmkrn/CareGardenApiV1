@@ -56,6 +56,18 @@ namespace CareGardenApiV1.Repository.Concrete
             return businessService;
         }
 
+
+        public async Task<BusinessServiceModel> GetBusinessServicePriceByIdAsync(Guid id)
+        {
+            return await _context.BusinessServices
+                .AsNoTracking()
+                .Select(x => new BusinessServiceModel
+                {
+                    price = x.price 
+                })
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<bool> DeleteBusinessServiceAsync(Guid id)
         {
             await _context.BusinessServices

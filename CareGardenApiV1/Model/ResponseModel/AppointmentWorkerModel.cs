@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using CareGardenApiV1.Helpers;
 
 namespace CareGardenApiV1.Model.ResponseModel
 {
@@ -31,5 +30,19 @@ namespace CareGardenApiV1.Model.ResponseModel
         [JsonIgnore]
         public string? sundayWorkHours { get; set; }
 
+        public string GetWorkerWorkHours(DateTime businessStartDate)
+        {
+            switch (businessStartDate.DayOfWeek)
+            {
+                case DayOfWeek.Monday: return mondayWorkHours;
+                case DayOfWeek.Tuesday: return tuesdayWorkHours;
+                case DayOfWeek.Wednesday: return wednesdayWorkHours;
+                case DayOfWeek.Thursday: return thursdayWorkHours;
+                case DayOfWeek.Friday: return fridayWorkHours;
+                case DayOfWeek.Saturday: return saturdayWorkHours;
+                case DayOfWeek.Sunday: return sundayWorkHours;
+                default: return null;
+            }
+        }
     }
 }

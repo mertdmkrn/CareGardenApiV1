@@ -5,6 +5,7 @@ namespace CareGardenApiV1.Service.Abstract
     public interface IBusinessServicesService
     {
         Task<BusinessServiceModel> GetBusinessServiceByIdAsync(Guid id);
+        Task<BusinessServiceModel> GetBusinessServicePriceByIdAsync(Guid id);
         Task<List<BusinessServiceModel>> GetBusinessServicesByServiceIdAsync(Guid serviceId);
         Task<List<BusinessServiceModel>> GetBusinessServicesByBusinessIdAsync(Guid businessId);
         Task<List<BusinessServiceModel>> SaveBusinessServicesAsync(List<BusinessServiceModel> businessServices);

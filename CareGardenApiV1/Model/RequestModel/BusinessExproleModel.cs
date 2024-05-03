@@ -1,4 +1,5 @@
 ﻿using CareGardenApiV1.Helpers;
+using System.Text.Json.Serialization;
 
 namespace CareGardenApiV1.Model.RequestModel
 {
@@ -15,6 +16,8 @@ namespace CareGardenApiV1.Model.RequestModel
         public int? isWithinKilometer { get; set; }
         public WorkingGenderType workingGenderType { get; set; }
         public SortByType sortByType { get; set; }
+        [JsonIgnore]
+        public List<Guid?> favoriteBusinessIds { get; set; }
         public string? city { get; set; }
         public bool isStartPage { get; set; }
     }

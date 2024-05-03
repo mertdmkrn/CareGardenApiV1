@@ -253,6 +253,8 @@ namespace CareGardenApiV1.Controller
                                          ? item.price * discountMultiplier
                                          : item.price;
 
+                    item.discountRate = isDiscountAvailable ? activeDiscount.rate : 0; 
+
                     businessServiceInfo.businessServices.Add(item);
                 }
 
@@ -273,6 +275,8 @@ namespace CareGardenApiV1.Controller
                     item.discountPrice = isDiscountAvailable
                                          ? item.price * discountMultiplier
                                          : item.price;
+
+                    item.discountRate = isDiscountAvailable ? activeDiscount.rate : 0;
 
                     businessServiceInfo.businessServices.Add(item);
                 }

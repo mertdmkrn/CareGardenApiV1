@@ -37,6 +37,9 @@ namespace CareGardenApiV1.Model
         [NotMapped]
         public double discountPrice { get; set; }
 
+        [NotMapped]
+        public double discountRate { get; set; }
+
         [JsonIgnore]
         public Business? business { get; set; }
 

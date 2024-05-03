@@ -19,17 +19,20 @@ namespace CareGardenApiV1.Controller
     public class SearchController : ControllerBase
     {
         private readonly IBusinessService _businessService;
+        private readonly IUserService _userService;
         private readonly IServicesService _servicesService;
         private readonly IMemoryCache _memoryCache;
         private readonly IElasticClient _elasticClient;
 
         public SearchController(
             IBusinessService businessService,
+            IUserService userService,
             IServicesService servicesService,
             IMemoryCache memoryCache,
             IElasticClient elasticClient)
         {
             _businessService = businessService;
+            _userService = userService;
             _servicesService = servicesService;
             _memoryCache = memoryCache;
             _elasticClient = elasticClient;
@@ -133,7 +136,12 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> SearchBusiness([FromBody] BusinessExploreModel businessExploreModel)
         {
             ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
+            var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
 
+            if (businessExploreModel.sortByType == SortByType.Favorites)
+            {
+                businessExploreModel.favoriteBusinessIds = await _userService.GetUserFavoriteBusinessIds(userId.ToGuid());
+            }
 
             bool isSendNoLocationInfo = (!businessExploreModel.latitude.HasValue || businessExploreModel.latitude == 0)
                         && (!businessExploreModel.longitude.HasValue || businessExploreModel.longitude == 0)
@@ -164,7 +172,7 @@ namespace CareGardenApiV1.Controller
             }
             else
             {
-                if (isSendNoLocationInfo)
+                if (isSendNoLocationInfo && businessExploreModel.sortByType != SortByType.Favorites)
                 {
                     businessExploreModel.city = HelperMethods.GetClaimInfo(Request, ClaimTypes.Locality).IsNull("İstanbul");
                 }

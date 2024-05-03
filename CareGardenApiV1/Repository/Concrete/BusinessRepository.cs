@@ -159,11 +159,11 @@ namespace CareGardenApiV1.Repository.Concrete
 
             var businesses = await GetBusinessListForCache();
 
-
             var filteredBusinesses = businesses
                 .WhereIf(businessExploreModel.workingGenderType != WorkingGenderType.All, x => x.workingGenderType.Equals((int)businessExploreModel.workingGenderType))
                 .WhereIf(businessExploreModel.serviceId.HasValue, x => x.serviceIds != null && x.serviceIds.Contains(businessExploreModel.serviceId))
                 .WhereIf(!businessExploreModel.offers.IsNullOrEmpty(), x => x.discounts != null && x.discounts.Exists(x => x.isActive && businessExploreModel.offers.Contains((int)x.rate)))
+                .WhereIf(!businessExploreModel.favoriteBusinessIds.IsNullOrEmpty(), x => businessExploreModel.favoriteBusinessIds.Contains(x.id))
                 .WhereIf(businessExploreModel.availableDate.HasValue, x => HelperMethods.IsAvailableAppointmentDay(x.appointments, x.workingInfo, x.officialDayAvailable, businessExploreModel.availableDate.Value))
                 .WhereIf(!businessExploreModel.city.IsNullOrEmpty(), x => x.city.Equals(businessExploreModel.city))
                 .Select(x =>
@@ -178,7 +178,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 .OrderByDescendingIf(businessExploreModel.sortByType == SortByType.MostPopular, x => x.countRating)
                 .OrderByDescendingIf(businessExploreModel.sortByType == SortByType.Newest, x => x.createDate)
                 .OrderByDescendingIf(businessExploreModel.sortByType == SortByType.TopRated, x => x.averageRating)
-                .OrderByIf(businessExploreModel.sortByType == SortByType.Nearest, x => x.distance)
+                .OrderByIf(businessExploreModel.sortByType == SortByType.Nearest || businessExploreModel.sortByType == SortByType.Favorites, x => x.distance)
                 .ToList();
 
             var resultCount = filteredBusinesses.Count();

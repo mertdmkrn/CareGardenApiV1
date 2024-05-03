@@ -39,7 +39,8 @@
         MostPopular,
         Nearest,
         TopRated,
-        Newest
+        Newest,
+        Favorites
     }
 
     public enum WorkingGenderType

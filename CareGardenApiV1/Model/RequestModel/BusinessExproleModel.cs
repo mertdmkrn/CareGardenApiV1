@@ -17,7 +17,7 @@ namespace CareGardenApiV1.Model.RequestModel
         public WorkingGenderType workingGenderType { get; set; }
         public SortByType sortByType { get; set; }
         [JsonIgnore]
-        public List<Guid?> favoriteBusinessIds { get; set; }
+        public List<Guid?> favoriteBusinessIds { get; set; } = new();
         public string? city { get; set; }
         public bool isStartPage { get; set; }
     }

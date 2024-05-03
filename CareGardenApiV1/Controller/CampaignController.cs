@@ -82,7 +82,7 @@ namespace CareGardenApiV1.Controller
 
             response.Data = campaigns
                 .Where(x => x.isActive)
-                .Where(x => !x.expireDate.HasValue || x.expireDate > DateTime.Now)
+                //.Where(x => !x.expireDate.HasValue || x.expireDate > DateTime.Now)
                 .Select(x => new CampaingInfo
                 {
                     id = x.id,

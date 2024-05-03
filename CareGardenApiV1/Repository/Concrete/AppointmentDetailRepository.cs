@@ -66,5 +66,20 @@ namespace CareGardenApiV1.Repository.Concrete
         {
             throw new NotImplementedException();
         }
+
+        public async Task<List<AppointmentDetail>> GetAppointmentDetailsByWorkerIdsAndDateAsync(AppointmentSearchModel searchModel)
+        {
+            return await _context.AppointmentDetails
+                .AsNoTracking()
+                .Where(x => x.appointment.status != AppointmentStatus.Rejected)
+                .Where(x => x.date >= searchModel.startDate)
+                .Where(x => searchModel.workerIds.Contains(x.workerId.Value))
+                .Select(x => new AppointmentDetail
+                {
+                    workerId = x.workerId,
+                    date = x.date
+                })
+                .ToListAsync();
+        }
     }
 }

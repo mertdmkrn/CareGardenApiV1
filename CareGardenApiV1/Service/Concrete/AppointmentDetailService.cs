@@ -30,6 +30,11 @@ namespace CareGardenApiV1.Service.Concrete
             return await _appointmentDetailRepository.GetAppointmentDetailsByAppointmentDetailSearchModelAsync(searchModel);
         }
 
+        public async Task<List<AppointmentDetail>> GetAppointmentDetailsByWorkerIdsAndDateAsync(AppointmentSearchModel searchModel)
+        {
+            return await _appointmentDetailRepository.GetAppointmentDetailsByWorkerIdsAndDateAsync(searchModel);
+        }
+
         public async Task<AppointmentDetail> SaveAppointmentDetailAsync(AppointmentDetail appointmentDetail)
         {
             return await _appointmentDetailRepository.SaveAppointmentDetailAsync(appointmentDetail);

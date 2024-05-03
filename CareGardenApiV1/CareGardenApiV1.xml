@@ -237,23 +237,6 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.AppointmentController.GetWorkerAvailableTime(CareGardenApiV1.Model.RequestModel.AppointmentSearchModel)">
-             <summary>
-             Get Worker Available Times
-             </summary>
-             <remarks>
-             **Sample request body:**
-            
-                 { 
-                    "businessId" : "00000000-0000-0000-0000-000000000000",
-                    "workerId" : "00000000-0000-0000-0000-000000000000",
-                    "businessServiceId" : "00000000-0000-0000-0000-000000000000",
-                    "startDate" : "2023-10-13 10:00"
-                 }
-                 
-             </remarks>
-             <returns></returns>
-        </member>
         <member name="M:CareGardenApiV1.Controller.BusinessController.GetInfoById(System.String)">
              <summary>
              Get Business Info By Id (Brings only its own information)

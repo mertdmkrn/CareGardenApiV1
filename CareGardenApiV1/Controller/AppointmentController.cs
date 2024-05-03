@@ -17,6 +17,7 @@ namespace CareGardenApiV1.Controller
     public class AppointmentController : ControllerBase
     {
         private readonly IAppointmentService _appointmentService;
+        private readonly IAppointmentDetailService _appointmentDetailService;
         private readonly IBusinessWorkingInfoService _businessWorkingInfoService;
         private readonly IBusinessServicesService _businessServicesService;
         private readonly IBusinessService _businessService;
@@ -24,12 +25,14 @@ namespace CareGardenApiV1.Controller
 
         public AppointmentController(
             IAppointmentService appointmentService,
+            IAppointmentDetailService appointmentDetailService,
             IBusinessWorkingInfoService businessWorkingInfoService,
             IBusinessServicesService businessServicesService,
             IBusinessService businessService,
             IWorkerService workerService)
         {
             _appointmentService = appointmentService;
+            _appointmentDetailService = appointmentDetailService;
             _businessWorkingInfoService = businessWorkingInfoService;
             _businessServicesService = businessServicesService;
             _businessService = businessService;
@@ -350,13 +353,13 @@ namespace CareGardenApiV1.Controller
                 .Where(x => x.serviceIds.IsNullOrEmpty() || x.serviceIds.Contains(appointmentInfo.businessServiceId.Value.ToString()));
 
             var nowDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now.AddMinutes(business.appointmentTimeInterval), "Turkey Standard Time");
+            var pastAppointments = await _appointmentDetailService.GetAppointmentDetailsByWorkerIdsAndDateAsync(new AppointmentSearchModel { startDate = nowDate, workerIds = workers.Select(x => x.id).ToHashSet() });
+
             bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
 
             foreach (var worker in workers)
             {
                 var businessStartDate = nowDate;
-                var pastAppointments = business.appointments?
-                    .SelectMany(x => x.details?.Where(d => d.workerId == worker.id));
 
                 while (!worker.availableDate.HasValue)
                 {

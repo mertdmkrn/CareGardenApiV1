@@ -7,6 +7,7 @@
         public Guid? businessServiceId { get; set; } = Guid.Empty;
         public Guid? appointmentId { get; set; } = Guid.Empty;
         public Guid? workerId { get; set; } = Guid.Empty;
+        public HashSet<Guid> workerIds { get; set; } = new();
         public DateTime? startDate  { get; set; }
         public DateTime? endDate { get; set; }
         public int? page { get; set; }

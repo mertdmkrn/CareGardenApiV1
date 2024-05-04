@@ -3,6 +3,7 @@ using CareGardenApiV1.Model;
 using Microsoft.EntityFrameworkCore;
 using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Helpers;
+using CareGardenApiV1.Service.Concrete;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -60,6 +61,28 @@ namespace CareGardenApiV1.Repository.Concrete
                     name = x.name,
                     path = x.path,
                     title = isTurkish ? x.title : x.titleEn.IsNull(x.title),
+                    isActive = x.isActive,
+                    mondayWorkHours = x.mondayWorkHours,
+                    tuesdayWorkHours = x.tuesdayWorkHours,
+                    wednesdayWorkHours = x.wednesdayWorkHours,
+                    thursdayWorkHours = x.thursdayWorkHours,
+                    fridayWorkHours = x.fridayWorkHours,
+                    saturdayWorkHours = x.saturdayWorkHours,
+                    sundayWorkHours = x.sundayWorkHours
+                })
+                .ToListAsync();
+        }
+
+        public async Task<List<AppointmentWorkerModel>> GetWorkersByWorkerIdsAsync(List<Guid?> workerIds)
+        {
+            bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
+
+            return await _context.Workers
+                .AsNoTracking()
+                .Where(x => workerIds.Contains(x.id))
+                .Select(x => new AppointmentWorkerModel
+                {
+                    id = x.id,
                     isActive = x.isActive,
                     mondayWorkHours = x.mondayWorkHours,
                     tuesdayWorkHours = x.tuesdayWorkHours,

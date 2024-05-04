@@ -39,6 +39,11 @@ namespace CareGardenApiV1.Service.Concrete
             return await _workerRepository.GetWorkersByBusinessServiceIdAsync(businessServiceId);
         }
 
+        public async Task<List<AppointmentWorkerModel>> GetWorkersByWorkerIdsAsync(List<Guid?> workerIds)
+        {
+            return await _workerRepository.GetWorkersByWorkerIdsAsync(workerIds);
+        }
+
         public async Task<Worker> SaveWorkerAsync(Worker worker)
         {
             return await _workerRepository.SaveWorkerAsync(worker);

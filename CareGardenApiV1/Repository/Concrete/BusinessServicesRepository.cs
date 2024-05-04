@@ -56,11 +56,11 @@ namespace CareGardenApiV1.Repository.Concrete
             return businessService;
         }
 
-
         public async Task<BusinessServiceModel> GetBusinessServicePriceByIdAsync(Guid id)
         {
             return await _context.BusinessServices
                 .AsNoTracking()
+                .Where(x => x.id == id)
                 .Select(x => new BusinessServiceModel
                 {
                     price = x.price 

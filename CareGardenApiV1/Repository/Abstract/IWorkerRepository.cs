@@ -8,6 +8,7 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<Worker> GetWorkerByIdAsync(Guid id);
         Task<List<Worker>> GetWorkersByBusinessIdAsync(Guid businessId);
         Task<List<AppointmentWorkerModel>> GetWorkersByBusinessServiceIdAsync(Guid businessServiceId);
+        Task<List<AppointmentWorkerModel>> GetWorkersByWorkerIdsAsync(List<Guid?> workerIds);
         Task<Worker> SaveWorkerAsync(Worker worker);
         Task<Worker> UpdateWorkerAsync(Worker worker);
         Task<bool> DeleteWorkerAsync(Guid id);

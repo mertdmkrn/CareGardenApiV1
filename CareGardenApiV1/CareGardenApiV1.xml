@@ -237,6 +237,34 @@
              </remarks>
              <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.GetAppointmentDates(CareGardenApiV1.Model.RequestModel.AppointmentDatesModel)">
+             <summary>
+             Get Appointment Dates 
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 {
+                     "businessId" : "00000000-0000-0000-0000-000000000000",
+                     "page" : 0,
+                     "serviceWorkerInfos" : [
+                         {
+                             "businessServiceId" : "00000000-0000-0000-0000-000000000000",
+                             "workerId" : "00000000-0000-0000-0000-000000000000"
+                         },
+                         {
+                             "businessServiceId" : "00000000-0000-0000-0000-000000000000",
+                             "workerId" : "00000000-0000-0000-0000-000000000000"
+                         },
+                         {
+                             "businessServiceId" : "00000000-0000-0000-0000-000000000000",
+                             "workerId" : "00000000-0000-0000-0000-000000000000"
+                         }
+                     ]
+                 }
+             </remarks>
+             <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.BusinessController.GetInfoById(System.String)">
              <summary>
              Get Business Info By Id (Brings only its own information)

@@ -299,7 +299,10 @@ namespace CareGardenApiV1.Controller
 
             bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
 
-            var workers = await _workerService.GetWorkersByBusinessServiceIdAsync(appointmentInfo.businessServiceId.Value);
+            var workers = await _workerService.GetWorkersByAppointmentSearchModelAsync(new AppointmentSearchModel()
+            {
+                businessServiceId = appointmentInfo.businessServiceId
+            });
 
             if (workers.IsNullOrEmpty())
             {
@@ -450,6 +453,7 @@ namespace CareGardenApiV1.Controller
         ///     {
         ///         "businessId" : "00000000-0000-0000-0000-000000000000",
         ///         "page" : 0,
+        ///         "hasGetAnyAvailibityWorker" : false,
         ///         "serviceWorkerInfos" : [
         ///             {
         ///                 "businessServiceId" : "00000000-0000-0000-0000-000000000000",
@@ -478,9 +482,17 @@ namespace CareGardenApiV1.Controller
 
             if (business == null) return Ok(response);
 
-            var workers = await _workerService.GetWorkersByWorkerIdsAsync(appointmentInfo.serviceWorkerInfos.Select(x => x.workerId).ToList());
+            var workers = appointmentInfo.hasGetAnyAvailibityWorker
+                ? await _workerService.GetWorkersByAppointmentSearchModelAsync(new AppointmentSearchModel()
+                {
+                    businessId = appointmentInfo.businessId,
+                    isActive = true
+                })
+                : await _workerService.GetWorkersByWorkerIdsAsync(appointmentInfo.serviceWorkerInfos
+                    .Select(x => x.workerId).ToList());
+            
             Dictionary<string, Tuple<TimeSpan, TimeSpan>> workersWorkTimesDict = new Dictionary<string, Tuple<TimeSpan, TimeSpan>>();
-
+            
             foreach (var worker in workers)
             {
                 setWorkerTimes(worker.mondayWorkHours, $"{worker.id}|{DayOfWeek.Monday}", workersWorkTimesDict);
@@ -498,8 +510,33 @@ namespace CareGardenApiV1.Controller
             var startDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Today.AddDays(intervalDay * appointmentInfo.page), "Turkey Standard Time");
             var endDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Today.AddDays(intervalDay * (appointmentInfo.page + 1)), "Turkey Standard Time");
 
-            var pastAppointments = await _appointmentDetailService.GetAppointmentDetailsByWorkerIdsAndDateAsync(new AppointmentSearchModel { startDate = nowDate, endDate = endDate, workerIds = appointmentInfo.serviceWorkerInfos.Select(x => x.workerId.Value).ToHashSet() });
+            var pastAppointments = await _appointmentDetailService.GetAppointmentDetailsByWorkerIdsAndDateAsync(new AppointmentSearchModel { startDate = nowDate, endDate = endDate, workerIds = workers.Select(x => x.id).ToHashSet() });
 
+            if (appointmentInfo.hasGetAnyAvailibityWorker)
+            {
+                var groupingPastAppointments = pastAppointments.GroupBy(x => x.workerId.Value).ToList();
+                foreach (var item in appointmentInfo.serviceWorkerInfos)
+                {
+                    var serviceWorkers = workers
+                        .Where(x => x.serviceIds.IsNull("").Contains(item.businessServiceId.ToString()))
+                        .ToList();
+
+                    if (serviceWorkers.IsNullOrEmpty())
+                    {
+                        serviceWorkers = workers;
+                    }
+
+                    var worker = groupingPastAppointments
+                        .Where(x => serviceWorkers
+                            .Exists(y => y.id.Equals(x.Key)))
+                            .MinBy(x => x.Count());
+
+                    item.workerId = !worker.IsNullOrEmpty()
+                        ? worker.Key
+                        : serviceWorkers.FirstOrDefault().id;
+                }
+            }
+            
             List<AppointmentAvailableTimeModel> models = new();
 
             for (int i = 0; i < intervalDay; i++)

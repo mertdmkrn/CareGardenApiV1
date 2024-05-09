@@ -1,4 +1,6 @@
-﻿namespace CareGardenApiV1.Model.RequestModel
+﻿using Newtonsoft.Json;
+
+namespace CareGardenApiV1.Model.RequestModel
 {
     public class AppointmentSearchModel
     {
@@ -12,5 +14,7 @@
         public DateTime? endDate { get; set; }
         public int? page { get; set; }
         public int? take { get; set; }
+        [JsonIgnore]
+        public bool? isActive { get; set; }
     }
 }

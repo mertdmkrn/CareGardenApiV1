@@ -6,6 +6,7 @@ using CareGardenApiV1.Service.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using CareGardenApiV1.Model.RequestModel;
 
 namespace CareGardenApiV1.Controller
 {
@@ -104,7 +105,10 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
-            response.Data = await _workerService.GetWorkersByBusinessServiceIdAsync(businessServiceId.ToGuid());
+            response.Data = await _workerService.GetWorkersByAppointmentSearchModelAsync(new AppointmentSearchModel()
+            {
+                businessServiceId = businessServiceId.ToGuid()
+            });
             return Ok(response);
         }
 

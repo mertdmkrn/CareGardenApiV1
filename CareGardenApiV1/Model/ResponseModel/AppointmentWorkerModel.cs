@@ -29,6 +29,8 @@ namespace CareGardenApiV1.Model.ResponseModel
         public string? saturdayWorkHours { get; set; }
         [JsonIgnore]
         public string? sundayWorkHours { get; set; }
+        [JsonIgnore]
+        public string? serviceIds { get; set; }
 
         public string GetWorkerWorkHours(DateTime businessStartDate)
         {

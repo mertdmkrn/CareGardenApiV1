@@ -3,7 +3,7 @@ using CareGardenApiV1.Model;
 using Microsoft.EntityFrameworkCore;
 using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Helpers;
-using CareGardenApiV1.Service.Concrete;
+using CareGardenApiV1.Model.RequestModel;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -48,13 +48,15 @@ namespace CareGardenApiV1.Repository.Concrete
                 .ToListAsync();
         }
 
-        public async Task<List<AppointmentWorkerModel>> GetWorkersByBusinessServiceIdAsync(Guid businessServiceId)
+        public async Task<List<AppointmentWorkerModel>> GetWorkersByAppointmentSearchModelAsync(AppointmentSearchModel searchModel)
         {
             bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
 
             return await _context.Workers
                 .AsNoTracking()
-                .Where(x => x.serviceIds.ToLower().Contains(businessServiceId.ToString()))
+                .WhereIf(searchModel.isActive.HasValue, x => x.isActive == searchModel.isActive.Value)
+                .WhereIf(searchModel.businessServiceId.IsNotNullOrEmpty(), x => x.serviceIds.ToLower().Contains(searchModel.businessServiceId.Value.ToString().ToLower()))
+                .WhereIf(searchModel.businessId.IsNotNullOrEmpty(), x => x.businessId == searchModel.businessId)
                 .Select(x => new AppointmentWorkerModel
                 {
                     id = x.id,
@@ -62,6 +64,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     path = x.path,
                     title = isTurkish ? x.title : x.titleEn.IsNull(x.title),
                     isActive = x.isActive,
+                    serviceIds = x.serviceIds,
                     mondayWorkHours = x.mondayWorkHours,
                     tuesdayWorkHours = x.tuesdayWorkHours,
                     wednesdayWorkHours = x.wednesdayWorkHours,
@@ -90,7 +93,8 @@ namespace CareGardenApiV1.Repository.Concrete
                     thursdayWorkHours = x.thursdayWorkHours,
                     fridayWorkHours = x.fridayWorkHours,
                     saturdayWorkHours = x.saturdayWorkHours,
-                    sundayWorkHours = x.sundayWorkHours
+                    sundayWorkHours = x.sundayWorkHours,
+                    serviceIds = x.serviceIds
                 })
                 .ToListAsync();
         }

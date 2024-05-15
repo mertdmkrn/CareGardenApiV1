@@ -26,6 +26,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 .Where(x => ids.Contains(x.id))
                 .Select(x => new BusinessServiceModel
                 {
+                    id = x.id,
                     price = x.price,
                     minDuration = x.minDuration,
                     maxDuration = x.maxDuration

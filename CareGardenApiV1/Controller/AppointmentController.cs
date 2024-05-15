@@ -215,7 +215,7 @@ namespace CareGardenApiV1.Controller
             var businessServices = await _businessServicesService.GetBusinessServicesByIdsAsync(businessServicesIds);
 
             businessServices.ConvertAll(x => {
-                var discount = activeDiscounts.FirstOrDefault(d => d.serviceIds.IsNullOrEmpty() || d.serviceIds.Contains(x.id.ToString()));
+                var discount = activeDiscounts?.FirstOrDefault(d => d.serviceIds.IsNullOrEmpty() || d.serviceIds.Contains(x.id.ToString()));
                 x.discountPrice = x.price * (1 - (discount?.rate ?? 0) / 100);
                 return x;
             });
@@ -225,7 +225,7 @@ namespace CareGardenApiV1.Controller
             Appointment appointment = new Appointment()
             {
                 businessId = business.id,
-                userId = null,
+                userId = appointmentSaveModel.userId,
                 startDate = appointmentSaveModel.startDate,
                 endDate = appointmentSaveModel.startDate.Value.AddMinutes(totalWorkMinutes),
                 totalPrice = businessServices.Sum(x => x.price),
@@ -257,64 +257,64 @@ namespace CareGardenApiV1.Controller
             return Ok(response);
         }
 
-        /// <summary>
-        /// Delete Appointment
-        /// </summary>
-        /// <remarks>
-        /// **Sample request body:**
-        ///
-        ///     { 
-        ///        "id" : "00000000-0000-0000-0000-000000000000",
-        ///        "isForceDelete" : true
-        ///     }
-        ///     
-        /// </remarks>
-        /// <returns></returns>
-        [HttpPost("delete")]
-        public async Task<IActionResult> Delete([FromBody] AppointmentChangeModel appointmentChangeModel)
-        {
-            ResponseModel<bool> response = new ResponseModel<bool>();
+        ///// <summary>
+        ///// Delete Appointment
+        ///// </summary>
+        ///// <remarks>
+        ///// **Sample request body:**
+        /////
+        /////     { 
+        /////        "id" : "00000000-0000-0000-0000-000000000000",
+        /////        "isForceDelete" : true
+        /////     }
+        /////     
+        ///// </remarks>
+        ///// <returns></returns>
+        //[HttpPost("delete")]
+        //public async Task<IActionResult> Delete([FromBody] AppointmentChangeModel appointmentChangeModel)
+        //{
+        //    ResponseModel<bool> response = new ResponseModel<bool>();
 
-            if (!appointmentChangeModel.id.HasValue)
-            {
-                response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.KayitSilinemedi;
-                return Ok(response);
-            }
+        //    if (!appointmentChangeModel.id.HasValue)
+        //    {
+        //        response.HasError = true;
+        //        response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+        //        response.Message = Resource.Resource.KayitSilinemedi;
+        //        return Ok(response);
+        //    }
 
-            Appointment appointment = await _appointmentService.GetAppointmentByIdAsync(appointmentChangeModel.id.Value);
+        //    Appointment appointment = await _appointmentService.GetAppointmentByIdAsync(appointmentChangeModel.id.Value);
 
-            if (appointment == null)
-            {
-                response.HasError = true;
-                response.Message = Resource.Resource.KayitBulunamadi;
-                return Ok(response);
-            }
+        //    if (appointment == null)
+        //    {
+        //        response.HasError = true;
+        //        response.Message = Resource.Resource.KayitBulunamadi;
+        //        return Ok(response);
+        //    }
 
-            var sessionUserId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid).IsNull(Guid.Empty.ToString());
+        //    var sessionUserId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid).IsNull(Guid.Empty.ToString());
 
-            if (appointment.startDate.DifferenceBetweenDates(DateTimeOffset.UtcNow.UtcDateTime, DateType.Hour) < 9 && appointment.userId == sessionUserId.ToGuid())
-            {
-                if (!appointmentChangeModel.isForceDelete.HasValue || (appointmentChangeModel.isForceDelete.HasValue && !appointmentChangeModel.isForceDelete.Value))
-                {
-                    response.HasError = true;
-                    response.Message = Resource.Resource.RandevuIptalUyari;
-                    return Ok(response);
-                }
-                else
-                {
-                    // Todo: Güvenirliği azalt
-                }
-            }
+        //    if (appointment.startDate.DifferenceBetweenDates(DateTimeOffset.UtcNow.UtcDateTime, DateType.Hour) < 9 && appointment.userId == sessionUserId.ToGuid())
+        //    {
+        //        if (!appointmentChangeModel.isForceDelete.HasValue || (appointmentChangeModel.isForceDelete.HasValue && !appointmentChangeModel.isForceDelete.Value))
+        //        {
+        //            response.HasError = true;
+        //            response.Message = Resource.Resource.RandevuIptalUyari;
+        //            return Ok(response);
+        //        }
+        //        else
+        //        {
+        //            // Todo: Güvenirliği azalt
+        //        }
+        //    }
 
-            response.Data = await _appointmentService.DeleteAppointmentAsync(appointment);
-            response.Message = Resource.Resource.KayitSilindi;
+        //    response.Data = await _appointmentService.DeleteAppointmentAsync(appointment);
+        //    response.Message = Resource.Resource.KayitSilindi;
 
-            BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(appointment.businessId.Value));
+        //    BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(appointment.businessId.Value));
 
-            return Ok(response);
-        }
+        //    return Ok(response);
+        //}
 
         /// <summary>
         /// Change Appointment Status
@@ -679,23 +679,27 @@ namespace CareGardenApiV1.Controller
 
                 while (true)
                 {
+                    if(tempDate < nowDate)
+                    {
+                        tempDate = tempDate.AddMinutes(business.appointmentTimeInterval);
+                        continue;
+                    }                  
+                    
                     TimeModel timeModel = new();
 
                     timeModel.date = tempDate;
                     timeModel.hourStr = $"{tempDate.Hour.ToString().PadLeft(2, '0')}:{tempDate.Minute.ToString().PadLeft(2, '0')}";
 
-                    if(tempDate < nowDate)
-                    {
-                        timeModel.isActive = false;
-                        model.dateList.Add(timeModel);
-                        tempDate = tempDate.AddMinutes(business.appointmentTimeInterval);
-                        continue;
-                    }
-
                     var hourTimeSpan = TimeSpan.Parse(timeModel.hourStr);
 
                     timeModel.isActive = !pastAppointments.Exists(x => x.date == tempDate)
                                          && !workTimeTuples.Exists(x => x.Item1 > hourTimeSpan && x.Item2 < hourTimeSpan);
+
+                    if (!timeModel.isActive)
+                    {
+                        tempDate = tempDate.AddMinutes(business.appointmentTimeInterval);
+                        continue;
+                    }
 
                     model.dateList.Add(timeModel);
 

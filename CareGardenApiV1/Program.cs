@@ -22,6 +22,7 @@ using AspNetCoreRateLimit;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using CareGardenApiV1.Repository;
+using System.Text.Json.Serialization;
 
 internal class Program
 {
@@ -41,7 +42,11 @@ internal class Program
         builder.Host.UseSerilog();
         builder.Services.AddElasticSearch(builder.Configuration);
         builder.Services.AddOptions();
-        builder.Services.AddControllers();
+        builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            });
 
         builder.Services.AddMemoryCache();
 

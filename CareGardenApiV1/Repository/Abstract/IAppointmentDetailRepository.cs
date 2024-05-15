@@ -11,6 +11,7 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<List<AppointmentDetail>> GetAppointmentDetailsByWorkerIdsAndDateAsync(AppointmentSearchModel searchModel);
         Task<AppointmentDetail> SaveAppointmentDetailAsync(AppointmentDetail appointmentDetail);
         Task<AppointmentDetail> UpdateAppointmentDetailAsync(AppointmentDetail appointmentDetail);
+        Task<bool> IsExistsAppointment(List<Guid> workerIds, DateTime date);
         Task<bool> DeleteAppointmentDetailAsync(Guid id);
     }
 }

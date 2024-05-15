@@ -33,6 +33,11 @@ namespace CareGardenApiV1.Service.Concrete
             return await _businessServicesRepository.GetBusinessServicePriceByIdAsync(id);
         }
 
+        public async Task<List<BusinessServiceModel>> GetBusinessServicesByIdsAsync(List<Guid> ids)
+        {
+            return await _businessServicesRepository.GetBusinessServicesByIdsAsync(ids);
+        }
+
         public async Task<List<BusinessServiceModel>> GetBusinessServicesByBusinessIdAsync(Guid businessId)
         {
             return await _businessServicesRepository.GetBusinessServicesByBusinessIdAsync(businessId);          

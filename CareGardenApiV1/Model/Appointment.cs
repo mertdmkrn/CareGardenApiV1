@@ -28,6 +28,8 @@ namespace CareGardenApiV1.Model
         public Guid? businessId { get; set; }
 
         public double totalPrice { get; set; }
+        
+        public double totalDiscountPrice { get; set; }
 
         [JsonIgnore]
         public Business? business { get; set; }

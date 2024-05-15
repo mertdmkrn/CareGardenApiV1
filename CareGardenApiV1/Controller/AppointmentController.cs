@@ -8,12 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CareGardenApiV1.Helpers;
 using System.Security.Claims;
-using Hangfire.Server;
-using Microsoft.AspNetCore.DataProtection.XmlEncryption;
-using System.Collections.Generic;
-using System.Drawing.Text;
-using System;
-using Microsoft.EntityFrameworkCore.Migrations.Internal;
 
 namespace CareGardenApiV1.Controller
 {
@@ -121,42 +115,71 @@ namespace CareGardenApiV1.Controller
         ///     { 
         ///        "businessId" : "00000000-0000-0000-0000-000000000000",
         ///        "userId" : "00000000-0000-0000-0000-000000000000",
-        ///        "workerId" : "00000000-0000-0000-0000-000000000000",
-        ///        "businessServiceId" : "00000000-0000-0000-0000-000000000000",    
         ///        "description" : "Yeniden geliyorum.",
-        ///        "startDate" : "2023-10-07 15:00",
-        ///        "endDate" : "2023-10-07 16:00"
+        ///        "startDate" : "2024-10-07 15:00",
+        ///        "serviceWorkerInfos" : [
+        ///             {
+        ///                 "businessServiceId" : "00000000-0000-0000-0000-000000000000",
+        ///                 "workerId" : "00000000-0000-0000-0000-000000000000"
+        ///             },
+        ///             {
+        ///                 "businessServiceId" : "00000000-0000-0000-0000-000000000000",
+        ///                 "workerId" : "00000000-0000-0000-0000-000000000000"
+        ///             },
+        ///             {
+        ///                 "businessServiceId" : "00000000-0000-0000-0000-000000000000",
+        ///                 "workerId" : "00000000-0000-0000-0000-000000000000"
+        ///             }
+        ///        ]
+        ///     }
         ///     }
         ///
         /// </remarks>
         /// <returns></returns>
         [HttpPost("save")]
-        public async Task<IActionResult> Save([FromBody] Appointment appointment)
+        public async Task<IActionResult> Save([FromBody] AppointmentSaveModel appointmentSaveModel)
         {
             ResponseModel<Appointment> response = new ResponseModel<Appointment>();
+            
+            var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
 
-            if (!appointment.businessId.HasValue)
+            if (userId.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.KullaniciBulunamadi;
+                return Ok(response);
+            }
+
+            appointmentSaveModel.userId = appointmentSaveModel.userId.IsNotNullOrEmpty() ? appointmentSaveModel.userId : userId.ToGuid();
+
+            if (!appointmentSaveModel.businessId.HasValue)
             {
                 response.HasError = true;
                 response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
 
-            if (!appointment.userId.HasValue)
+            if (!appointmentSaveModel.userId.HasValue)
             {
                 response.HasError = true;
                 response.ValidationErrors.Add(new ValidationError("userId", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
 
-            if (!appointment.startDate.HasValue)
+            if (!appointmentSaveModel.startDate.HasValue)
             {
                 response.HasError = true;
                 response.ValidationErrors.Add(new ValidationError("startDate", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
 
-            if (!appointment.endDate.HasValue)
+            if (Extensions.IsNullOrEmpty(appointmentSaveModel.serviceWorkerInfos))
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("endDate", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("serviceWorkerInfos", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (appointmentSaveModel.serviceWorkerInfos.Exists(x => !x.workerId.HasValue))
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("workerId", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
 
             if (response.HasError)
@@ -165,10 +188,71 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
+            var workerIds = appointmentSaveModel.serviceWorkerInfos.Select(x => x.workerId.Value).ToList();
+            var businessServicesIds =  appointmentSaveModel.serviceWorkerInfos.Select(x => x.businessServiceId).ToList();
+            bool isExistsAppointment = await _appointmentDetailService.IsExistsAppointment(workerIds, appointmentSaveModel.startDate.Value);
+            var businesses = await _businessService.GetBusinessListForCache();
+            var business = businesses.FirstOrDefault(x => x.id.Equals(appointmentSaveModel.businessId.Value));
+            
+            if (isExistsAppointment || !HelperMethods.GetBusinessOpenSpecialDate(business.workingInfo, business.officialDayAvailable, appointmentSaveModel.startDate))
+            {
+                response.Message = Resource.Resource.RandevuMevcut;
+                response.HasError = true;
+                return Ok(response);
+            }
+            
+            var activeDiscounts = business.discounts?
+                .Where(x => x.type == DiscountType.AllDay
+                            || (x.type == DiscountType.WeekDay &&
+                                appointmentSaveModel.startDate.Value.DayOfWeek >= DayOfWeek.Monday &&
+                                appointmentSaveModel.startDate.Value.DayOfWeek <= DayOfWeek.Friday)
+                            || (x.type == DiscountType.WeekEnd &&
+                                appointmentSaveModel.startDate.Value.DayOfWeek == DayOfWeek.Saturday ||
+                                appointmentSaveModel.startDate.Value.DayOfWeek == DayOfWeek.Sunday))
+                .OrderBy(x => x.rate)
+                .ToList();
+
+            var businessServices = await _businessServicesService.GetBusinessServicesByIdsAsync(businessServicesIds);
+
+            businessServices.ConvertAll(x => {
+                var discount = activeDiscounts.FirstOrDefault(d => d.serviceIds.IsNullOrEmpty() || d.serviceIds.Contains(x.id.ToString()));
+                x.discountPrice = x.price * (1 - (discount?.rate ?? 0) / 100);
+                return x;
+            });
+
+            var totalWorkMinutes = businessServices.Sum(x => x.maxDuration.IsNull(x.minDuration));
+
+            Appointment appointment = new Appointment()
+            {
+                businessId = business.id,
+                userId = null,
+                startDate = appointmentSaveModel.startDate,
+                endDate = appointmentSaveModel.startDate.Value.AddMinutes(totalWorkMinutes),
+                totalPrice = businessServices.Sum(x => x.price),
+                totalDiscountPrice = businessServices.Sum(x => x.discountPrice),
+                description = appointmentSaveModel.description
+            };
+
+            foreach (var serviceWorkerInfo in appointmentSaveModel.serviceWorkerInfos)
+            {
+                var businessService = businessServices.FirstOrDefault(x => x.id.Equals(serviceWorkerInfo.businessServiceId));
+                
+                AppointmentDetail appointmentDetail = new AppointmentDetail()
+                {
+                    workerId = serviceWorkerInfo.workerId,
+                    businessServiceId = serviceWorkerInfo.businessServiceId,
+                    date = appointment.startDate,
+                    price = businessService.price,
+                    discountPrice = businessService.discountPrice,
+                };
+                
+                appointment.details.Add(appointmentDetail);
+            }
+
             response.Data = await _appointmentService.SaveAppointmentAsync(appointment);
             response.Message = Resource.Resource.KayitBasarili;
 
-            BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(appointment.businessId.Value));
+            BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(appointmentSaveModel.businessId.Value));
 
             return Ok(response);
         }
@@ -304,7 +388,7 @@ namespace CareGardenApiV1.Controller
                 businessServiceId = appointmentInfo.businessServiceId
             });
 
-            if (workers.IsNullOrEmpty())
+            if (Extensions.IsNullOrEmpty(workers))
             {
                 response.HasError = true;
                 response.Message = Resource.Resource.KayitBulunamadi;
@@ -320,7 +404,7 @@ namespace CareGardenApiV1.Controller
                 .ThenByDescending(x => x.name)
                 .ToList();
 
-            if(!workers.IsNullOrEmpty())
+            if(!Extensions.IsNullOrEmpty(workers))
             {
                 workers.Insert(0, new AppointmentWorkerModel
                 {
@@ -521,7 +605,7 @@ namespace CareGardenApiV1.Controller
                         .Where(x => x.serviceIds.IsNull("").Contains(item.businessServiceId.ToString()))
                         .ToList();
 
-                    if (serviceWorkers.IsNullOrEmpty())
+                    if (Extensions.IsNullOrEmpty(serviceWorkers))
                     {
                         serviceWorkers = workers;
                     }
@@ -531,7 +615,7 @@ namespace CareGardenApiV1.Controller
                             .Exists(y => y.id.Equals(x.Key)))
                             .MinBy(x => x.Count());
 
-                    item.workerId = !worker.IsNullOrEmpty()
+                    item.workerId = !Extensions.IsNullOrEmpty(worker)
                         ? worker.Key
                         : serviceWorkers.FirstOrDefault().id;
                 }

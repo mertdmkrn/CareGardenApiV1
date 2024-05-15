@@ -19,6 +19,20 @@ namespace CareGardenApiV1.Repository.Concrete
                 .FirstOrDefaultAsync(x => x.id == id);
         }
 
+        public async Task<List<BusinessServiceModel>> GetBusinessServicesByIdsAsync(List<Guid> ids)
+        {
+            return await _context.BusinessServices
+                .AsNoTracking()
+                .Where(x => ids.Contains(x.id))
+                .Select(x => new BusinessServiceModel
+                {
+                    price = x.price,
+                    minDuration = x.minDuration,
+                    maxDuration = x.maxDuration
+                })
+                .ToListAsync();
+        }
+
         public async Task<List<BusinessServiceModel>> GetBusinessServicesByServiceIdAsync(Guid serviceId)
         {
             return await _context.BusinessServices

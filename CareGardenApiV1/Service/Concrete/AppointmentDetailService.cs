@@ -15,6 +15,11 @@ namespace CareGardenApiV1.Service.Concrete
             _appointmentDetailRepository = appointmentDetailRepository;
         }
 
+        public async Task<bool> IsExistsAppointment(List<Guid> workerIds, DateTime date)
+        {
+            return await _appointmentDetailRepository.IsExistsAppointment(workerIds, date);
+        }
+
         public async Task<bool> DeleteAppointmentDetailAsync(Guid id)
         {
             return await _appointmentDetailRepository.DeleteAppointmentDetailAsync(id);

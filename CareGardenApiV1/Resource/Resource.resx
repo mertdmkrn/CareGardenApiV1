@@ -270,4 +270,7 @@
   <data name="YetkinizYok" xml:space="preserve">
     <value>Yetkiniz yok.</value>
   </data>
+  <data name="RandevuMevcut" xml:space="preserve">
+    <value>Seçili tarihte bir randevu alındığı için randevu yapılamadı. Lütfen tekrar randevu alınız.</value>
+  </data>
 </root>

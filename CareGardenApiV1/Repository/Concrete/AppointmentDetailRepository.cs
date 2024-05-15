@@ -61,6 +61,13 @@ namespace CareGardenApiV1.Repository.Concrete
         {
             throw new NotImplementedException();
         }
+        
+        public async Task<bool> IsExistsAppointment(List<Guid> workerIds, DateTime date)
+        {
+            return await _context.AppointmentDetails
+                .AsNoTracking()
+                .AnyAsync(x => workerIds.Contains(x.workerId.Value) && x.date.Equals(date));
+        }
 
         public Task<bool> DeleteAppointmentDetailAsync(Guid id)
         {

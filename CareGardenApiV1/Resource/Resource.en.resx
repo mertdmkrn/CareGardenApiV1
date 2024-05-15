@@ -270,4 +270,7 @@
   <data name="YetkinizYok" xml:space="preserve">
     <value>You have no authority.</value>
   </data>
+  <data name="RandevuMevcut" xml:space="preserve">
+    <value>The appointment could not be made because an appointment was already booked on the selected date. Please make an appointment again.</value>
+  </data>
 </root>

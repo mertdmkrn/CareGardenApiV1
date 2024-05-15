@@ -7,6 +7,7 @@ namespace CareGardenApiV1.Service.Abstract
         Task<BusinessServiceModel> GetBusinessServiceByIdAsync(Guid id);
         Task<BusinessServiceModel> GetBusinessServicePriceByIdAsync(Guid id);
         Task<List<BusinessServiceModel>> GetBusinessServicesByServiceIdAsync(Guid serviceId);
+        Task<List<BusinessServiceModel>> GetBusinessServicesByIdsAsync(List<Guid> ids);
         Task<List<BusinessServiceModel>> GetBusinessServicesByBusinessIdAsync(Guid businessId);
         Task<List<BusinessServiceModel>> SaveBusinessServicesAsync(List<BusinessServiceModel> businessServices);
         Task<BusinessServiceModel> SaveBusinessServiceAsync(BusinessServiceModel businessService);

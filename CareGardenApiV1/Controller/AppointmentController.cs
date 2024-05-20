@@ -683,8 +683,10 @@ namespace CareGardenApiV1.Controller
                     {
                         tempDate = tempDate.AddMinutes(business.appointmentTimeInterval);
                         continue;
-                    }                  
-                    
+                    }
+
+                    if (tempDate >= endWorkDate) break;
+
                     TimeModel timeModel = new();
 
                     timeModel.date = tempDate;
@@ -704,8 +706,6 @@ namespace CareGardenApiV1.Controller
                     model.dateList.Add(timeModel);
 
                     tempDate = tempDate.AddMinutes(business.appointmentTimeInterval);
-
-                    if (tempDate >= endWorkDate) break;
                 }
 
                 models.Add(model);

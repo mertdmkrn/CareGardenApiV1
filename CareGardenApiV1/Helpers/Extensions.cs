@@ -53,7 +53,7 @@ namespace CareGardenApiV1.Helpers
 
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> target)
         {
-            return !(target != null && target.Count() > 0);
+            return !(target != null && target.Any());
         }
 
         public static int ToInt(this string number, int defaultInt = 0)

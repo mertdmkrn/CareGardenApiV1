@@ -708,6 +708,8 @@ namespace CareGardenApiV1.Controller
                     tempDate = tempDate.AddMinutes(business.appointmentTimeInterval);
                 }
 
+                model.isActive = model.isActive && !model.dateList.IsNullOrEmpty();
+
                 models.Add(model);
             }
 

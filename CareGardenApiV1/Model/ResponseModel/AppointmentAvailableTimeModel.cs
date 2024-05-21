@@ -1,7 +1,15 @@
-﻿using Org.BouncyCastle.Bcpg.OpenPgp;
+﻿using CareGardenApiV1.Model.RequestModel;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 
 namespace CareGardenApiV1.Model.ResponseModel
 {
+
+    public class AppointmentAvailableInfoModel
+    {
+        public List<AppointmentAvailableTimeModel> dateInfos {  get; set; }
+        public List<ServiceWorkerInfo> serviceWorkerInfos { get; set; }
+    }
+
     public class AppointmentAvailableTimeModel
     {
         public DateTime date { get; set; }

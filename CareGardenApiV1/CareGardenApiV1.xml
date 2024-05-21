@@ -204,21 +204,6 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.AppointmentController.Delete(CareGardenApiV1.Model.RequestModel.AppointmentChangeModel)">
-             <summary>
-             Delete Appointment
-             </summary>
-             <remarks>
-             **Sample request body:**
-            
-                 { 
-                    "id" : "00000000-0000-0000-0000-000000000000",
-                    "isForceDelete" : true
-                 }
-                 
-             </remarks>
-             <returns></returns>
-        </member>
         <member name="M:CareGardenApiV1.Controller.AppointmentController.Update(CareGardenApiV1.Model.RequestModel.AppointmentChangeModel)">
              <summary>
              Change Appointment Status

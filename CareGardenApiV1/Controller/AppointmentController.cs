@@ -562,7 +562,7 @@ namespace CareGardenApiV1.Controller
         [HttpPost("getappointmentdates")]
         public async Task<IActionResult> GetAppointmentDates([FromBody] AppointmentDatesModel appointmentInfo)
         {
-            ResponseModel<List<AppointmentAvailableTimeModel>> response = new ResponseModel<List<AppointmentAvailableTimeModel>>();
+            ResponseModel<AppointmentAvailableInfoModel> response = new ResponseModel<AppointmentAvailableInfoModel>();
 
             var businesses = await _businessService.GetBusinessListForCache();
             bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
@@ -712,10 +712,17 @@ namespace CareGardenApiV1.Controller
                     tempDate = tempDate.AddMinutes(business.appointmentTimeInterval);
                 }
 
+                model.isActive = model.isActive && !model.dateList.IsNullOrEmpty();
+
                 models.Add(model);
             }
 
-            response.Data = models.OrderBy(x => x.date).ToList();
+            response.Data = new AppointmentAvailableInfoModel()
+            {
+                dateInfos = models,
+                serviceWorkerInfos = appointmentInfo.serviceWorkerInfos
+            };
+
             return Ok(response);
         }
 

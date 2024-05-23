@@ -1499,6 +1499,80 @@
              </remarks>
              <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerServicePriceController.GetById(System.String)">
+             <summary>
+             Get Worker Service Price By Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerServicePriceController.Search(CareGardenApiV1.Model.WorkerServicePrice)">
+             <summary>
+             Search Worker Service Prices
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    businessServiceId: "00000000-0000-0000-0000-000000000000",
+                    workerId: "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerServicePriceController.Save(CareGardenApiV1.Model.WorkerServicePrice)">
+             <summary>
+             Save Worker Servive Price
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "businessServiceId" : "00000000-0000-0000-0000-000000000000",
+                    "workerId" : "00000000-0000-0000-0000-000000000000",
+                    "price" : 1000
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerServicePriceController.Update(CareGardenApiV1.Model.WorkerServicePrice)">
+             <summary>
+             Update Worker Service Price
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "price" : 1000
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerServicePriceController.Delete(System.String)">
+             <summary>
+             Delete Worker Service Price By Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
         <member name="T:CareGardenApiV1.Migrations.CareGarden">
             <inheritdoc />
         </member>
@@ -1893,6 +1967,18 @@
             <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.CareGardenV34.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV35">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV35.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV35.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV35.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

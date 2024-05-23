@@ -143,7 +143,7 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Save([FromBody] AppointmentSaveModel appointmentSaveModel)
         {
             ResponseModel<Appointment> response = new ResponseModel<Appointment>();
-            
+
             var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
 
             if (userId.IsNullOrEmpty())
@@ -173,7 +173,7 @@ namespace CareGardenApiV1.Controller
                 response.ValidationErrors.Add(new ValidationError("startDate", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
 
-            if (Extensions.IsNullOrEmpty(appointmentSaveModel.serviceWorkerInfos))
+            if (appointmentSaveModel.serviceWorkerInfos.IsNullOrEmpty())
             {
                 response.HasError = true;
                 response.ValidationErrors.Add(new ValidationError("serviceWorkerInfos", Resource.Resource.BuAlaniBosBirakmayiniz));
@@ -192,18 +192,18 @@ namespace CareGardenApiV1.Controller
             }
 
             var workerIds = appointmentSaveModel.serviceWorkerInfos.Select(x => x.workerId.Value).ToList();
-            var businessServicesIds =  appointmentSaveModel.serviceWorkerInfos.Select(x => x.businessServiceId).ToList();
+            var businessServicesIds = appointmentSaveModel.serviceWorkerInfos.Select(x => x.businessServiceId).ToList();
             bool isExistsAppointment = await _appointmentDetailService.IsExistsAppointment(workerIds, appointmentSaveModel.startDate.Value);
             var businesses = await _businessService.GetBusinessListForCache();
             var business = businesses.FirstOrDefault(x => x.id.Equals(appointmentSaveModel.businessId.Value));
-            
+
             if (isExistsAppointment || !HelperMethods.GetBusinessOpenSpecialDate(business.workingInfo, business.officialDayAvailable, appointmentSaveModel.startDate))
             {
                 response.Message = Resource.Resource.RandevuMevcut;
                 response.HasError = true;
                 return Ok(response);
             }
-            
+
             var activeDiscounts = business.discounts?
                 .Where(x => x.type == DiscountType.AllDay
                             || (x.type == DiscountType.WeekDay &&
@@ -217,7 +217,7 @@ namespace CareGardenApiV1.Controller
 
             var businessServices = await _businessServicesService.GetBusinessServicesByIdsAsync(businessServicesIds);
             var workerServicePrices = await _workerServicePriceService.GetWorkerServicePricesByBusinessServiceIdsAsync(businessServicesIds);
-                
+
             var totalWorkMinutes = businessServices.Sum(x => x.maxDuration.IsNull(x.minDuration));
 
             Appointment appointment = new Appointment()
@@ -237,7 +237,7 @@ namespace CareGardenApiV1.Controller
                 var discount = activeDiscounts?.FirstOrDefault(d => d.serviceIds.IsNullOrEmpty() || d.serviceIds.Contains(businessService.id.ToString()));
 
                 var price = workerServicePrice?.price ?? businessService?.price ?? 0;
-                
+
                 AppointmentDetail appointmentDetail = new AppointmentDetail()
                 {
                     workerId = serviceWorkerInfo.workerId,
@@ -249,7 +249,7 @@ namespace CareGardenApiV1.Controller
 
                 appointment.totalPrice += appointmentDetail.price;
                 appointment.totalDiscountPrice += appointmentDetail.discountPrice;
-                
+
                 appointment.details.Add(appointmentDetail);
             }
 
@@ -392,7 +392,7 @@ namespace CareGardenApiV1.Controller
                 businessServiceId = appointmentInfo.businessServiceId
             });
 
-            if (Extensions.IsNullOrEmpty(workers))
+            if (workers.IsNullOrEmpty())
             {
                 response.HasError = true;
                 response.Message = Resource.Resource.KayitBulunamadi;
@@ -408,27 +408,18 @@ namespace CareGardenApiV1.Controller
                 .ThenBy(x => x.name)
                 .ToList();
 
-            if(!workers.IsNullOrEmpty())
+            workers.Insert(0, new AppointmentWorkerModel
             {
-                workers.Insert(0, new AppointmentWorkerModel
-                {
-                    id = workers[0].id,
-                    name = isTurkish ? "Herhangi Bir Profesyonel" : "Any Professional",
-                    title = isTurkish ? "En Müsait" : "Maximum Availability",
-                    rating = workers[0].rating,
-                    countRating = workers[0].countRating,
-                    availableDate = workers[0].availableDate,
-                    availableDateStr = workers[0].availableDateStr,
-                    isActive = workers[0].isActive,
-                    price = workers[0].price,
-                });
-            }
-            else
-            {
-                response.HasError = true;
-                response.Message = Resource.Resource.KayitBulunamadi;
-                return Ok(response);
-            }
+                id = workers[0].id,
+                name = isTurkish ? "Herhangi Bir Profesyonel" : "Any Professional",
+                title = isTurkish ? "En Müsait" : "Maximum Availability",
+                rating = workers[0].rating,
+                countRating = workers[0].countRating,
+                availableDate = workers[0].availableDate,
+                availableDateStr = workers[0].availableDateStr,
+                isActive = workers[0].isActive,
+                price = workers[0].price,
+            });
 
             response.Data = workers;
 
@@ -452,7 +443,7 @@ namespace CareGardenApiV1.Controller
             var nowDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now.AddMinutes(business.appointmentTimeInterval), "Turkey Standard Time");
             var pastAppointments = await _appointmentDetailService.GetAppointmentDetailsByWorkerIdsAndDateAsync(new AppointmentSearchModel { startDate = nowDate, workerIds = workers.Select(x => x.id).ToHashSet() });
             var workerServicePrices = await _workerServicePriceService.GetWorkerServicePricesSearchAsync(businessServiceId: businessService.id);
-            
+
             bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
 
             foreach (var worker in workers)
@@ -472,7 +463,7 @@ namespace CareGardenApiV1.Controller
                             businessIsOpen = HelperMethods.GetBusinessOpenSpecialDate(business.workingInfo, business.officialDayAvailable, businessStartDate);
                         }
                     }
-                    
+
                     setWorkerAvailableDate(worker, business.appointmentTimeInterval, businessStartDate, nowDate, pastAppointments);
 
                     if (!worker.availableDate.HasValue)
@@ -578,9 +569,9 @@ namespace CareGardenApiV1.Controller
                 })
                 : await _workerService.GetWorkersByWorkerIdsAsync(appointmentInfo.serviceWorkerInfos
                     .Select(x => x.workerId).ToList());
-            
+
             Dictionary<string, Tuple<TimeSpan, TimeSpan>> workersWorkTimesDict = new Dictionary<string, Tuple<TimeSpan, TimeSpan>>();
-            
+
             foreach (var worker in workers)
             {
                 setWorkerTimes(worker.mondayWorkHours, $"{worker.id}|{DayOfWeek.Monday}", workersWorkTimesDict);
@@ -609,7 +600,7 @@ namespace CareGardenApiV1.Controller
                         .Where(x => x.serviceIds.IsNull("").Contains(item.businessServiceId.ToString()))
                         .ToList();
 
-                    if (Extensions.IsNullOrEmpty(serviceWorkers))
+                    if (serviceWorkers.IsNullOrEmpty())
                     {
                         serviceWorkers = workers;
                     }
@@ -619,12 +610,12 @@ namespace CareGardenApiV1.Controller
                             .Exists(y => y.id.Equals(x.Key)))
                             .MinBy(x => x.Count());
 
-                    item.workerId = !Extensions.IsNullOrEmpty(worker)
+                    item.workerId = !worker.IsNullOrEmpty()
                         ? worker.Key
                         : serviceWorkers.FirstOrDefault().id;
                 }
             }
-            
+
             List<AppointmentAvailableTimeModel> models = new();
 
             for (int i = 0; i < intervalDay; i++)
@@ -683,7 +674,7 @@ namespace CareGardenApiV1.Controller
 
                 while (true)
                 {
-                    if(tempDate < nowDate)
+                    if (tempDate < nowDate)
                     {
                         tempDate = tempDate.AddMinutes(business.appointmentTimeInterval);
                         continue;

@@ -22,6 +22,7 @@ namespace CareGardenApiV1.Controller
         private readonly IBusinessServicesService _businessServicesService;
         private readonly IBusinessService _businessService;
         private readonly IWorkerService _workerService;
+        private readonly IWorkerServicePriceService _workerServicePriceService;
 
         public AppointmentController(
             IAppointmentService appointmentService,
@@ -29,7 +30,8 @@ namespace CareGardenApiV1.Controller
             IBusinessWorkingInfoService businessWorkingInfoService,
             IBusinessServicesService businessServicesService,
             IBusinessService businessService,
-            IWorkerService workerService)
+            IWorkerService workerService,
+            IWorkerServicePriceService workerServicePriceService)
         {
             _appointmentService = appointmentService;
             _appointmentDetailService = appointmentDetailService;
@@ -37,6 +39,7 @@ namespace CareGardenApiV1.Controller
             _businessServicesService = businessServicesService;
             _businessService = businessService;
             _workerService = workerService;
+            _workerServicePriceService = workerServicePriceService;
         }
 
 
@@ -213,13 +216,8 @@ namespace CareGardenApiV1.Controller
                 .ToList();
 
             var businessServices = await _businessServicesService.GetBusinessServicesByIdsAsync(businessServicesIds);
-
-            businessServices.ConvertAll(x => {
-                var discount = activeDiscounts?.FirstOrDefault(d => d.serviceIds.IsNullOrEmpty() || d.serviceIds.Contains(x.id.ToString()));
-                x.discountPrice = x.price * (1 - (discount?.rate ?? 0) / 100);
-                return x;
-            });
-
+            var workerServicePrices = await _workerServicePriceService.GetWorkerServicePricesByBusinessServiceIdsAsync(businessServicesIds);
+                
             var totalWorkMinutes = businessServices.Sum(x => x.maxDuration.IsNull(x.minDuration));
 
             Appointment appointment = new Appointment()
@@ -228,23 +226,29 @@ namespace CareGardenApiV1.Controller
                 userId = appointmentSaveModel.userId,
                 startDate = appointmentSaveModel.startDate,
                 endDate = appointmentSaveModel.startDate.Value.AddMinutes(totalWorkMinutes),
-                totalPrice = businessServices.Sum(x => x.price),
-                totalDiscountPrice = businessServices.Sum(x => x.discountPrice),
                 description = appointmentSaveModel.description
             };
 
             foreach (var serviceWorkerInfo in appointmentSaveModel.serviceWorkerInfos)
             {
                 var businessService = businessServices.FirstOrDefault(x => x.id.Equals(serviceWorkerInfo.businessServiceId));
+                var workerServicePrice = workerServicePrices.FirstOrDefault(x => x.businessServiceId.Equals(serviceWorkerInfo.businessServiceId)
+                    && x.workerId.Equals(serviceWorkerInfo.workerId));
+                var discount = activeDiscounts?.FirstOrDefault(d => d.serviceIds.IsNullOrEmpty() || d.serviceIds.Contains(businessService.id.ToString()));
+
+                var price = workerServicePrice?.price ?? businessService?.price ?? 0;
                 
                 AppointmentDetail appointmentDetail = new AppointmentDetail()
                 {
                     workerId = serviceWorkerInfo.workerId,
                     businessServiceId = serviceWorkerInfo.businessServiceId,
                     date = appointment.startDate,
-                    price = businessService.price,
-                    discountPrice = businessService.discountPrice,
+                    price = price,
+                    discountPrice = price * (1 - (discount?.rate ?? 0) / 100)
                 };
+
+                appointment.totalPrice += appointmentDetail.price;
+                appointment.totalDiscountPrice += appointmentDetail.discountPrice;
                 
                 appointment.details.Add(appointmentDetail);
             }
@@ -401,10 +405,10 @@ namespace CareGardenApiV1.Controller
                 .Where(x => x.availableDate.HasValue)
                 .OrderByDescending(x => x.availableDate)
                 .ThenByDescending(x => x.rating)
-                .ThenByDescending(x => x.name)
+                .ThenBy(x => x.name)
                 .ToList();
 
-            if(!Extensions.IsNullOrEmpty(workers))
+            if(!workers.IsNullOrEmpty())
             {
                 workers.Insert(0, new AppointmentWorkerModel
                 {
@@ -447,12 +451,15 @@ namespace CareGardenApiV1.Controller
 
             var nowDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now.AddMinutes(business.appointmentTimeInterval), "Turkey Standard Time");
             var pastAppointments = await _appointmentDetailService.GetAppointmentDetailsByWorkerIdsAndDateAsync(new AppointmentSearchModel { startDate = nowDate, workerIds = workers.Select(x => x.id).ToHashSet() });
-
+            var workerServicePrices = await _workerServicePriceService.GetWorkerServicePricesSearchAsync(businessServiceId: businessService.id);
+            
             bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
 
             foreach (var worker in workers)
             {
                 var businessStartDate = nowDate;
+                var workerServicePrice = workerServicePrices?.FirstOrDefault(x => x.workerId.Equals(worker.id));
+                var price = workerServicePrice?.price ?? businessService?.price ?? 0;
 
                 while (!worker.availableDate.HasValue)
                 {
@@ -465,9 +472,7 @@ namespace CareGardenApiV1.Controller
                             businessIsOpen = HelperMethods.GetBusinessOpenSpecialDate(business.workingInfo, business.officialDayAvailable, businessStartDate);
                         }
                     }
-
-                    var workHours = business.workingInfo.GetBusinessWorkInfoHours(businessStartDate);
-
+                    
                     setWorkerAvailableDate(worker, business.appointmentTimeInterval, businessStartDate, nowDate, pastAppointments);
 
                     if (!worker.availableDate.HasValue)
@@ -477,14 +482,13 @@ namespace CareGardenApiV1.Controller
                 }
 
                 worker.availableDateStr = worker.availableDate.Value.ToString((isTurkish ? "dd/MM HH:mm" : "MM/dd h:mm tt"), Resource.Resource.Culture);
-                var activeDiscount = discounts?
+                var activeDiscount = (discounts?
                     .Where(x => x.type == DiscountType.AllDay
-                    || (x.type == DiscountType.WeekDay && worker.availableDate.Value.DayOfWeek >= DayOfWeek.Monday && worker.availableDate.Value.DayOfWeek <= DayOfWeek.Friday)
-                    || (x.type == DiscountType.WeekEnd && worker.availableDate.Value.DayOfWeek == DayOfWeek.Saturday || worker.availableDate.Value.DayOfWeek == DayOfWeek.Sunday))
-                    .OrderBy(x => x.rate)
-                    .FirstOrDefault();
+                                || (x.type == DiscountType.WeekDay && worker.availableDate.Value.DayOfWeek >= DayOfWeek.Monday && worker.availableDate.Value.DayOfWeek <= DayOfWeek.Friday)
+                                || (x.type == DiscountType.WeekEnd && worker.availableDate.Value.DayOfWeek == DayOfWeek.Saturday || worker.availableDate.Value.DayOfWeek == DayOfWeek.Sunday)))
+                    .MaxBy(x => x.rate);
 
-                worker.price = activeDiscount == null ? businessService.price : businessService.price * (1 - (activeDiscount.rate / 100));
+                worker.price = activeDiscount == null ? price : price * (1 - (activeDiscount.rate / 100));
             }
         }
 

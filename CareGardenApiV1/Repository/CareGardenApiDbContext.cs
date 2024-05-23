@@ -188,5 +188,6 @@ namespace CareGardenApiV1.Repository
         public DbSet<Discount> Discounts { get; set; }
         public DbSet<Setting> Settings { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<WorkerServicePrice> WorkerServicePrices { get; set; }
     }
 }

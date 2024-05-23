@@ -13,10 +13,13 @@ namespace CareGardenApiV1.Controller
     {
         private readonly IBusinessServicesService _businessServicesService;
         private readonly IBusinessService _businessService;
-        public BusinessServicesController(IBusinessServicesService businessServicesService, IBusinessService businessService)
+        private readonly IWorkerServicePriceService _workerServicePriceService;
+
+        public BusinessServicesController(IBusinessServicesService businessServicesService, IBusinessService businessService, IWorkerServicePriceService workerServicePriceService)
         {
             _businessServicesService = businessServicesService;
             _businessService = businessService;
+            _workerServicePriceService = workerServicePriceService;
         }
 
 
@@ -295,6 +298,8 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
+            bool isChangedPrice = Math.Abs(businessService.price - updateBusinessService.price) > 0.1;
+
             businessService.serviceId = updateBusinessService.serviceId;
             businessService.businessId = updateBusinessService.businessId;
             businessService.name = updateBusinessService.name;
@@ -310,6 +315,15 @@ namespace CareGardenApiV1.Controller
             response.Data = await _businessServicesService.UpdateBusinessServiceAsync(businessService);
 
             BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(businessService.businessId.Value));
+
+            if (isChangedPrice)
+            {
+                BackgroundJob.Enqueue(() => _workerServicePriceService.UpdateWorkerServicePriceOnlyPriceAsync(new WorkerServicePrice()
+                {
+                    businessServiceId = businessService.id,
+                    price = businessService.price
+                }));
+            }
 
             return Ok(response);
         }

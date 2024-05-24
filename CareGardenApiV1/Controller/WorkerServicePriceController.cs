@@ -67,7 +67,7 @@ namespace CareGardenApiV1.Controller
         {
             ResponseModel<List<WorkerServicePrice>> response = new ResponseModel<List<WorkerServicePrice>>();
 
-            if (!workerServicePrice.businessServiceId.HasValue || !workerServicePrice.workerId.HasValue)
+            if (!workerServicePrice.businessServiceId.HasValue && !workerServicePrice.workerId.HasValue)
             {
                 response.HasError = true;
                 response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));

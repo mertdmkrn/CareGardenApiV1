@@ -444,7 +444,7 @@ namespace CareGardenApiV1.Controller
 
             var nowDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now.AddMinutes(business.appointmentTimeInterval), "Turkey Standard Time");
             var pastAppointments = await _appointmentDetailService.GetAppointmentDetailsByWorkerIdsAndDateAsync(new AppointmentSearchModel { startDate = nowDate, workerIds = workers.Select(x => x.id).ToHashSet() });
-            var workerServicePrices = await _workerServicePriceService.GetWorkerServicePricesSearchAsync(businessServiceId: businessService.id);
+            var workerServicePrices = await _workerServicePriceService.GetWorkerServicePricesSearchAsync(businessServiceId: appointmentInfo.businessServiceId.Value);
 
             bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
 
@@ -475,10 +475,10 @@ namespace CareGardenApiV1.Controller
                 }
 
                 worker.availableDateStr = worker.availableDate.Value.ToString((isTurkish ? "dd/MM HH:mm" : "MM/dd h:mm tt"), Resource.Resource.Culture);
-                var activeDiscount = (discounts?
+                var activeDiscount = discounts?
                     .Where(x => x.type == DiscountType.AllDay
                                 || (x.type == DiscountType.WeekDay && worker.availableDate.Value.DayOfWeek >= DayOfWeek.Monday && worker.availableDate.Value.DayOfWeek <= DayOfWeek.Friday)
-                                || (x.type == DiscountType.WeekEnd && worker.availableDate.Value.DayOfWeek == DayOfWeek.Saturday || worker.availableDate.Value.DayOfWeek == DayOfWeek.Sunday)))
+                                || (x.type == DiscountType.WeekEnd && worker.availableDate.Value.DayOfWeek == DayOfWeek.Saturday || worker.availableDate.Value.DayOfWeek == DayOfWeek.Sunday))
                     .MaxBy(x => x.rate);
 
                 worker.price = activeDiscount == null ? price : price * (1 - (activeDiscount.rate / 100));

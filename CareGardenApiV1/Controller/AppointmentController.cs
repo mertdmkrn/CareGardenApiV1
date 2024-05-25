@@ -193,11 +193,13 @@ namespace CareGardenApiV1.Controller
 
             var workerIds = appointmentSaveModel.serviceWorkerInfos.Select(x => x.workerId.Value).ToList();
             var businessServicesIds = appointmentSaveModel.serviceWorkerInfos.Select(x => x.businessServiceId).ToList();
-            bool isExistsAppointment = await _appointmentDetailService.IsExistsAppointment(workerIds, appointmentSaveModel.startDate.Value);
+            var startDate = appointmentSaveModel.startDate.Value;
+
+            bool isExistsAppointment = await _appointmentDetailService.IsExistsAppointment(workerIds, startDate);
             var businesses = await _businessService.GetBusinessListForCache();
             var business = businesses.FirstOrDefault(x => x.id.Equals(appointmentSaveModel.businessId.Value));
 
-            if (isExistsAppointment || !HelperMethods.GetBusinessOpenSpecialDate(business.workingInfo, business.officialDayAvailable, appointmentSaveModel.startDate))
+            if (isExistsAppointment || !HelperMethods.GetBusinessOpenSpecialDate(business.workingInfo, business.officialDayAvailable, startDate))
             {
                 response.Message = Resource.Resource.RandevuMevcut;
                 response.HasError = true;
@@ -207,11 +209,11 @@ namespace CareGardenApiV1.Controller
             var activeDiscounts = business.discounts?
                 .Where(x => x.type == DiscountType.AllDay
                             || (x.type == DiscountType.WeekDay &&
-                                appointmentSaveModel.startDate.Value.DayOfWeek >= DayOfWeek.Monday &&
-                                appointmentSaveModel.startDate.Value.DayOfWeek <= DayOfWeek.Friday)
+                                startDate.DayOfWeek >= DayOfWeek.Monday &&
+                                startDate.DayOfWeek <= DayOfWeek.Friday)
                             || (x.type == DiscountType.WeekEnd &&
-                                appointmentSaveModel.startDate.Value.DayOfWeek == DayOfWeek.Saturday ||
-                                appointmentSaveModel.startDate.Value.DayOfWeek == DayOfWeek.Sunday))
+                                (startDate.DayOfWeek == DayOfWeek.Saturday ||
+                                 startDate.DayOfWeek == DayOfWeek.Sunday)))
                 .OrderBy(x => x.rate)
                 .ToList();
 
@@ -224,8 +226,8 @@ namespace CareGardenApiV1.Controller
             {
                 businessId = business.id,
                 userId = appointmentSaveModel.userId,
-                startDate = appointmentSaveModel.startDate,
-                endDate = appointmentSaveModel.startDate.Value.AddMinutes(totalWorkMinutes),
+                startDate = startDate,
+                endDate = startDate.AddMinutes(totalWorkMinutes),
                 description = appointmentSaveModel.description
             };
 
@@ -468,7 +470,7 @@ namespace CareGardenApiV1.Controller
 
                     if (!worker.availableDate.HasValue)
                     {
-                        businessStartDate.AddDays(1);
+                        businessStartDate = businessStartDate.AddDays(1);
                     }
                 }
 
@@ -496,30 +498,19 @@ namespace CareGardenApiV1.Controller
                 !TimeSpan.TryParse(workingHoursParts[1], out var endWorkTime))
                 return;
 
-            var startDate = new DateTime(businessStartDate.Year, businessStartDate.Month, businessStartDate.Day)
-            .Add(startWorkTime);
-            var endDate = new DateTime(businessStartDate.Year, businessStartDate.Month, businessStartDate.Day)
-            .Add(endWorkTime);
+            var startDate = new DateTime(businessStartDate.Year, businessStartDate.Month, businessStartDate.Day).Add(startWorkTime);
+            var endDate = new DateTime(businessStartDate.Year, businessStartDate.Month, businessStartDate.Day).Add(endWorkTime);
 
-            var date = startDate;
-
-            while (true)
+            for (var date = startDate; date < endDate; date = date.AddMinutes(appointmentTimeInterval))
             {
                 if (date < nowDate)
-                {
-                    date = date.AddMinutes(appointmentTimeInterval);
                     continue;
-                }
 
                 if (pastAppointments == null || (pastAppointments != null && !pastAppointments.Any(x => x.date == date)))
                 {
                     worker.availableDate = date;
                     break;
                 }
-
-                date.AddMinutes(appointmentTimeInterval);
-
-                if (date >= endDate) break;
             }
         }
 
@@ -570,17 +561,17 @@ namespace CareGardenApiV1.Controller
                 : await _workerService.GetWorkersByWorkerIdsAsync(appointmentInfo.serviceWorkerInfos
                     .Select(x => x.workerId).ToList());
 
-            Dictionary<string, Tuple<TimeSpan, TimeSpan>> workersWorkTimesDict = new Dictionary<string, Tuple<TimeSpan, TimeSpan>>();
+            Dictionary<DayOfWeek, List<Tuple<TimeSpan, TimeSpan>>> workersWorkTimesDict = new Dictionary<DayOfWeek, List<Tuple<TimeSpan, TimeSpan>>>();
 
             foreach (var worker in workers)
             {
-                setWorkerTimes(worker.mondayWorkHours, $"{worker.id}|{DayOfWeek.Monday}", workersWorkTimesDict);
-                setWorkerTimes(worker.tuesdayWorkHours, $"{worker.id}|{DayOfWeek.Tuesday}", workersWorkTimesDict);
-                setWorkerTimes(worker.wednesdayWorkHours, $"{worker.id}|{DayOfWeek.Wednesday}", workersWorkTimesDict);
-                setWorkerTimes(worker.thursdayWorkHours, $"{worker.id}|{DayOfWeek.Thursday}", workersWorkTimesDict);
-                setWorkerTimes(worker.fridayWorkHours, $"{worker.id}|{DayOfWeek.Friday}", workersWorkTimesDict);
-                setWorkerTimes(worker.saturdayWorkHours, $"{worker.id}|{DayOfWeek.Saturday}", workersWorkTimesDict);
-                setWorkerTimes(worker.sundayWorkHours, $"{worker.id}|{DayOfWeek.Sunday}", workersWorkTimesDict);
+                setWorkerTimes(worker.mondayWorkHours, DayOfWeek.Monday, workersWorkTimesDict);
+                setWorkerTimes(worker.tuesdayWorkHours, DayOfWeek.Tuesday, workersWorkTimesDict);
+                setWorkerTimes(worker.wednesdayWorkHours, DayOfWeek.Wednesday, workersWorkTimesDict);
+                setWorkerTimes(worker.thursdayWorkHours, DayOfWeek.Thursday, workersWorkTimesDict);
+                setWorkerTimes(worker.fridayWorkHours, DayOfWeek.Friday, workersWorkTimesDict);
+                setWorkerTimes(worker.saturdayWorkHours, DayOfWeek.Saturday, workersWorkTimesDict);
+                setWorkerTimes(worker.sundayWorkHours, DayOfWeek.Sunday, workersWorkTimesDict);
             }
 
             var intervalDay = 7;
@@ -657,20 +648,10 @@ namespace CareGardenApiV1.Controller
                     continue;
                 }
 
-                var startWorkDate = new DateTime(date.Year, date.Month, date.Day)
-                .Add(startWorkTime);
-                var endWorkDate = new DateTime(date.Year, date.Month, date.Day)
-                .Add(endWorkTime);
+                var startWorkDate = new DateTime(date.Year, date.Month, date.Day).Add(startWorkTime);
+                var endWorkDate = new DateTime(date.Year, date.Month, date.Day).Add(endWorkTime);
 
                 var tempDate = startWorkDate;
-
-                List<Tuple<TimeSpan, TimeSpan>> workTimeTuples = new();
-
-                foreach (var worker in workers)
-                {
-                    var tuple = workersWorkTimesDict[$"{worker.id}|{startWorkDate.DayOfWeek}"];
-                    workTimeTuples.Add(tuple);
-                }
 
                 while (true)
                 {
@@ -683,22 +664,23 @@ namespace CareGardenApiV1.Controller
                     if (tempDate >= endWorkDate) break;
 
                     TimeModel timeModel = new();
-
                     timeModel.date = tempDate;
                     timeModel.hourStr = $"{tempDate.Hour.ToString().PadLeft(2, '0')}:{tempDate.Minute.ToString().PadLeft(2, '0')}";
 
                     var hourTimeSpan = TimeSpan.Parse(timeModel.hourStr);
 
-                    timeModel.isActive = !pastAppointments.Exists(x => x.date == tempDate)
+                    var workTimeTuples = workersWorkTimesDict.ContainsKey(tempDate.DayOfWeek) 
+                        ? workersWorkTimesDict[tempDate.DayOfWeek]
+                        : null;
+
+
+                    timeModel.isActive = workTimeTuples != null && !pastAppointments.Exists(x => x.date == tempDate)
                                          && !workTimeTuples.Exists(x => x.Item1 > hourTimeSpan && x.Item2 < hourTimeSpan);
 
-                    if (!timeModel.isActive)
+                    if (timeModel.isActive)
                     {
-                        tempDate = tempDate.AddMinutes(business.appointmentTimeInterval);
-                        continue;
+                        model.dateList.Add(timeModel);
                     }
-
-                    model.dateList.Add(timeModel);
 
                     tempDate = tempDate.AddMinutes(business.appointmentTimeInterval);
                 }
@@ -717,18 +699,21 @@ namespace CareGardenApiV1.Controller
             return Ok(response);
         }
 
-        private void setWorkerTimes(string workHours, string key, Dictionary<string, Tuple<TimeSpan, TimeSpan>> workersWorkTimesDict)
+        private void setWorkerTimes(string workHours, DayOfWeek dayOfWeek, Dictionary<DayOfWeek, List<Tuple<TimeSpan, TimeSpan>>> workersWorkTimesDict)
         {
             if (!workHours.IsNullOrEmpty())
             {
                 var workHoursArr = workHours.Split('-');
                 var startTime = TimeSpan.Parse(workHoursArr.FirstOrDefault());
                 var endTime = TimeSpan.Parse(workHoursArr.LastOrDefault());
-                workersWorkTimesDict.TryAdd(key, Tuple.Create(startTime, endTime));
-            }
-            else
-            {
-                workersWorkTimesDict.TryAdd(key, Tuple.Create(TimeSpan.MinValue, TimeSpan.MinValue));
+                var tuple = Tuple.Create(startTime, endTime);
+
+                if (!workersWorkTimesDict.ContainsKey(dayOfWeek))
+                {
+                    workersWorkTimesDict[dayOfWeek] = new List<Tuple<TimeSpan, TimeSpan>>();
+                }
+
+                workersWorkTimesDict[dayOfWeek].Add(tuple);
             }
         }
     }

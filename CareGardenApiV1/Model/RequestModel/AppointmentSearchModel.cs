@@ -16,5 +16,6 @@ namespace CareGardenApiV1.Model.RequestModel
         public int? take { get; set; }
         [JsonIgnore]
         public bool? isActive { get; set; }
+        public bool isHistory { get; set; }
     }
 }

@@ -78,7 +78,7 @@ namespace CareGardenApiV1.Repository.Concrete
         {
             return await _context.AppointmentDetails
                 .AsNoTracking()
-                .Where(x => x.appointment.status != AppointmentStatus.Rejected)
+                .Where(x => x.appointment.status != AppointmentStatus.Cancelled)
                 .Where(x => x.date >= searchModel.startDate)
                 .WhereIf(searchModel.endDate.HasValue, x => x.date <= searchModel.endDate)
                 .Where(x => searchModel.workerIds.Contains(x.workerId.Value))

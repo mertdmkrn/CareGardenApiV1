@@ -3,8 +3,9 @@
     public enum AppointmentStatus
     {
         Pending,
-        Approve,
-        Rejected
+        Approved,
+        Completed,
+        Cancelled
     }
 
     public enum Gender
@@ -30,8 +31,7 @@
         Month,
         Year
     }
-
-
+    
     public enum SortByType
     {
         Recommended,

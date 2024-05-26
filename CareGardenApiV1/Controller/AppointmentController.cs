@@ -42,6 +42,43 @@ namespace CareGardenApiV1.Controller
             _workerServicePriceService = workerServicePriceService;
         }
 
+        /// <summary>
+        /// Get Appointments
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "isHistory" : false,
+        ///        "page" : 0,
+        ///        "take" : 5
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost("get")]
+        public async Task<IActionResult> Get([FromBody] AppointmentSearchModel searchModel)
+        {
+            ResponseModel<List<AppointmentListModel>> response = new ResponseModel<List<AppointmentListModel>>();
+
+            var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
+
+            if (userId.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.KullaniciBulunamadi;
+                return Ok(response);
+            }
+
+            searchModel.userId = userId.ToGuid();
+            searchModel.startDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, "Turkey Standard Time");
+            searchModel.page ??= 0;
+            searchModel.take ??= 5;
+            
+            response.Data = await _appointmentService.GetAppointmentsListModelByAppointmentSearchModelAsync(searchModel);
+
+            return Ok(response);
+        }
 
         /// <summary>
         /// Get Appointment By Id
@@ -72,42 +109,6 @@ namespace CareGardenApiV1.Controller
             return Ok(response);
         }
 
-        /// <summary>
-        /// Search Appointment
-        /// </summary>
-        /// <remarks>
-        /// **Sample request body:**
-        ///
-        ///     { 
-        ///        "businessId" : "00000000-0000-0000-0000-000000000000",
-        ///        "userId" : "00000000-0000-0000-0000-000000000000",
-        ///        "workerId" : "00000000-0000-0000-0000-000000000000",
-        ///        "businessServiceId" : "00000000-0000-0000-0000-000000000000",
-        ///        "startDate" : "2023-10-07",
-        ///        "endDate" : "2023-10-22",
-        ///        "page" : 0,
-        ///        "take" : 5
-        ///     }
-        ///
-        /// </remarks>
-        /// <returns></returns>
-        [HttpPost("search")]
-        public async Task<IActionResult> Search([FromBody] AppointmentSearchModel searchModel)
-        {
-            ResponseModel<List<Appointment>> response = new ResponseModel<List<Appointment>>();
-
-            if (!searchModel.userId.HasValue && !searchModel.businessId.HasValue && !searchModel.workerId.HasValue && !searchModel.businessServiceId.HasValue)
-            {
-                response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("ids", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.KayitBulunamadi;
-                return Ok(response);
-            }
-
-            response.Data = await _appointmentService.GetAppointmentsByAppointmentSearchModelAsync(searchModel);
-
-            return Ok(response);
-        }
 
         /// <summary>
         /// Save Appoinment
@@ -133,13 +134,12 @@ namespace CareGardenApiV1.Controller
         ///                 "businessServiceId" : "00000000-0000-0000-0000-000000000000",
         ///                 "workerId" : "00000000-0000-0000-0000-000000000000"
         ///             }
-        ///        ]
-        ///     }
+        ///         ]
         ///     }
         ///
         /// </remarks>
         /// <returns></returns>
-        [HttpPost("save")]
+   [HttpPost("save")]
         public async Task<IActionResult> Save([FromBody] AppointmentSaveModel appointmentSaveModel)
         {
             ResponseModel<Appointment> response = new ResponseModel<Appointment>();

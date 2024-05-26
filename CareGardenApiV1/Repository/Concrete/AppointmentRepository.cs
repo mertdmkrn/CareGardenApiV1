@@ -3,6 +3,7 @@ using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Model;
 using Microsoft.EntityFrameworkCore;
 using CareGardenApiV1.Model.RequestModel;
+using CareGardenApiV1.Model.ResponseModel;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -27,7 +28,6 @@ namespace CareGardenApiV1.Repository.Concrete
         {
             return await _context.Appointments
                 .FindAsync(id);
-
         }
 
         public async Task<List<Appointment>> GetAppointmentsByAppointmentSearchModelAsync(AppointmentSearchModel searchModel)
@@ -56,7 +56,50 @@ namespace CareGardenApiV1.Repository.Concrete
             }
 
         }
-        
+
+        public async Task<List<AppointmentListModel>> GetAppointmentsListModelByAppointmentSearchModelAsync(AppointmentSearchModel searchModel)
+        {
+            bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
+
+            return await _context.Appointments
+                .AsNoTracking()
+                .Where(x => x.userId.Equals(searchModel.userId))
+                .WhereIf(searchModel.isHistory, x => x.startDate < searchModel.startDate)
+                .WhereIf(!searchModel.isHistory, x => x.startDate >= searchModel.startDate)
+                .Select(x => new AppointmentListModel
+                {
+                    status = x.status,
+                    startDate = x.startDate,
+                    endDate = x.endDate,
+                    description = x.description,
+                    business = x.business == null
+                        ? null
+                        : new AppointmentBusinessListModel
+                        {
+                            id = x.business.id,
+                            address = x.business.address,
+                            name = x.business.name,
+                            logoUrl = x.business.logoUrl,
+                            telephone = x.business.telephone
+                        },
+                    details = x.details.Select(d => new AppointmentDetailListModel
+                    {
+                        workerName = d.worker != null ? d.worker.name : null,
+                        workerImagePath = d.worker != null ? d.worker.path : null,
+                        serviceName = isTurkish ?  d.businessService != null ? d.businessService.name : null 
+                                                : d.businessService != null ? d.businessService.nameEn : null,
+                        minDuration = d.businessService != null ? d.businessService.minDuration : null,
+                        maxDuration = d.businessService != null ? d.businessService.maxDuration : null,
+                        price = d.price,
+                        discountPrice = d.discountPrice
+                    })
+                })
+                .OrderByDescending(x => x.startDate)
+                .Skip(searchModel.page.Value * searchModel.take.Value)
+                .Take(searchModel.take.Value)
+                .ToListAsync();
+        }
+
         public async Task<Appointment> SaveAppointmentAsync(Appointment appointment)
         {
             appointment.createDate = DateTime.UtcNow;

@@ -137,6 +137,22 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.Get(CareGardenApiV1.Model.RequestModel.AppointmentSearchModel)">
+             <summary>
+             Get Appointments
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "isHistory" : false,
+                    "page" : 0,
+                    "take" : 5
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.AppointmentController.GetById(System.String)">
              <summary>
              Get Appointment By Id
@@ -146,27 +162,6 @@
             
                  { 
                     "00000000-0000-0000-0000-000000000000"
-                 }
-            
-             </remarks>
-             <returns></returns>
-        </member>
-        <member name="M:CareGardenApiV1.Controller.AppointmentController.Search(CareGardenApiV1.Model.RequestModel.AppointmentSearchModel)">
-             <summary>
-             Search Appointment
-             </summary>
-             <remarks>
-             **Sample request body:**
-            
-                 { 
-                    "businessId" : "00000000-0000-0000-0000-000000000000",
-                    "userId" : "00000000-0000-0000-0000-000000000000",
-                    "workerId" : "00000000-0000-0000-0000-000000000000",
-                    "businessServiceId" : "00000000-0000-0000-0000-000000000000",
-                    "startDate" : "2023-10-07",
-                    "endDate" : "2023-10-22",
-                    "page" : 0,
-                    "take" : 5
                  }
             
              </remarks>
@@ -197,8 +192,7 @@
                              "businessServiceId" : "00000000-0000-0000-0000-000000000000",
                              "workerId" : "00000000-0000-0000-0000-000000000000"
                          }
-                    ]
-                 }
+                     ]
                  }
             
              </remarks>
@@ -620,7 +614,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.CampaignController.GetActives">
+        <member name="M:CareGardenApiV1.Controller.CampaignController.GetActives(System.String)">
             <summary>
             Get Active Campaigns
             </summary>

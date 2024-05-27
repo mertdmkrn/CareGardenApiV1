@@ -6,6 +6,7 @@ using CareGardenApiV1.Service.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using RestSharp.Extensions;
 
 namespace CareGardenApiV1.Controller
 {
@@ -59,7 +60,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("getactives")]
-        public async Task<IActionResult> GetActives()
+        public async Task<IActionResult> GetActives([FromBody] string id)
         {
             ResponseModel<List<CampaingInfo>> response = new ResponseModel<List<CampaingInfo>>();
             var campaigns = new List<Campaign>();
@@ -82,7 +83,7 @@ namespace CareGardenApiV1.Controller
 
             response.Data = campaigns
                 .Where(x => x.isActive)
-                //.Where(x => !x.expireDate.HasValue || x.expireDate > DateTime.Now)
+                .WhereIf(!id.IsNullOrEmpty() && id.IsGuid(), x => x.id == id.ToGuid())
                 .Select(x => new CampaingInfo
                 {
                     id = x.id,

@@ -4,6 +4,8 @@ namespace CareGardenApiV1.Helpers
 {
     public static class Constants
     {
+        public static bool IsTurkish = Resource.Resource.Culture.ToString().Equals("tr");
+
         public static class CacheKeys
         {
             public static string BusinessList = "BusinessList";
@@ -1858,6 +1860,66 @@ namespace CareGardenApiV1.Helpers
             "Diğer"
         };
 
+        public static List<VoteAspect> businessStarChips = new List<VoteAspect>
+        {
+           new VoteAspect(1, 1, "Long wait time." ,"Uzun bekleme süresi.", IsTurkish),
+           new VoteAspect(1, 2, "Unfriendly staff." ,"İlgisiz personel.", IsTurkish),
+           new VoteAspect(1, 3, "Dirty environment." ,"Kirli ortam.", IsTurkish),
+           new VoteAspect(1, 4, "Poor service." ,"Kötü hizmet.", IsTurkish),
+           new VoteAspect(1, 5, "Very expensive." ,"Çok pahalı.", IsTurkish),
+           new VoteAspect(2, 1, "Wait time was long." ,"Bekleme süresi uzundu.", IsTurkish),
+           new VoteAspect(2, 2, "Staff not very friendly." ,"Personel çok dostça değildi.", IsTurkish),
+           new VoteAspect(2, 3, "Average cleanliness." ,"Ortalama temizlik.", IsTurkish),
+           new VoteAspect(2, 4, "Mediocre service." ,"Vasat hizmet.", IsTurkish),
+           new VoteAspect(2, 5, "Somewhat expensive." ,"Biraz pahalı.", IsTurkish),
+           new VoteAspect(3, 1, "Acceptable wait time.", "Kabul edilebilir bekleme süresi.", IsTurkish),
+           new VoteAspect(3, 2, "Friendly staff.", "Dostça personel.", IsTurkish),
+           new VoteAspect(3, 3, "Clean enough.", "Yeterince temiz.", IsTurkish),
+           new VoteAspect(3, 4, "Good service.", "İyi hizmet.", IsTurkish),
+           new VoteAspect(3, 5, "Reasonable prices.", "Makul fiyatlar.", IsTurkish),
+           new VoteAspect(4, 1, "Short wait time.", "Kısa bekleme süresi.", IsTurkish),
+           new VoteAspect(4, 2, "Very friendly staff.", "Çok dostça personel.", IsTurkish),
+           new VoteAspect(4, 3, "Very clean.", "Çok temiz.", IsTurkish),
+           new VoteAspect(4, 4, "Very good service.", "Çok iyi hizmet.", IsTurkish),
+           new VoteAspect(4, 5, "Fair prices.", "Uygun fiyatlar.", IsTurkish),
+           new VoteAspect(5, 1, "Very short wait time.", "Çok kısa bekleme süresi.", IsTurkish),
+           new VoteAspect(5, 2, "Extremely friendly staff.", "Son derece dostça personel.", IsTurkish),
+           new VoteAspect(5, 3, "Spotlessly clean.", "Tertemiz.", IsTurkish),
+           new VoteAspect(5, 4, "Excellent service.", "Mükemmel hizmet.", IsTurkish),
+           new VoteAspect(5, 5, "Very reasonable prices.", "Çok makul fiyatlar.", IsTurkish)
+        };
+
+        public static List<VoteAspect> workerStarChips = new List<VoteAspect>
+        {
+           new VoteAspect(1, 1, "Unfriendly attitude.", "Dostça olmayan tutum.", IsTurkish),
+           new VoteAspect(1, 2, "Lacked professionalism.", "Profesyonellik eksikliği.", IsTurkish),
+           new VoteAspect(1, 3, "Poor communication.", "Kötü iletişim.", IsTurkish),
+           new VoteAspect(1, 4, "Low skill level.", "Düşük yetenek seviyesi.", IsTurkish),
+           new VoteAspect(1, 5, "Did not meet expectations.", "Beklentileri karşılamadı.", IsTurkish),
+           new VoteAspect(2, 1, "Not very friendly.", "Çok dostça değildi.", IsTurkish),
+           new VoteAspect(2, 2, "Somewhat unprofessional.", "Biraz profesyonel değildi.", IsTurkish),
+           new VoteAspect(2, 3, "Average communication.", "Ortalama iletişim.", IsTurkish),
+           new VoteAspect(2, 4, "Adequate skill level.", "Yeterli yetenek seviyesi.", IsTurkish),
+           new VoteAspect(2, 5, "Barely met expectations.", "Zorla beklentileri karşıladı.", IsTurkish),
+           new VoteAspect(3, 1, "Acceptably friendly.", "Kabul edilebilir derecede dostça.", IsTurkish),
+           new VoteAspect(3, 2, "Professional enough.", "Yeterince profesyonel.", IsTurkish),
+           new VoteAspect(3, 3, "Good communication.", "İyi iletişim.", IsTurkish),
+           new VoteAspect(3, 4, "Good skill level.", "İyi yetenek seviyesi.", IsTurkish),
+           new VoteAspect(3, 5, "Met expectations.", "Beklentileri karşıladı.", IsTurkish),
+           new VoteAspect(4, 1, "Very friendly.", "Çok dostça.", IsTurkish),
+           new VoteAspect(4, 2, "Very professional.", "Çok profesyonel.", IsTurkish),
+           new VoteAspect(4, 3, "Very good communication.", "Çok iyi iletişim.", IsTurkish),
+           new VoteAspect(4, 4, "High skill level.", "Yüksek yetenek seviyesi.", IsTurkish),
+           new VoteAspect(4, 5, "Exceeded expectations.", "Beklentileri aştı.", IsTurkish),
+           new VoteAspect(5, 1, "Extremely friendly.", "Son derece dostça.", IsTurkish),
+           new VoteAspect(5, 2, "Extremely professional.", "Son derece profesyonel.", IsTurkish),
+           new VoteAspect(5, 3, "Excellent communication.", "Mükemmel iletişim.", IsTurkish),
+           new VoteAspect(5, 4, "Expert skill level.", "Uzman yetenek seviyesi.", IsTurkish),
+           new VoteAspect(5, 5, "Far exceeded expectations.", "Beklentileri fazlasıyla aştı.", IsTurkish)
+        };
+
         public static double DistanceValue = 160.9344;
+
+        
     }
 }

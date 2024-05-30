@@ -802,9 +802,9 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.DefinitionController.PrivacyPolicy">
+        <member name="M:CareGardenApiV1.Controller.DefinitionController.GetStarChips">
             <summary>
-            Get Privacy Policy
+            Get Cities
             </summary>
             <returns></returns>
         </member>

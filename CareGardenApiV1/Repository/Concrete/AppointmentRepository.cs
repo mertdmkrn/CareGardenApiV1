@@ -103,7 +103,8 @@ namespace CareGardenApiV1.Repository.Concrete
                         minDuration = d.businessService != null ? d.businessService.minDuration : null,
                         maxDuration = d.businessService != null ? d.businessService.maxDuration : null,
                         price = d.price,
-                        discountPrice = d.discountPrice
+                        discountPrice = d.discountPrice,
+                        discountRate = (int)((d.price - d.discountPrice) / d.price) * 100,
                     })
                 })
                 .OrderByDescending(x => x.startDate)

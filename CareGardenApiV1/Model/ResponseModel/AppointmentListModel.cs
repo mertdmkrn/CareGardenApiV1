@@ -19,6 +19,7 @@ namespace CareGardenApiV1.Model.ResponseModel
         public string? workerImagePath { get; set; }
         public double price { get; set; }
         public double discountPrice { get; set; }
+        public int discountRate { get; set; }
         public string? serviceName { get; set; }
         public int? minDuration  { get; set; }
         public int? maxDuration  { get; set; }

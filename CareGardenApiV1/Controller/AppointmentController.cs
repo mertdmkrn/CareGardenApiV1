@@ -489,8 +489,9 @@ namespace CareGardenApiV1.Controller
                     }
                 }
 
+
                 worker.isActive = worker.availableDate.HasValue;
-                worker.availableDateStr = worker.availableDate.GetRelativeDate(Resource.Resource.Culture.ToString());
+                worker.availableDateStr = worker.isActive ? worker.availableDate.Value.ToString((isTurkish ? "dd/MM HH:mm" : "MM/dd h:mm tt"), Resource.Resource.Culture) : string.Empty;
 
                 var activeDiscount = worker.isActive
                     ? discounts?

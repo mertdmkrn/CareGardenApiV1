@@ -417,18 +417,22 @@ namespace CareGardenApiV1.Controller
                 .ThenBy(x => x.name)
                 .ToList();
 
-            workers.Insert(0, new AppointmentWorkerModel
+
+            if(workers.Exists(x => x.availableDate.HasValue))
             {
-                id = workers[0].id,
-                name = isTurkish ? "Herhangi Bir Profesyonel" : "Any Professional",
-                title = isTurkish ? "En Müsait" : "Maximum Availability",
-                rating = workers[0].rating,
-                countRating = workers[0].countRating,
-                availableDate = workers[0].availableDate,
-                availableDateStr = workers[0].availableDateStr,
-                isActive = workers[0].isActive,
-                price = workers[0].price,
-            });
+                workers.Insert(0, new AppointmentWorkerModel
+                {
+                    id = workers[0].id,
+                    name = isTurkish ? "Herhangi Bir Profesyonel" : "Any Professional",
+                    title = isTurkish ? "En Müsait" : "Maximum Availability",
+                    rating = workers[0].rating,
+                    countRating = workers[0].countRating,
+                    availableDate = workers[0].availableDate,
+                    availableDateStr = workers[0].availableDateStr,
+                    isActive = workers[0].isActive,
+                    price = workers[0].price,
+                });
+            }
 
             response.Data = workers;
 

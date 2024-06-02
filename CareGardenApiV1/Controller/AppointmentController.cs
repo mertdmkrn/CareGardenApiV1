@@ -506,7 +506,7 @@ namespace CareGardenApiV1.Controller
                 if (date < nowDate)
                     continue;
 
-                if (pastAppointments == null || (pastAppointments != null && !pastAppointments.Any(x => x.date == date)))
+                if (pastAppointments == null || (pastAppointments != null && !pastAppointments.Any(x => x.date == date && x.workerId.Equals(worker.id))))
                 {
                     worker.availableDate = date;
                     break;

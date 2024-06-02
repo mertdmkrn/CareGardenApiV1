@@ -396,16 +396,24 @@ namespace CareGardenApiV1.Controller
 
             if (workers.IsNullOrEmpty())
             {
-                response.HasError = true;
-                response.Message = Resource.Resource.KayitBulunamadi;
-                return Ok(response);
+                workers = await _workerService.GetWorkersByAppointmentSearchModelAsync(new AppointmentSearchModel()
+                {
+                    businessId = appointmentInfo.businessId
+                });
+
+                if(workers.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.Message = Resource.Resource.KayitBulunamadi;
+                    return Ok(response);
+                }
             }
 
             await setWorkersAvailableDate(workers.Where(x => x.isActive).ToList(), appointmentInfo);
 
             workers = workers
                 .Where(x => x.availableDate.HasValue)
-                .OrderByDescending(x => x.availableDate)
+                .OrderBy(x => x.availableDate)
                 .ThenByDescending(x => x.rating)
                 .ThenBy(x => x.name)
                 .ToList();

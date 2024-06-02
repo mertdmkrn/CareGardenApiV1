@@ -273,4 +273,7 @@
   <data name="RandevuMevcut" xml:space="preserve">
     <value>The appointment could not be made because an appointment was already booked on the selected date. Please make an appointment again.</value>
   </data>
+  <data name="Anonymous" xml:space="preserve">
+    <value>Anonymous</value>
+  </data>
 </root>

@@ -19,16 +19,13 @@ namespace CareGardenApiV1.Controller
     {
         private readonly ICommentService _commentService;
         private readonly IBusinessService _businessService;
-        private readonly IElasticHandler _elasticHandler;
 
         public CommentController(
             ICommentService commentService,
-            IBusinessService businessService,
-            IElasticHandler elasticHandler)
+            IBusinessService businessService)
         {
             _commentService = commentService;
             _businessService = businessService;
-            _elasticHandler = elasticHandler;
         }
 
         /// <summary>
@@ -163,9 +160,14 @@ namespace CareGardenApiV1.Controller
         ///     { 
         ///        "userId" : "00000000-0000-0000-0000-000000000000",
         ///        "businessId" : "00000000-0000-0000-0000-000000000000",
+        ///        "appointmentId" : "00000000-0000-0000-0000-000000000000",
         ///        "replyId" : "00000000-0000-0000-0000-000000000000",
         ///        "comment" : "Harika bir hizmet teşekkürler.",
         ///        "point" : 5
+        ///        "aspectsOfPoint" : "1~2",
+        ///        "workerPoint" : 5
+        ///        "aspectsOfPoint" : "1~2",
+        ///        "isShowProfile": true
         ///     }
         ///
         /// </remarks>
@@ -203,6 +205,17 @@ namespace CareGardenApiV1.Controller
                 response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
 
+            if (!userRole.Equals("Business") && comment.appointmentId.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("appointmentId", Resource.Resource.BuAlaniBosBirakmayiniz));
+
+            }
+            else
+            {
+                comment.appointmentId = null;
+            }
+
             if (response.HasError)
             {
                 response.Message = Resource.Resource.KayitYapilamadi;
@@ -232,7 +245,6 @@ namespace CareGardenApiV1.Controller
 
             if (comment.businessId.HasValue)
             {
-                BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(comment.businessId.Value));
                 BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(comment.businessId.Value));
             }
 
@@ -249,6 +261,10 @@ namespace CareGardenApiV1.Controller
         ///        "id" : "00000000-0000-0000-0000-000000000000",
         ///        "comment" : "Harika bir hizmet teşekkürler.",
         ///        "point" : 5
+        ///        "aspectsOfPoint" : "1~2",
+        ///        "workerPoint" : 5
+        ///        "aspectsOfPoint" : "1~2",
+        ///        "isShowProfile": true
         ///     }
         ///
         /// </remarks>
@@ -274,12 +290,6 @@ namespace CareGardenApiV1.Controller
                 response.ValidationErrors.Add(new ValidationError("comment", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
 
-            if (updateComment.id == null)
-            {
-                response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.BuAlaniBosBirakmayiniz));
-            }
-
             if (response.HasError)
             {
                 response.Message = Resource.Resource.KayitYapilamadi;
@@ -291,18 +301,17 @@ namespace CareGardenApiV1.Controller
             bool isPointChanged = comment.point != updateComment.point;
 
             comment.comment = updateComment.comment.IsNull(comment.comment);
-            comment.point = updateComment.point;
+            comment.point = updateComment.point.IsNull(comment.point);
+            comment.aspectsOfPoint = updateComment.aspectsOfPoint.IsNull(comment.aspectsOfPoint);
+            comment.workerPoint = updateComment.workerPoint.IsNull(comment.workerPoint);
+            comment.aspectsOfWorkerPoint = updateComment.aspectsOfWorkerPoint.IsNull(comment.aspectsOfWorkerPoint);
+            comment.isShowProfile = updateComment.isShowProfile;
 
             await _commentService.UpdateCommentAsync(comment);
 
-            if (comment.businessId.HasValue)
+            if (comment.businessId.HasValue && isPointChanged)
             {
-                BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(comment.businessId.Value));
-
-                if(isPointChanged)
-                {
-                    BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(comment.businessId.Value));
-                }
+                BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(comment.businessId.Value));    
             }
 
             response.Data = true;

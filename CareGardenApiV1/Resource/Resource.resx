@@ -273,4 +273,7 @@
   <data name="RandevuMevcut" xml:space="preserve">
     <value>Seçili tarihte bir randevu alındığı için randevu yapılamadı. Lütfen tekrar randevu alınız.</value>
   </data>
+  <data name="Anonymous" xml:space="preserve">
+    <value>Anonim</value>
+  </data>
 </root>

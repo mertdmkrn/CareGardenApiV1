@@ -9,6 +9,7 @@ namespace CareGardenApiV1.Model.ResponseModel
         public DateTime? endDate { get; set; }
         public string? description { get; set; }
         public AppointmentBusinessListModel? business { get; set; }
+        public Comment? comment { get; set; }
         public IEnumerable<AppointmentDetailListModel>? details { get; set; }
     }
 

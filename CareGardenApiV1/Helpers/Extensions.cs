@@ -23,6 +23,13 @@ namespace CareGardenApiV1.Helpers
             return value.HasValue && value != Guid.Empty;
         }
 
+
+        public static bool IsNullOrEmpty(this Guid? value)
+        {
+            return !value.HasValue || value == Guid.Empty;
+        }
+
+
         public static string IsNull(this string value, string value2)
         {
             return value.IsNotNullOrEmpty() ? value : value2;

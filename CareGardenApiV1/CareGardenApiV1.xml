@@ -125,12 +125,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.AdminController.IndexBusiness">
-            <summary>
-            It enables elasticsearch indexing of business records.
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:CareGardenApiV1.Controller.AdminController.SearchBusiness(CareGardenApiV1.Model.RequestModel.BusinessSearchAdminModel)">
             <summary>
             Search Business
@@ -765,9 +759,14 @@
                  { 
                     "userId" : "00000000-0000-0000-0000-000000000000",
                     "businessId" : "00000000-0000-0000-0000-000000000000",
+                    "appointmentId" : "00000000-0000-0000-0000-000000000000",
                     "replyId" : "00000000-0000-0000-0000-000000000000",
                     "comment" : "Harika bir hizmet teşekkürler.",
                     "point" : 5
+                    "aspectsOfPoint" : "1~2",
+                    "workerPoint" : 5
+                    "aspectsOfPoint" : "1~2",
+                    "isShowProfile": true
                  }
             
              </remarks>
@@ -784,6 +783,10 @@
                     "id" : "00000000-0000-0000-0000-000000000000",
                     "comment" : "Harika bir hizmet teşekkürler.",
                     "point" : 5
+                    "aspectsOfPoint" : "1~2",
+                    "workerPoint" : 5
+                    "aspectsOfPoint" : "1~2",
+                    "isShowProfile": true
                  }
             
              </remarks>
@@ -1973,6 +1976,30 @@
             <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.CareGardenV35.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV36">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV36.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV36.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV36.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV37">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV37.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV37.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV37.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

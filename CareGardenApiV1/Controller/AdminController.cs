@@ -27,7 +27,6 @@ namespace CareGardenApiV1.Controller
         private readonly IFileHandler _fileHandler;
         private readonly IMemoryCache _memoryCache;
         private readonly IMailHandler _mailHandler;
-        private readonly IElasticHandler _elasticHandler;
 
         public AdminController(
             IBusinessService businessService,
@@ -44,7 +43,6 @@ namespace CareGardenApiV1.Controller
             _fileHandler = fileHandler;
             _memoryCache = memoryCache;
             _mailHandler = mailHandler;
-            _elasticHandler = elasticHandler;
         }
 
         /// <summary>
@@ -503,22 +501,6 @@ namespace CareGardenApiV1.Controller
             ResponseModel<List<string>> response = new ResponseModel<List<string>>();
 
             response.Data = Constants.FaqCategories;
-            return Ok(response);
-        }
-
-        /// <summary>
-        /// It enables elasticsearch indexing of business records.
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost("makeindexbusiness")]
-        public async Task<IActionResult> IndexBusiness()
-        {
-            ResponseModel<bool> response = new ResponseModel<bool>();
-
-            BackgroundJob.Enqueue(() => _elasticHandler.MakeIndexBusiness());
-            response.Message = Resource.Resource.ElasticIndexlemeIslemiBasladi;
-            response.Data = true;
-
             return Ok(response);
         }
 

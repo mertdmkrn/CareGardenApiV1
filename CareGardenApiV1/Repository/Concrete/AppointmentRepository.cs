@@ -82,6 +82,18 @@ namespace CareGardenApiV1.Repository.Concrete
                             logoUrl = x.business.logoUrl,
                             telephone = x.business.telephone
                         },
+                    comment = x.comment == null
+                        ? null
+                        : new Comment
+                        {
+                            id = x.comment.id,
+                            comment = x.comment.comment,
+                            point = x.comment.point,
+                            aspectsOfPoint = x.comment.aspectsOfPoint,
+                            workerPoint = x.comment.workerPoint,
+                            aspectsOfWorkerPoint = x.comment.aspectsOfWorkerPoint,
+                            isShowProfile = x.comment.isShowProfile
+                        },
                     details = x.details.Select(d => new AppointmentDetailListModel
                     {
                         workerName = d.worker != null ? d.worker.name : null,

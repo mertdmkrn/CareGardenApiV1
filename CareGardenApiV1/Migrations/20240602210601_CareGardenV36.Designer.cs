@@ -3,6 +3,7 @@ using System;
 using CareGardenApiV1.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CareGardenApiV1.Migrations
 {
     [DbContext(typeof(CareGardenApiDbContext))]
-    partial class CareGardenApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240602210601_CareGardenV36")]
+    partial class CareGardenV36
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -461,6 +464,9 @@ namespace CareGardenApiV1.Migrations
 
                     b.Property<Guid?>("userId")
                         .HasColumnType("uuid");
+
+                    b.Property<Guid?[]>("workerIds")
+                        .HasColumnType("uuid[]");
 
                     b.Property<double>("workerPoint")
                         .HasColumnType("double precision");

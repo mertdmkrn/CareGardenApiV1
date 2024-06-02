@@ -4,6 +4,7 @@ using CareGardenApiV1.Model;
 using Microsoft.EntityFrameworkCore;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
+using Hangfire.PostgreSql.Utils;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -151,6 +152,8 @@ namespace CareGardenApiV1.Repository.Concrete
 
         public async Task<List<CommentSearchResponseModel>> GetSearchCommentsAsync(CommentSearchModel searchModel)
         {
+            bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
+
             return await _context.Comments
                 .AsNoTracking()
                 .Where(x => x.businessId == searchModel.businessId)
@@ -167,10 +170,10 @@ namespace CareGardenApiV1.Repository.Concrete
                     updateDate = x.updateDate,
                     comment = x.comment,
                     point = x.point,
-                    userName = x.user.fullName,
-                    userImageUrl = x.user.imageUrl,
-                    serviceInfos = string.Empty,
-                    staffInfos = string.Empty,
+                    userName = x.isShowProfile ? x.user.fullName : Resource.Resource.Anonymous,
+                    userImageUrl = x.isShowProfile ? x.user.imageUrl : null,
+                    serviceInfos = x.appointment != null ? string.Join(',', x.appointment.details.Select(d => isTurkish ? d.businessService.name : d.businessService.nameEn)) : null,
+                    staffInfos = x.appointment != null ? string.Join(',', x.appointment.details.Select(d => d.worker.name)) : null,
                     reply = x.reply.comment
                 })
                 .OrderByDescendingIf(searchModel.orderType == CommentOrderType.Lastest, x => x.createDate)

@@ -139,7 +139,7 @@ namespace CareGardenApiV1.Controller
         ///
         /// </remarks>
         /// <returns></returns>
-   [HttpPost("save")]
+        [HttpPost("save")]
         public async Task<IActionResult> Save([FromBody] AppointmentSaveModel appointmentSaveModel)
         {
             ResponseModel<Appointment> response = new ResponseModel<Appointment>();
@@ -412,7 +412,6 @@ namespace CareGardenApiV1.Controller
             await setWorkersAvailableDate(workers.Where(x => x.isActive).ToList(), appointmentInfo);
 
             workers = workers
-                .Where(x => x.availableDate.HasValue)
                 .OrderBy(x => x.availableDate)
                 .ThenByDescending(x => x.rating)
                 .ThenBy(x => x.name)
@@ -459,6 +458,7 @@ namespace CareGardenApiV1.Controller
             foreach (var worker in workers)
             {
                 var businessStartDate = nowDate;
+                var intervalDay = 14;
                 var workerServicePrice = workerServicePrices?.FirstOrDefault(x => x.workerId.Equals(worker.id));
                 var price = workerServicePrice?.price ?? businessService?.price ?? 0;
 
@@ -479,15 +479,22 @@ namespace CareGardenApiV1.Controller
                     if (!worker.availableDate.HasValue)
                     {
                         businessStartDate = businessStartDate.AddDays(1);
+                        intervalDay--;
+
+                        if(intervalDay == 0) break;
                     }
                 }
 
-                worker.availableDateStr = worker.availableDate.Value.ToString((isTurkish ? "dd/MM HH:mm" : "MM/dd h:mm tt"), Resource.Resource.Culture);
-                var activeDiscount = discounts?
-                    .Where(x => x.type == DiscountType.AllDay
-                                || (x.type == DiscountType.WeekDay && worker.availableDate.Value.DayOfWeek >= DayOfWeek.Monday && worker.availableDate.Value.DayOfWeek <= DayOfWeek.Friday)
-                                || (x.type == DiscountType.WeekEnd && worker.availableDate.Value.DayOfWeek == DayOfWeek.Saturday || worker.availableDate.Value.DayOfWeek == DayOfWeek.Sunday))
-                    .MaxBy(x => x.rate);
+                worker.isActive = worker.availableDate.HasValue;
+                worker.availableDateStr = worker.availableDate.GetRelativeDate(Resource.Resource.Culture.ToString());
+
+                var activeDiscount = worker.isActive
+                    ? discounts?
+                        .Where(x => x.type == DiscountType.AllDay
+                                    || (x.type == DiscountType.WeekDay && worker.availableDate.Value.DayOfWeek >= DayOfWeek.Monday && worker.availableDate.Value.DayOfWeek <= DayOfWeek.Friday)
+                                    || (x.type == DiscountType.WeekEnd && worker.availableDate.Value.DayOfWeek == DayOfWeek.Saturday || worker.availableDate.Value.DayOfWeek == DayOfWeek.Sunday))
+                        .MaxBy(x => x.rate)
+                    : null;
 
                 worker.price = activeDiscount == null ? price : price * (1 - (activeDiscount.rate / 100));
             }

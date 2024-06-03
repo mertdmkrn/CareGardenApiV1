@@ -625,9 +625,16 @@ namespace CareGardenApiV1.Controller
             if (appointmentInfo.hasGetAnyAvailibityWorker)
             {
                 var groupingPastAppointments = pastAppointments.GroupBy(x => x.workerId.Value).ToList();
+               
                 foreach (var item in appointmentInfo.serviceWorkerInfos)
                 {
                     var serviceWorkers = workers
+                        .Where(x => x.serviceIds.IsNull("").Contains(item.businessServiceId.ToString()))
+                        .Where(x => !groupingPastAppointments.Any(g => g.Key.Equals(x.id)))
+                        .OrderBy(x => x.price)
+                        .ToList()
+                        ??
+                        workers
                         .Where(x => x.serviceIds.IsNull("").Contains(item.businessServiceId.ToString()))
                         .OrderBy(x => x.price)
                         .ToList();
@@ -637,14 +644,9 @@ namespace CareGardenApiV1.Controller
                         serviceWorkers = workers;
                     }
 
-                    var worker = groupingPastAppointments
-                        .Where(x => serviceWorkers
-                            .Exists(y => y.id.Equals(x.Key)))
-                            .MinBy(x => x.Count());
+                    var worker = serviceWorkers.FirstOrDefault();
 
-                    item.workerId = !worker.IsNullOrEmpty()
-                        ? worker.Key
-                        : serviceWorkers.FirstOrDefault().id;
+                    item.workerId = worker?.id;
                 }
             }
 

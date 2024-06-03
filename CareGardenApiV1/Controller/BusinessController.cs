@@ -261,8 +261,6 @@ namespace CareGardenApiV1.Controller
                     item.discountPrice = item.price * (1 - (item.discountRate / 100));
                     
                     businessServiceInfo.businessServices.Add(item);
-                    
-                    businessServiceInfo.businessServices.Add(item);
                 }
 
                 businessDetail.businessServicesInfos.Add(businessServiceInfo);

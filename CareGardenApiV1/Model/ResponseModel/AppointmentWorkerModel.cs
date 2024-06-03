@@ -11,6 +11,9 @@ namespace CareGardenApiV1.Model.ResponseModel
         public double rating { get; set; }
         public int countRating { get; set; }
         public double price { get; set; }
+        public double discountPrice { get; set; }
+        public double discountRate { get; set; }
+
         public bool isActive { get; set; }
         public string availableDateStr { get; set; }
         public DateTime? availableDate { get; set; }

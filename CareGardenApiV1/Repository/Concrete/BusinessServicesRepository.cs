@@ -78,7 +78,8 @@ namespace CareGardenApiV1.Repository.Concrete
                 .Where(x => x.id == id)
                 .Select(x => new BusinessServiceModel
                 {
-                    price = x.price 
+                    price = x.price,
+                    serviceId = x.serviceId
                 })
                 .FirstOrDefaultAsync();
         }

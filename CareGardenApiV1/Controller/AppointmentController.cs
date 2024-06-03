@@ -629,6 +629,7 @@ namespace CareGardenApiV1.Controller
                 {
                     var serviceWorkers = workers
                         .Where(x => x.serviceIds.IsNull("").Contains(item.businessServiceId.ToString()))
+                        .OrderBy(x => x.price)
                         .ToList();
 
                     if (serviceWorkers.IsNullOrEmpty())

@@ -74,8 +74,26 @@ namespace CareGardenApiV1.Controller
             searchModel.startDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, "Turkey Standard Time");
             searchModel.page ??= 0;
             searchModel.take ??= 5;
-            
+
             response.Data = await _appointmentService.GetAppointmentsListModelByAppointmentSearchModelAsync(searchModel);
+            
+            if (searchModel.isHistory)
+            {
+                var historyPendingAppointments = response.Data.Where(x => x.status == AppointmentStatus.Pending);
+
+                if (!historyPendingAppointments.IsNullOrEmpty())
+                {
+                    response.Data.ConvertAll(x => x.status = x.status == AppointmentStatus.Pending ? AppointmentStatus.Cancelled : x.status);
+                    BackgroundJob.Enqueue(() => _appointmentService.ChangeStatusAsync(new AppointmentChangeModel
+                    {
+                        userId = searchModel.userId,
+                        status = AppointmentStatus.Cancelled,
+                        date = searchModel.startDate
+                    }));
+                }
+
+                response.Data = response.Data.OrderByDescending(x => x.startDate).ToList(); 
+            }
 
             return Ok(response);
         }
@@ -401,7 +419,7 @@ namespace CareGardenApiV1.Controller
                     businessId = appointmentInfo.businessId
                 });
 
-                if(workers.IsNullOrEmpty())
+                if (workers.IsNullOrEmpty())
                 {
                     response.HasError = true;
                     response.Message = Resource.Resource.KayitBulunamadi;
@@ -418,7 +436,7 @@ namespace CareGardenApiV1.Controller
                 .ToList();
 
 
-            if(workers.Exists(x => x.availableDate.HasValue))
+            if (workers.Exists(x => x.availableDate.HasValue))
             {
                 workers.Insert(0, new AppointmentWorkerModel
                 {
@@ -487,7 +505,7 @@ namespace CareGardenApiV1.Controller
                         businessStartDate = businessStartDate.AddDays(1);
                         intervalDay--;
 
-                        if(intervalDay == 0) break;
+                        if (intervalDay == 0) break;
                     }
                 }
 
@@ -503,9 +521,7 @@ namespace CareGardenApiV1.Controller
                         .MaxBy(x => x.rate)
                     : discounts?.Where(x => x.type == DiscountType.AllDay).FirstOrDefault();
 
-                worker.price = price;
-                worker.discountRate = activeDiscount?.rate ?? 0;
-                worker.discountPrice = price * (1 - (worker.discountRate / 100));
+                worker.price = price * (1 - (worker.discountRate / 100));
             }
         }
 
@@ -693,7 +709,7 @@ namespace CareGardenApiV1.Controller
 
                     var hourTimeSpan = TimeSpan.Parse(timeModel.hourStr);
 
-                    var workTimeTuples = workersWorkTimesDict.ContainsKey(tempDate.DayOfWeek) 
+                    var workTimeTuples = workersWorkTimesDict.ContainsKey(tempDate.DayOfWeek)
                         ? workersWorkTimesDict[tempDate.DayOfWeek]
                         : null;
 

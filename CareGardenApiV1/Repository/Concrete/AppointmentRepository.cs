@@ -104,10 +104,10 @@ namespace CareGardenApiV1.Repository.Concrete
                         maxDuration = d.businessService != null ? d.businessService.maxDuration : null,
                         price = d.price,
                         discountPrice = d.discountPrice,
-                        discountRate = (int)((d.price - d.discountPrice) / d.price) * 100,
+                        discountRate = ((d.price - d.discountPrice) / d.price) * 100,
                     })
                 })
-                .OrderByDescending(x => x.startDate)
+                .OrderBy(x => x.startDate)
                 .Skip(searchModel.page.Value * searchModel.take.Value)
                 .Take(searchModel.take.Value)
                 .ToListAsync();
@@ -136,7 +136,9 @@ namespace CareGardenApiV1.Repository.Concrete
         public async Task<bool> ChangeStatusAsync(AppointmentChangeModel changeModel)
         {
             await _context.Appointments
-             .Where(x => x.id == changeModel.id)
+             .WhereIf(changeModel.id.HasValue, x => x.id.Equals(changeModel.id))
+             .WhereIf(changeModel.userId.HasValue, x => x.userId.Equals(changeModel.userId))
+             .WhereIf(changeModel.date.HasValue, x => x.startDate < changeModel.date)
              .ExecuteUpdateAsync(x => x.SetProperty(y => y.status, changeModel.status));
 
             return true;

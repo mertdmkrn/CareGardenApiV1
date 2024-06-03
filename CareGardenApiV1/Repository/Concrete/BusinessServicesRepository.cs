@@ -29,6 +29,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     id = x.id,
                     price = x.price,
                     minDuration = x.minDuration,
+                    serviceId = x.serviceId,
                     maxDuration = x.maxDuration
                 })
                 .ToListAsync();

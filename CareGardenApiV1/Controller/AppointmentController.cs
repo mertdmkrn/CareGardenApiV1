@@ -236,7 +236,7 @@ namespace CareGardenApiV1.Controller
                 var businessService = businessServices.FirstOrDefault(x => x.id.Equals(serviceWorkerInfo.businessServiceId));
                 var workerServicePrice = workerServicePrices.FirstOrDefault(x => x.businessServiceId.Equals(serviceWorkerInfo.businessServiceId)
                     && x.workerId.Equals(serviceWorkerInfo.workerId));
-                var discount = activeDiscounts?.FirstOrDefault(d => d.serviceIds.IsNullOrEmpty() || d.serviceIds.Contains(businessService.id.ToString()));
+                var discount = activeDiscounts?.FirstOrDefault(d => d.serviceIds.IsNullOrEmpty() || d.serviceIds.Contains(businessService.serviceId.ToString()));
 
                 var price = workerServicePrice?.price ?? businessService?.price ?? 0;
 
@@ -451,7 +451,7 @@ namespace CareGardenApiV1.Controller
             if (businessService == null) return;
 
             var discounts = business.discounts?
-                .Where(x => x.serviceIds.IsNullOrEmpty() || x.serviceIds.Contains(appointmentInfo.businessServiceId.Value.ToString()));
+                .Where(x => x.serviceIds.IsNullOrEmpty() || x.serviceIds.Contains(businessService.serviceId.Value.ToString()));
 
             var nowDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now.AddMinutes(business.appointmentTimeInterval), "Turkey Standard Time");
             var pastAppointments = await _appointmentDetailService.GetAppointmentDetailsByWorkerIdsAndDateAsync(new AppointmentSearchModel { startDate = nowDate, workerIds = workers.Select(x => x.id).ToHashSet() });
@@ -499,7 +499,7 @@ namespace CareGardenApiV1.Controller
                                     || (x.type == DiscountType.WeekDay && worker.availableDate.Value.DayOfWeek >= DayOfWeek.Monday && worker.availableDate.Value.DayOfWeek <= DayOfWeek.Friday)
                                     || (x.type == DiscountType.WeekEnd && worker.availableDate.Value.DayOfWeek == DayOfWeek.Saturday || worker.availableDate.Value.DayOfWeek == DayOfWeek.Sunday))
                         .MaxBy(x => x.rate)
-                    : null;
+                    : discounts?.Where(x => x.type == DiscountType.AllDay).FirstOrDefault();
 
                 worker.price = activeDiscount == null ? price : price * (1 - (activeDiscount.rate / 100));
             }

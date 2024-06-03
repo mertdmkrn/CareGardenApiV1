@@ -521,7 +521,9 @@ namespace CareGardenApiV1.Controller
                         .MaxBy(x => x.rate)
                     : discounts?.Where(x => x.type == DiscountType.AllDay).FirstOrDefault();
 
-                worker.price = price * (1 - (worker.discountRate / 100));
+                worker.price = price;
+                worker.discountRate = activeDiscount?.rate ?? 0;
+                worker.discountPrice = price * (1 - (worker.discountRate / 100));
             }
         }
 

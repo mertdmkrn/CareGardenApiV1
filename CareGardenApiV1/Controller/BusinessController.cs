@@ -24,6 +24,7 @@ namespace CareGardenApiV1.Controller
         private readonly IServicesService _servicesService;
         private readonly IMemoryCache _memoryCache;
         private readonly IFileHandler _fileHandler;
+        private readonly IElasticHandler _elasticHandler;
 
         public BusinessController(
             IBusinessService businessService,
@@ -205,34 +206,16 @@ namespace CareGardenApiV1.Controller
             }
 
             var discountMultiplier = 1.0;
-            Discount activeDiscount = null;
-
-            foreach (var item in businessDetail.discounts.OrderBy(x => x.rate))
-            {
-                if (item.type == DiscountType.AllDay)
-                {
-                    discountMultiplier = 1 - (item.rate / 100);
-                    activeDiscount = item;
-                }
-                else if (item.type == DiscountType.WeekDay && DateTime.Today.DayOfWeek >= DayOfWeek.Monday && DateTime.Today.DayOfWeek <= DayOfWeek.Friday)
-                {
-                    discountMultiplier = 1 - (item.rate / 100);
-                    activeDiscount = item;
-                }
-                else if (item.type == DiscountType.WeekEnd && (DateTime.Today.DayOfWeek == DayOfWeek.Saturday || DateTime.Today.DayOfWeek == DayOfWeek.Sunday))
-                {
-                    discountMultiplier = 1 - (item.rate / 100);
-                    activeDiscount = item;
-                }
-
-                var typeText = item.type == DiscountType.WeekDay
-                                 ? Resource.Resource.HaftaIci
-                                 : item.type == DiscountType.WeekEnd
-                                   ? Resource.Resource.HaftaSonu
-                                   : string.Empty;
-
-                item.title = $"{string.Format(Resource.Resource.Indirim, item.rate)} {typeText}";
-            }
+            var activeDiscounts = businessDetail.discounts?
+                .Where(x => x.type == DiscountType.AllDay
+                            || (x.type == DiscountType.WeekDay &&
+                                DateTime.Today.DayOfWeek >= DayOfWeek.Monday &&
+                                DateTime.Today.DayOfWeek <= DayOfWeek.Friday)
+                            || (x.type == DiscountType.WeekEnd &&
+                                (DateTime.Today.DayOfWeek == DayOfWeek.Saturday ||
+                                  DateTime.Today.DayOfWeek == DayOfWeek.Sunday)))
+                .OrderBy(x => x.rate)
+                .ToList();
 
             var popularServices = businessDetail.businessServices.Where(x => x.isPopular);
 
@@ -244,14 +227,15 @@ namespace CareGardenApiV1.Controller
 
                 foreach (var item in popularServices)
                 {
-                    bool isDiscountAvailable = activeDiscount != null && (activeDiscount.serviceIds.IsNullOrEmpty() || activeDiscount.serviceIds.Contains(item.serviceId.Value.ToString()));
+                    var activeDiscount = (activeDiscounts?
+                        .Where(x =>x.serviceIds.Contains(item.serviceId.Value.ToString()) || x.serviceIds.IsNullOrEmpty()))
+                        .MaxBy(x => x.rate);
 
-                    item.discountPrice = isDiscountAvailable
-                                         ? item.price * discountMultiplier
-                                         : item.price;
-
-                    item.discountRate = isDiscountAvailable ? activeDiscount.rate : 0; 
-
+                    setDiscountTitle(activeDiscount);
+                    
+                    item.discountRate = activeDiscount?.rate??0; 
+                    item.discountPrice = item.price * (1 - (item.discountRate / 100));
+                    
                     businessServiceInfo.businessServices.Add(item);
                 }
 
@@ -267,14 +251,17 @@ namespace CareGardenApiV1.Controller
 
                 foreach (var item in items)
                 {
-                    bool isDiscountAvailable = activeDiscount != null && (activeDiscount.serviceIds.IsNullOrEmpty() || activeDiscount.serviceIds.Contains(item.serviceId.Value.ToString()));
+                    var activeDiscount = (activeDiscounts?
+                            .Where(x =>x.serviceIds.Contains(item.serviceId.Value.ToString()) || x.serviceIds.IsNullOrEmpty()))
+                        .MaxBy(x => x.rate);
 
-                    item.discountPrice = isDiscountAvailable
-                                         ? item.price * discountMultiplier
-                                         : item.price;
-
-                    item.discountRate = isDiscountAvailable ? activeDiscount.rate : 0;
-
+                    setDiscountTitle(activeDiscount);
+                    
+                    item.discountRate = activeDiscount?.rate??0; 
+                    item.discountPrice = item.price * (1 - (item.discountRate / 100));
+                    
+                    businessServiceInfo.businessServices.Add(item);
+                    
                     businessServiceInfo.businessServices.Add(item);
                 }
 
@@ -362,6 +349,7 @@ namespace CareGardenApiV1.Controller
             response.Message = Resource.Resource.ResimYuklemeBasarili;
             response.Data = await _businessGalleryService.SaveBusinessGalleryAsync(businessGallery);
 
+            BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
             BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(business.id));
 
             return Ok(response);
@@ -438,6 +426,7 @@ namespace CareGardenApiV1.Controller
             response.Message = Resource.Resource.KayitBasarili;
             response.Data = true;
 
+            BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
             BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(business.id));
 
             return Ok(response);
@@ -522,6 +511,7 @@ namespace CareGardenApiV1.Controller
             response.Message = Resource.Resource.KayitBasarili;
             response.Data = true;
 
+            BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
             BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(business.id));
 
             return Ok(response);
@@ -580,6 +570,8 @@ namespace CareGardenApiV1.Controller
             response.Message = Resource.Resource.ResimYuklemeBasarili;
             response.Data = await _businessGalleryService.SaveBusinessGalleryAsync(businessGallery);
 
+            BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
+
             if(businessGallery.isProfilePhoto)
             {
                 BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(business.id));
@@ -624,6 +616,16 @@ namespace CareGardenApiV1.Controller
             response.Data = await _businessGalleryService.UpdateBusinessGalleryAsync(businessGallery);
             response.Message = Resource.Resource.KayitBasarili;
 
+            if (businessGallery.businessId.HasValue)
+            {
+                BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(businessGallery.businessId.Value));
+
+                if (businessGallery.isProfilePhoto)
+                {
+                    BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(businessGallery.businessId.Value));
+                }
+            }
+
             return Ok(response);
         }
 
@@ -665,6 +667,19 @@ namespace CareGardenApiV1.Controller
 
             response.Data = await _businessService.DeleteBusinessAsync(business);
             return Ok(response);
+        }
+
+        private void setDiscountTitle(Discount? discount)
+        {
+            if(discount == null) return;
+            
+            var typeText = discount.type == DiscountType.WeekDay
+                ? Resource.Resource.HaftaIci
+                : discount.type == DiscountType.WeekEnd
+                    ? Resource.Resource.HaftaSonu
+                    : string.Empty;
+
+            discount.title = $"{string.Format(Resource.Resource.Indirim, discount.rate)} {typeText}";
         }
     }
 }

@@ -4,6 +4,7 @@ namespace CareGardenApiV1.Model.ResponseModel
 {
     public class AppointmentListModel
     {
+        public Guid id {  get; set; }
         public AppointmentStatus status {  get; set; }
         public DateTime? startDate { get; set; }
         public DateTime? endDate { get; set; }

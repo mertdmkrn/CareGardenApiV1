@@ -166,7 +166,7 @@ namespace CareGardenApiV1.Controller
         ///        "point" : 5
         ///        "aspectsOfPoint" : "1~2",
         ///        "workerPoint" : 5
-        ///        "aspectsOfPoint" : "1~2",
+        ///        "aspectsOfWorkerPoint" : "1~2",
         ///        "isShowProfile": true
         ///     }
         ///
@@ -263,7 +263,7 @@ namespace CareGardenApiV1.Controller
         ///        "point" : 5
         ///        "aspectsOfPoint" : "1~2",
         ///        "workerPoint" : 5
-        ///        "aspectsOfPoint" : "1~2",
+        ///        "aspectsOfWorkerPoint" : "1~2",
         ///        "isShowProfile": true
         ///     }
         ///

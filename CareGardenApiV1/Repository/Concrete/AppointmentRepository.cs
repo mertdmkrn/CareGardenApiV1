@@ -68,6 +68,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 .WhereIf(!searchModel.isHistory, x => x.startDate >= searchModel.startDate)
                 .Select(x => new AppointmentListModel
                 {
+                    id = x.id,
                     status = x.status,
                     startDate = x.startDate,
                     endDate = x.endDate,

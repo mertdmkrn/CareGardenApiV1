@@ -13,6 +13,7 @@ namespace CareGardenApiV1.Model
         public Appointment()
         {
             this.details = new HashSet<AppointmentDetail>();
+            this.comments = new HashSet<Comment>();
         }
 
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -44,10 +45,15 @@ namespace CareGardenApiV1.Model
         public User? user { get; set; }
 
         [JsonIgnore]
+        [NotMapped]
         public Comment? comment { get; set; }
 
 
+
         public virtual ICollection<AppointmentDetail> details { get; set; }
+
+        public virtual ICollection<Comment> comments { get; set; }
+
 
     }
 }

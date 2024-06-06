@@ -205,7 +205,8 @@ namespace CareGardenApiV1.Controller
                 response.ValidationErrors.Add(new ValidationError("appointmentId", Resource.Resource.BuAlaniBosBirakmayiniz));
 
             }
-            else
+            
+            if (userRole.Equals("Business"))
             {
                 comment.appointmentId = null;
             }

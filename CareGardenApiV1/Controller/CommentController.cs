@@ -186,13 +186,7 @@ namespace CareGardenApiV1.Controller
                 response.Message = Resource.Resource.KullaniciBulunamadi;
                 return Ok(response);
             }
-
-            if (comment.comment.IsNullOrEmpty())
-            {
-                response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("comment", Resource.Resource.BuAlaniBosBirakmayiniz));
-            }
-
+            
             if (userRole.Equals("Business") && !comment.replyId.HasValue)
             {
                 response.HasError = true;
@@ -284,19 +278,12 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
-            if (updateComment.comment.IsNullOrEmpty())
-            {
-                response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("comment", Resource.Resource.BuAlaniBosBirakmayiniz));
-            }
-
             if (response.HasError)
             {
                 response.Message = Resource.Resource.KayitYapilamadi;
                 return Ok(response);
             }
-
-
+            
             var comment = await _commentService.GetCommentByIdAsync(updateComment.id);
             bool isPointChanged = comment.point != updateComment.point;
 

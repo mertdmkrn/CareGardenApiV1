@@ -5,7 +5,8 @@
         Pending,
         Approved,
         Completed,
-        Cancelled
+        Cancelled,
+        All
     }
 
     public enum Gender

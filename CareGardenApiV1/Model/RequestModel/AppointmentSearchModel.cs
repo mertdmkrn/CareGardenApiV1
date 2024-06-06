@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CareGardenApiV1.Helpers;
+using Newtonsoft.Json;
 
 namespace CareGardenApiV1.Model.RequestModel
 {
@@ -12,10 +13,12 @@ namespace CareGardenApiV1.Model.RequestModel
         public HashSet<Guid> workerIds { get; set; } = new();
         public DateTime? startDate  { get; set; }
         public DateTime? endDate { get; set; }
+        public AppointmentStatus status { get; set; } = AppointmentStatus.All;
+
         public int? page { get; set; }
         public int? take { get; set; }
         [JsonIgnore]
         public bool? isActive { get; set; }
-        public bool isHistory { get; set; }
+        public bool? isHistory { get; set; }
     }
 }

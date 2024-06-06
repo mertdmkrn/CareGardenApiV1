@@ -64,8 +64,8 @@ namespace CareGardenApiV1.Repository.Concrete
             return await _context.Appointments
                 .AsNoTracking()
                 .Where(x => x.userId.Equals(searchModel.userId))
-                .WhereIf(searchModel.isHistory, x => x.startDate < searchModel.startDate)
-                .WhereIf(!searchModel.isHistory, x => x.startDate >= searchModel.startDate)
+                .WhereIf(searchModel.isHistory.HasValue && searchModel.isHistory.Value, x => x.startDate < searchModel.startDate)
+                .WhereIf(searchModel.isHistory.HasValue && !searchModel.isHistory.Value, x => x.startDate >= searchModel.startDate)
                 .Select(x => new AppointmentListModel
                 {
                     id = x.id,
@@ -140,10 +140,12 @@ namespace CareGardenApiV1.Repository.Concrete
         public async Task<bool> ChangeStatusAsync(AppointmentChangeModel changeModel)
         {
             await _context.Appointments
-             .WhereIf(changeModel.id.HasValue, x => x.id.Equals(changeModel.id))
-             .WhereIf(changeModel.userId.HasValue, x => x.userId.Equals(changeModel.userId))
-             .WhereIf(changeModel.date.HasValue, x => x.startDate < changeModel.date)
-             .ExecuteUpdateAsync(x => x.SetProperty(y => y.status, changeModel.status));
+                .WhereIf(changeModel.id.HasValue, x => x.id.Equals(changeModel.id))
+                .WhereIf(changeModel.userId.HasValue, x => x.userId.Equals(changeModel.userId))
+                .WhereIf(changeModel.date.HasValue, x => x.startDate < changeModel.date)
+                .ExecuteUpdateAsync(x => x
+                    .SetProperty(y => y.status, changeModel.status)
+                    .SetProperty(y => y.updateDate, DateTime.UtcNow));
 
             return true;
         }

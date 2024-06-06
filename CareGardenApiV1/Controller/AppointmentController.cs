@@ -77,7 +77,7 @@ namespace CareGardenApiV1.Controller
 
             response.Data = await _appointmentService.GetAppointmentsListModelByAppointmentSearchModelAsync(searchModel);
             
-            if (searchModel.isHistory)
+            if (searchModel.isHistory.GetValueOrDefault(false))
             {
                 var historyPendingAppointments = response.Data.Where(x => x.status == AppointmentStatus.Pending);
 

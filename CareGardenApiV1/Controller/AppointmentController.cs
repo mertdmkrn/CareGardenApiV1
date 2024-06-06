@@ -281,65 +281,7 @@ namespace CareGardenApiV1.Controller
             return Ok(response);
         }
 
-        ///// <summary>
-        ///// Delete Appointment
-        ///// </summary>
-        ///// <remarks>
-        ///// **Sample request body:**
-        /////
-        /////     { 
-        /////        "id" : "00000000-0000-0000-0000-000000000000",
-        /////        "isForceDelete" : true
-        /////     }
-        /////     
-        ///// </remarks>
-        ///// <returns></returns>
-        //[HttpPost("delete")]
-        //public async Task<IActionResult> Delete([FromBody] AppointmentChangeModel appointmentChangeModel)
-        //{
-        //    ResponseModel<bool> response = new ResponseModel<bool>();
-
-        //    if (!appointmentChangeModel.id.HasValue)
-        //    {
-        //        response.HasError = true;
-        //        response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-        //        response.Message = Resource.Resource.KayitSilinemedi;
-        //        return Ok(response);
-        //    }
-
-        //    Appointment appointment = await _appointmentService.GetAppointmentByIdAsync(appointmentChangeModel.id.Value);
-
-        //    if (appointment == null)
-        //    {
-        //        response.HasError = true;
-        //        response.Message = Resource.Resource.KayitBulunamadi;
-        //        return Ok(response);
-        //    }
-
-        //    var sessionUserId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid).IsNull(Guid.Empty.ToString());
-
-        //    if (appointment.startDate.DifferenceBetweenDates(DateTimeOffset.UtcNow.UtcDateTime, DateType.Hour) < 9 && appointment.userId == sessionUserId.ToGuid())
-        //    {
-        //        if (!appointmentChangeModel.isForceDelete.HasValue || (appointmentChangeModel.isForceDelete.HasValue && !appointmentChangeModel.isForceDelete.Value))
-        //        {
-        //            response.HasError = true;
-        //            response.Message = Resource.Resource.RandevuIptalUyari;
-        //            return Ok(response);
-        //        }
-        //        else
-        //        {
-        //            // Todo: Güvenirliği azalt
-        //        }
-        //    }
-
-        //    response.Data = await _appointmentService.DeleteAppointmentAsync(appointment);
-        //    response.Message = Resource.Resource.KayitSilindi;
-
-        //    BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(appointment.businessId.Value));
-
-        //    return Ok(response);
-        //}
-
+    
         /// <summary>
         /// Change Appointment Status
         /// </summary>
@@ -367,6 +309,62 @@ namespace CareGardenApiV1.Controller
             }
 
             response.Data = await _appointmentService.ChangeStatusAsync(appointmentChangeModel);
+            response.Message = Resource.Resource.KayitBasarili;
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Appointment Cancel
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "id" : "00000000-0000-0000-0000-000000000000",
+        ///        "cancellationDescription" : "Lorem ipsum."
+        ///     }
+        ///     
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost("cancel")]
+        public async Task<IActionResult> Cancel([FromBody] AppointmentChangeModel appointmentChangeModel)
+        {
+            ResponseModel<bool> response = new ResponseModel<bool>();
+            var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
+
+            if (!appointmentChangeModel.id.HasValue)
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (appointmentChangeModel.cancellationDescription.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("cancellationDescription", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.KayitYapilamadi;
+                return Ok(response);
+            }
+
+            var appointment = await _appointmentService.GetAppointmentByIdAsync(appointmentChangeModel.id.Value);
+
+            if (appointment == null || (appointment != null && appointment.userId != userId.ToGuid()))
+            {
+                response.Message = Resource.Resource.KayitYapilamadi;
+                response.HasError = true;
+                return Ok(response);
+            }
+
+            appointment.status = AppointmentStatus.Cancelled;
+            appointment.cancellationDescription = appointmentChangeModel.cancellationDescription;
+
+            await _appointmentService.UpdateAppointmentAsync(appointment);
+            
+            response.Data = true;
             response.Message = Resource.Resource.KayitBasarili;
             return Ok(response);
         }

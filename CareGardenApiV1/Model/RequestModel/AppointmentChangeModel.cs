@@ -10,7 +10,8 @@ namespace CareGardenApiV1.Model.RequestModel
         public Guid? userId { get; set; }
         [JsonIgnore]
         public DateTime? date { get; set; }
+
+        public string? cancellationDescription { get; set; }
         public AppointmentStatus status { get; set; }
-        public bool? isForceDelete { get; set; }
     }
 }

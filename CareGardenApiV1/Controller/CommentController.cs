@@ -29,13 +29,22 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
-        /// Get CommentBy Session User (User or Business)
+        /// Get Comment By Business Id
         /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "page": 0,
+        ///        "take": 5
+        ///     }
+        ///
+        /// </remarks>
         /// <returns></returns>
         [HttpPost("get")]
-        public async Task<IActionResult> GetBySessionUser()
+        public async Task<IActionResult> Get([FromBody] CommentSearchModel commentSearchModel)
         {
-            ResponseModel<List<Comment>> response = new ResponseModel<List<Comment>>();
+            ResponseModel<List<CommentListResponseModel>> response = new ResponseModel<List<CommentListResponseModel>>();
 
             var id = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
             var userRole = HelperMethods.GetClaimInfo(Request, ClaimTypes.Role);
@@ -47,9 +56,16 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
-            response.Data = userRole.Equals("Business")
-                ? await _commentService.GetCommentsByBusinessIdAsync(id.ToGuid())
-                : await _commentService.GetCommentsByUserIdAsync(id.ToGuid());
+            if(userRole.Equals("Business"))
+            {
+                commentSearchModel.businessId = id.ToGuid();
+            }
+            else
+            {
+                commentSearchModel.userId = id.ToGuid();
+            }
+
+            response.Data = await _commentService.GetSearchCommentListAsync(commentSearchModel);
 
             return Ok(response);
         }

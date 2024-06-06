@@ -79,5 +79,10 @@ namespace CareGardenApiV1.Service.Concrete
         {
             return await _commentRepository.GetSearchCommentsAsync(searchModel);
         }
+
+        public async Task<List<CommentListResponseModel>> GetSearchCommentListAsync(CommentSearchModel searchModel)
+        {
+            return await _commentRepository.GetSearchCommentListAsync(searchModel);
+        }
     }
 }

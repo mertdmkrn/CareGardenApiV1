@@ -73,6 +73,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     startDate = x.startDate,
                     endDate = x.endDate,
                     description = x.description,
+                    cancellationDescription = x.cancellationDescription,
                     business = x.business == null
                         ? null
                         : new AppointmentBusinessListModel
@@ -131,7 +132,7 @@ namespace CareGardenApiV1.Repository.Concrete
         {
             appointment.updateDate = DateTime.UtcNow;
 
-            await _context.Appointments.AddAsync(appointment);
+            _context.Appointments.Update(appointment);
             await _context.SaveChangesAsync();
             return appointment;
         }

@@ -207,6 +207,21 @@
              </remarks>
              <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.Cancel(CareGardenApiV1.Model.RequestModel.AppointmentChangeModel)">
+             <summary>
+             Appointment Cancel
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "cancellationDescription" : "Lorem ipsum."
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.AppointmentController.GetWorkersProvideService(CareGardenApiV1.Model.RequestModel.AppointmentSearchModel)">
              <summary>
              Get Workers Provide Service 
@@ -683,11 +698,20 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.CommentController.GetBySessionUser">
-            <summary>
-            Get CommentBy Session User (User or Business)
-            </summary>
-            <returns></returns>
+        <member name="M:CareGardenApiV1.Controller.CommentController.Get(CareGardenApiV1.Model.RequestModel.CommentSearchModel)">
+             <summary>
+             Get Comment By Business Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "page": 0,
+                    "take": 5
+                 }
+            
+             </remarks>
+             <returns></returns>
         </member>
         <member name="M:CareGardenApiV1.Controller.CommentController.GetByBusinessId(System.Guid)">
              <summary>

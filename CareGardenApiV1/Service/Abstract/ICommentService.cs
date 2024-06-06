@@ -10,6 +10,7 @@ namespace CareGardenApiV1.Service.Abstract
         Task<List<Comment>> GetCommentsByBusinessIdAsync(Guid businessId);
         Task<List<Comment>> GetCommentsByUserIdAsync(Guid userId);
         Task<List<CommentSearchResponseModel>> GetSearchCommentsAsync(CommentSearchModel searchModel);
+        Task<List<CommentListResponseModel>> GetSearchCommentListAsync(CommentSearchModel searchModel);
         Task<Comment> SaveCommentAsync(Comment comment);
         Task<Comment> UpdateCommentAsync(Comment comment);
         Task<bool> DeleteCommentAsync(Comment comment);

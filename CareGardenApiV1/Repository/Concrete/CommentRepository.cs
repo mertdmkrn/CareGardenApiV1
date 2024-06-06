@@ -170,8 +170,8 @@ namespace CareGardenApiV1.Repository.Concrete
                     updateDate = x.updateDate,
                     comment = x.comment,
                     point = x.point,
-                    userName = x.isShowProfile ? x.user.fullName : Resource.Resource.Anonymous,
-                    userImageUrl = x.isShowProfile ? x.user.imageUrl : null,
+                    userName = x.isShowProfile && x.user != null ? x.user.fullName : Resource.Resource.Anonymous,
+                    userImageUrl = x.isShowProfile && x.user != null ? x.user.imageUrl : null,
                     serviceInfos = x.appointment != null ? string.Join(',', x.appointment.details.Select(d => isTurkish ? d.businessService.name : d.businessService.nameEn)) : null,
                     staffInfos = x.appointment != null ? string.Join(',', x.appointment.details.Select(d => d.worker.name)) : null,
                     reply = x.reply.comment
@@ -185,5 +185,37 @@ namespace CareGardenApiV1.Repository.Concrete
                 .ToAsyncEnumerable()
                 .ToListAsync();
         }
+
+        public async Task<List<CommentListResponseModel>> GetSearchCommentListAsync(CommentSearchModel searchModel)
+        {
+            bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
+
+            return await _context.Comments
+                .AsNoTracking()
+                .WhereIf(searchModel.businessId.HasValue, x => x.businessId == searchModel.businessId)
+                .WhereIf(searchModel.businessId.HasValue, x => x.commentType == CommentType.Business)
+                .WhereIf(searchModel.userId.HasValue, x => x.userId == searchModel.userId)
+                .WhereIf(searchModel.userId.HasValue, x => x.commentType == CommentType.User)
+                .Select(x => new CommentListResponseModel
+                {
+                    id = x.id,
+                    businessName = x.business != null ? x.business.name : "",
+                    comment = x.comment,
+                    point = x.point,
+                    aspectsOfPoint = x.aspectsOfPoint,
+                    workerPoint = x.workerPoint,
+                    aspectsOfWorkerPoint = x.aspectsOfWorkerPoint,
+                    isShowProfile = x.isShowProfile,
+                    createDate = x.createDate,
+                    updateDate = x.updateDate,
+                    serviceInfos = x.appointment != null ? string.Join(',', x.appointment.details.Select(d => isTurkish ? d.businessService.name : d.businessService.nameEn)) : null,
+                    staffInfos = x.appointment != null ? string.Join(',', x.appointment.details.Select(d => d.worker.name)) : null,
+                })
+                .OrderByDescending(x => x.updateDate)
+                .Skip(searchModel.page * searchModel.take)
+                .Take(searchModel.take)
+                .ToListAsync();
+        }
+
     }
 }

@@ -94,6 +94,10 @@ namespace CareGardenApiV1.Controller
 
                 response.Data = response.Data.OrderByDescending(x => x.startDate).ToList(); 
             }
+            else if (!searchModel.isHistory.HasValue)
+            {
+                response.Data = response.Data.OrderBy(x => x.status).ThenByDescending(x => x.startDate).ToList();
+            }
 
             return Ok(response);
         }

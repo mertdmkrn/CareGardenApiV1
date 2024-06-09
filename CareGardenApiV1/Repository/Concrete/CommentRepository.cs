@@ -172,8 +172,8 @@ namespace CareGardenApiV1.Repository.Concrete
                     point = x.point,
                     userName = x.isShowProfile && x.user != null ? x.user.fullName : Resource.Resource.Anonymous,
                     userImageUrl = x.isShowProfile && x.user != null ? x.user.imageUrl : null,
-                    serviceInfos = x.appointment != null ? string.Join(',', x.appointment.details.Select(d => isTurkish ? d.businessService.name : d.businessService.nameEn)) : null,
-                    staffInfos = x.appointment != null ? string.Join(',', x.appointment.details.Select(d => d.worker.name)) : null,
+                    serviceInfos = x.appointment != null && !x.appointment.details.IsNullOrEmpty() ? string.Join(',', x.appointment.details.Select(d => isTurkish ? d.businessService.name : d.businessService.nameEn)) : null,
+                    staffInfos = x.appointment != null && !x.appointment.details.IsNullOrEmpty() ? string.Join(',', x.appointment.details.Select(d => d.worker.name)) : null,
                     reply = x.reply.comment
                 })
                 .OrderByDescendingIf(searchModel.orderType == CommentOrderType.Lastest, x => x.createDate)
@@ -209,8 +209,8 @@ namespace CareGardenApiV1.Repository.Concrete
                     isShowProfile = x.isShowProfile,
                     createDate = x.createDate,
                     updateDate = x.updateDate,
-                    serviceInfos = x.appointment != null ? string.Join(',', x.appointment.details.Select(d => isTurkish ? d.businessService.name : d.businessService.nameEn)) : null,
-                    staffInfos = x.appointment != null ? string.Join(',', x.appointment.details.Select(d => d.worker.name)) : null,
+                    serviceInfos = x.appointment != null && !x.appointment.details.IsNullOrEmpty() ? string.Join(',', x.appointment.details.Select(d => isTurkish ? d.businessService.name : d.businessService.nameEn)) : null,
+                    staffInfos = x.appointment != null && !x.appointment.details.IsNullOrEmpty() ? string.Join(',', x.appointment.details.Select(d => d.worker.name)) : null,
                 })
                 .OrderByDescending(x => x.updateDate)
                 .Skip(searchModel.page * searchModel.take)

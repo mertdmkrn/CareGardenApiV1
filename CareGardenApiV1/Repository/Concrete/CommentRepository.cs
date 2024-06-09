@@ -199,7 +199,8 @@ namespace CareGardenApiV1.Repository.Concrete
                 .Select(x => new CommentListResponseModel
                 {
                     id = x.id,
-                    businessName = x.business != null ? x.business.name : "",
+                    businessName = x.business != null ? x.business.name : null,
+                    businessLogoUrl = x.business != null ? x.business.logoUrl : null,
                     comment = x.comment,
                     point = x.point,
                     aspectsOfPoint = x.aspectsOfPoint,

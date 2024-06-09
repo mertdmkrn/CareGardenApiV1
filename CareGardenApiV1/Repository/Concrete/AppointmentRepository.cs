@@ -61,60 +61,92 @@ namespace CareGardenApiV1.Repository.Concrete
         {
             bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
 
-            return await _context.Appointments
-                .AsNoTracking()
-                .Where(x => x.userId.Equals(searchModel.userId))
-                .WhereIf(searchModel.isHistory.HasValue && searchModel.isHistory.Value, x => x.startDate < searchModel.startDate)
-                .WhereIf(searchModel.isHistory.HasValue && !searchModel.isHistory.Value, x => x.startDate >= searchModel.startDate)
-                .Select(x => new AppointmentListModel
-                {
-                    id = x.id,
-                    status = x.status,
-                    startDate = x.startDate,
-                    endDate = x.endDate,
-                    description = x.description,
-                    cancellationDescription = x.cancellationDescription,
-                    business = x.business == null
-                        ? null
-                        : new AppointmentBusinessListModel
-                        {
-                            id = x.business.id,
-                            address = x.business.address,
-                            name = x.business.name,
-                            logoUrl = x.business.logoUrl,
-                            telephone = x.business.telephone
-                        },
-                    comment = x.comments.Any()
-                        ? new Comment
-                        {
-                            id = x.comments.ElementAt(0).id,
-                            comment = x.comments.ElementAt(0).comment,
-                            point = x.comments.ElementAt(0).point,
-                            aspectsOfPoint = x.comments.ElementAt(0).aspectsOfPoint,
-                            workerPoint = x.comments.ElementAt(0).workerPoint,
-                            aspectsOfWorkerPoint = x.comments.ElementAt(0).aspectsOfWorkerPoint,
-                            isShowProfile = x.comments.ElementAt(0).isShowProfile,
-                            createDate = x.comments.ElementAt(0).createDate,
-                            updateDate = x.comments.ElementAt(0).updateDate
-                        }
-                        : null,
-                    details = x.details.Select(d => new AppointmentDetailListModel
+            if (searchModel.isHistory.HasValue)
+            {
+                return await _context.Appointments
+                    .AsNoTracking()
+                    .Where(x => x.userId.Equals(searchModel.userId))
+                    .WhereIf(searchModel.isHistory.Value, x => x.startDate < searchModel.startDate)
+                    .WhereIf(!searchModel.isHistory.Value, x => x.startDate >= searchModel.startDate)
+                    .Select(x => new AppointmentListModel
                     {
-                        workerName = d.worker != null ? d.worker.name : null,
-                        workerImagePath = d.worker != null ? d.worker.path : null,
-                        serviceName = isTurkish ?  d.businessService != null ? d.businessService.name : null 
-                                                : d.businessService != null ? d.businessService.nameEn : null,
-                        minDuration = d.businessService != null ? d.businessService.minDuration : null,
-                        maxDuration = d.businessService != null ? d.businessService.maxDuration : null,
-                        price = d.price,
-                        discountPrice = d.discountPrice,
-                        discountRate = ((d.price - d.discountPrice) / d.price) * 100,
+                        id = x.id,
+                        status = x.status,
+                        startDate = x.startDate,
+                        endDate = x.endDate,
+                        description = x.description,
+                        cancellationDescription = x.cancellationDescription,
+                        business = x.business == null
+                            ? null
+                            : new AppointmentBusinessListModel
+                            {
+                                id = x.business.id,
+                                address = x.business.address,
+                                name = x.business.name,
+                                logoUrl = x.business.logoUrl,
+                                telephone = x.business.telephone
+                            },
+                        comment = x.comments.Any()
+                            ? new Comment
+                            {
+                                id = x.comments.ElementAt(0).id,
+                                comment = x.comments.ElementAt(0).comment,
+                                point = x.comments.ElementAt(0).point,
+                                aspectsOfPoint = x.comments.ElementAt(0).aspectsOfPoint,
+                                workerPoint = x.comments.ElementAt(0).workerPoint,
+                                aspectsOfWorkerPoint = x.comments.ElementAt(0).aspectsOfWorkerPoint,
+                                isShowProfile = x.comments.ElementAt(0).isShowProfile,
+                                createDate = x.comments.ElementAt(0).createDate,
+                                updateDate = x.comments.ElementAt(0).updateDate
+                            }
+                            : null,
+                        details = x.details.Select(d => new AppointmentDetailListModel
+                        {
+                            workerName = d.worker != null ? d.worker.name : null,
+                            workerImagePath = d.worker != null ? d.worker.path : null,
+                            serviceName = isTurkish ? d.businessService != null ? d.businessService.name : null
+                                                    : d.businessService != null ? d.businessService.nameEn : null,
+                            minDuration = d.businessService != null ? d.businessService.minDuration : null,
+                            maxDuration = d.businessService != null ? d.businessService.maxDuration : null,
+                            price = d.price,
+                            discountPrice = d.discountPrice,
+                            discountRate = ((d.price - d.discountPrice) / d.price) * 100,
+                        })
                     })
-                })
-                .OrderBy(x => x.startDate)
-                .Skip(searchModel.page.Value * searchModel.take.Value)
-                .Take(searchModel.take.Value)
-                .ToListAsync();
+                    .OrderBy(x => x.startDate)
+                    .Skip(searchModel.page.Value * searchModel.take.Value)
+                    .Take(searchModel.take.Value)
+                    .ToListAsync();
+            }
+            else
+            {
+                return await _context.Appointments
+                    .AsNoTracking()
+                    .Where(x => x.userId.Equals(searchModel.userId))
+                    .Select(x => new AppointmentListModel
+                    {
+                        id = x.id,
+                        status = x.status,
+                        startDate = x.startDate,
+                        endDate = x.endDate,
+                        business = x.business == null
+                            ? null
+                            : new AppointmentBusinessListModel
+                            {
+                                name = x.business.name
+                            },
+                           details = x.details.Select(d => new AppointmentDetailListModel
+                           {                          
+                               price = d.price,
+                               discountPrice = d.discountPrice
+                           })
+                       })
+                       .OrderBy(x => x.status)
+                       .ThenByDescending(x => x.startDate)
+                       .Skip(searchModel.page.Value * searchModel.take.Value)
+                       .Take(searchModel.take.Value)
+                       .ToListAsync();
+            }
         }
 
         public async Task<Appointment> SaveAppointmentAsync(Appointment appointment)

@@ -77,7 +77,7 @@ namespace CareGardenApiV1.Controller
 
             response.Data = await _appointmentService.GetAppointmentsListModelByAppointmentSearchModelAsync(searchModel);
             
-            if (searchModel.isHistory.GetValueOrDefault(false))
+            if (!searchModel.isHistory.HasValue || searchModel.isHistory.GetValueOrDefault(false))
             {
                 var historyPendingAppointments = response.Data.Where(x => x.status == AppointmentStatus.Pending);
 
@@ -92,11 +92,8 @@ namespace CareGardenApiV1.Controller
                     }));
                 }
 
-                response.Data = response.Data.OrderByDescending(x => x.startDate).ToList(); 
-            }
-            else if (!searchModel.isHistory.HasValue)
-            {
-                response.Data = response.Data.OrderBy(x => x.status).ThenByDescending(x => x.startDate).ToList();
+                if (searchModel.isHistory.HasValue)
+                    response.Data = response.Data.OrderByDescending(x => x.startDate).ToList(); 
             }
 
             return Ok(response);

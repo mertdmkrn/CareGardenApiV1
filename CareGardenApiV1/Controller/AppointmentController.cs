@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CareGardenApiV1.Helpers;
 using System.Security.Claims;
-
 namespace CareGardenApiV1.Controller
 {
     [ApiController]
@@ -23,6 +22,7 @@ namespace CareGardenApiV1.Controller
         private readonly IBusinessService _businessService;
         private readonly IWorkerService _workerService;
         private readonly IWorkerServicePriceService _workerServicePriceService;
+        private readonly ICommentService _commentService;
 
         public AppointmentController(
             IAppointmentService appointmentService,
@@ -31,7 +31,8 @@ namespace CareGardenApiV1.Controller
             IBusinessServicesService businessServicesService,
             IBusinessService businessService,
             IWorkerService workerService,
-            IWorkerServicePriceService workerServicePriceService)
+            IWorkerServicePriceService workerServicePriceService,
+            ICommentService commentService)
         {
             _appointmentService = appointmentService;
             _appointmentDetailService = appointmentDetailService;
@@ -40,6 +41,7 @@ namespace CareGardenApiV1.Controller
             _businessService = businessService;
             _workerService = workerService;
             _workerServicePriceService = workerServicePriceService;
+            _commentService = commentService;
         }
 
         /// <summary>
@@ -472,7 +474,7 @@ namespace CareGardenApiV1.Controller
             var nowDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now.AddMinutes(business.appointmentTimeInterval), "Turkey Standard Time");
             var pastAppointments = await _appointmentDetailService.GetAppointmentDetailsByWorkerIdsAndDateAsync(new AppointmentSearchModel { startDate = nowDate, workerIds = workers.Select(x => x.id).ToHashSet() });
             var workerServicePrices = await _workerServicePriceService.GetWorkerServicePricesSearchAsync(businessServiceId: appointmentInfo.businessServiceId.Value);
-
+            var pointList = await _commentService.GetCommentPointListForCache(businessId: appointmentInfo.businessId);
             bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
 
             foreach (var worker in workers)
@@ -519,6 +521,17 @@ namespace CareGardenApiV1.Controller
                 worker.price = price;
                 worker.discountRate = activeDiscount?.rate ?? 0;
                 worker.discountPrice = price * (1 - (worker.discountRate / 100));
+
+                if(!pointList.IsNullOrEmpty())
+                {
+                    var points = pointList.Where(x => x.workerIds.Contains(worker.id));
+
+                    if(!points.IsNullOrEmpty())
+                    {
+                        worker.countRating = points.Count();
+                        worker.rating = points.Average(x => x.point);
+                    }
+                }
             }
         }
 

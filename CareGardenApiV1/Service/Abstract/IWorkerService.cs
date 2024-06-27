@@ -10,6 +10,7 @@ namespace CareGardenApiV1.Service.Abstract
         Task<List<Worker>> GetWorkersByBusinessIdAsync(Guid businessId);
         Task<List<AppointmentWorkerModel>> GetWorkersByAppointmentSearchModelAsync(AppointmentSearchModel searchModel);
         Task<List<AppointmentWorkerModel>> GetWorkersByWorkerIdsAsync(List<Guid?> workerIds);
+        Task<WorkerDetailResponseModel> GetWorkerDetailByIdAsync(Guid id);
         Task<Worker> SaveWorkerAsync(Worker worker);
         Task<Worker> UpdateWorkerAsync(Worker worker);
         Task<bool> DeleteWorkerAsync(Guid id);

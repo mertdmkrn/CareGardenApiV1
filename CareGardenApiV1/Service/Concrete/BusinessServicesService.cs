@@ -1,4 +1,5 @@
 ﻿using CareGardenApiV1.Model;
+using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 
@@ -61,6 +62,11 @@ namespace CareGardenApiV1.Service.Concrete
         public async Task<BusinessServiceModel> UpdateBusinessServiceAsync(BusinessServiceModel businessService)
         {
             return await _businessServicesRepository.UpdateBusinessServiceAsync(businessService);          
+        }
+
+        public async Task<List<WorkerDetailServiceInfo>> GetWorkerDetailServiceInfoByIdsAsync(List<Guid> ids)
+        {
+            return await _businessServicesRepository.GetWorkerDetailServiceInfoByIdsAsync(ids);
         }
     }
 }

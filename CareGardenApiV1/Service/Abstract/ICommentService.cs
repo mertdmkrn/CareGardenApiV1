@@ -11,6 +11,7 @@ namespace CareGardenApiV1.Service.Abstract
         Task<List<Comment>> GetCommentsByUserIdAsync(Guid userId);
         Task<List<CommentSearchResponseModel>> GetSearchCommentsAsync(CommentSearchModel searchModel);
         Task<List<CommentListResponseModel>> GetSearchCommentListAsync(CommentSearchModel searchModel);
+        Task<List<CommentPointListModel>> GetCommentPointListForCache(Guid? businessId = null, Guid? workerId = null, bool cache = true);
         Task<Comment> SaveCommentAsync(Comment comment);
         Task<Comment> UpdateCommentAsync(Comment comment);
         Task<bool> DeleteCommentAsync(Comment comment);

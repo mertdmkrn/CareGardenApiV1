@@ -22,15 +22,16 @@ namespace CareGardenApiV1.Controller
         private readonly IBusinessWorkingInfoService _businessWorkingInfoService;
         private readonly IBusinessGalleryService _businessGalleryService;
         private readonly IServicesService _servicesService;
+        private readonly ICommentService _commentService;
         private readonly IMemoryCache _memoryCache;
         private readonly IFileHandler _fileHandler;
-        private readonly IElasticHandler _elasticHandler;
 
         public BusinessController(
             IBusinessService businessService,
             IBusinessWorkingInfoService businessWorkingInfoService,
             IBusinessGalleryService businessGalleryService,
             IServicesService servicesService,
+            ICommentService commentService,
             IMemoryCache memoryCache,
             IFileHandler fileHandler)
         {
@@ -40,6 +41,7 @@ namespace CareGardenApiV1.Controller
             _servicesService = servicesService;
             _memoryCache = memoryCache;
             _fileHandler = fileHandler;
+            _commentService = commentService;
         }
 
 
@@ -189,6 +191,26 @@ namespace CareGardenApiV1.Controller
             var businessDetail = await _businessService.GetBusinessDetailByIdAsync(id.ToGuid());
             businessDetail.isOpen = HelperMethods.GetBusinessOpen(businessDetail.businessWorkingInfo, businessDetail.officialDayAvailable);
             businessDetail.averageRating = Math.Round(businessDetail.averageRating, 1);
+
+            var pointList = await _commentService.GetCommentPointListForCache(businessId: id.ToGuid());
+
+            if (!pointList.IsNullOrEmpty())
+            {
+                businessDetail.workers = businessDetail.workers
+                    .Select(x =>
+                    {
+                        var points = pointList.Where(p => p.workerIds.Contains(x.id));
+
+                        if(!points.IsNullOrEmpty())
+                        {
+                            x.countRating = points.Count();
+                            x.point = points.Average(x => x.point);
+                        }
+
+                        return x;
+                    })
+                    .ToList();
+            }
 
             var services = new List<Services>();
 
@@ -347,7 +369,6 @@ namespace CareGardenApiV1.Controller
             response.Message = Resource.Resource.ResimYuklemeBasarili;
             response.Data = await _businessGalleryService.SaveBusinessGalleryAsync(businessGallery);
 
-            BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
             BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(business.id));
 
             return Ok(response);
@@ -424,7 +445,6 @@ namespace CareGardenApiV1.Controller
             response.Message = Resource.Resource.KayitBasarili;
             response.Data = true;
 
-            BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
             BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(business.id));
 
             return Ok(response);
@@ -509,7 +529,6 @@ namespace CareGardenApiV1.Controller
             response.Message = Resource.Resource.KayitBasarili;
             response.Data = true;
 
-            BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
             BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(business.id));
 
             return Ok(response);
@@ -568,8 +587,6 @@ namespace CareGardenApiV1.Controller
             response.Message = Resource.Resource.ResimYuklemeBasarili;
             response.Data = await _businessGalleryService.SaveBusinessGalleryAsync(businessGallery);
 
-            BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(business.id));
-
             if(businessGallery.isProfilePhoto)
             {
                 BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(business.id));
@@ -613,16 +630,6 @@ namespace CareGardenApiV1.Controller
 
             response.Data = await _businessGalleryService.UpdateBusinessGalleryAsync(businessGallery);
             response.Message = Resource.Resource.KayitBasarili;
-
-            if (businessGallery.businessId.HasValue)
-            {
-                BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(businessGallery.businessId.Value));
-
-                if (businessGallery.isProfilePhoto)
-                {
-                    BackgroundJob.Enqueue(() => _elasticHandler.UpdateOrCreateIndexBusiness(businessGallery.businessId.Value));
-                }
-            }
 
             return Ok(response);
         }

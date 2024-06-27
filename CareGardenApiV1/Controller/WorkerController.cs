@@ -1,7 +1,6 @@
 ﻿using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.ResponseModel;
-using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,15 +10,19 @@ using CareGardenApiV1.Model.RequestModel;
 namespace CareGardenApiV1.Controller
 {
     [ApiController]
-    [Authorize(Roles = "Admin,Business")]
+    [Authorize]
     [Route("worker")]
     public class WorkerController : ControllerBase
     {
         private readonly IWorkerService _workerService;
+        private readonly IBusinessServicesService _businessServicesService;
+        private readonly ICommentService _commentService;
 
-        public WorkerController(IWorkerService workerService)
+        public WorkerController(IWorkerService workerService, IBusinessServicesService businessServicesService, ICommentService commentService)
         {
             _workerService = workerService;
+            _businessServicesService = businessServicesService;
+            _commentService = commentService;
         }
 
         /// <summary>
@@ -113,6 +116,48 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
+        /// Get Worker By Business Id
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "00000000-0000-0000-0000-000000000000"
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost("getdetailbyid")]
+        public async Task<IActionResult> GetDetailById([FromBody] string? id)
+        {
+            ResponseModel<WorkerDetailResponseModel> response = new ResponseModel<WorkerDetailResponseModel>();
+
+            if (id.IsNullOrEmpty() || !id.IsGuid())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                response.Message = Resource.Resource.KayitBulunamadi;
+                return Ok(response);
+            }
+
+            var data = await _workerService.GetWorkerDetailByIdAsync(id.ToGuid());
+            data.serviceInfos = await _businessServicesService.GetWorkerDetailServiceInfoByIdsAsync(data.serviceIds.Select(x => x.ToGuid()).ToList());
+            
+            var pointList = await _commentService.GetCommentPointListForCache(workerId: id.ToGuid());
+
+            if(!pointList.IsNullOrEmpty())
+            {
+                data.countRating = pointList.Count;
+                data.point = Math.Round(pointList.Average(x => x.point), 1);
+            }
+
+            response.Data = data;
+
+            return Ok(response);
+        }
+
+
+        /// <summary>
         /// Save Worker
         /// </summary>
         /// <remarks>
@@ -121,6 +166,9 @@ namespace CareGardenApiV1.Controller
         ///     { 
         ///        "name" : "Mert DEMİRKIRAN",
         ///        "title" : "Hair Stylist",
+        ///        "titleEn" : "Hair Stylist",
+        ///        "about" : "Lorem ipsum",
+        ///        "aboutEn" : "Lorem ipsum",
         ///        "path" : "mert.jpg",
         ///        "businessId" : "00000000-0000-0000-0000-000000000000",
         ///        "serviceIds" : "00000000-0000-0000-0000-000000000000;00000000-0000-0000-0000-000000000001",
@@ -187,6 +235,9 @@ namespace CareGardenApiV1.Controller
         ///        "id" : "00000000-0000-0000-0000-000000000000",
         ///        "name" : "Mert DEMİRKIRAN",
         ///        "title" : "Hair Stylist",
+        ///        "titleEn" : "Hair Stylist",
+        ///        "about" : "Lorem ipsum",
+        ///        "aboutEn" : "Lorem ipsum",
         ///        "path" : "mert.jpg",
         ///        "businessId" : "00000000-0000-0000-0000-000000000000",
         ///        "serviceIds" : "00000000-0000-0000-0000-000000000000;00000000-0000-0000-0000-000000000001",
@@ -245,11 +296,14 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
-            worker.name = updateWorker.name;
-            worker.title = updateWorker.title;
-            worker.path = updateWorker.path;
-            worker.businessId = updateWorker.businessId;
-            worker.serviceIds = updateWorker.serviceIds;
+            worker.name = updateWorker.name.IsNull(worker.name);
+            worker.title = updateWorker.title.IsNull(worker.title);
+            worker.titleEn = updateWorker.titleEn.IsNull(worker.titleEn);
+            worker.about = updateWorker.about.IsNull(worker.about);
+            worker.aboutEn = updateWorker.aboutEn.IsNull(worker.aboutEn);
+            worker.path = updateWorker.path.IsNull(worker.path);
+            worker.businessId = updateWorker.businessId ?? worker.businessId;
+            worker.serviceIds = updateWorker.serviceIds.IsNull(worker.serviceIds);
             worker.createdUserId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid).ToGuid();
             worker.isActive = updateWorker.isActive;
             worker.mondayWorkHours = updateWorker.mondayWorkHours;

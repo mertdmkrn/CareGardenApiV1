@@ -1,4 +1,5 @@
-﻿using CareGardenApiV1.Model;
+﻿using CareGardenApiV1.Helpers;
+using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
@@ -83,6 +84,16 @@ namespace CareGardenApiV1.Service.Concrete
         public async Task<List<CommentListResponseModel>> GetSearchCommentListAsync(CommentSearchModel searchModel)
         {
             return await _commentRepository.GetSearchCommentListAsync(searchModel);
+        }
+
+        public async Task<List<CommentPointListModel>> GetCommentPointListForCache(Guid? businessId = null, Guid? workerId = null, bool cache = true)
+        {
+            var list = await _commentRepository.GetCommentPointListForCache(cache);
+
+            return list
+                .WhereIf(businessId.IsNotNullOrEmpty(), x => x.businessId == businessId)
+                .WhereIf(workerId.IsNotNullOrEmpty(), x => x.workerIds.Contains(workerId))
+                .ToList();              
         }
     }
 }

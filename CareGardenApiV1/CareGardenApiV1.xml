@@ -1440,6 +1440,20 @@
              </remarks>
              <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerController.GetDetailById(System.String)">
+             <summary>
+             Get Worker By Business Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.WorkerController.Save(CareGardenApiV1.Model.Worker)">
              <summary>
              Save Worker
@@ -1450,6 +1464,9 @@
                  { 
                     "name" : "Mert DEMİRKIRAN",
                     "title" : "Hair Stylist",
+                    "titleEn" : "Hair Stylist",
+                    "about" : "Lorem ipsum",
+                    "aboutEn" : "Lorem ipsum",
                     "path" : "mert.jpg",
                     "businessId" : "00000000-0000-0000-0000-000000000000",
                     "serviceIds" : "00000000-0000-0000-0000-000000000000;00000000-0000-0000-0000-000000000001",
@@ -1476,6 +1493,9 @@
                     "id" : "00000000-0000-0000-0000-000000000000",
                     "name" : "Mert DEMİRKIRAN",
                     "title" : "Hair Stylist",
+                    "titleEn" : "Hair Stylist",
+                    "about" : "Lorem ipsum",
+                    "aboutEn" : "Lorem ipsum",
                     "path" : "mert.jpg",
                     "businessId" : "00000000-0000-0000-0000-000000000000",
                     "serviceIds" : "00000000-0000-0000-0000-000000000000;00000000-0000-0000-0000-000000000001",
@@ -2036,6 +2056,18 @@
             <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.CareGardenV38.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV39">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV39.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV39.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV39.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:CareGardenApiV1.Resource.Resource">

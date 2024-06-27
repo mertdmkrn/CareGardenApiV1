@@ -54,5 +54,10 @@ namespace CareGardenApiV1.Service.Concrete
         {
             return await _workerRepository.UpdateWorkerAsync(worker);
         }
+
+        public async Task<WorkerDetailResponseModel> GetWorkerDetailByIdAsync(Guid id)
+        {
+            return await _workerRepository.GetWorkerDetailByIdAsync(id);
+        }
     }
 }

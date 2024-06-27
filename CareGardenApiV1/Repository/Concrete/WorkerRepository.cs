@@ -76,6 +76,25 @@ namespace CareGardenApiV1.Repository.Concrete
                 .ToListAsync();
         }
 
+        public async Task<WorkerDetailResponseModel> GetWorkerDetailByIdAsync(Guid id)
+        {
+            bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
+
+            return await _context.Workers
+                .AsNoTracking()
+                .Where(x => x.id == id)
+                .Select(x => new WorkerDetailResponseModel
+                {
+                    id = x.id,
+                    name = x.name,
+                    path = x.path,
+                    title = isTurkish ? x.title : x.titleEn.IsNull(x.title),
+                    about = isTurkish ? x.about : x.aboutEn.IsNull(x.about),
+                    serviceIds = x.serviceIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                })
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<List<AppointmentWorkerModel>> GetWorkersByWorkerIdsAsync(List<Guid?> workerIds)
         {
             bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");

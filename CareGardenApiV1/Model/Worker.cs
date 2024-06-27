@@ -18,6 +18,8 @@ namespace CareGardenApiV1.Model
         public string? title { get; set; }
         [MaxLength(100)]
         public string? titleEn { get; set; }
+        public string? about { get; set; }
+        public string? aboutEn { get; set; }
         public string? path { get; set; }
         public bool isActive { get; set; }
         public bool isAvailable { get; set; }

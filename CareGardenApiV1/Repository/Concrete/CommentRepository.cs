@@ -4,17 +4,20 @@ using CareGardenApiV1.Model;
 using Microsoft.EntityFrameworkCore;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
-using Hangfire.PostgreSql.Utils;
+using Microsoft.Extensions.Caching.Memory;
+using static CareGardenApiV1.Helpers.Constants;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
     public class CommentRepository : ICommentRepository
     {
         private readonly CareGardenApiDbContext _context;
+        private readonly IMemoryCache _memoryCache;
 
-        public CommentRepository(CareGardenApiDbContext context)
+        public CommentRepository(CareGardenApiDbContext context, IMemoryCache memoryCache)
         {
             _context = context;
+            _memoryCache = memoryCache;
         }
 
         public async Task<Comment> GetCommentByIdAsync(Guid id)
@@ -218,5 +221,41 @@ namespace CareGardenApiV1.Repository.Concrete
                 .ToListAsync();
         }
 
+        public async Task<List<CommentPointListModel>> GetCommentPointListForCache(bool cache = true)
+        {
+            List<CommentPointListModel> commentPointListModel = null;
+
+            if (cache && _memoryCache.TryGetValue(CacheKeys.CommentPointList, out object list))
+            {
+                commentPointListModel = (List<CommentPointListModel>)list;
+            }
+            else
+            {
+                commentPointListModel = await GetCommentPointList();
+
+                _memoryCache.Set(CacheKeys.CommentPointList, commentPointListModel, new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpiration = DateTime.Now.AddHours(3),
+                    Priority = CacheItemPriority.Normal
+                });
+            }
+
+            return commentPointListModel;
+        }
+
+        private async Task<List<CommentPointListModel>> GetCommentPointList()
+        {
+            return await _context.Comments
+                .AsNoTracking()
+                .Where(x => x.commentType == CommentType.User)
+                .Where(x => x.appointment != null && x.appointment.details.Any()) 
+                .Select(x => new CommentPointListModel
+                {
+                    businessId = x.businessId,
+                    point = x.point,
+                    workerIds = x.appointment.details.Select(x => x.workerId)
+                })
+                .ToListAsync();
+        }
     }
 }

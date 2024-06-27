@@ -1,6 +1,7 @@
 ﻿using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Model;
 using Microsoft.EntityFrameworkCore;
+using CareGardenApiV1.Model.ResponseModel;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -32,6 +33,23 @@ namespace CareGardenApiV1.Repository.Concrete
                     serviceId = x.serviceId,
                     maxDuration = x.maxDuration
                 })
+                .ToListAsync();
+        }
+
+        public async Task<List<WorkerDetailServiceInfo>> GetWorkerDetailServiceInfoByIdsAsync(List<Guid> ids)
+        {
+            bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
+
+            return await _context.BusinessServices
+                .AsNoTracking()
+                .Where(x => ids.Contains(x.id))
+                .Select(x => new WorkerDetailServiceInfo
+                {
+                    className = x.service.className,
+                    name = isTurkish ? x.service.name : x.service.nameEn ?? x.service.name
+                })
+                .OrderBy(x => x.name)
+                .Distinct()
                 .ToListAsync();
         }
 

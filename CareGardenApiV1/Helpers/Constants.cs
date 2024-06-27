@@ -9,6 +9,7 @@ namespace CareGardenApiV1.Helpers
         public static class CacheKeys
         {
             public static string BusinessList = "BusinessList";
+            public static string CommentPointList = "CommentPointList";
         }
 
         public static List<string> Cities = new List<string>

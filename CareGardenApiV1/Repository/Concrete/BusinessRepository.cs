@@ -386,7 +386,7 @@ namespace CareGardenApiV1.Repository.Concrete
             var query = _context.Businesses
                 .AsNoTracking()
                 .WhereIf(searchAdminModel.city.IsNotNullOrEmpty(), x => x.city == searchAdminModel.city)
-                .WhereIf(searchAdminModel.name.IsNotNullOrEmpty(), x => x.name == searchAdminModel.name)
+                .WhereIf(searchAdminModel.name.IsNotNullOrEmpty(), x => x.name.StartsWith(searchAdminModel.name))
                 .WhereIf(searchAdminModel.isOnlyActive, x => x.isActive == true)
                 .WhereIf(searchAdminModel.isOnlyNotActive, x => x.isActive == false)
                 .WhereIf((WorkingGenderType)searchAdminModel.workingGenderType != WorkingGenderType.All, x => x.workingGenderType == searchAdminModel.workingGenderType);

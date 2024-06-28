@@ -400,9 +400,11 @@ namespace CareGardenApiV1.Repository.Concrete
                     name = x.name,
                     city = x.city,
                     province = x.province,
+                    email = x.email,
+                    logoUrl = x.logoUrl,
                     createDate = x.createDate,
                     isActive = x.isActive,
-                    workingGenderType = x.workingGenderType,
+                    workingGenderType = x.workingGenderType
                 })
                 .OrderByDescending(x => x.createDate)
                 .ThenByDescending(x => x.name)

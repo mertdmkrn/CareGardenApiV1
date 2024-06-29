@@ -10,7 +10,6 @@ using CareGardenApiV1.Model.RequestModel;
 namespace CareGardenApiV1.Controller
 {
     [ApiController]
-    [Authorize]
     [Route("worker")]
     public class WorkerController : ControllerBase
     {
@@ -38,6 +37,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("getbyid")]
+        [Authorize]
         public async Task<IActionResult> GetById([FromBody] string? id)
         {
             ResponseModel<Worker> response = new ResponseModel<Worker>();
@@ -67,6 +67,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("getbybusinessid")]
+        [Authorize]
         public async Task<IActionResult> GetByBusinessId([FromBody] string? businessId)
         {
             ResponseModel<List<Worker>> response = new ResponseModel<List<Worker>>();
@@ -96,6 +97,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("getbybusinessserviceid")]
+        [Authorize]
         public async Task<IActionResult> GetByBusinessServiceId([FromBody] string? businessServiceId)
         {
             ResponseModel<List<AppointmentWorkerModel>> response = new ResponseModel<List<AppointmentWorkerModel>>();
@@ -184,6 +186,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("save")]
+        [Authorize(Roles = "Business,Admin")]
         public async Task<IActionResult> Save([FromBody] Worker worker)
         {
             ResponseModel<Worker> response = new ResponseModel<Worker>();
@@ -254,6 +257,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("update")]
+        [Authorize(Roles = "Business,Admin")]
         public async Task<IActionResult> Update([FromBody] Worker updateWorker)
         {
             ResponseModel<Worker> response = new ResponseModel<Worker>();
@@ -332,6 +336,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("delete")]
+        [Authorize(Roles = "Business,Admin")]
         public async Task<IActionResult> Delete([FromBody] string? id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -363,6 +368,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("deletebybusinessid")]
+        [Authorize(Roles = "Business,Admin")]
         public async Task<IActionResult> DeleteByBusinessId([FromBody] string? businessId)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();

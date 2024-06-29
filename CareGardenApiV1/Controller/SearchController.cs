@@ -14,7 +14,6 @@ using System.Security.Claims;
 namespace CareGardenApiV1.Controller
 {
     [ApiController]
-    [Authorize]
     [Route("user")]
     public class SearchController : ControllerBase
     {
@@ -227,27 +226,6 @@ namespace CareGardenApiV1.Controller
             response.Data = Constants.LocationInfos;
 
             return Ok(response);
-        }
-
-        private async Task<List<BusinessDetailModel>> GetSearchBusinessWithElastic(string keyword)
-        {
-            var data = new List<BusinessDetailModel>();
-            ClusterHealthResponse? elasticHealthResponse = await _elasticClient.Cluster.HealthAsync();
-
-            if (elasticHealthResponse.IsValid)
-            {
-                var searchResponse = await _elasticClient.SearchAsync<BusinessDetailModel>(s => s
-                    .Query(q => q
-                        .QueryString(d => d.Query($"*{keyword}*"))
-                    )
-                    .Size(15)
-                );
-
-                data = searchResponse.Documents.ToList();
-                return data;
-            }
-
-            return data;
         }
     }
 }

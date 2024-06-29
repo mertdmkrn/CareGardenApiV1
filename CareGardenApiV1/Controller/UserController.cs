@@ -14,7 +14,6 @@ using System.Security.Claims;
 namespace CareGardenApiV1.Controller
 {
     [ApiController]
-    [Authorize]
     [Route("user")]
     public class UserController : ControllerBase
     {
@@ -46,6 +45,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("getbyid")]
+        [Authorize]
         public async Task<IActionResult> GetById([FromBody] string id)
         {
             ResponseModel<UserResponseModel> response = new ResponseModel<UserResponseModel>();
@@ -77,6 +77,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("get")]
+        [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> Get()
         {
             ResponseModel<UserResponseModel> response = new ResponseModel<UserResponseModel>();
@@ -99,6 +100,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("sendfeedback")]
+        [Authorize]
         public async Task<IActionResult> SendFeedBack([FromForm] MailRequest email)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -149,6 +151,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("setprofilephoto")]
+        [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> SetProfilePhoto(IFormFile file)
         {
             ResponseModel<string> response = new ResponseModel<string>();
@@ -190,6 +193,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("delete")]
+        [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> Delete([FromBody] string id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -228,14 +232,6 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetPopularBusiness([FromBody] BusinessSearchModel businessSearchModel)
         {
             ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
-            var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
-
-            if (userId.IsNullOrEmpty())
-            {
-                response.HasError = true;
-                response.Message = Resource.Resource.KullaniciBulunamadi;
-                return Ok(response);
-            }
 
             bool isSendNoLocationInfo = (!businessSearchModel.latitude.HasValue || businessSearchModel.latitude == 0)
                                         && (!businessSearchModel.longitude.HasValue || businessSearchModel.longitude == 0)
@@ -262,6 +258,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("getfavoritebusiness")]
+        [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> GetFavoriteBusiness([FromBody] BusinessSearchModel businessSearchModel)
         {
             ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
@@ -294,14 +291,6 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetNearByBusiness([FromBody] BusinessSearchModel businessSearchModel)
         {
             ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
-            var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
-
-            if (userId.IsNullOrEmpty())
-            {
-                response.HasError = true;
-                response.Message = Resource.Resource.KullaniciBulunamadi;
-                return Ok(response);
-            }
 
             if (businessSearchModel.longitude == null || businessSearchModel.latitude == null)
             {
@@ -331,6 +320,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("update")]
+        [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> Update([FromBody] User updateUser)
         {
             ResponseModel<UserResponseModel> response = new ResponseModel<UserResponseModel>();
@@ -415,6 +405,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("changepassword")]
+        [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> ChangePassword([FromBody] PasswordChangeModel updateUser)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -507,6 +498,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("updatelocation")]
+        [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> UpdateLocation([FromBody] User updateUser)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();

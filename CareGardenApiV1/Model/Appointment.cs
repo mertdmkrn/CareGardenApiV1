@@ -23,6 +23,12 @@ namespace CareGardenApiV1.Model
         public DateTime? endDate { get; set; }
         public DateTime? createDate { get; set; }
         public DateTime? updateDate { get; set; }
+        
+        [MaxLength(20)]
+        public string? userTelephone { get; set; }
+
+        [MaxLength(100)]
+        public string? userName { get; set; }
        
         [MaxLength(200)]
         public string? description { get; set; }
@@ -34,6 +40,8 @@ namespace CareGardenApiV1.Model
         public double totalPrice { get; set; }
         
         public double totalDiscountPrice { get; set; }
+        
+        public bool isGuest { get; set; }
         
         [MaxLength(200)]
         public string? cancellationDescription { get; set; }
@@ -48,7 +56,7 @@ namespace CareGardenApiV1.Model
         [NotMapped]
         public Comment? comment { get; set; }
 
-
+        
 
         public virtual ICollection<AppointmentDetail> details { get; set; }
 

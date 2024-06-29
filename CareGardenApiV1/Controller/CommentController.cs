@@ -13,7 +13,6 @@ using System.Security.Claims;
 namespace CareGardenApiV1.Controller
 {
     [ApiController]
-    [Authorize]
     [Route("comment")]
     public class CommentController : ControllerBase
     {
@@ -42,6 +41,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("get")]
+        [Authorize]
         public async Task<IActionResult> Get([FromBody] CommentSearchModel commentSearchModel)
         {
             ResponseModel<List<CommentListResponseModel>> response = new ResponseModel<List<CommentListResponseModel>>();
@@ -159,6 +159,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("getbyuserid")]
+        [Authorize]
         public async Task<IActionResult> GetCommentByUserId([FromBody] Guid userId)
         {
             ResponseModel<List<Comment>> response = new ResponseModel<List<Comment>>();
@@ -189,6 +190,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("save")]
+        [Authorize]
         public async Task<IActionResult> Save([FromBody] Comment comment)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -281,6 +283,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("update")]
+        [Authorize]
         public async Task<IActionResult> Update([FromBody] Comment updateComment)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -339,6 +342,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("delete")]
+        [Authorize]
         public async Task<IActionResult> Delete([FromBody] Guid id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();

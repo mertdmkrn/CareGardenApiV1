@@ -14,7 +14,6 @@ using System.Security.Claims;
 namespace CareGardenApiV1.Controller
 {
     [ApiController]
-    [Authorize]
     [Route("business")]
     public class BusinessController : ControllerBase
     {
@@ -56,6 +55,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("getinfo")]
+        [Authorize]
         public async Task<IActionResult> GetInfoById([FromBody] string id)
         {
             ResponseModel<Business> response = new ResponseModel<Business>();
@@ -96,6 +96,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("getbyid")]
+        [Authorize]
         public async Task<IActionResult> GetById([FromBody] string id)
         {
             ResponseModel<Business> response = new ResponseModel<Business>();
@@ -130,6 +131,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("get")]
+        [Authorize(Roles = "Business")]
         public async Task<IActionResult> Get()
         {
             ResponseModel<Business> response = new ResponseModel<Business>();
@@ -155,6 +157,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("getbusinesslistnocache")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetBusinessListNoCache()
         {
             ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
@@ -298,6 +301,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("getnames")]
+        [Authorize]
         public async Task<IActionResult> GetBusinessNames()
         {
             ResponseModel<List<Tuple<string, string>>> response = new ResponseModel<List<Tuple<string, string>>>();
@@ -321,6 +325,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("setprofilephoto")]
+        [Authorize(Roles = "Business,Admin")]
         public async Task<IActionResult> SetProfilePhoto([FromForm] BusinessFileInfoModel businessFileInfoModel)
         {
             ResponseModel<BusinessGallery> response = new ResponseModel<BusinessGallery>();
@@ -399,6 +404,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("update")]
+        [Authorize(Roles = "Business,Admin")]
         public async Task<IActionResult> Update(Business updateBusiness)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -476,6 +482,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("saveworkinginfo")]
+        [Authorize(Roles = "Business,Admin")]
         public async Task<IActionResult> SaveWorkingInfo(BusinessWorkInfoModel businessWorkInfoModel)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -539,6 +546,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("addgalleryphoto")]
+        [Authorize(Roles = "Business,Admin")]
         public async Task<IActionResult> AddGalleryPhoto([FromForm] BusinessFileInfoModel businessFileInfoModel)
         {
             ResponseModel<BusinessGallery> response = new ResponseModel<BusinessGallery>();
@@ -611,6 +619,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("updategalleryphoto")]
+        [Authorize(Roles = "Business,Admin")]
         public async Task<IActionResult> UpdateGalleryPhoto([FromBody] BusinessGallery updateBusinessGallery)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -639,6 +648,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("deletegalleryphoto")]
+        [Authorize(Roles = "Business,Admin")]
         public async Task<IActionResult> DeleteGalleryPhoto([FromBody] string id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -666,6 +676,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("delete")]
+        [Authorize(Roles = "Business,Admin")]
         public async Task<IActionResult> Delete([FromBody] Business business)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();

@@ -11,7 +11,6 @@ using System.Security.Claims;
 namespace CareGardenApiV1.Controller
 {
     [ApiController]
-    [Authorize]
     [Route("appointment")]
     public class AppointmentController : ControllerBase
     {
@@ -59,6 +58,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("get")]
+        [Authorize]
         public async Task<IActionResult> Get([FromBody] AppointmentSearchModel searchModel)
         {
             ResponseModel<List<AppointmentListModel>> response = new ResponseModel<List<AppointmentListModel>>();
@@ -111,6 +111,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("getbyid")]
+        [Authorize]
         public async Task<IActionResult> GetById([FromBody] string? id)
         {
             ResponseModel<Appointment> response = new ResponseModel<Appointment>();
@@ -137,6 +138,8 @@ namespace CareGardenApiV1.Controller
         ///     { 
         ///        "businessId" : "00000000-0000-0000-0000-000000000000",
         ///        "userId" : "00000000-0000-0000-0000-000000000000",
+        ///        "userName" : "00000000-0000-0000-0000-000000000000",
+        ///        "userTelephone" : "00000000-0000-0000-0000-000000000000",
         ///        "description" : "Yeniden geliyorum.",
         ///        "startDate" : "2024-10-07 15:00",
         ///        "serviceWorkerInfos" : [
@@ -161,30 +164,44 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Save([FromBody] AppointmentSaveModel appointmentSaveModel)
         {
             ResponseModel<Appointment> response = new ResponseModel<Appointment>();
-
+            
             var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
-
-            if (userId.IsNullOrEmpty())
+            
+            if (!userId.IsNullOrEmpty())
             {
-                response.HasError = true;
-                response.Message = Resource.Resource.KullaniciBulunamadi;
-                return Ok(response);
+                appointmentSaveModel.userId = appointmentSaveModel.userId.IsNotNullOrEmpty() ? appointmentSaveModel.userId : userId.ToGuid();
+                appointmentSaveModel.userName = null;
+                appointmentSaveModel.userTelephone = null;
             }
-
-            appointmentSaveModel.userId = appointmentSaveModel.userId.IsNotNullOrEmpty() ? appointmentSaveModel.userId : userId.ToGuid();
+            else
+            {
+                appointmentSaveModel.userId = null;
+                
+                if (appointmentSaveModel.userName.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("userName", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }            
+                
+                if (appointmentSaveModel.userTelephone.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("userName", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }       
+                
+                if (!appointmentSaveModel.userTelephone.IsValidTelephoneNumber())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("userTelephone", Resource.Resource.GecerliTelefonMesaji));
+                }  
+            }
 
             if (!appointmentSaveModel.businessId.HasValue)
             {
                 response.HasError = true;
                 response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.BuAlaniBosBirakmayiniz));
             }
-
-            if (!appointmentSaveModel.userId.HasValue)
-            {
-                response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("userId", Resource.Resource.BuAlaniBosBirakmayiniz));
-            }
-
+            
             if (!appointmentSaveModel.startDate.HasValue)
             {
                 response.HasError = true;
@@ -246,7 +263,10 @@ namespace CareGardenApiV1.Controller
                 userId = appointmentSaveModel.userId,
                 startDate = startDate,
                 endDate = startDate.AddMinutes(totalWorkMinutes),
-                description = appointmentSaveModel.description
+                description = appointmentSaveModel.description,
+                userName = appointmentSaveModel.userName,
+                userTelephone = appointmentSaveModel.userTelephone,
+                isGuest = !appointmentSaveModel.userId.HasValue
             };
 
             foreach (var serviceWorkerInfo in appointmentSaveModel.serviceWorkerInfos)
@@ -327,6 +347,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("cancel")]
+        [Authorize]
         public async Task<IActionResult> Cancel([FromBody] AppointmentChangeModel appointmentChangeModel)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();

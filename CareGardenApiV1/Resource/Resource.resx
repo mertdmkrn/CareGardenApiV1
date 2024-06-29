@@ -276,4 +276,10 @@
   <data name="Anonymous" xml:space="preserve">
     <value>Anonim</value>
   </data>
+  <data name="ConfirmationCodeForAppointment" xml:space="preserve">
+    <value>Randevuyu tamamlamak için onay kodu {0}.</value>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value />
+  </data>
 </root>

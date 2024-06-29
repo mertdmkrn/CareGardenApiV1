@@ -88,6 +88,15 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Randevuyu tamamlamak için onay kodu {0}..
+        /// </summary>
+        public static string ConfirmationCodeForAppointment {
+            get {
+                return ResourceManager.GetString("ConfirmationCodeForAppointment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Elastic indexleme işlemi arkaplanda başlamıştır..
         /// </summary>
         public static string ElasticIndexlemeIslemiBasladi {
@@ -525,6 +534,15 @@ namespace CareGardenApiV1.Resource {
         public static string SirketBulunamadi {
             get {
                 return ResourceManager.GetString("SirketBulunamadi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string String1 {
+            get {
+                return ResourceManager.GetString("String1", resourceCulture);
             }
         }
         

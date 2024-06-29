@@ -165,7 +165,6 @@ namespace CareGardenApiV1.Controller
             return Ok(response);
         }
 
-
         /// <summary>
         /// Verify Confirmation Code
         /// </summary>

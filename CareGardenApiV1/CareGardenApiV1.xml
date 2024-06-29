@@ -171,6 +171,8 @@
                  { 
                     "businessId" : "00000000-0000-0000-0000-000000000000",
                     "userId" : "00000000-0000-0000-0000-000000000000",
+                    "userName" : "00000000-0000-0000-0000-000000000000",
+                    "userTelephone" : "00000000-0000-0000-0000-000000000000",
                     "description" : "Yeniden geliyorum.",
                     "startDate" : "2024-10-07 15:00",
                     "serviceWorkerInfos" : [
@@ -1318,6 +1320,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.UserLoginController.SendCodeForAppointment(System.String)">
+            <summary>
+            Send Code For Appointment Code
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.UserLoginController.VerifyConfirmationCode(CareGardenApiV1.Model.ConfirmationInfo)">
              <summary>
              Verify Confirmation Code
@@ -2070,6 +2078,18 @@
         <member name="M:CareGardenApiV1.Migrations.CareGardenV39.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV40">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV40.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV40.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV40.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="T:CareGardenApiV1.Resource.Resource">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -2099,6 +2119,11 @@
         <member name="P:CareGardenApiV1.Resource.Resource.BuAlaniBosBirakmayiniz">
             <summary>
               Looks up a localized string similar to Bu alanı boş bırakmayınız..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ConfirmationCodeForAppointment">
+            <summary>
+              Looks up a localized string similar to Randevuyu tamamlamak için onay kodu {0}..
             </summary>
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.ElasticIndexlemeIslemiBasladi">
@@ -2344,6 +2369,11 @@
         <member name="P:CareGardenApiV1.Resource.Resource.SirketBulunamadi">
             <summary>
               Looks up a localized string similar to Şirket bulunamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.String1">
+            <summary>
+              Looks up a localized string similar to .
             </summary>
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.YetkinizYok">

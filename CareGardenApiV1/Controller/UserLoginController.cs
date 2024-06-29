@@ -164,6 +164,57 @@ namespace CareGardenApiV1.Controller
             return Ok(response);
         }
 
+        /// <summary>
+        /// Send Code For Appointment Code
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("sendcodeforappointment")]
+        public async Task<IActionResult> SendCodeForAppointment([FromBody] string telephoneNumber)
+        {
+            ResponseModel<int> response = new ResponseModel<int>();
+            int confirmationCode = new Random().Next(1000, 10000);
+
+            if (telephoneNumber.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("telephoneNumber", Resource.Resource.BuAlaniBosBirakmayiniz));
+            }
+
+            if (!telephoneNumber.IsValidTelephoneNumber())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("telephoneNumber", Resource.Resource.GecerliTelefonMesaji));
+            }
+
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.OnayKoduGonderilemedi;
+                response.HasError = true;
+                return Ok(response);
+            }
+
+            var systemConfirmationInfo = await _contirmationService.GetConfirmationInfo(telephoneNumber);
+
+            if (systemConfirmationInfo != null && systemConfirmationInfo.createDate.DifferenceBetweenDates(DateTime.Now, DateType.Minute) < 1)
+            {
+                response.Message = Resource.Resource.BirDakikaIcindeOnayKoduMesaji;
+                response.HasError = true;
+                return Ok(response);
+            }
+
+            string smsMessage = string.Format(Resource.Resource.ConfirmationCodeForAppointment, confirmationCode);
+
+            //var sendSms = await _smsHandler.SendSmsAsync(smsMessage, telephoneNumber);
+
+            await _contirmationService.SaveConfirmationInfoAsync(telephoneNumber, confirmationCode.ToString());
+
+            response.Message = Resource.Resource.OnayKoduGonderildi;
+            response.Data = confirmationCode;
+
+            return Ok(response);
+        }
+
 
         /// <summary>
         /// Verify Confirmation Code

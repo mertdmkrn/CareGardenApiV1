@@ -276,4 +276,7 @@
   <data name="Anonymous" xml:space="preserve">
     <value>Anonymous</value>
   </data>
+  <data name="ConfirmationCodeForAppointment" xml:space="preserve">
+    <value>Confirmation code {0} to complete the appointment.</value>
+  </data>
 </root>

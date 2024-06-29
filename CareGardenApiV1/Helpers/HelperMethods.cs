@@ -99,6 +99,9 @@ namespace CareGardenApiV1.Helpers
         public static string GetClaimInfo(HttpRequest request, string type)
         {
             var tokenString = request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            if (tokenString.IsNullOrEmpty()) return null;
+
             var token = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
 
             if (token == null || token.Claims == null)

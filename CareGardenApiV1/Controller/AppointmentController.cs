@@ -141,7 +141,7 @@ namespace CareGardenApiV1.Controller
         ///        "userName" : "00000000-0000-0000-0000-000000000000",
         ///        "userTelephone" : "00000000-0000-0000-0000-000000000000",
         ///        "description" : "Yeniden geliyorum.",
-        ///        "startDate" : "2024-10-07 15:00",
+        ///        "startDate" : "2024-10-07T15:00",
         ///        "serviceWorkerInfos" : [
         ///             {
         ///                 "businessServiceId" : "00000000-0000-0000-0000-000000000000",

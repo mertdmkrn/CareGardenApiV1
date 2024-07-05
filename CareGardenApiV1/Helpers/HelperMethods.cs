@@ -42,18 +42,11 @@ namespace CareGardenApiV1.Helpers
 
         public static bool IsValidTelephoneNumber(this string telephoneNumber)
         {
-            try
-            {
-                if (telephoneNumber.IsNullOrEmpty()) return false;
+            if (string.IsNullOrEmpty(telephoneNumber)) return false;
 
-                telephoneNumber = telephoneNumber.Replace("+9", "");
-                string regex = @"^(0[1-9][0-9]{2})\s?(\d{3})\s?(\d{2})\s?(\d{2})$|^05\d{9}$";
-                return Regex.IsMatch(telephoneNumber, regex, RegexOptions.IgnoreCase);
-            }
-            catch (FormatException)
-            {
-                return false;
-            }
+            string regex = @"^\+(\d{1,4})[\s-]?\(?\d{1,4}?\)?[\s-]?\d{1,4}[\s-]?\d{1,4}[\s-]?\d{1,9}$";
+
+            return Regex.IsMatch(telephoneNumber, regex, RegexOptions.IgnoreCase);
         }
 
         public async static Task<User> GetSessionUser(HttpRequest request, IUserService userService)

@@ -29,7 +29,10 @@ namespace CareGardenApiV1.Model
 
         [MaxLength(100)]
         public string? userName { get; set; }
-       
+
+        [MaxLength(150)]
+        public string? userEmail { get; set; }
+
         [MaxLength(200)]
         public string? description { get; set; }
         

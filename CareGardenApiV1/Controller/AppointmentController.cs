@@ -137,9 +137,9 @@ namespace CareGardenApiV1.Controller
         ///
         ///     { 
         ///        "businessId" : "00000000-0000-0000-0000-000000000000",
-        ///        "userId" : "00000000-0000-0000-0000-000000000000",
-        ///        "userName" : "00000000-0000-0000-0000-000000000000",
-        ///        "userTelephone" : "00000000-0000-0000-0000-000000000000",
+        ///        "userName" : "Mert Demirkıran",
+        ///        "userEmail" : "mertdmkrn37@gmail.com",
+        ///        "userTelephone" : "+905467335939",
         ///        "description" : "Yeniden geliyorum.",
         ///        "startDate" : "2024-10-07T15:00",
         ///        "serviceWorkerInfos" : [
@@ -171,6 +171,7 @@ namespace CareGardenApiV1.Controller
             {
                 appointmentSaveModel.userId = appointmentSaveModel.userId.IsNotNullOrEmpty() ? appointmentSaveModel.userId : userId.ToGuid();
                 appointmentSaveModel.userName = null;
+                appointmentSaveModel.userEmail = null;
                 appointmentSaveModel.userTelephone = null;
             }
             else
@@ -193,7 +194,20 @@ namespace CareGardenApiV1.Controller
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("userTelephone", Resource.Resource.GecerliTelefonMesaji));
-                }  
+                }
+
+
+                if (appointmentSaveModel.userEmail.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("userEmail", Resource.Resource.BuAlaniBosBirakmayiniz));
+                }
+
+                if (!appointmentSaveModel.userEmail.IsValidEmail())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("userTelephone", Resource.Resource.GecerliTelefonMesaji));
+                }
             }
 
             if (!appointmentSaveModel.businessId.HasValue)
@@ -234,6 +248,13 @@ namespace CareGardenApiV1.Controller
             var businesses = await _businessService.GetBusinessListForCache();
             var business = businesses.FirstOrDefault(x => x.id.Equals(appointmentSaveModel.businessId.Value));
 
+            if(business == null)
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.KayitYapilamadi;
+                return Ok(response);
+            }
+
             if (isExistsAppointment || !HelperMethods.GetBusinessOpenSpecialDate(business.workingInfo, business.officialDayAvailable, startDate))
             {
                 response.Message = Resource.Resource.RandevuMevcut;
@@ -265,6 +286,7 @@ namespace CareGardenApiV1.Controller
                 endDate = startDate.AddMinutes(totalWorkMinutes),
                 description = appointmentSaveModel.description,
                 userName = appointmentSaveModel.userName,
+                userEmail = appointmentSaveModel.userEmail,
                 userTelephone = appointmentSaveModel.userTelephone,
                 isGuest = !appointmentSaveModel.userId.HasValue
             };

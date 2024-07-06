@@ -17,6 +17,7 @@ namespace CareGardenApiV1.Model
             this.favorites = new HashSet<Favorite>();
             this.appointments = new HashSet<Appointment>();
             this.complains = new HashSet<Complain>();
+            this.notifications = new HashSet<Notification>();
         }
 
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -77,6 +78,8 @@ namespace CareGardenApiV1.Model
         public virtual ICollection<Appointment> appointments { get; set; }
         [JsonIgnore]
         public virtual ICollection<Complain> complains { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<Notification> notifications { get; set; }
 
     }
 }

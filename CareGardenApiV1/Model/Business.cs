@@ -26,6 +26,7 @@ namespace CareGardenApiV1.Model
             this.campaigns = new HashSet<Campaign>();
             this.complains = new HashSet<Complain>();
             this.discounts = new HashSet<Discount>();
+            this.notifications = new HashSet<Notification>();
         }
 
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -101,5 +102,8 @@ namespace CareGardenApiV1.Model
         public virtual ICollection<Campaign> campaigns { get; set; }
         public virtual ICollection<Complain> complains { get; set; }
         public virtual ICollection<Discount> discounts { get; set; }
+
+        [JsonIgnore]
+        public virtual ICollection<Notification> notifications { get; set; }
     }
 }

@@ -15,7 +15,6 @@ namespace CareGardenApiV1.Repository
 
             builder.Entity<Appointment>(entity =>
             {
-
                 entity.HasOne(d => d.business)
                 .WithMany(p => p.appointments)
                 .HasForeignKey(d => d.businessId)
@@ -26,6 +25,27 @@ namespace CareGardenApiV1.Repository
                 .WithMany(p => p.appointments)
                 .HasForeignKey(d => d.userId)
                 .HasConstraintName("FK_Appointment_User_userId")
+                .OnDelete(DeleteBehavior.SetNull);
+            });
+
+            builder.Entity<AppointmentDetail>(entity =>
+            {
+                entity.HasOne(d => d.appointment)
+                .WithMany(p => p.details)
+                .HasForeignKey(d => d.appointmentId)
+                .HasConstraintName("FK_AppointmentDetail_Appointment_appointmentId")
+                .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(d => d.worker)
+                .WithMany(p => p.appointmentDetails)
+                .HasForeignKey(d => d.workerId)
+                .HasConstraintName("FK_AppointmentDetail_Worker_workerId")
+                .OnDelete(DeleteBehavior.SetNull);
+
+                entity.HasOne(d => d.businessService)
+                .WithMany(p => p.appointmentDetails)
+                .HasForeignKey(d => d.businessServiceId)
+                .HasConstraintName("FK_AppointmentDetail_BusinessService_businessServiceId")
                 .OnDelete(DeleteBehavior.SetNull);
             });
 
@@ -158,12 +178,43 @@ namespace CareGardenApiV1.Repository
                 .OnDelete(DeleteBehavior.Cascade);
             });
 
+            builder.Entity<WorkerServicePrice>(entity =>
+            {
+                entity.HasOne(d => d.worker)
+                .WithMany(p => p.workerServicePrices)
+                .HasForeignKey(d => d.workerId)
+                .HasConstraintName("FK_WorkerServicePrices_Worker_workerId")
+                .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(d => d.businessService)
+                .WithMany(p => p.workerServicePrices)
+                .HasForeignKey(d => d.businessServiceId)
+                .HasConstraintName("FK_WorkerServicePrices_BusinessService_businessServiceId")
+                .OnDelete(DeleteBehavior.Cascade);
+            });
+
             builder.Entity<Discount>(entity =>
             {
                 entity.HasOne(d => d.business)
                 .WithMany(p => p.discounts)
                 .HasForeignKey(d => d.businessId)
                 .HasConstraintName("FK_Discount_Business_businessId")
+                .OnDelete(DeleteBehavior.Cascade);
+            });
+
+
+            builder.Entity<Notification>(entity =>
+            {
+                entity.HasOne(d => d.business)
+                .WithMany(p => p.notifications)
+                .HasForeignKey(d => d.businessId)
+                .HasConstraintName("FK_Notification_Business_businessId")
+                .OnDelete(DeleteBehavior.SetNull);
+
+                entity.HasOne(d => d.user)
+                .WithMany(p => p.notifications)
+                .HasForeignKey(d => d.userId)
+                .HasConstraintName("FK_Notification_User_userId")
                 .OnDelete(DeleteBehavior.Cascade);
             });
         }

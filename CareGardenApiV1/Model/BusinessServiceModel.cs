@@ -9,6 +9,12 @@ namespace CareGardenApiV1.Model
     [Index(nameof(serviceId)), Index(nameof(businessId))]
     public class BusinessServiceModel
     {
+        public BusinessServiceModel()
+        {
+            this.appointmentDetails = new HashSet<AppointmentDetail>();
+            this.workerServicePrices = new HashSet<WorkerServicePrice>();
+        }
+
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid id { get; set; } = Guid.Empty;
 
@@ -45,5 +51,11 @@ namespace CareGardenApiV1.Model
 
         [JsonIgnore]
         public Services? service { get; set; }
+
+        [JsonIgnore]
+        public ICollection<AppointmentDetail> appointmentDetails { get; set; }
+
+        [JsonIgnore]
+        public ICollection<WorkerServicePrice> workerServicePrices { get; set; }
     }
 }

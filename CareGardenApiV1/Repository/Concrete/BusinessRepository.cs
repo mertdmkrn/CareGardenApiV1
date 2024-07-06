@@ -69,7 +69,7 @@ namespace CareGardenApiV1.Repository.Concrete
             {
                 return businesses
                     .WhereIf(businessSearchModel.city.IsNotNullOrEmpty(), x => x.city.Equals(businessSearchModel.city))
-                    .Select(x => 
+                    .Select(x =>
                     {
                         x.isOpen = HelperMethods.GetBusinessOpen(x.workingInfo, x.officialDayAvailable);
                         x.distance = userLocation != null && x.location != null ? Math.Round((x.location.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue), 1) : 0;
@@ -204,6 +204,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 {
                     id = x.id,
                     name = x.name ?? "",
+                    nameForUrl = x.nameForUrl ?? "",
                     discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
                     workingGenderType = (int)x.workingGenderType,
                     imageUrl = x.galleries.FirstOrDefault(x => x.isProfilePhoto).imageUrl,
@@ -274,6 +275,34 @@ namespace CareGardenApiV1.Repository.Concrete
                     properties = x.properties
                 })
                 .AsNoTracking()
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<BusinessDetailModel> GetBusinessDetailByNameForUrlAsync(string nameForUrl)
+        {
+            return await _context.Businesses
+                .Where(x => x.nameForUrl.Equals(nameForUrl))
+                .AsNoTracking()
+                .Select(x => new BusinessDetailModel
+                {
+                    id = x.id,
+                    name = x.name,
+                    address = x.address,
+                    telephone = x.telephone,
+                    description = x.description,
+                    descriptionEn = x.descriptionEn,
+                    workingGenderType = x.workingGenderType,
+                    logoUrl = x.logoUrl,
+                    latitude = x.latitude,
+                    longitude = x.longitude,
+                    discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
+                    averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == CommentType.User).Average(x => x.point) : 0,
+                    countRating = x.comments.Where(x => x.commentType == CommentType.User).Count(),
+                    businessWorkingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null,
+                    discounts = x.discounts.Where(x => x.isActive).ToList(),
+                    businessServices = x.services,
+                    properties = x.properties
+                })
                 .FirstOrDefaultAsync();
         }
 

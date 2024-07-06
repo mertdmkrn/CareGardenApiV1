@@ -337,6 +337,8 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
+            business.nameForUrl = await _businessService.GetNameForUrl(business);
+
             business = await _businessService.SaveBusinessAsync(business);
 
             response.Message = Resource.Resource.KayitBasarili;

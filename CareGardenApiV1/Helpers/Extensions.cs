@@ -274,5 +274,22 @@ namespace CareGardenApiV1.Helpers
         {
             return !language.Equals("tr", StringComparison.OrdinalIgnoreCase) && Math.Abs(number) >= 2 ? "s" : string.Empty;
         }
+
+        public static string GenerateUrlFriendlyName(this string name)
+        {
+            if (name.IsNullOrEmpty()) return string.Empty;
+
+            name = name.TurkishChrToEnglishChr().ToLowerInvariant();
+
+            name = Regex.Replace(name, @"[^a-z0-9\s-]", "");
+
+            name = Regex.Replace(name, @"\s+", " ").Trim();
+
+            name = name.Replace(" ", "-");
+
+            name = Regex.Replace(name, @"-+", "-");
+
+            return name;
+        }
     }
 }

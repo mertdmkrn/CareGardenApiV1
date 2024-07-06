@@ -1,8 +1,8 @@
-﻿using CareGardenApiV1.Model;
+﻿using CareGardenApiV1.Helpers;
+using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Repository.Abstract;
-using CareGardenApiV1.Service.Abstract;
 using Microsoft.Extensions.Caching.Memory;
 using static CareGardenApiV1.Helpers.Constants;
 
@@ -146,6 +146,23 @@ namespace CareGardenApiV1.Service.Concrete
         public async Task<bool> UpdateHasNotificationAsync(List<Guid> businessIds, bool value)
         {
             return await _businessRepository.UpdateHasNotificationAsync(businessIds, value);
+        }
+
+        public async Task<BusinessDetailModel> GetBusinessDetailByNameForUrlAsync(string nameForUrl)
+        {
+            return await _businessRepository.GetBusinessDetailByNameForUrlAsync(nameForUrl);
+        }
+
+        public async Task<string> GetNameForUrl(Business business)
+        {
+            string nameForUrl = business.name.GenerateUrlFriendlyName();
+            var businesses = await GetBusinessListForCache();
+
+            nameForUrl = businesses.Any(b => b.nameForUrl == nameForUrl)
+                    ? $"{nameForUrl}-{business.city.IsNull("2").GenerateUrlFriendlyName()}"
+                    : nameForUrl;
+
+            return nameForUrl;
         }
     }
 }

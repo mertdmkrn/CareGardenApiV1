@@ -297,6 +297,123 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
+        /// Get Business Detail By NameforUrl (Can be used for fast appointment page.)
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        /// "tolga-beauty-house"
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost("getdetailbynameforurl")]
+        public async Task<IActionResult> GetBusinessDetailByNameForUrl([FromBody] string nameForUrl)
+        {
+            var culture = Request.Headers["Language"].ToString().IsNull("en");
+            ResponseModel<BusinessDetailModel> response = new ResponseModel<BusinessDetailModel>();
+
+            if (nameForUrl.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("nameForUrl", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.Message = Resource.Resource.BuAlaniBosBirakmayiniz;
+                return Ok(response);
+            }
+
+            var businessDetail = await _businessService.GetBusinessDetailByNameForUrlAsync(nameForUrl);
+
+            if(businessDetail == null)
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.SirketBulunamadi;
+                return Ok(response);
+            }
+
+            businessDetail.isOpen = HelperMethods.GetBusinessOpen(businessDetail.businessWorkingInfo, businessDetail.officialDayAvailable);
+            businessDetail.averageRating = Math.Round(businessDetail.averageRating, 1);
+
+            var services = new List<Services>();
+
+            if (_memoryCache.TryGetValue("services", out object list))
+            {
+                services = (List<Services>)list;
+            }
+            else
+            {
+                services = await _servicesService.GetServicesAsync();
+                _memoryCache.Set("services", services, new MemoryCacheEntryOptions
+                {
+                    Priority = CacheItemPriority.Normal
+                });
+            }
+
+            var discountMultiplier = 1.0;
+            var activeDiscounts = businessDetail.discounts?
+                .Where(x => x.type == DiscountType.AllDay
+                            || (x.type == DiscountType.WeekDay &&
+                                DateTime.Today.DayOfWeek >= DayOfWeek.Monday &&
+                                DateTime.Today.DayOfWeek <= DayOfWeek.Friday)
+                            || (x.type == DiscountType.WeekEnd &&
+                                (DateTime.Today.DayOfWeek == DayOfWeek.Saturday ||
+                                  DateTime.Today.DayOfWeek == DayOfWeek.Sunday)))
+                .OrderBy(x => x.rate)
+                .ToList();
+
+            var popularServices = businessDetail.businessServices.Where(x => x.isPopular);
+
+            if (popularServices.Any())
+            {
+                BusinessServicesInfo businessServiceInfo = new BusinessServicesInfo();
+                businessServiceInfo.serviceName = Resource.Resource.PopulerServisler;
+                businessServiceInfo.className = "popular";
+
+                foreach (var item in popularServices)
+                {
+                    var activeDiscount = (activeDiscounts?
+                        .Where(x => x.serviceIds.Contains(item.serviceId.Value.ToString()) || x.serviceIds.IsNullOrEmpty()))
+                        .MaxBy(x => x.rate);
+
+                    setDiscountTitle(activeDiscount);
+
+                    item.discountRate = activeDiscount?.rate ?? 0;
+                    item.discountPrice = item.price * (1 - (item.discountRate / 100));
+
+                    businessServiceInfo.businessServices.Add(item);
+                }
+
+                businessDetail.businessServicesInfos.Add(businessServiceInfo);
+            }
+
+            foreach (var items in businessDetail.businessServices.GroupBy(x => x.serviceId))
+            {
+                BusinessServicesInfo businessServiceInfo = new BusinessServicesInfo();
+                var service = services.FirstOrDefault(x => x.id == items.Key.Value);
+                businessServiceInfo.serviceName = service != null ? (culture == "en" ? service.nameEn : service.name) : string.Empty;
+                businessServiceInfo.className = service != null ? service.className : string.Empty;
+
+                foreach (var item in items)
+                {
+                    var activeDiscount = (activeDiscounts?
+                        .Where(x => x.serviceIds.Contains(item.serviceId.Value.ToString()) || x.serviceIds.IsNullOrEmpty()))
+                        .MaxBy(x => x.rate);
+
+                    setDiscountTitle(activeDiscount);
+
+                    item.discountRate = activeDiscount?.rate ?? 0;
+                    item.discountPrice = item.price * (1 - (item.discountRate / 100));
+
+                    businessServiceInfo.businessServices.Add(item);
+                }
+
+                businessDetail.businessServicesInfos.Add(businessServiceInfo);
+            }
+
+            response.Data = businessDetail;
+
+            return Ok(response);
+        }
+
+        /// <summary>
         /// Get Business Names
         /// </summary>
         /// <returns></returns>
@@ -432,6 +549,7 @@ namespace CareGardenApiV1.Controller
             business.logoUrl = updateBusiness.logoUrl.IsNull(business.logoUrl);
             business.isFeatured = updateBusiness.isFeatured;
             business.hasPromotion = updateBusiness.hasPromotion;
+            business.nameForUrl = await _businessService.GetNameForUrl(business);
 
             if (updateBusiness.latitude > 0 && updateBusiness.longitude > 0)
             {

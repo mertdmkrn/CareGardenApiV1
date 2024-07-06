@@ -9,6 +9,7 @@ namespace CareGardenApiV1.Model
 {
     [Table("Business")]
     [Index(nameof(email), nameof(telephone), nameof(city))]
+    [Index(nameof(nameForUrl))]
     public class Business
     {
         public Business()
@@ -30,13 +31,17 @@ namespace CareGardenApiV1.Model
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid id { get; set; }
 
-        [MaxLength(100)]
+        [MaxLength(150)]
         public string? name { get; set; }
+
+        [MaxLength(200)]
+        public string? nameForUrl { get; set; }
 
         public string? description { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? descriptionEn { get; set; }
+
 
         [MaxLength(80)]
         public string? city { get; set; }

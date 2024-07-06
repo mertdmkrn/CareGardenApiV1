@@ -36,6 +36,7 @@ namespace CareGardenApiV1.Model.ResponseModel
 
         public Guid id { get; set; }
         public string name { get; set; }
+        public string nameForUrl { get; set; }
         public string logoUrl { get; set; }
         public double distance { get; set; }
         public double averageRating { get; set; }

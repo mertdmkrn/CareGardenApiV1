@@ -90,7 +90,7 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasIndex("userId");
 
-                    b.ToTable("Appointment");
+                    b.ToTable("Appointment", (string)null);
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.AppointmentDetail", b =>
@@ -125,7 +125,7 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasIndex("workerId");
 
-                    b.ToTable("AppointmentDetail");
+                    b.ToTable("AppointmentDetail", (string)null);
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.Business", b =>
@@ -232,7 +232,7 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasIndex("telephone");
 
-                    b.ToTable("Business");
+                    b.ToTable("Business", (string)null);
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.BusinessGallery", b =>
@@ -264,7 +264,7 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasIndex("businessId");
 
-                    b.ToTable("BusinessGallery");
+                    b.ToTable("BusinessGallery", (string)null);
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.BusinessProperties", b =>
@@ -287,7 +287,7 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasIndex("businessId");
 
-                    b.ToTable("BusinessProperties");
+                    b.ToTable("BusinessProperties", (string)null);
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.BusinessServiceModel", b =>
@@ -334,7 +334,7 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasIndex("serviceId");
 
-                    b.ToTable("BusinessService");
+                    b.ToTable("BusinessService", (string)null);
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.BusinessWorkingInfo", b =>
@@ -381,7 +381,7 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasIndex("businessId");
 
-                    b.ToTable("BusinessWorkingInfo");
+                    b.ToTable("BusinessWorkingInfo", (string)null);
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.Campaign", b =>
@@ -445,7 +445,7 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasIndex("isActive");
 
-                    b.ToTable("Campaign");
+                    b.ToTable("Campaign", (string)null);
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.Comment", b =>
@@ -506,7 +506,7 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasIndex("userId");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comment", (string)null);
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.Complain", b =>
@@ -534,7 +534,7 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasIndex("userId");
 
-                    b.ToTable("Complain");
+                    b.ToTable("Complain", (string)null);
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.ConfirmationInfo", b =>
@@ -560,7 +560,7 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasIndex("target");
 
-                    b.ToTable("ConfirmationInfo");
+                    b.ToTable("ConfirmationInfo", (string)null);
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.Discount", b =>
@@ -602,7 +602,7 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasIndex("isActive");
 
-                    b.ToTable("Discount");
+                    b.ToTable("Discount", (string)null);
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.Faq", b =>
@@ -638,7 +638,7 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Faq");
+                    b.ToTable("Faq", (string)null);
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.Favorite", b =>
@@ -659,7 +659,7 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasIndex("userId");
 
-                    b.ToTable("Favorite");
+                    b.ToTable("Favorite", (string)null);
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.Notification", b =>
@@ -715,7 +715,7 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasIndex("userId");
 
-                    b.ToTable("Notification");
+                    b.ToTable("Notification", (string)null);
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.PaymentInfo", b =>
@@ -760,7 +760,7 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasIndex("paidType");
 
-                    b.ToTable("PaymentInfo");
+                    b.ToTable("PaymentInfo", (string)null);
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.Services", b =>
@@ -790,7 +790,7 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Services");
+                    b.ToTable("Services", (string)null);
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.Setting", b =>
@@ -818,7 +818,7 @@ namespace CareGardenApiV1.Migrations
                     b.HasIndex("name")
                         .IsUnique();
 
-                    b.ToTable("Setting");
+                    b.ToTable("Setting", (string)null);
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.User", b =>
@@ -890,7 +890,7 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasIndex("telephone");
 
-                    b.ToTable("User");
+                    b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.Worker", b =>
@@ -970,7 +970,7 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasIndex("isActive");
 
-                    b.ToTable("Worker");
+                    b.ToTable("Worker", (string)null);
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.WorkerServicePrice", b =>
@@ -994,7 +994,7 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasIndex("workerId");
 
-                    b.ToTable("WorkerServicePrice");
+                    b.ToTable("WorkerServicePrice", (string)null);
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.Appointment", b =>

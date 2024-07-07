@@ -13,15 +13,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CareGardenApiV1.Migrations
 {
     [DbContext(typeof(CareGardenApiDbContext))]
-    [Migration("20230730100742_CareGardenV14")]
-    partial class CareGardenV14
+    [Migration("20240707094118_CareGardenV1")]
+    partial class CareGardenV1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.5")
+                .HasAnnotation("ProductVersion", "8.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
@@ -36,31 +36,99 @@ namespace CareGardenApiV1.Migrations
                     b.Property<Guid?>("businessId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("cancellationDescription")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
                     b.Property<DateTime?>("createDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<DateTime?>("date")
+                    b.Property<string>("description")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime?>("endDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("description")
-                        .HasColumnType("text");
+                    b.Property<bool>("isGuest")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("startDate")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("status")
                         .HasColumnType("integer");
 
+                    b.Property<double>("totalDiscountPrice")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("totalPrice")
+                        .HasColumnType("double precision");
+
                     b.Property<DateTime?>("updateDate")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<string>("userEmail")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
                     b.Property<Guid?>("userId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("userName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("userTelephone")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.HasKey("id");
 
                     b.HasIndex("businessId");
 
-                    b.HasIndex("userId", "businessId", "date", "status");
+                    b.HasIndex("startDate");
+
+                    b.HasIndex("status");
+
+                    b.HasIndex("userId");
 
                     b.ToTable("Appointment");
+                });
+
+            modelBuilder.Entity("CareGardenApiV1.Model.AppointmentDetail", b =>
+                {
+                    b.Property<Guid>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("appointmentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("businessServiceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<double>("discountPrice")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("price")
+                        .HasColumnType("double precision");
+
+                    b.Property<Guid?>("workerId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("appointmentId");
+
+                    b.HasIndex("businessServiceId");
+
+                    b.HasIndex("workerId");
+
+                    b.ToTable("AppointmentDetail");
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.Business", b =>
@@ -92,9 +160,6 @@ namespace CareGardenApiV1.Migrations
                     b.Property<string>("descriptionEn")
                         .HasColumnType("text");
 
-                    b.Property<int>("discountRate")
-                        .HasColumnType("integer");
-
                     b.Property<string>("district")
                         .HasMaxLength(80)
                         .HasColumnType("character varying(80)");
@@ -102,6 +167,9 @@ namespace CareGardenApiV1.Migrations
                     b.Property<string>("email")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<bool>("hasNotification")
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("hasPromotion")
                         .HasColumnType("boolean");
@@ -118,12 +186,20 @@ namespace CareGardenApiV1.Migrations
                     b.Property<Point>("location")
                         .HasColumnType("geometry (point)");
 
+                    b.Property<string>("logoUrl")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
                     b.Property<double>("longitude")
                         .HasColumnType("double precision");
 
                     b.Property<string>("name")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("nameForUrl")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<bool>("officialHolidayAvailable")
                         .HasColumnType("boolean");
@@ -151,7 +227,13 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("email", "telephone", "city");
+                    b.HasIndex("city");
+
+                    b.HasIndex("email");
+
+                    b.HasIndex("nameForUrl");
+
+                    b.HasIndex("telephone");
 
                     b.ToTable("Business");
                 });
@@ -171,9 +253,15 @@ namespace CareGardenApiV1.Migrations
                     b.Property<bool>("isProfilePhoto")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("isSliderPhoto")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("size")
                         .HasMaxLength(9)
                         .HasColumnType("character varying(9)");
+
+                    b.Property<int>("sortOrder")
+                        .HasColumnType("integer");
 
                     b.HasKey("id");
 
@@ -214,6 +302,9 @@ namespace CareGardenApiV1.Migrations
                     b.Property<Guid?>("businessId")
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("isPopular")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("maxDuration")
                         .HasColumnType("integer");
 
@@ -221,7 +312,12 @@ namespace CareGardenApiV1.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("name")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("nameEn")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<double>("price")
                         .HasColumnType("double precision");
@@ -230,6 +326,9 @@ namespace CareGardenApiV1.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("spot")
+                        .HasColumnType("text");
+
+                    b.Property<string>("spotEn")
                         .HasColumnType("text");
 
                     b.HasKey("id");
@@ -251,25 +350,35 @@ namespace CareGardenApiV1.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("fridayWorkHours")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("mondayWorkHours")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<bool>("officialHolidayAvailable")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("saturdayWorkHours")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("sundayWorkHours")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("thursdayWorkHours")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("tuesdayWorkHours")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("wednesdayWorkHours")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.HasKey("id");
 
@@ -284,10 +393,27 @@ namespace CareGardenApiV1.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("about")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<string>("aboutEn")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
                     b.Property<Guid?>("businessId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("condition")
+                        .HasColumnType("text");
+
+                    b.Property<string>("conditionEn")
+                        .HasColumnType("text");
+
                     b.Property<DateTime?>("createDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime?>("expireDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<bool>("isActive")
@@ -296,8 +422,19 @@ namespace CareGardenApiV1.Migrations
                     b.Property<string>("path")
                         .HasColumnType("text");
 
+                    b.Property<string>("pathEn")
+                        .HasColumnType("text");
+
                     b.Property<int>("sortOrder")
                         .HasColumnType("integer");
+
+                    b.Property<string>("title")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("titleEn")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<DateTime?>("updateDate")
                         .HasColumnType("timestamp without time zone");
@@ -309,6 +446,8 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasIndex("businessId");
 
+                    b.HasIndex("isActive");
+
                     b.ToTable("Campaign");
                 });
 
@@ -317,6 +456,17 @@ namespace CareGardenApiV1.Migrations
                     b.Property<Guid>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<Guid?>("appointmentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("aspectsOfPoint")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("aspectsOfWorkerPoint")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<Guid?>("businessId")
                         .HasColumnType("uuid");
@@ -331,6 +481,9 @@ namespace CareGardenApiV1.Migrations
                     b.Property<DateTime?>("createDate")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<bool>("isShowProfile")
+                        .HasColumnType("boolean");
+
                     b.Property<double>("point")
                         .HasColumnType("double precision");
 
@@ -343,13 +496,18 @@ namespace CareGardenApiV1.Migrations
                     b.Property<Guid?>("userId")
                         .HasColumnType("uuid");
 
+                    b.Property<double>("workerPoint")
+                        .HasColumnType("double precision");
+
                     b.HasKey("id");
+
+                    b.HasIndex("appointmentId");
 
                     b.HasIndex("businessId");
 
                     b.HasIndex("replyId");
 
-                    b.HasIndex("userId", "businessId");
+                    b.HasIndex("userId");
 
                     b.ToTable("Comment");
                 });
@@ -377,7 +535,7 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasIndex("businessId");
 
-                    b.HasIndex("userId", "businessId");
+                    b.HasIndex("userId");
 
                     b.ToTable("Complain");
                 });
@@ -403,9 +561,51 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("target", "code");
+                    b.HasIndex("target");
 
                     b.ToTable("ConfirmationInfo");
+                });
+
+            modelBuilder.Entity("CareGardenApiV1.Model.Discount", b =>
+                {
+                    b.Property<Guid>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("businessId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("colorCode")
+                        .HasColumnType("text");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("descriptionEn")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("isActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<double>("rate")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("serviceIds")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("type")
+                        .HasColumnType("integer");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("businessId");
+
+                    b.HasIndex("isActive");
+
+                    b.ToTable("Discount");
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.Faq", b =>
@@ -465,6 +665,62 @@ namespace CareGardenApiV1.Migrations
                     b.ToTable("Favorite");
                 });
 
+            modelBuilder.Entity("CareGardenApiV1.Model.Notification", b =>
+                {
+                    b.Property<Guid>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("businessId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("createDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("descriptionEn")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("isRead")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("publishDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid?>("redirectId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("redirectUrl")
+                        .HasColumnType("text");
+
+                    b.Property<string>("title")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("titleEn")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("type")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("updateDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid?>("userId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("businessId");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("Notification");
+                });
+
             modelBuilder.Entity("CareGardenApiV1.Model.PaymentInfo", b =>
                 {
                     b.Property<Guid>("id")
@@ -501,7 +757,11 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("businessId", "paidType");
+                    b.HasIndex("businessId");
+
+                    b.HasIndex("isPaid");
+
+                    b.HasIndex("paidType");
 
                     b.ToTable("PaymentInfo");
                 });
@@ -536,6 +796,34 @@ namespace CareGardenApiV1.Migrations
                     b.ToTable("Services");
                 });
 
+            modelBuilder.Entity("CareGardenApiV1.Model.Setting", b =>
+                {
+                    b.Property<Guid>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("description")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("name")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<int>("type")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("value")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("name")
+                        .IsUnique();
+
+                    b.ToTable("Setting");
+                });
+
             modelBuilder.Entity("CareGardenApiV1.Model.User", b =>
                 {
                     b.Property<Guid>("id")
@@ -562,6 +850,9 @@ namespace CareGardenApiV1.Migrations
 
                     b.Property<int>("gender")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("hasNotification")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("imageUrl")
                         .HasColumnType("text");
@@ -598,31 +889,170 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("email", "telephone");
+                    b.HasIndex("email");
+
+                    b.HasIndex("telephone");
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("CareGardenApiV1.Model.Worker", b =>
+                {
+                    b.Property<Guid>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("about")
+                        .HasColumnType("text");
+
+                    b.Property<string>("aboutEn")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("businessId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("createdUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("fridayWorkHours")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<bool>("isActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("isAvailable")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("mondayWorkHours")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("name")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("path")
+                        .HasColumnType("text");
+
+                    b.Property<string>("saturdayWorkHours")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("serviceIds")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("sundayWorkHours")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("thursdayWorkHours")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("title")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("titleEn")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("tuesdayWorkHours")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("wednesdayWorkHours")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("businessId");
+
+                    b.HasIndex("isActive");
+
+                    b.ToTable("Worker");
+                });
+
+            modelBuilder.Entity("CareGardenApiV1.Model.WorkerServicePrice", b =>
+                {
+                    b.Property<Guid>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("businessServiceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("price")
+                        .HasColumnType("double precision");
+
+                    b.Property<Guid?>("workerId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("businessServiceId");
+
+                    b.HasIndex("workerId");
+
+                    b.ToTable("WorkerServicePrice");
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.Appointment", b =>
                 {
                     b.HasOne("CareGardenApiV1.Model.Business", "business")
                         .WithMany("appointments")
-                        .HasForeignKey("businessId");
+                        .HasForeignKey("businessId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("FK_Appointment_Business_businessId");
 
                     b.HasOne("CareGardenApiV1.Model.User", "user")
                         .WithMany("appointments")
-                        .HasForeignKey("userId");
+                        .HasForeignKey("userId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("FK_Appointment_User_userId");
 
                     b.Navigation("business");
 
                     b.Navigation("user");
                 });
 
+            modelBuilder.Entity("CareGardenApiV1.Model.AppointmentDetail", b =>
+                {
+                    b.HasOne("CareGardenApiV1.Model.Appointment", "appointment")
+                        .WithMany("details")
+                        .HasForeignKey("appointmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("FK_AppointmentDetail_Appointment_appointmentId");
+
+                    b.HasOne("CareGardenApiV1.Model.BusinessServiceModel", "businessService")
+                        .WithMany("appointmentDetails")
+                        .HasForeignKey("businessServiceId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("FK_AppointmentDetail_BusinessService_businessServiceId");
+
+                    b.HasOne("CareGardenApiV1.Model.Worker", "worker")
+                        .WithMany("appointmentDetails")
+                        .HasForeignKey("workerId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("FK_AppointmentDetail_Worker_workerId");
+
+                    b.Navigation("appointment");
+
+                    b.Navigation("businessService");
+
+                    b.Navigation("worker");
+                });
+
             modelBuilder.Entity("CareGardenApiV1.Model.BusinessGallery", b =>
                 {
                     b.HasOne("CareGardenApiV1.Model.Business", "business")
                         .WithMany("galleries")
-                        .HasForeignKey("businessId");
+                        .HasForeignKey("businessId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("FK_BusinessGallery_Business_businessId");
 
                     b.Navigation("business");
                 });
@@ -631,7 +1061,9 @@ namespace CareGardenApiV1.Migrations
                 {
                     b.HasOne("CareGardenApiV1.Model.Business", "business")
                         .WithMany("properties")
-                        .HasForeignKey("businessId");
+                        .HasForeignKey("businessId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("FK_BusinessProperties_Business_businessId");
 
                     b.Navigation("business");
                 });
@@ -640,11 +1072,15 @@ namespace CareGardenApiV1.Migrations
                 {
                     b.HasOne("CareGardenApiV1.Model.Business", "business")
                         .WithMany("services")
-                        .HasForeignKey("businessId");
+                        .HasForeignKey("businessId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("FK_BusinessService_Business_businessId");
 
                     b.HasOne("CareGardenApiV1.Model.Services", "service")
                         .WithMany("businessServices")
-                        .HasForeignKey("serviceId");
+                        .HasForeignKey("serviceId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("FK_BusinessService_Services_serviceId");
 
                     b.Navigation("business");
 
@@ -655,7 +1091,9 @@ namespace CareGardenApiV1.Migrations
                 {
                     b.HasOne("CareGardenApiV1.Model.Business", "business")
                         .WithMany("workingInfos")
-                        .HasForeignKey("businessId");
+                        .HasForeignKey("businessId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("FK_BusinessWorkingInfo_Business_businessId");
 
                     b.Navigation("business");
                 });
@@ -663,25 +1101,39 @@ namespace CareGardenApiV1.Migrations
             modelBuilder.Entity("CareGardenApiV1.Model.Campaign", b =>
                 {
                     b.HasOne("CareGardenApiV1.Model.Business", "business")
-                        .WithMany()
-                        .HasForeignKey("businessId");
+                        .WithMany("campaigns")
+                        .HasForeignKey("businessId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("FK_Campaign_Business_businessId");
 
                     b.Navigation("business");
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.Comment", b =>
                 {
+                    b.HasOne("CareGardenApiV1.Model.Appointment", "appointment")
+                        .WithMany("comments")
+                        .HasForeignKey("appointmentId");
+
                     b.HasOne("CareGardenApiV1.Model.Business", "business")
                         .WithMany("comments")
-                        .HasForeignKey("businessId");
+                        .HasForeignKey("businessId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("FK_Comment_Business_businessId");
 
                     b.HasOne("CareGardenApiV1.Model.Comment", "reply")
                         .WithMany()
-                        .HasForeignKey("replyId");
+                        .HasForeignKey("replyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("FK_Comment_Comment_replyId");
 
                     b.HasOne("CareGardenApiV1.Model.User", "user")
                         .WithMany("comments")
-                        .HasForeignKey("userId");
+                        .HasForeignKey("userId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("FK_Comment_User_userId");
+
+                    b.Navigation("appointment");
 
                     b.Navigation("business");
 
@@ -693,27 +1145,65 @@ namespace CareGardenApiV1.Migrations
             modelBuilder.Entity("CareGardenApiV1.Model.Complain", b =>
                 {
                     b.HasOne("CareGardenApiV1.Model.Business", "business")
-                        .WithMany()
-                        .HasForeignKey("businessId");
+                        .WithMany("complains")
+                        .HasForeignKey("businessId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("FK_Complain_Business_businessId");
 
                     b.HasOne("CareGardenApiV1.Model.User", "user")
                         .WithMany("complains")
-                        .HasForeignKey("userId");
+                        .HasForeignKey("userId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("FK_Complain_User_userId");
 
                     b.Navigation("business");
 
                     b.Navigation("user");
                 });
 
+            modelBuilder.Entity("CareGardenApiV1.Model.Discount", b =>
+                {
+                    b.HasOne("CareGardenApiV1.Model.Business", "business")
+                        .WithMany("discounts")
+                        .HasForeignKey("businessId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("FK_Discount_Business_businessId");
+
+                    b.Navigation("business");
+                });
+
             modelBuilder.Entity("CareGardenApiV1.Model.Favorite", b =>
                 {
                     b.HasOne("CareGardenApiV1.Model.Business", "business")
                         .WithMany("favorites")
-                        .HasForeignKey("businessId");
+                        .HasForeignKey("businessId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("FK_Favorite_Business_businessId");
 
                     b.HasOne("CareGardenApiV1.Model.User", "user")
                         .WithMany("favorites")
-                        .HasForeignKey("userId");
+                        .HasForeignKey("userId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("FK_Favorite_User_userId");
+
+                    b.Navigation("business");
+
+                    b.Navigation("user");
+                });
+
+            modelBuilder.Entity("CareGardenApiV1.Model.Notification", b =>
+                {
+                    b.HasOne("CareGardenApiV1.Model.Business", "business")
+                        .WithMany("notifications")
+                        .HasForeignKey("businessId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("FK_Notification_Business_businessId");
+
+                    b.HasOne("CareGardenApiV1.Model.User", "user")
+                        .WithMany("notifications")
+                        .HasForeignKey("userId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("FK_Notification_User_userId");
 
                     b.Navigation("business");
 
@@ -724,20 +1214,67 @@ namespace CareGardenApiV1.Migrations
                 {
                     b.HasOne("CareGardenApiV1.Model.Business", "business")
                         .WithMany("paymentInfos")
-                        .HasForeignKey("businessId");
+                        .HasForeignKey("businessId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .HasConstraintName("FK_PaymentInfo_Business_businessId");
 
                     b.Navigation("business");
+                });
+
+            modelBuilder.Entity("CareGardenApiV1.Model.Worker", b =>
+                {
+                    b.HasOne("CareGardenApiV1.Model.Business", "business")
+                        .WithMany("workers")
+                        .HasForeignKey("businessId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("FK_Worker_Business_businessId");
+
+                    b.Navigation("business");
+                });
+
+            modelBuilder.Entity("CareGardenApiV1.Model.WorkerServicePrice", b =>
+                {
+                    b.HasOne("CareGardenApiV1.Model.BusinessServiceModel", "businessService")
+                        .WithMany("workerServicePrices")
+                        .HasForeignKey("businessServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("FK_WorkerServicePrices_BusinessService_businessServiceId");
+
+                    b.HasOne("CareGardenApiV1.Model.Worker", "worker")
+                        .WithMany("workerServicePrices")
+                        .HasForeignKey("workerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("FK_WorkerServicePrices_Worker_workerId");
+
+                    b.Navigation("businessService");
+
+                    b.Navigation("worker");
+                });
+
+            modelBuilder.Entity("CareGardenApiV1.Model.Appointment", b =>
+                {
+                    b.Navigation("comments");
+
+                    b.Navigation("details");
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.Business", b =>
                 {
                     b.Navigation("appointments");
 
+                    b.Navigation("campaigns");
+
                     b.Navigation("comments");
+
+                    b.Navigation("complains");
+
+                    b.Navigation("discounts");
 
                     b.Navigation("favorites");
 
                     b.Navigation("galleries");
+
+                    b.Navigation("notifications");
 
                     b.Navigation("paymentInfos");
 
@@ -745,7 +1282,16 @@ namespace CareGardenApiV1.Migrations
 
                     b.Navigation("services");
 
+                    b.Navigation("workers");
+
                     b.Navigation("workingInfos");
+                });
+
+            modelBuilder.Entity("CareGardenApiV1.Model.BusinessServiceModel", b =>
+                {
+                    b.Navigation("appointmentDetails");
+
+                    b.Navigation("workerServicePrices");
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.Services", b =>
@@ -762,6 +1308,15 @@ namespace CareGardenApiV1.Migrations
                     b.Navigation("complains");
 
                     b.Navigation("favorites");
+
+                    b.Navigation("notifications");
+                });
+
+            modelBuilder.Entity("CareGardenApiV1.Model.Worker", b =>
+                {
+                    b.Navigation("appointmentDetails");
+
+                    b.Navigation("workerServicePrices");
                 });
 #pragma warning restore 612, 618
         }

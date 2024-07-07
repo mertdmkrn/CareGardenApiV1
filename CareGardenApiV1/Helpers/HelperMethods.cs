@@ -7,7 +7,7 @@ using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Model.ResponseModel;
 using System.Text;
 using CareGardenApiV1.Model.TableModel;
-
+using CareGardenApiV1.Model.OtherModel;
 namespace CareGardenApiV1.Helpers
 {
     public static class HelperMethods
@@ -313,6 +313,50 @@ namespace CareGardenApiV1.Helpers
             sumWorkMinutes += endStartTimeDifference % 100;
 
             return sumWorkMinutes - todayWorksMinutes >= 30;
+        }
+
+        public static string findNearestCity(double userLat, double userLon)
+        {
+            LocationInfo nearestCity = null;
+            double smallestDistance = double.MaxValue;
+
+            // Kullanıcının enlem ve boylamını radyanlara dönüştürme
+            double userLatRad = degreesToRadians(userLat);
+            double userLonRad = degreesToRadians(userLon);
+
+            foreach (var location in Constants.CityLocationInfos)
+            {
+                double locationLatRad = degreesToRadians(location.latitude);
+                double locationLonRad = degreesToRadians(location.longitude);
+
+                double distance = haversineDistance(userLatRad, userLonRad, locationLatRad, locationLonRad);
+
+                if (distance < smallestDistance)
+                {
+                    smallestDistance = distance;
+                    nearestCity = location;
+                }
+            }
+
+            return nearestCity?.name ?? "İstanbul";
+        }
+
+        private static double haversineDistance(double lat1Rad, double lon1Rad, double lat2Rad, double lon2Rad)
+        {
+            const double R = 6371; // Dünya'nın yarıçapı (km)
+            var dLat = lat2Rad - lat1Rad;
+            var dLon = lon2Rad - lon1Rad;
+
+            var h1 = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                     Math.Cos(lat1Rad) * Math.Cos(lat2Rad) *
+                     Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+            var h2 = 2 * Math.Atan2(Math.Sqrt(h1), Math.Sqrt(1 - h1));
+            return R * h2;
+        }
+
+        private static double degreesToRadians(double degrees)
+        {
+            return degrees * Math.PI / 180;
         }
     }
 }

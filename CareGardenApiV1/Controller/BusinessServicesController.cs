@@ -141,7 +141,6 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Save([FromBody] BusinessServiceModel businessService)
         {
             ResponseModel<BusinessServiceModel> response = new ResponseModel<BusinessServiceModel>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             if (!businessService.serviceId.HasValue)
             {

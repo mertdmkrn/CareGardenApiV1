@@ -118,7 +118,6 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetUsers([FromBody] UserSearchAdminRequestModel userSearchAdminModel)
         {
             ResponseModel<List<UserAdminResponseModel>> response = new ResponseModel<List<UserAdminResponseModel>>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             response.Data = await _userService.GetUsersAsync(userSearchAdminModel);
             return Ok(response);

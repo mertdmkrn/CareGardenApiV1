@@ -424,7 +424,6 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> UserLogin([FromBody] User loginUser)
         {
             ResponseModel<Token> response = new ResponseModel<Token>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             if (loginUser.email.IsNullOrEmpty())
             {

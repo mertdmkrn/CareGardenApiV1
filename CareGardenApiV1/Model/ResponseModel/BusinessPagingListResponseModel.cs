@@ -6,6 +6,7 @@ namespace CareGardenApiV1.Model.ResponseModel
     {
         public Guid id { get; set; }
         public string name { get; set; }
+        public string nameForUrl { get; set; }
         public string email { get; set; }
         public string logoUrl { get; set; }
         public bool isPaid { get; set; }

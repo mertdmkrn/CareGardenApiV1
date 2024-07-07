@@ -66,13 +66,6 @@ namespace CareGardenApiV1.Controller
 
             var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
 
-            if (userId.IsNullOrEmpty())
-            {
-                response.HasError = true;
-                response.Message = Resource.Resource.KullaniciBulunamadi;
-                return Ok(response);
-            }
-
             searchModel.userId = userId.ToGuid();
             searchModel.startDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, "Turkey Standard Time");
             searchModel.page ??= 0;

@@ -350,13 +350,6 @@ namespace CareGardenApiV1.Controller
 
             var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
 
-            if (userId.IsNullOrEmpty())
-            {
-                response.HasError = true;
-                response.Message = Resource.Resource.KullaniciBulunamadi;
-                return Ok(response);
-            }
-
             await _commentService.DeleteCommentByIdAsync(id);
 
             response.Data = true;

@@ -136,7 +136,6 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> Get()
         {
             ResponseModel<Business> response = new ResponseModel<Business>();
-            Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
 
             var business = await HelperMethods.GetSessionBusiness(Request, _businessService);
 

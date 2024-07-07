@@ -33,13 +33,6 @@ namespace CareGardenApiV1.Controller
 
             var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
 
-            if (userId.IsNullOrEmpty())
-            {
-                response.HasError = true;
-                response.Message = Resource.Resource.KullaniciBulunamadi;
-                return Ok(response);
-            }
-
             response.Data = await _favoriteService.GetFavoritesByUserIdAsync(userId.ToGuid());
 
             return Ok(response);
@@ -63,13 +56,6 @@ namespace CareGardenApiV1.Controller
             ResponseModel<bool> response = new ResponseModel<bool>();
 
             var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
-
-            if (userId.IsNullOrEmpty())
-            {
-                response.HasError = true;
-                response.Message = Resource.Resource.KullaniciBulunamadi;
-                return Ok(response);
-            }
 
             Favorite favorite = new Favorite()
             {
@@ -105,13 +91,6 @@ namespace CareGardenApiV1.Controller
             ResponseModel<bool> response = new ResponseModel<bool>();
 
             var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
-
-            if (userId.IsNullOrEmpty())
-            {
-                response.HasError = true;
-                response.Message = Resource.Resource.KullaniciBulunamadi;
-                return Ok(response);
-            }
 
             await _favoriteService.DeleteFavoriteByBusinessIdAndUserIdAsync(userId.ToGuid(), businessId);
 

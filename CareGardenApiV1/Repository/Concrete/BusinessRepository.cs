@@ -428,6 +428,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 {
                     id = x.id,
                     name = x.name,
+                    nameForUrl = x.nameForUrl,
                     city = x.city,
                     province = x.province,
                     email = x.email,

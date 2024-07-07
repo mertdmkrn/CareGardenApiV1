@@ -126,13 +126,6 @@ namespace CareGardenApiV1.Controller
 
             var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
 
-            if (userId.IsNullOrEmpty())
-            {
-                response.HasError = true;
-                response.Message = Resource.Resource.GirdiginizMaileAitKullaniciBulunamadi;
-                return Ok(response);
-            }
-
             var userName = HelperMethods.GetClaimInfo(Request, ClaimTypes.Name);
             var userEmail = HelperMethods.GetClaimInfo(Request, ClaimTypes.Email);
 
@@ -234,18 +227,27 @@ namespace CareGardenApiV1.Controller
         {
             ResponseModel<IList<BusinessListResponseModel>> response = new ResponseModel<IList<BusinessListResponseModel>>();
 
-            bool isSendNoLocationInfo = (!businessSearchModel.latitude.HasValue || businessSearchModel.latitude == 0)
-                                        && (!businessSearchModel.longitude.HasValue || businessSearchModel.longitude == 0)
-                                        && businessSearchModel.city.IsNullOrEmpty();
+            bool isSendLocationInfo = businessSearchModel.latitude.HasValue && businessSearchModel.latitude > 0 &&
+                                      businessSearchModel.longitude.HasValue && businessSearchModel.longitude > 0;
 
-            if(isSendNoLocationInfo)
+            string userCityInfo = HelperMethods.GetClaimInfo(Request, ClaimTypes.Locality);
+
+
+            if (businessSearchModel.city.IsNullOrEmpty())
             {
-                businessSearchModel.city = HelperMethods.GetClaimInfo(Request, ClaimTypes.Locality).IsNull("İstanbul");
+                if (isSendLocationInfo && userCityInfo.IsNullOrEmpty())
+                {
+                    businessSearchModel.city = HelperMethods.findNearestCity(businessSearchModel.longitude.Value, businessSearchModel.latitude.Value);
+                }
+                else
+                {
+                    businessSearchModel.city = userCityInfo.IsNull("İstanbul");
+                }
             }
-                
+
             response.Data = await _businessService.GetBusinessByPopularAsync(businessSearchModel);
 
-            if(isSendNoLocationInfo && response.Data.IsNullOrEmpty() && businessSearchModel.city != "İstanbul")
+            if (!isSendLocationInfo && response.Data.IsNullOrEmpty() && businessSearchModel.city != "İstanbul")
             {
                 businessSearchModel.city = "İstanbul";
                 response.Data = await _businessService.GetBusinessByPopularAsync(businessSearchModel);
@@ -266,16 +268,9 @@ namespace CareGardenApiV1.Controller
 
             var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
 
-            if (userId.IsNullOrEmpty())
-            {
-                response.HasError = true;
-                response.Message = Resource.Resource.KullaniciBulunamadi;
-                return Ok(response);
-            }
-
             businessSearchModel.favoriteBusinessIds = await _userService.GetUserFavoriteBusinessIds(userId.ToGuid());
 
-            if(!businessSearchModel.favoriteBusinessIds.IsNullOrEmpty())
+            if (!businessSearchModel.favoriteBusinessIds.IsNullOrEmpty())
             {
                 response.Data = await _businessService.GetBusinessByUserFavorites(businessSearchModel);
             }

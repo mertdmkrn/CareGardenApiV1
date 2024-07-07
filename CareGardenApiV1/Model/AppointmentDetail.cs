@@ -7,7 +7,8 @@ using Newtonsoft.Json;
 namespace CareGardenApiV1.Model
 {
     [Table("AppointmentDetail")]
-    [Index(nameof(appointmentId), nameof(workerId))]
+    [Index(nameof(appointmentId))]
+    [Index(nameof(workerId))]
     public class AppointmentDetail
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]

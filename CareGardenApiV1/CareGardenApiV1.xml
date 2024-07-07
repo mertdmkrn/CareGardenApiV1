@@ -318,12 +318,12 @@
         </member>
         <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessDetailByNameForUrl(System.String)">
              <summary>
-             Get Business Details By NameforUrl (Can be used for fast appointment page.)
+             Get Business Detail By NameforUrl (Can be used for fast appointment page.)
              </summary>
              <remarks>
              **Sample request body:**
             
-             "tolga-guzellik-salonu"
+             "tolga-beauty-house"
             
              </remarks>
              <returns></returns>
@@ -2124,6 +2124,18 @@
             <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.CareGardenV42.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV43">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV43.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV43.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV43.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:CareGardenApiV1.Resource.Resource">

@@ -7,6 +7,7 @@ namespace CareGardenApiV1.Model
 {
     [Table("Campaign")]
     [Index(nameof(businessId))]
+    [Index(nameof(isActive))]
     public class Campaign
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]

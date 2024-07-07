@@ -8,7 +8,9 @@ using CareGardenApiV1.Helpers;
 namespace CareGardenApiV1.Model
 {
     [Table("Business")]
-    [Index(nameof(email), nameof(telephone), nameof(city))]
+    [Index(nameof(email))]
+    [Index(nameof(telephone))]
+    [Index(nameof(city))]
     [Index(nameof(nameForUrl))]
     public class Business
     {

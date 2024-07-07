@@ -5,8 +5,9 @@ using System.Text.Json.Serialization;
 
 namespace CareGardenApiV1.Model
 {
-    [Index(nameof(businessId))]
     [Table("Worker")]
+    [Index(nameof(businessId))]
+    [Index(nameof(isActive))]
     public class Worker
     {
         public Worker()

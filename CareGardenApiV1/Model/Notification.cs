@@ -7,7 +7,8 @@ using CareGardenApiV1.Helpers;
 namespace CareGardenApiV1.Model
 {
     [Table("Notification")]
-    [Index(nameof(userId), nameof(businessId))]
+    [Index(nameof(userId))]
+    [Index(nameof(businessId))]
     public class Notification
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]

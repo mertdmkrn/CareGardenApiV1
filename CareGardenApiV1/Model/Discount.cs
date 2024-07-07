@@ -7,7 +7,8 @@ using CareGardenApiV1.Helpers;
 namespace CareGardenApiV1.Model
 {
     [Table("Discount")]
-    [Index(nameof(businessId), nameof(isActive))]
+    [Index(nameof(businessId))]
+    [Index(nameof(isActive))]
     public class Discount
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]

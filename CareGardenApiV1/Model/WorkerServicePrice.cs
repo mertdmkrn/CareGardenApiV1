@@ -6,7 +6,8 @@ using System.Text.Json.Serialization;
 namespace CareGardenApiV1.Model
 {
     [Table("WorkerServicePrice")]
-    [Index(nameof(businessServiceId), nameof(workerId))]
+    [Index(nameof(businessServiceId))]
+    [Index(nameof(workerId))]
     public class WorkerServicePrice
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]

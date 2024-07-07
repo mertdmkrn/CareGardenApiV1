@@ -6,7 +6,8 @@ using System.Text.Json.Serialization;
 namespace CareGardenApiV1.Model
 {
     [Table("Complain")]
-    [Index(nameof(userId), nameof(businessId))]
+    [Index(nameof(userId))]
+    [Index(nameof(businessId))]
     public class Complain
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]

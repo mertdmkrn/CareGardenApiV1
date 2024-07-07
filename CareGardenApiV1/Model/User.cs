@@ -8,7 +8,8 @@ using CareGardenApiV1.Helpers;
 namespace CareGardenApiV1.Model
 {
     [Table("User")]
-    [Index(nameof(email), nameof(telephone))]
+    [Index(nameof(email))]
+    [Index(nameof(telephone))]
     public class User
     {
         public User()

@@ -7,6 +7,7 @@ namespace CareGardenApiV1.Model
 {
     [Table("Favorite")]
     [Index(nameof(userId))]
+    [Index(nameof(businessId))]
     public class Favorite
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]

@@ -7,7 +7,9 @@ using System.Text.Json.Serialization;
 namespace CareGardenApiV1.Model
 {
     [Table("PaymentInfo")]
-    [Index(nameof(businessId), nameof(paidType))]
+    [Index(nameof(businessId))]
+    [Index(nameof(paidType))]
+    [Index(nameof(isPaid))]
     public class PaymentInfo
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]

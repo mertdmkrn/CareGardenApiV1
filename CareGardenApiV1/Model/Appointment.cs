@@ -7,7 +7,10 @@ using Newtonsoft.Json;
 namespace CareGardenApiV1.Model
 {
     [Table("Appointment")]
-    [Index(nameof(userId), nameof(businessId), nameof(startDate), nameof(status))]
+    [Index(nameof(userId))]
+    [Index(nameof(businessId))]
+    [Index(nameof(startDate))]
+    [Index(nameof(status))]
     public class Appointment
     {
         public Appointment()

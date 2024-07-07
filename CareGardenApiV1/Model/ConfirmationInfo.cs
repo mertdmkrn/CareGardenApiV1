@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CareGardenApiV1.Model
 {
     [Table("ConfirmationInfo")]
-    [Index(nameof(target), nameof(code))]
+    [Index(nameof(target))]
     public class ConfirmationInfo
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]

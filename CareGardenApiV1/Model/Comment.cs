@@ -7,7 +7,9 @@ using System.Text.Json.Serialization;
 namespace CareGardenApiV1.Model
 {
     [Table("Comment")]
-    [Index(nameof(userId), nameof(businessId), nameof(appointmentId))]
+    [Index(nameof(userId))]
+    [Index(nameof(businessId))]
+    [Index(nameof(appointmentId))]
     public class Comment
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]

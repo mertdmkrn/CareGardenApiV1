@@ -1,7 +1,7 @@
 ﻿using CareGardenApiV1.Helpers;
-using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
+using CareGardenApiV1.Model.TableModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 
@@ -26,12 +26,12 @@ namespace CareGardenApiV1.Service.Concrete
             return await _appointmentRepository.GetAppointmentByIdAsync(id);
         }
 
-        public async Task<List<Appointment>> GetAppointmentsByAppointmentSearchModelAsync(AppointmentSearchModel searchModel)
+        public async Task<List<Appointment>> GetAppointmentsByAppointmentSearchModelAsync(AppointmentSearchRequestModel searchModel)
         {
             return await _appointmentRepository.GetAppointmentsByAppointmentSearchModelAsync(searchModel);
         }
 
-        public async Task<List<AppointmentListModel>> GetAppointmentsListModelByAppointmentSearchModelAsync(AppointmentSearchModel searchModel)
+        public async Task<List<AppointmentListResponseModel>> GetAppointmentsListModelByAppointmentSearchModelAsync(AppointmentSearchRequestModel searchModel)
         {
             return await _appointmentRepository.GetAppointmentsListModelByAppointmentSearchModelAsync(searchModel);
         }
@@ -46,7 +46,7 @@ namespace CareGardenApiV1.Service.Concrete
             return await _appointmentRepository.UpdateAppointmentAsync(appointment);
         }
 
-        public async Task<bool> ChangeStatusAsync(AppointmentChangeModel changeModel)
+        public async Task<bool> ChangeStatusAsync(AppointmentChangeRequestModel changeModel)
         {
             return await _appointmentRepository.ChangeStatusAsync(changeModel);
         }

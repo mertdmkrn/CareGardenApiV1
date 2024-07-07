@@ -1,8 +1,8 @@
 ﻿using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Repository.Abstract;
-using CareGardenApiV1.Model;
 using Microsoft.EntityFrameworkCore;
 using CareGardenApiV1.Model.RequestModel;
+using CareGardenApiV1.Model.TableModel;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -21,7 +21,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 .FindAsync(id);
         }
 
-        public async Task<List<AppointmentDetail>> GetAppointmentDetailsByAppointmentDetailSearchModelAsync(AppointmentSearchModel searchModel)
+        public async Task<List<AppointmentDetail>> GetAppointmentDetailsByAppointmentDetailSearchModelAsync(AppointmentSearchRequestModel searchModel)
         {
             if (searchModel.page.HasValue && searchModel.take.HasValue)
             {
@@ -74,7 +74,7 @@ namespace CareGardenApiV1.Repository.Concrete
             throw new NotImplementedException();
         }
 
-        public async Task<List<AppointmentDetail>> GetAppointmentDetailsByWorkerIdsAndDateAsync(AppointmentSearchModel searchModel)
+        public async Task<List<AppointmentDetail>> GetAppointmentDetailsByWorkerIdsAndDateAsync(AppointmentSearchRequestModel searchModel)
         {
             return await _context.AppointmentDetails
                 .AsNoTracking()

@@ -1,5 +1,6 @@
 ﻿using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
+using CareGardenApiV1.Model.TableModel;
 using CareGardenApiV1.Service.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

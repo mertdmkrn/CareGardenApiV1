@@ -1,4 +1,5 @@
 ﻿using CareGardenApiV1.Helpers;
+using CareGardenApiV1.Model.OtherModel;
 
 namespace CareGardenApiV1.Model.ResponseModel
 {

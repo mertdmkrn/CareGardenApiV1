@@ -4,7 +4,7 @@
         <name>CareGardenApiV1</name>
     </assembly>
     <members>
-        <member name="M:CareGardenApiV1.Controller.AdminController.VerifyBusiness(CareGardenApiV1.Model.Business)">
+        <member name="M:CareGardenApiV1.Controller.AdminController.VerifyBusiness(CareGardenApiV1.Model.TableModel.Business)">
              <summary>
              It is used for activation and verification of Business.
              </summary>
@@ -20,7 +20,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.AdminController.GetUsers(CareGardenApiV1.Model.RequestModel.UserSearchAdminModel)">
+        <member name="M:CareGardenApiV1.Controller.AdminController.GetUsers(CareGardenApiV1.Model.RequestModel.UserSearchAdminRequestModel)">
              <summary>
              Get Users.
              </summary>
@@ -39,7 +39,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.AdminController.Save(CareGardenApiV1.Model.User)">
+        <member name="M:CareGardenApiV1.Controller.AdminController.Save(CareGardenApiV1.Model.TableModel.User)">
              <summary>
              Save Admin.
              </summary>
@@ -68,7 +68,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.AdminController.SaveFaq(CareGardenApiV1.Model.Faq)">
+        <member name="M:CareGardenApiV1.Controller.AdminController.SaveFaq(CareGardenApiV1.Model.TableModel.Faq)">
              <summary>
              Save Faq
              </summary>
@@ -87,7 +87,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.AdminController.UpdateFaq(CareGardenApiV1.Model.Faq)">
+        <member name="M:CareGardenApiV1.Controller.AdminController.UpdateFaq(CareGardenApiV1.Model.TableModel.Faq)">
              <summary>
              Update Faq
              </summary>
@@ -125,13 +125,13 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.AdminController.SearchBusiness(CareGardenApiV1.Model.RequestModel.BusinessSearchAdminModel)">
+        <member name="M:CareGardenApiV1.Controller.AdminController.SearchBusiness(CareGardenApiV1.Model.RequestModel.BusinessSearchAdminRequestModel)">
             <summary>
             Search Business
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.AppointmentController.Get(CareGardenApiV1.Model.RequestModel.AppointmentSearchModel)">
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.Get(CareGardenApiV1.Model.RequestModel.AppointmentSearchRequestModel)">
              <summary>
              Get Appointments
              </summary>
@@ -161,7 +161,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.AppointmentController.Save(CareGardenApiV1.Model.RequestModel.AppointmentSaveModel)">
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.Save(CareGardenApiV1.Model.RequestModel.AppointmentSaveRequestModel)">
              <summary>
              Save Appoinment
              </summary>
@@ -194,7 +194,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.AppointmentController.Update(CareGardenApiV1.Model.RequestModel.AppointmentChangeModel)">
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.Update(CareGardenApiV1.Model.RequestModel.AppointmentChangeRequestModel)">
              <summary>
              Change Appointment Status
              </summary>
@@ -209,7 +209,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.AppointmentController.Cancel(CareGardenApiV1.Model.RequestModel.AppointmentChangeModel)">
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.Cancel(CareGardenApiV1.Model.RequestModel.AppointmentChangeRequestModel)">
              <summary>
              Appointment Cancel
              </summary>
@@ -224,7 +224,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.AppointmentController.GetWorkersProvideService(CareGardenApiV1.Model.RequestModel.AppointmentSearchModel)">
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.GetWorkersProvideService(CareGardenApiV1.Model.RequestModel.AppointmentSearchRequestModel)">
              <summary>
              Get Workers Provide Service 
              </summary>
@@ -239,7 +239,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.AppointmentController.GetAppointmentDates(CareGardenApiV1.Model.RequestModel.AppointmentDatesModel)">
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.GetAppointmentDates(CareGardenApiV1.Model.RequestModel.AppointmentDatesRequestModel)">
              <summary>
              Get Appointment Dates 
              </summary>
@@ -334,13 +334,13 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessController.SetProfilePhoto(CareGardenApiV1.Model.RequestModel.BusinessFileInfoModel)">
+        <member name="M:CareGardenApiV1.Controller.BusinessController.SetProfilePhoto(CareGardenApiV1.Model.RequestModel.BusinessFileInfoRequestModel)">
             <summary>
             Set Profile Photo
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessController.Update(CareGardenApiV1.Model.Business)">
+        <member name="M:CareGardenApiV1.Controller.BusinessController.Update(CareGardenApiV1.Model.TableModel.Business)">
              <summary>
              Update Business
              </summary>
@@ -366,7 +366,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessController.SaveWorkingInfo(CareGardenApiV1.Model.RequestModel.BusinessWorkInfoModel)">
+        <member name="M:CareGardenApiV1.Controller.BusinessController.SaveWorkingInfo(CareGardenApiV1.Model.RequestModel.BusinessWorkInfoRequestModel)">
              <summary>
              Save Business Working Info
              </summary>
@@ -392,13 +392,13 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessController.AddGalleryPhoto(CareGardenApiV1.Model.RequestModel.BusinessFileInfoModel)">
+        <member name="M:CareGardenApiV1.Controller.BusinessController.AddGalleryPhoto(CareGardenApiV1.Model.RequestModel.BusinessFileInfoRequestModel)">
             <summary>
             Add Gallery Photo
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessController.UpdateGalleryPhoto(CareGardenApiV1.Model.BusinessGallery)">
+        <member name="M:CareGardenApiV1.Controller.BusinessController.UpdateGalleryPhoto(CareGardenApiV1.Model.TableModel.BusinessGallery)">
              <summary>
              Update Gallery Photo
              </summary>
@@ -421,7 +421,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessController.Delete(CareGardenApiV1.Model.Business)">
+        <member name="M:CareGardenApiV1.Controller.BusinessController.Delete(CareGardenApiV1.Model.TableModel.Business)">
             <summary>
             Delete Business
             </summary>
@@ -439,7 +439,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessLoginController.VerifyConfirmationCode(CareGardenApiV1.Model.ConfirmationInfo)">
+        <member name="M:CareGardenApiV1.Controller.BusinessLoginController.VerifyConfirmationCode(CareGardenApiV1.Model.TableModel.ConfirmationInfo)">
              <summary>
              Verify Confirmation Code
              </summary>
@@ -454,7 +454,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessLoginController.Save(CareGardenApiV1.Model.Business)">
+        <member name="M:CareGardenApiV1.Controller.BusinessLoginController.Save(CareGardenApiV1.Model.TableModel.Business)">
              <summary>
              Save Business
              </summary>
@@ -472,7 +472,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessLoginController.BusinessLogin(CareGardenApiV1.Model.Business)">
+        <member name="M:CareGardenApiV1.Controller.BusinessLoginController.BusinessLogin(CareGardenApiV1.Model.TableModel.Business)">
              <summary>
              Login Business
              </summary>
@@ -487,7 +487,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessLoginController.PasswordReset(CareGardenApiV1.Model.RequestModel.PasswordResetModel)">
+        <member name="M:CareGardenApiV1.Controller.BusinessLoginController.PasswordReset(CareGardenApiV1.Model.RequestModel.PasswordResetRequestModel)">
              <summary>
              Business Password Reset
              </summary>
@@ -522,7 +522,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.Save(CareGardenApiV1.Model.BusinessProperties)">
+        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.Save(CareGardenApiV1.Model.TableModel.BusinessProperties)">
              <summary>
              Save BusinessProperties
              </summary>
@@ -538,7 +538,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.Update(CareGardenApiV1.Model.BusinessProperties)">
+        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.Update(CareGardenApiV1.Model.TableModel.BusinessProperties)">
              <summary>
              Update BusinessProperties
              </summary>
@@ -555,7 +555,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.Delete(CareGardenApiV1.Model.BusinessProperties)">
+        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.Delete(CareGardenApiV1.Model.TableModel.BusinessProperties)">
             <summary>
             Delete BusinessProperties
             </summary>
@@ -579,7 +579,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessServicesController.Save(CareGardenApiV1.Model.BusinessServiceModel)">
+        <member name="M:CareGardenApiV1.Controller.BusinessServicesController.Save(CareGardenApiV1.Model.TableModel.BusinessServiceModel)">
              <summary>
              Save Business Service
              </summary>
@@ -601,7 +601,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessServicesController.Update(CareGardenApiV1.Model.BusinessServiceModel)">
+        <member name="M:CareGardenApiV1.Controller.BusinessServicesController.Update(CareGardenApiV1.Model.TableModel.BusinessServiceModel)">
              <summary>
              Update Business Service
              </summary>
@@ -655,7 +655,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.CampaignController.Save(CareGardenApiV1.Model.Campaign)">
+        <member name="M:CareGardenApiV1.Controller.CampaignController.Save(CareGardenApiV1.Model.TableModel.Campaign)">
              <summary>
              Save Campaign (Role = 'Admin')
              </summary>
@@ -680,7 +680,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.CampaignController.Update(CareGardenApiV1.Model.Campaign)">
+        <member name="M:CareGardenApiV1.Controller.CampaignController.Update(CareGardenApiV1.Model.TableModel.Campaign)">
              <summary>
              Update Campaign (Role = 'Admin')
              </summary>
@@ -712,7 +712,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.CommentController.Get(CareGardenApiV1.Model.RequestModel.CommentSearchModel)">
+        <member name="M:CareGardenApiV1.Controller.CommentController.Get(CareGardenApiV1.Model.RequestModel.CommentSearchRequestModel)">
              <summary>
              Get Comment By Business Id
              </summary>
@@ -741,7 +741,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.CommentController.Search(CareGardenApiV1.Model.RequestModel.CommentSearchModel)">
+        <member name="M:CareGardenApiV1.Controller.CommentController.Search(CareGardenApiV1.Model.RequestModel.CommentSearchRequestModel)">
              <summary>
              Search Comments
              </summary>
@@ -787,7 +787,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.CommentController.Save(CareGardenApiV1.Model.Comment)">
+        <member name="M:CareGardenApiV1.Controller.CommentController.Save(CareGardenApiV1.Model.TableModel.Comment)">
              <summary>
              Save Comment (İşyeri cevabı ise replyId dolu olacak. Cevap verilen yorumun id si yazılması yeterli. Kullanıcı yorum yapmışsa businessId dolu olmalı.)
              </summary>
@@ -810,7 +810,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.CommentController.Update(CareGardenApiV1.Model.Comment)">
+        <member name="M:CareGardenApiV1.Controller.CommentController.Update(CareGardenApiV1.Model.TableModel.Comment)">
              <summary>
              Update Comment
              </summary>
@@ -849,7 +849,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.DiscountController.GetByBusinessId(CareGardenApiV1.Model.Discount)">
+        <member name="M:CareGardenApiV1.Controller.DiscountController.GetByBusinessId(CareGardenApiV1.Model.TableModel.Discount)">
              <summary>
              Get Discount By Business Id
              </summary>
@@ -864,7 +864,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.DiscountController.Save(CareGardenApiV1.Model.Discount)">
+        <member name="M:CareGardenApiV1.Controller.DiscountController.Save(CareGardenApiV1.Model.TableModel.Discount)">
              <summary>
              Save Discount
              </summary>
@@ -884,7 +884,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.DiscountController.Update(CareGardenApiV1.Model.Discount)">
+        <member name="M:CareGardenApiV1.Controller.DiscountController.Update(CareGardenApiV1.Model.TableModel.Discount)">
              <summary>
              Update Discount
              </summary>
@@ -939,8 +939,8 @@
              <returns></returns>
         </member>
         <!-- Badly formed XML comment ignored for member "M:CareGardenApiV1.Controller.FavoriteController.Delete(System.Guid)" -->
-        <!-- Badly formed XML comment ignored for member "M:CareGardenApiV1.Controller.NotificationController.Get(CareGardenApiV1.Model.RequestModel.NotificationSearchModel)" -->
-        <member name="M:CareGardenApiV1.Controller.NotificationController.Save(CareGardenApiV1.Model.Notification)">
+        <!-- Badly formed XML comment ignored for member "M:CareGardenApiV1.Controller.NotificationController.Get(CareGardenApiV1.Model.RequestModel.NotificationSearchRequestModel)" -->
+        <member name="M:CareGardenApiV1.Controller.NotificationController.Save(CareGardenApiV1.Model.TableModel.Notification)">
              <summary>
              Save Notification (Publish Date is the date the notification will start to appear. If null, it will appear immediately.)
              </summary>
@@ -963,7 +963,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.NotificationController.SaveAllUsers(CareGardenApiV1.Model.Notification)">
+        <member name="M:CareGardenApiV1.Controller.NotificationController.SaveAllUsers(CareGardenApiV1.Model.TableModel.Notification)">
              <summary>
              Save Notification All Users (Publish Date is the date the notification will start to appear. If null, it will appear immediately.)
              </summary>
@@ -984,7 +984,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.NotificationController.SaveAllBusinesses(CareGardenApiV1.Model.Notification)">
+        <member name="M:CareGardenApiV1.Controller.NotificationController.SaveAllBusinesses(CareGardenApiV1.Model.TableModel.Notification)">
              <summary>
              Save Notification All Businesses (Publish Date is the date the notification will start to appear. If null, it will appear immediately.)
              </summary>
@@ -1005,7 +1005,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.NotificationController.SetRead(CareGardenApiV1.Model.RequestModel.IdListSearchModel)">
+        <member name="M:CareGardenApiV1.Controller.NotificationController.SetRead(CareGardenApiV1.Model.RequestModel.IdListSearchRequestModel)">
              <summary>
              Notification Set Read ({} boş gönderildiğinde session daki kullanıcının tüm bildirimleri okundu yapar.)
              </summary>
@@ -1022,7 +1022,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.NotificationController.Delete(CareGardenApiV1.Model.RequestModel.IdListSearchModel)">
+        <member name="M:CareGardenApiV1.Controller.NotificationController.Delete(CareGardenApiV1.Model.RequestModel.IdListSearchRequestModel)">
              <summary>
              Delete Notifications
              </summary>
@@ -1039,7 +1039,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.SearchController.SearchBusinessByKeyword(CareGardenApiV1.Model.RequestModel.KeywordSearchModel)">
+        <member name="M:CareGardenApiV1.Controller.SearchController.SearchBusinessByKeyword(CareGardenApiV1.Model.RequestModel.KeywordSearchRequestModel)">
             <summary>
             Get Search By Keyword
             </summary>
@@ -1063,7 +1063,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.SearchController.SearchLocation(CareGardenApiV1.Model.RequestModel.StringSearchModel)">
+        <member name="M:CareGardenApiV1.Controller.SearchController.SearchLocation(CareGardenApiV1.Model.RequestModel.StringSearchRequestModel)">
             <summary>
             Get Search Location
             </summary>
@@ -1099,7 +1099,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.ServicesController.Save(CareGardenApiV1.Model.Services)">
+        <member name="M:CareGardenApiV1.Controller.ServicesController.Save(CareGardenApiV1.Model.TableModel.Services)">
              <summary>
              Save Service (Role = 'Admin')
              </summary>
@@ -1117,7 +1117,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.ServicesController.Update(CareGardenApiV1.Model.Services)">
+        <member name="M:CareGardenApiV1.Controller.ServicesController.Update(CareGardenApiV1.Model.TableModel.Services)">
              <summary>
              Update Service (Role = 'Admin')
              </summary>
@@ -1172,7 +1172,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.SettingController.Save(CareGardenApiV1.Model.Setting)">
+        <member name="M:CareGardenApiV1.Controller.SettingController.Save(CareGardenApiV1.Model.TableModel.Setting)">
              <summary>
              Save Setting
              </summary>
@@ -1189,7 +1189,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.SettingController.Update(CareGardenApiV1.Model.Setting)">
+        <member name="M:CareGardenApiV1.Controller.SettingController.Update(CareGardenApiV1.Model.TableModel.Setting)">
              <summary>
              Update Worker
              </summary>
@@ -1246,25 +1246,25 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.UserController.GetPopularBusiness(CareGardenApiV1.Model.RequestModel.BusinessSearchModel)">
+        <member name="M:CareGardenApiV1.Controller.UserController.GetPopularBusiness(CareGardenApiV1.Model.RequestModel.BusinessSearchRequestModel)">
             <summary>
             User Get Popular Business
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.UserController.GetFavoriteBusiness(CareGardenApiV1.Model.RequestModel.BusinessSearchModel)">
+        <member name="M:CareGardenApiV1.Controller.UserController.GetFavoriteBusiness(CareGardenApiV1.Model.RequestModel.BusinessSearchRequestModel)">
             <summary>
             User Get Favorite Business
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.UserController.GetNearByBusiness(CareGardenApiV1.Model.RequestModel.BusinessSearchModel)">
+        <member name="M:CareGardenApiV1.Controller.UserController.GetNearByBusiness(CareGardenApiV1.Model.RequestModel.BusinessSearchRequestModel)">
             <summary>
             User Get Near By Business
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.UserController.Update(CareGardenApiV1.Model.User)">
+        <member name="M:CareGardenApiV1.Controller.UserController.Update(CareGardenApiV1.Model.TableModel.User)">
              <summary>
              Update User
              </summary>
@@ -1283,7 +1283,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.UserController.ChangePassword(CareGardenApiV1.Model.RequestModel.PasswordChangeModel)">
+        <member name="M:CareGardenApiV1.Controller.UserController.ChangePassword(CareGardenApiV1.Model.RequestModel.PasswordChangeRequestModel)">
              <summary>
              User Change Password
              </summary>
@@ -1299,7 +1299,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.UserController.UpdateLocation(CareGardenApiV1.Model.User)">
+        <member name="M:CareGardenApiV1.Controller.UserController.UpdateLocation(CareGardenApiV1.Model.TableModel.User)">
              <summary>
              Update User Location
              </summary>
@@ -1338,7 +1338,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.UserLoginController.VerifyConfirmationCode(CareGardenApiV1.Model.ConfirmationInfo)">
+        <member name="M:CareGardenApiV1.Controller.UserLoginController.VerifyConfirmationCode(CareGardenApiV1.Model.TableModel.ConfirmationInfo)">
              <summary>
              Verify Confirmation Code
              </summary>
@@ -1353,7 +1353,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.UserLoginController.Save(CareGardenApiV1.Model.User)">
+        <member name="M:CareGardenApiV1.Controller.UserLoginController.Save(CareGardenApiV1.Model.TableModel.User)">
              <summary>
              Save User
              </summary>
@@ -1371,7 +1371,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.UserLoginController.UserLogin(CareGardenApiV1.Model.User)">
+        <member name="M:CareGardenApiV1.Controller.UserLoginController.UserLogin(CareGardenApiV1.Model.TableModel.User)">
              <summary>
              User Login Control
              </summary>
@@ -1386,7 +1386,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.UserLoginController.PasswordReset(CareGardenApiV1.Model.RequestModel.PasswordResetModel)">
+        <member name="M:CareGardenApiV1.Controller.UserLoginController.PasswordReset(CareGardenApiV1.Model.RequestModel.PasswordResetRequestModel)">
              <summary>
              User Password Reset
              </summary>
@@ -1403,7 +1403,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.UserLoginController.AdminLogin(CareGardenApiV1.Model.User)">
+        <member name="M:CareGardenApiV1.Controller.UserLoginController.AdminLogin(CareGardenApiV1.Model.TableModel.User)">
              <summary>
              Admin Login Control
              </summary>
@@ -1474,7 +1474,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.WorkerController.Save(CareGardenApiV1.Model.Worker)">
+        <member name="M:CareGardenApiV1.Controller.WorkerController.Save(CareGardenApiV1.Model.TableModel.Worker)">
              <summary>
              Save Worker
              </summary>
@@ -1502,7 +1502,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.WorkerController.Update(CareGardenApiV1.Model.Worker)">
+        <member name="M:CareGardenApiV1.Controller.WorkerController.Update(CareGardenApiV1.Model.TableModel.Worker)">
              <summary>
              Update Worker
              </summary>
@@ -1574,7 +1574,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.WorkerServicePriceController.Search(CareGardenApiV1.Model.WorkerServicePrice)">
+        <member name="M:CareGardenApiV1.Controller.WorkerServicePriceController.Search(CareGardenApiV1.Model.TableModel.WorkerServicePrice)">
              <summary>
              Search Worker Service Prices
              </summary>
@@ -1589,7 +1589,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.WorkerServicePriceController.Save(CareGardenApiV1.Model.WorkerServicePrice)">
+        <member name="M:CareGardenApiV1.Controller.WorkerServicePriceController.Save(CareGardenApiV1.Model.TableModel.WorkerServicePrice)">
              <summary>
              Save Worker Servive Price
              </summary>
@@ -1605,7 +1605,7 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.WorkerServicePriceController.Update(CareGardenApiV1.Model.WorkerServicePrice)">
+        <member name="M:CareGardenApiV1.Controller.WorkerServicePriceController.Update(CareGardenApiV1.Model.TableModel.WorkerServicePrice)">
              <summary>
              Update Worker Service Price
              </summary>
@@ -1633,12 +1633,6 @@
             
              </remarks>
              <returns></returns>
-        </member>
-        <member name="T:CareGardenApiV1.Migrations.CareGardenV1">
-            <inheritdoc />
-        </member>
-        <member name="M:CareGardenApiV1.Migrations.CareGardenV1.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.CareGardenV1.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />

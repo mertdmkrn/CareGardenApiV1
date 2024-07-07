@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CareGardenApiV1.Helpers;
 using System.Security.Claims;
+using CareGardenApiV1.Model.TableModel;
 namespace CareGardenApiV1.Controller
 {
     [ApiController]
@@ -59,9 +60,9 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost("get")]
         [Authorize]
-        public async Task<IActionResult> Get([FromBody] AppointmentSearchModel searchModel)
+        public async Task<IActionResult> Get([FromBody] AppointmentSearchRequestModel searchModel)
         {
-            ResponseModel<List<AppointmentListModel>> response = new ResponseModel<List<AppointmentListModel>>();
+            ResponseModel<List<AppointmentListResponseModel>> response = new ResponseModel<List<AppointmentListResponseModel>>();
 
             var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
 
@@ -86,7 +87,7 @@ namespace CareGardenApiV1.Controller
                 if (!historyPendingAppointments.IsNullOrEmpty())
                 {
                     response.Data.ConvertAll(x => x.status = x.status == AppointmentStatus.Pending ? AppointmentStatus.Cancelled : x.status);
-                    BackgroundJob.Enqueue(() => _appointmentService.ChangeStatusAsync(new AppointmentChangeModel
+                    BackgroundJob.Enqueue(() => _appointmentService.ChangeStatusAsync(new AppointmentChangeRequestModel
                     {
                         userId = searchModel.userId,
                         status = AppointmentStatus.Cancelled,
@@ -161,7 +162,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("save")]
-        public async Task<IActionResult> Save([FromBody] AppointmentSaveModel appointmentSaveModel)
+        public async Task<IActionResult> Save([FromBody] AppointmentSaveRequestModel appointmentSaveModel)
         {
             ResponseModel<Appointment> response = new ResponseModel<Appointment>();
             
@@ -338,7 +339,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("changestatus")]
-        public async Task<IActionResult> Update([FromBody] AppointmentChangeModel appointmentChangeModel)
+        public async Task<IActionResult> Update([FromBody] AppointmentChangeRequestModel appointmentChangeModel)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
 
@@ -370,7 +371,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost("cancel")]
         [Authorize]
-        public async Task<IActionResult> Cancel([FromBody] AppointmentChangeModel appointmentChangeModel)
+        public async Task<IActionResult> Cancel([FromBody] AppointmentChangeRequestModel appointmentChangeModel)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
             var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
@@ -426,9 +427,9 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("getworkersprovideservice")]
-        public async Task<IActionResult> GetWorkersProvideService([FromBody] AppointmentSearchModel appointmentInfo)
+        public async Task<IActionResult> GetWorkersProvideService([FromBody] AppointmentSearchRequestModel appointmentInfo)
         {
-            ResponseModel<List<AppointmentWorkerModel>> response = new ResponseModel<List<AppointmentWorkerModel>>();
+            ResponseModel<List<AppointmentWorkerResponseModel>> response = new ResponseModel<List<AppointmentWorkerResponseModel>>();
 
             if (!appointmentInfo.businessId.HasValue)
             {
@@ -448,14 +449,14 @@ namespace CareGardenApiV1.Controller
 
             bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
 
-            var workers = await _workerService.GetWorkersByAppointmentSearchModelAsync(new AppointmentSearchModel()
+            var workers = await _workerService.GetWorkersByAppointmentSearchModelAsync(new AppointmentSearchRequestModel()
             {
                 businessServiceId = appointmentInfo.businessServiceId
             });
 
             if (workers.IsNullOrEmpty())
             {
-                workers = await _workerService.GetWorkersByAppointmentSearchModelAsync(new AppointmentSearchModel()
+                workers = await _workerService.GetWorkersByAppointmentSearchModelAsync(new AppointmentSearchRequestModel()
                 {
                     businessId = appointmentInfo.businessId
                 });
@@ -479,7 +480,7 @@ namespace CareGardenApiV1.Controller
 
             if (workers.Exists(x => x.availableDate.HasValue))
             {
-                workers.Insert(0, new AppointmentWorkerModel
+                workers.Insert(0, new AppointmentWorkerResponseModel
                 {
                     id = workers[0].id,
                     name = isTurkish ? "Herhangi Bir Profesyonel" : "Any Professional",
@@ -500,7 +501,7 @@ namespace CareGardenApiV1.Controller
             return Ok(response);
         }
 
-        private async Task setWorkersAvailableDate(List<AppointmentWorkerModel> workers, AppointmentSearchModel appointmentInfo)
+        private async Task setWorkersAvailableDate(List<AppointmentWorkerResponseModel> workers, AppointmentSearchRequestModel appointmentInfo)
         {
             var businesses = await _businessService.GetBusinessListForCache();
             var business = businesses.FirstOrDefault(x => x.id == appointmentInfo.businessId);
@@ -515,7 +516,7 @@ namespace CareGardenApiV1.Controller
                 .Where(x => x.serviceIds.IsNullOrEmpty() || x.serviceIds.Contains(businessService.serviceId.Value.ToString()));
 
             var nowDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now.AddMinutes(business.appointmentTimeInterval), "Turkey Standard Time");
-            var pastAppointments = await _appointmentDetailService.GetAppointmentDetailsByWorkerIdsAndDateAsync(new AppointmentSearchModel { startDate = nowDate, workerIds = workers.Select(x => x.id).ToHashSet() });
+            var pastAppointments = await _appointmentDetailService.GetAppointmentDetailsByWorkerIdsAndDateAsync(new AppointmentSearchRequestModel { startDate = nowDate, workerIds = workers.Select(x => x.id).ToHashSet() });
             var workerServicePrices = await _workerServicePriceService.GetWorkerServicePricesSearchAsync(businessServiceId: appointmentInfo.businessServiceId.Value);
             var pointList = await _commentService.GetCommentPointListForCache(businessId: appointmentInfo.businessId);
             bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
@@ -578,7 +579,7 @@ namespace CareGardenApiV1.Controller
             }
         }
 
-        private void setWorkerAvailableDate(AppointmentWorkerModel worker, int appointmentTimeInterval, DateTime businessStartDate, DateTime nowDate, IEnumerable<AppointmentDetail> pastAppointments)
+        private void setWorkerAvailableDate(AppointmentWorkerResponseModel worker, int appointmentTimeInterval, DateTime businessStartDate, DateTime nowDate, IEnumerable<AppointmentDetail> pastAppointments)
         {
             string workerWorkHours = worker.GetWorkerWorkHours(businessStartDate);
             if (workerWorkHours.IsNullOrEmpty()) return;
@@ -635,7 +636,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("getappointmentdates")]
-        public async Task<IActionResult> GetAppointmentDates([FromBody] AppointmentDatesModel appointmentInfo)
+        public async Task<IActionResult> GetAppointmentDates([FromBody] AppointmentDatesRequestModel appointmentInfo)
         {
             ResponseModel<AppointmentAvailableInfoModel> response = new ResponseModel<AppointmentAvailableInfoModel>();
 
@@ -646,7 +647,7 @@ namespace CareGardenApiV1.Controller
             if (business == null) return Ok(response);
 
             var workers = appointmentInfo.hasGetAnyAvailibityWorker
-                ? await _workerService.GetWorkersByAppointmentSearchModelAsync(new AppointmentSearchModel()
+                ? await _workerService.GetWorkersByAppointmentSearchModelAsync(new AppointmentSearchRequestModel()
                 {
                     businessId = appointmentInfo.businessId,
                     isActive = true
@@ -673,7 +674,7 @@ namespace CareGardenApiV1.Controller
             var startDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Today.AddDays(intervalDay * appointmentInfo.page), "Turkey Standard Time");
             var endDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Today.AddDays(intervalDay * (appointmentInfo.page + 1)), "Turkey Standard Time");
 
-            var pastAppointments = await _appointmentDetailService.GetAppointmentDetailsByWorkerIdsAndDateAsync(new AppointmentSearchModel { startDate = nowDate, endDate = endDate, workerIds = workers.Select(x => x.id).ToHashSet() });
+            var pastAppointments = await _appointmentDetailService.GetAppointmentDetailsByWorkerIdsAndDateAsync(new AppointmentSearchRequestModel { startDate = nowDate, endDate = endDate, workerIds = workers.Select(x => x.id).ToHashSet() });
 
             if (appointmentInfo.hasGetAnyAvailibityWorker)
             {
@@ -703,13 +704,13 @@ namespace CareGardenApiV1.Controller
                 }
             }
 
-            List<AppointmentAvailableTimeModel> models = new();
+            List<AppointmentAvailableTimeResponseModel> models = new();
 
             for (int i = 0; i < intervalDay; i++)
             {
                 var date = startDate.AddDays(i);
 
-                AppointmentAvailableTimeModel model = new();
+                AppointmentAvailableTimeResponseModel model = new();
                 model.date = date;
 
                 bool isBusinessOpen = HelperMethods.GetBusinessOpenSpecialDate(business.workingInfo, business.officialDayAvailable, date);

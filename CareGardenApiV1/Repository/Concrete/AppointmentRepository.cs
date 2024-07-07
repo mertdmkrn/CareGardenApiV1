@@ -4,6 +4,7 @@ using CareGardenApiV1.Model;
 using Microsoft.EntityFrameworkCore;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
+using CareGardenApiV1.Model.TableModel;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -30,7 +31,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 .FindAsync(id);
         }
 
-        public async Task<List<Appointment>> GetAppointmentsByAppointmentSearchModelAsync(AppointmentSearchModel searchModel)
+        public async Task<List<Appointment>> GetAppointmentsByAppointmentSearchModelAsync(AppointmentSearchRequestModel searchModel)
         {
             if (searchModel.page.HasValue && searchModel.take.HasValue)
             {
@@ -57,7 +58,7 @@ namespace CareGardenApiV1.Repository.Concrete
 
         }
 
-        public async Task<List<AppointmentListModel>> GetAppointmentsListModelByAppointmentSearchModelAsync(AppointmentSearchModel searchModel)
+        public async Task<List<AppointmentListResponseModel>> GetAppointmentsListModelByAppointmentSearchModelAsync(AppointmentSearchRequestModel searchModel)
         {
             bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
 
@@ -68,7 +69,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     .Where(x => x.userId.Equals(searchModel.userId))
                     .WhereIf(searchModel.isHistory.Value, x => x.startDate < searchModel.startDate)
                     .WhereIf(!searchModel.isHistory.Value, x => x.startDate >= searchModel.startDate)
-                    .Select(x => new AppointmentListModel
+                    .Select(x => new AppointmentListResponseModel
                     {
                         id = x.id,
                         status = x.status,
@@ -123,7 +124,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 return await _context.Appointments
                     .AsNoTracking()
                     .Where(x => x.userId.Equals(searchModel.userId))
-                    .Select(x => new AppointmentListModel
+                    .Select(x => new AppointmentListResponseModel
                     {
                         id = x.id,
                         status = x.status,
@@ -169,7 +170,7 @@ namespace CareGardenApiV1.Repository.Concrete
             return appointment;
         }
 
-        public async Task<bool> ChangeStatusAsync(AppointmentChangeModel changeModel)
+        public async Task<bool> ChangeStatusAsync(AppointmentChangeRequestModel changeModel)
         {
             await _context.Appointments
                 .WhereIf(changeModel.id.HasValue, x => x.id.Equals(changeModel.id))

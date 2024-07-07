@@ -1,6 +1,6 @@
-﻿using CareGardenApiV1.Model;
-using CareGardenApiV1.Model.RequestModel;
+﻿using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
+using CareGardenApiV1.Model.TableModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 
@@ -64,7 +64,7 @@ namespace CareGardenApiV1.Service.Concrete
             return await _userRepository.GetUserByTelephoneNumberAsync(telephoneNumber);
         }
 
-        public async Task<List<UserAdminResponseModel>> GetUsersAsync(UserSearchAdminModel userSearchAdminModel)
+        public async Task<List<UserAdminResponseModel>> GetUsersAsync(UserSearchAdminRequestModel userSearchAdminModel)
         {
             return await _userRepository.GetUsersAsync(userSearchAdminModel);
         }

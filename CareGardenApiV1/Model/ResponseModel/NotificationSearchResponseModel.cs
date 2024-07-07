@@ -21,6 +21,6 @@ namespace CareGardenApiV1.Model.ResponseModel
         public string? redirectUrl { get; set; }
         public bool isRead { get; set; }
 
-        public BusinessListModel relatedBusiness { get; set; }
+        public BusinessListResponseModel relatedBusiness { get; set; }
     }
 }

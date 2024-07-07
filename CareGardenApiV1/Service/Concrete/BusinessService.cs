@@ -1,7 +1,7 @@
 ﻿using CareGardenApiV1.Helpers;
-using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
+using CareGardenApiV1.Model.TableModel;
 using CareGardenApiV1.Repository.Abstract;
 using Microsoft.Extensions.Caching.Memory;
 using static CareGardenApiV1.Helpers.Constants;
@@ -24,7 +24,7 @@ namespace CareGardenApiV1.Service.Concrete
             return await _businessRepository.DeleteBusinessAsync(business);
         }
 
-        public async Task<IList<BusinessListModel>> ExploreBusinesses(BusinessExploreModel businessExploreModel)
+        public async Task<IList<BusinessListResponseModel>> ExploreBusinesses(BusinessExploreModel businessExploreModel)
         {
             return await _businessRepository.ExploreBusinesses(businessExploreModel);
         }
@@ -48,7 +48,7 @@ namespace CareGardenApiV1.Service.Concrete
             return await _businessRepository.GetBusinessAllByIdAsync(id);
         }
 
-        public async Task<IList<BusinessListModel>> GetBusinessByPopularAsync(BusinessSearchModel businessSearchModel)
+        public async Task<IList<BusinessListResponseModel>> GetBusinessByPopularAsync(BusinessSearchRequestModel businessSearchModel)
         {
             return await _businessRepository.GetBusinessByPopularAsync(businessSearchModel);
         }
@@ -58,22 +58,22 @@ namespace CareGardenApiV1.Service.Concrete
             return await _businessRepository.GetBusinessByTelephoneNumberAsync(telephone);
         }
 
-        public async Task<IList<BusinessListModel>> GetBusinessByUserFavorites(BusinessSearchModel businessSearchModel)
+        public async Task<IList<BusinessListResponseModel>> GetBusinessByUserFavorites(BusinessSearchRequestModel businessSearchModel)
         {
             return await _businessRepository.GetBusinessByUserFavorites(businessSearchModel);
         }
 
-        public async Task<BusinessDetailModel> GetBusinessDetailByIdAsync(Guid id)
+        public async Task<BusinessDetailResponseModel> GetBusinessDetailByIdAsync(Guid id)
         {
             return await _businessRepository.GetBusinessDetailByIdAsync(id);
         }
 
-        public async Task<IList<BusinessDetailModel>> GetBusinessesAsync()
+        public async Task<IList<BusinessDetailResponseModel>> GetBusinessesAsync()
         {
             return await _businessRepository.GetBusinessesAsync();
         }
 
-        public async Task<IList<BusinessListModel>> GetBusinessNearByDistanceAsync(BusinessSearchModel businessSearchModel)
+        public async Task<IList<BusinessListResponseModel>> GetBusinessNearByDistanceAsync(BusinessSearchRequestModel businessSearchModel)
         {
             return await _businessRepository.GetBusinessNearByDistanceAsync(businessSearchModel);
         }
@@ -93,17 +93,17 @@ namespace CareGardenApiV1.Service.Concrete
             return await _businessRepository.UpdateBusinessAsync(business);
         }
 
-        public async Task<List<BusinessPagingListModel>> GetBusinessLiteListAsync(BusinessSearchAdminModel searchAdminModel)
+        public async Task<List<BusinessPagingListResponseModel>> GetBusinessLiteListAsync(BusinessSearchAdminRequestModel searchAdminModel)
         {
             return await _businessRepository.GetBusinessLiteListAsync(searchAdminModel);
         }
 
-        public async Task<IList<BusinessListModel>> GetBusinessListModelAsync(Guid? id = null)
+        public async Task<IList<BusinessListResponseModel>> GetBusinessListModelAsync(Guid? id = null)
         {
             return await _businessRepository.GetBusinessListModelAsync(id);
         }
         
-        public async Task<IList<BusinessListModel>> GetBusinessListForCache(bool cache = true)
+        public async Task<IList<BusinessListResponseModel>> GetBusinessListForCache(bool cache = true)
         {
             return await _businessRepository.GetBusinessListForCache(cache);
         }
@@ -148,7 +148,7 @@ namespace CareGardenApiV1.Service.Concrete
             return await _businessRepository.UpdateHasNotificationAsync(businessIds, value);
         }
 
-        public async Task<BusinessDetailModel> GetBusinessDetailByNameForUrlAsync(string nameForUrl)
+        public async Task<BusinessDetailResponseModel> GetBusinessDetailByNameForUrlAsync(string nameForUrl)
         {
             return await _businessRepository.GetBusinessDetailByNameForUrlAsync(nameForUrl);
         }

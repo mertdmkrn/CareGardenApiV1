@@ -1,7 +1,7 @@
 ﻿using CareGardenApiV1.Helpers;
-using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
+using CareGardenApiV1.Model.TableModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 
@@ -76,17 +76,17 @@ namespace CareGardenApiV1.Service.Concrete
             return await _commentRepository.GetCommentStatisticsByUserId(userId);
         }
 
-        public async Task<List<CommentSearchResponseModel>> GetSearchCommentsAsync(CommentSearchModel searchModel)
+        public async Task<List<CommentSearchResponseModel>> GetSearchCommentsAsync(CommentSearchRequestModel searchModel)
         {
             return await _commentRepository.GetSearchCommentsAsync(searchModel);
         }
 
-        public async Task<List<CommentListResponseModel>> GetSearchCommentListAsync(CommentSearchModel searchModel)
+        public async Task<List<CommentListResponseModel>> GetSearchCommentListAsync(CommentSearchRequestModel searchModel)
         {
             return await _commentRepository.GetSearchCommentListAsync(searchModel);
         }
 
-        public async Task<List<CommentPointListModel>> GetCommentPointListForCache(Guid? businessId = null, Guid? workerId = null, bool cache = true)
+        public async Task<List<CommentPointListResponseModel>> GetCommentPointListForCache(Guid? businessId = null, Guid? workerId = null, bool cache = true)
         {
             var list = await _commentRepository.GetCommentPointListForCache(cache);
 

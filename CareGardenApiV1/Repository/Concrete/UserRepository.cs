@@ -1,9 +1,9 @@
 ﻿using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Repository.Abstract;
-using CareGardenApiV1.Model;
 using Microsoft.EntityFrameworkCore;
 using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Model.RequestModel;
+using CareGardenApiV1.Model.TableModel;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -128,7 +128,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 .ToListAsync();
         }
 
-        public async Task<List<UserAdminResponseModel>> GetUsersAsync(UserSearchAdminModel userSearchAdminModel)
+        public async Task<List<UserAdminResponseModel>> GetUsersAsync(UserSearchAdminRequestModel userSearchAdminModel)
         {
             var query = _context.Users
             .AsNoTracking()

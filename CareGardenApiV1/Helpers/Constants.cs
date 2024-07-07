@@ -1,4 +1,4 @@
-﻿using CareGardenApiV1.Model;
+﻿using CareGardenApiV1.Model.OtherModel;
 
 namespace CareGardenApiV1.Helpers
 {
@@ -99,9 +99,7 @@ namespace CareGardenApiV1.Helpers
 
         public static List<OfficialDay> OfficialDays = new List<OfficialDay>
         {
-            new OfficialDay("Demokrasi ve Millî Birlik Günü", "Democracy and National Unity Day", "Cumartesi", new DateTime(2023, 07, 15)),
-            new OfficialDay("Zafer Bayramı", "Victory Day", "Çarşamba", new DateTime(2023, 08, 30)),
-            new OfficialDay("Cumhuriyet Bayramı", "Republic Day", "Pazar", new DateTime(2023, 10, 29)),
+            // 2024 Resmi Tatilleri
             new OfficialDay("Yılbaşı", "New Year's Day", "Pazartesi", new DateTime(2024, 01, 01)),
             new OfficialDay("Ramazan Bayramı (1. Gün)", "Ramadan Feast (1st Day)", "Çarşamba", new DateTime(2024, 04, 10)),
             new OfficialDay("Ramazan Bayramı (2. Gün)", "Ramadan Feast (2nd Day)", "Perşembe", new DateTime(2024, 04, 11)),
@@ -116,6 +114,8 @@ namespace CareGardenApiV1.Helpers
             new OfficialDay("Demokrasi ve Millî Birlik Günü", "Democracy and National Unity Day", "Pazartesi", new DateTime(2024, 07, 15)),
             new OfficialDay("Zafer Bayramı", "Victory Day", "Cuma", new DateTime(2024, 08, 30)),
             new OfficialDay("Cumhuriyet Bayramı", "Republic Day", "Salı", new DateTime(2024, 10, 29)),
+
+            // 2025 Resmi Tatilleri
             new OfficialDay("Yılbaşı", "New Year's Day", "Çarşamba", new DateTime(2025, 01, 01)),
             new OfficialDay("Ramazan Bayramı (1. Gün)", "Ramadan Feast (1st Day)", "Pazar", new DateTime(2025, 03, 30)),
             new OfficialDay("Ramazan Bayramı (2. Gün)", "Ramadan Feast (2nd Day)", "Pazartesi", new DateTime(2025, 03, 31)),
@@ -129,8 +129,89 @@ namespace CareGardenApiV1.Helpers
             new OfficialDay("Kurban Bayramı (4 Gün)", "Eid al-Adha (4th Day)", "Pazartesi", new DateTime(2025, 06, 09)),
             new OfficialDay("Demokrasi ve Millî Birlik Günü", "Democracy and National Unity Day", "Salı", new DateTime(2025, 07, 15)),
             new OfficialDay("Zafer Bayramı", "Victory Day", "Cumartesi", new DateTime(2025, 08, 30)),
-            new OfficialDay("Cumhuriyet Bayramı", "Republic Day", "Çarşamba", new DateTime(2025, 10, 29))
+            new OfficialDay("Cumhuriyet Bayramı", "Republic Day", "Çarşamba", new DateTime(2025, 10, 29)),
+    
+            // 2026 Resmi Tatilleri
+            new OfficialDay("Yılbaşı", "New Year's Day", "Perşembe", new DateTime(2026, 01, 01)),
+            new OfficialDay("Ramazan Bayramı (1. Gün)", "Ramadan Feast (1st Day)", "Cuma", new DateTime(2026, 03, 20)),
+            new OfficialDay("Ramazan Bayramı (2. Gün)", "Ramadan Feast (2nd Day)", "Cumartesi", new DateTime(2026, 03, 21)),
+            new OfficialDay("Ramazan Bayramı (3. Gün)", "Ramadan Feast (3rd Day)", "Pazar", new DateTime(2026, 03, 22)),
+            new OfficialDay("Ulusal Egemenlik ve Çocuk Bayramı", "National Sovereignty and Children's Day", "Perşembe", new DateTime(2026, 04, 23)),
+            new OfficialDay("Emek ve Dayanışma Günü", "Labor and Solidarity Day", "Cuma", new DateTime(2026, 05, 01)),
+            new OfficialDay("Atatürk'ü Anma, Gençlik ve Spor Bayramı", "Commemoration of Atatürk, Youth and Sports Day", "Salı", new DateTime(2026, 05, 19)),
+            new OfficialDay("Kurban Bayramı (1. Gün)", "Eid al-Adha (1st Day)", "Çarşamba", new DateTime(2026, 05, 27)),
+            new OfficialDay("Kurban Bayramı (2. Gün)", "Eid al-Adha (2nd Day)", "Perşembe", new DateTime(2026, 05, 28)),
+            new OfficialDay("Kurban Bayramı (3. Gün)", "Eid al-Adha (3rd Day)", "Cuma", new DateTime(2026, 05, 29)),
+            new OfficialDay("Kurban Bayramı (4 Gün)", "Eid al-Adha (4th Day)", "Cumartesi", new DateTime(2026, 05, 30)),
+            new OfficialDay("Demokrasi ve Millî Birlik Günü", "Democracy and National Unity Day", "Çarşamba", new DateTime(2026, 07, 15)),
+            new OfficialDay("Zafer Bayramı", "Victory Day", "Pazar", new DateTime(2026, 08, 30)),
+            new OfficialDay("Cumhuriyet Bayramı", "Republic Day", "Perşembe", new DateTime(2026, 10, 29)),
+    
+            // 2027 Resmi Tatilleri
+            new OfficialDay("Yılbaşı", "New Year's Day", "Cuma", new DateTime(2027, 01, 01)),
+            new OfficialDay("Ramazan Bayramı (1. Gün)", "Ramadan Feast (1st Day)", "Çarşamba", new DateTime(2027, 03, 10)),
+            new OfficialDay("Ramazan Bayramı (2. Gün)", "Ramadan Feast (2nd Day)", "Perşembe", new DateTime(2027, 03, 11)),
+            new OfficialDay("Ramazan Bayramı (3. Gün)", "Ramadan Feast (3rd Day)", "Cuma", new DateTime(2027, 03, 12)),
+            new OfficialDay("Ulusal Egemenlik ve Çocuk Bayramı", "National Sovereignty and Children's Day", "Cuma", new DateTime(2027, 04, 23)),
+            new OfficialDay("Emek ve Dayanışma Günü", "Labor and Solidarity Day", "Cumartesi", new DateTime(2027, 05, 01)),
+            new OfficialDay("Atatürk'ü Anma, Gençlik ve Spor Bayramı", "Commemoration of Atatürk, Youth and Sports Day", "Perşembe", new DateTime(2027, 05, 19)),
+            new OfficialDay("Kurban Bayramı (1. Gün)", "Eid al-Adha (1st Day)", "Pazartesi", new DateTime(2027, 05, 17)),
+            new OfficialDay("Kurban Bayramı (2. Gün)", "Eid al-Adha (2nd Day)", "Salı", new DateTime(2027, 05, 18)),
+            new OfficialDay("Kurban Bayramı (3. Gün)", "Eid al-Adha (3rd Day)", "Çarşamba", new DateTime(2027, 05, 19)),
+            new OfficialDay("Kurban Bayramı (4 Gün)", "Eid al-Adha (4th Day)", "Perşembe", new DateTime(2027, 05, 20)),
+            new OfficialDay("Demokrasi ve Millî Birlik Günü", "Democracy and National Unity Day", "Perşembe", new DateTime(2027, 07, 15)),
+            new OfficialDay("Zafer Bayramı", "Victory Day", "Pazartesi", new DateTime(2027, 08, 30)),
+            new OfficialDay("Cumhuriyet Bayramı", "Republic Day", "Cuma", new DateTime(2027, 10, 29)),
+
+            // 2028 Resmi Tatilleri
+            new OfficialDay("Yılbaşı", "New Year's Day", "Cumartesi", new DateTime(2028, 01, 01)),
+            new OfficialDay("Ramazan Bayramı (1. Gün)", "Ramadan Feast (1st Day)", "Pazartesi", new DateTime(2028, 02, 28)),
+            new OfficialDay("Ramazan Bayramı (2. Gün)", "Ramadan Feast (2nd Day)", "Salı", new DateTime(2028, 02, 29)),
+            new OfficialDay("Ramazan Bayramı (3. Gün)", "Ramadan Feast (3rd Day)", "Çarşamba", new DateTime(2028, 03, 01)),
+            new OfficialDay("Ulusal Egemenlik ve Çocuk Bayramı", "National Sovereignty and Children's Day", "Pazar", new DateTime(2028, 04, 23)),
+            new OfficialDay("Emek ve Dayanışma Günü", "Labor and Solidarity Day", "Pazartesi", new DateTime(2028, 05, 01)),
+            new OfficialDay("Atatürk'ü Anma, Gençlik ve Spor Bayramı", "Commemoration of Atatürk, Youth and Sports Day", "Cuma", new DateTime(2028, 05, 19)),
+            new OfficialDay("Kurban Bayramı (1. Gün)", "Eid al-Adha (1st Day)", "Cuma", new DateTime(2028, 05, 05)),
+            new OfficialDay("Kurban Bayramı (2. Gün)", "Eid al-Adha (2nd Day)", "Cumartesi", new DateTime(2028, 05, 06)),
+            new OfficialDay("Kurban Bayramı (3. Gün)", "Eid al-Adha (3rd Day)", "Pazar", new DateTime(2028, 05, 07)),
+            new OfficialDay("Kurban Bayramı (4 Gün)", "Eid al-Adha (4th Day)", "Pazartesi", new DateTime(2028, 05, 08)),
+            new OfficialDay("Demokrasi ve Millî Birlik Günü", "Democracy and National Unity Day", "Cumartesi", new DateTime(2028, 07, 15)),
+            new OfficialDay("Zafer Bayramı", "Victory Day", "Çarşamba", new DateTime(2028, 08, 30)),
+            new OfficialDay("Cumhuriyet Bayramı", "Republic Day", "Pazar", new DateTime(2028, 10, 29)),
+
+            // 2029 Resmi Tatilleri
+            new OfficialDay("Yılbaşı", "New Year's Day", "Pazartesi", new DateTime(2029, 01, 01)),
+            new OfficialDay("Ramazan Bayramı (1. Gün)", "Ramadan Feast (1st Day)", "Cumartesi", new DateTime(2029, 02, 17)),
+            new OfficialDay("Ramazan Bayramı (2. Gün)", "Ramadan Feast (2nd Day)", "Pazar", new DateTime(2029, 02, 18)),
+            new OfficialDay("Ramazan Bayramı (3. Gün)", "Ramadan Feast (3rd Day)", "Pazartesi", new DateTime(2029, 02, 19)),
+            new OfficialDay("Ulusal Egemenlik ve Çocuk Bayramı", "National Sovereignty and Children's Day", "Pazartesi", new DateTime(2029, 04, 23)),
+            new OfficialDay("Emek ve Dayanışma Günü", "Labor and Solidarity Day", "Salı", new DateTime(2029, 05, 01)),
+            new OfficialDay("Atatürk'ü Anma, Gençlik ve Spor Bayramı", "Commemoration of Atatürk, Youth and Sports Day", "Cumartesi", new DateTime(2029, 05, 19)),
+            new OfficialDay("Kurban Bayramı (1. Gün)", "Eid al-Adha (1st Day)", "Salı", new DateTime(2029, 04, 24)),
+            new OfficialDay("Kurban Bayramı (2. Gün)", "Eid al-Adha (2nd Day)", "Çarşamba", new DateTime(2029, 04, 25)),
+            new OfficialDay("Kurban Bayramı (3. Gün)", "Eid al-Adha (3rd Day)", "Perşembe", new DateTime(2029, 04, 26)),
+            new OfficialDay("Kurban Bayramı (4 Gün)", "Eid al-Adha (4th Day)", "Cuma", new DateTime(2029, 04, 27)),
+            new OfficialDay("Demokrasi ve Millî Birlik Günü", "Democracy and National Unity Day", "Pazar", new DateTime(2029, 07, 15)),
+            new OfficialDay("Zafer Bayramı", "Victory Day", "Perşembe", new DateTime(2029, 08, 30)),
+            new OfficialDay("Cumhuriyet Bayramı", "Republic Day", "Pazartesi", new DateTime(2029, 10, 29)),
+
+            // 2030 Resmi Tatilleri
+            new OfficialDay("Yılbaşı", "New Year's Day", "Salı", new DateTime(2030, 01, 01)),
+            new OfficialDay("Ramazan Bayramı (1. Gün)", "Ramadan Feast (1st Day)", "Çarşamba", new DateTime(2030, 02, 06)),
+            new OfficialDay("Ramazan Bayramı (2. Gün)", "Ramadan Feast (2nd Day)", "Perşembe", new DateTime(2030, 02, 07)),
+            new OfficialDay("Ramazan Bayramı (3. Gün)", "Ramadan Feast (3rd Day)", "Cuma", new DateTime(2030, 02, 08)),
+            new OfficialDay("Ulusal Egemenlik ve Çocuk Bayramı", "National Sovereignty and Children's Day", "Salı", new DateTime(2030, 04, 23)),
+            new OfficialDay("Emek ve Dayanışma Günü", "Labor and Solidarity Day", "Çarşamba", new DateTime(2030, 05, 01)),
+            new OfficialDay("Atatürk'ü Anma, Gençlik ve Spor Bayramı", "Commemoration of Atatürk, Youth and Sports Day", "Pazar", new DateTime(2030, 05, 19)),
+            new OfficialDay("Kurban Bayramı (1. Gün)", "Eid al-Adha (1st Day)", "Pazar", new DateTime(2030, 04, 14)),
+            new OfficialDay("Kurban Bayramı (2. Gün)", "Eid al-Adha (2nd Day)", "Pazartesi", new DateTime(2030, 04, 15)),
+            new OfficialDay("Kurban Bayramı (3. Gün)", "Eid al-Adha (3rd Day)", "Salı", new DateTime(2030, 04, 16)),
+            new OfficialDay("Kurban Bayramı (4 Gün)", "Eid al-Adha (4th Day)", "Çarşamba", new DateTime(2030, 04, 17)),
+            new OfficialDay("Demokrasi ve Millî Birlik Günü", "Democracy and National Unity Day", "Pazartesi", new DateTime(2030, 07, 15)),
+            new OfficialDay("Zafer Bayramı", "Victory Day", "Cuma", new DateTime(2030, 08, 30)),
+            new OfficialDay("Cumhuriyet Bayramı", "Republic Day", "Salı", new DateTime(2030, 10, 29))
         };
+
 
         public static List<LocationInfo> LocationInfos = new List<LocationInfo>()
         {
@@ -1919,8 +2000,6 @@ namespace CareGardenApiV1.Helpers
            new VoteAspect(5, 5, "Far exceeded expectations.", "Beklentileri fazlasıyla aştı.", IsTurkish)
         };
 
-        public static double DistanceValue = 160.9344;
-
-        
+        public static double DistanceValue = 160.9344;      
     }
 }

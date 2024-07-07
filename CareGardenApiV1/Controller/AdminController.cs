@@ -4,6 +4,7 @@ using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
+using CareGardenApiV1.Model.TableModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 using Hangfire;
@@ -114,7 +115,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("getusers")]
-        public async Task<IActionResult> GetUsers([FromBody] UserSearchAdminModel userSearchAdminModel)
+        public async Task<IActionResult> GetUsers([FromBody] UserSearchAdminRequestModel userSearchAdminModel)
         {
             ResponseModel<List<UserAdminResponseModel>> response = new ResponseModel<List<UserAdminResponseModel>>();
             Resource.Resource.Culture = new System.Globalization.CultureInfo(Request.Headers["Language"].ToString().IsNull("en"));
@@ -509,9 +510,9 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("searchbusiness")]
-        public async Task<IActionResult> SearchBusiness([FromBody] BusinessSearchAdminModel searchAdminModel)
+        public async Task<IActionResult> SearchBusiness([FromBody] BusinessSearchAdminRequestModel searchAdminModel)
         {
-            ResponseModel<List<BusinessPagingListModel>> response = new ResponseModel<List<BusinessPagingListModel>>();
+            ResponseModel<List<BusinessPagingListResponseModel>> response = new ResponseModel<List<BusinessPagingListResponseModel>>();
 
             response.Data = await _businessService.GetBusinessLiteListAsync(searchAdminModel);
             return Ok(response);

@@ -3,6 +3,7 @@ using CareGardenApiV1.Handler.Model;
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
+using CareGardenApiV1.Model.TableModel;
 using CareGardenApiV1.Service.Abstract;
 using Hangfire;
 using Microsoft.AspNetCore.Mvc;
@@ -264,7 +265,7 @@ namespace CareGardenApiV1.Controller
             if (systemConfirmationInfo == null)
             {
                 response.HasError = true;
-                response.Message += Resource.Resource.OnayKoduDogrulanamadi;
+                response.Message = Resource.Resource.OnayKoduDogrulanamadi;
                 return Ok(response);
             }
 
@@ -495,7 +496,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("passwordreset")]
-        public async Task<IActionResult> PasswordReset([FromBody] PasswordResetModel updateUser)
+        public async Task<IActionResult> PasswordReset([FromBody] PasswordResetRequestModel updateUser)
         {
             ResponseModel<Token> response = new ResponseModel<Token>();
 

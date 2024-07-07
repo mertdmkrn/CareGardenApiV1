@@ -1,9 +1,9 @@
 ﻿using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Repository.Abstract;
-using CareGardenApiV1.Model;
 using Microsoft.EntityFrameworkCore;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
+using CareGardenApiV1.Model.TableModel;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -16,7 +16,7 @@ namespace CareGardenApiV1.Repository.Concrete
             _context = context;
         }
 
-        public async Task<NotificationSearchResponseModel> SearchNotificationAsync(NotificationSearchModel notificationSearchModel)
+        public async Task<NotificationSearchResponseModel> SearchNotificationAsync(NotificationSearchRequestModel notificationSearchModel)
         {
             NotificationSearchResponseModel notificationSearchResponseModel = new NotificationSearchResponseModel();
             bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");

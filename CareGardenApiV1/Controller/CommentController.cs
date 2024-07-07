@@ -3,6 +3,7 @@ using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
+using CareGardenApiV1.Model.TableModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 using Hangfire;
@@ -42,7 +43,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost("get")]
         [Authorize]
-        public async Task<IActionResult> Get([FromBody] CommentSearchModel commentSearchModel)
+        public async Task<IActionResult> Get([FromBody] CommentSearchRequestModel commentSearchModel)
         {
             ResponseModel<List<CommentListResponseModel>> response = new ResponseModel<List<CommentListResponseModel>>();
 
@@ -108,7 +109,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("search")]
-        public async Task<IActionResult> Search([FromBody] CommentSearchModel searchModel)
+        public async Task<IActionResult> Search([FromBody] CommentSearchRequestModel searchModel)
         {
             ResponseModel<List<CommentSearchResponseModel>> response = new ResponseModel<List<CommentSearchResponseModel>>();
             var language = Request.Headers["Language"].ToString().IsNull("en");

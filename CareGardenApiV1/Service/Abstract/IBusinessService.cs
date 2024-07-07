@@ -1,6 +1,6 @@
-﻿using CareGardenApiV1.Model;
-using CareGardenApiV1.Model.RequestModel;
+﻿using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
+using CareGardenApiV1.Model.TableModel;
 
 namespace CareGardenApiV1.Repository.Abstract
 {
@@ -12,16 +12,16 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<Business> GetBusinessByEmailAndPasswordAsync(string email, string password);
         Task<Business> GetBusinessByEmailAsync(string email);
         Task<Business> GetBusinessByTelephoneNumberAsync(string telephone);
-        Task<List<BusinessPagingListModel>> GetBusinessLiteListAsync(BusinessSearchAdminModel searchAdminModel);
-        Task<BusinessDetailModel> GetBusinessDetailByIdAsync(Guid id);
-        Task<BusinessDetailModel> GetBusinessDetailByNameForUrlAsync(string nameForUrl);
-        Task<IList<BusinessListModel>> GetBusinessListModelAsync(Guid? id = null);
-        Task<IList<BusinessListModel>> GetBusinessListForCache(bool cache = true);
-        Task<IList<BusinessDetailModel>> GetBusinessesAsync();
-        Task<IList<BusinessListModel>> GetBusinessNearByDistanceAsync(BusinessSearchModel businessSearchModel);
-        Task<IList<BusinessListModel>> GetBusinessByUserFavorites(BusinessSearchModel businessSearchModel);
-        Task<IList<BusinessListModel>> GetBusinessByPopularAsync(BusinessSearchModel businessSearchModel);
-        Task<IList<BusinessListModel>> ExploreBusinesses(BusinessExploreModel businessExploreModel);
+        Task<List<BusinessPagingListResponseModel>> GetBusinessLiteListAsync(BusinessSearchAdminRequestModel searchAdminModel);
+        Task<BusinessDetailResponseModel> GetBusinessDetailByIdAsync(Guid id);
+        Task<BusinessDetailResponseModel> GetBusinessDetailByNameForUrlAsync(string nameForUrl);
+        Task<IList<BusinessListResponseModel>> GetBusinessListModelAsync(Guid? id = null);
+        Task<IList<BusinessListResponseModel>> GetBusinessListForCache(bool cache = true);
+        Task<IList<BusinessDetailResponseModel>> GetBusinessesAsync();
+        Task<IList<BusinessListResponseModel>> GetBusinessNearByDistanceAsync(BusinessSearchRequestModel businessSearchModel);
+        Task<IList<BusinessListResponseModel>> GetBusinessByUserFavorites(BusinessSearchRequestModel businessSearchModel);
+        Task<IList<BusinessListResponseModel>> GetBusinessByPopularAsync(BusinessSearchRequestModel businessSearchModel);
+        Task<IList<BusinessListResponseModel>> ExploreBusinesses(BusinessExploreModel businessExploreModel);
         Task<Business> SaveBusinessAsync(Business business);
         Task<Business> UpdateBusinessAsync(Business business);
         Task<bool> DeleteBusinessAsync(Business business);

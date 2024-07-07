@@ -32,11 +32,11 @@ namespace CareGardenApiV1.Handler.Concrete
         public async Task<bool> UpdateOrCreateIndexBusiness(Guid id)
         {
             var businessDetail = await _businessService.GetBusinessDetailByIdAsync(id);
-            var businessDetailClient = await _elasticClient.GetAsync<BusinessDetailModel>(id);
+            var businessDetailClient = await _elasticClient.GetAsync<BusinessDetailResponseModel>(id);
 
             if (businessDetailClient != null)
             {
-                await _elasticClient.UpdateAsync<BusinessDetailModel>(businessDetail.id, u => u
+                await _elasticClient.UpdateAsync<BusinessDetailResponseModel>(businessDetail.id, u => u
                 .Index("businesses")
                 .Doc(businessDetail));
             }
@@ -48,13 +48,13 @@ namespace CareGardenApiV1.Handler.Concrete
             return true;
         }
 
-        public async Task<bool> UpdateOrCreateIndexBusiness(BusinessDetailModel businessDetail)
+        public async Task<bool> UpdateOrCreateIndexBusiness(BusinessDetailResponseModel businessDetail)
         {
-            var businessDetailClient = await _elasticClient.GetAsync<BusinessDetailModel>(businessDetail.id);
+            var businessDetailClient = await _elasticClient.GetAsync<BusinessDetailResponseModel>(businessDetail.id);
 
             if (businessDetailClient.IsValid)
             {
-                await _elasticClient.UpdateAsync<BusinessDetailModel>(businessDetail.id, u => u
+                await _elasticClient.UpdateAsync<BusinessDetailResponseModel>(businessDetail.id, u => u
                 .Index("businesses")
                 .Doc(businessDetail));
             }
@@ -68,7 +68,7 @@ namespace CareGardenApiV1.Handler.Concrete
 
         public async Task<bool> DeleteIndexBusiness(Guid id)
         {
-            await _elasticClient.DeleteAsync<BusinessDetailModel>(id);
+            await _elasticClient.DeleteAsync<BusinessDetailResponseModel>(id);
             return true;
         }
     }

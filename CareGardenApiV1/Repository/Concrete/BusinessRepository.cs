@@ -7,6 +7,7 @@ using NetTopologySuite.Geometries;
 using CareGardenApiV1.Model.RequestModel;
 using Microsoft.Extensions.Caching.Memory;
 using static CareGardenApiV1.Helpers.Constants;
+using CareGardenApiV1.Model.TableModel;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -53,7 +54,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<IList<BusinessListModel>> GetBusinessByPopularAsync(BusinessSearchModel businessSearchModel)
+        public async Task<IList<BusinessListResponseModel>> GetBusinessByPopularAsync(BusinessSearchRequestModel businessSearchModel)
         {
             Point? userLocation = null;
             var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
@@ -103,7 +104,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 .FirstOrDefaultAsync(x => x.telephone == telephone);
         }
 
-        public async Task<IList<BusinessListModel>> GetBusinessByUserFavorites(BusinessSearchModel businessSearchModel)
+        public async Task<IList<BusinessListResponseModel>> GetBusinessByUserFavorites(BusinessSearchRequestModel businessSearchModel)
         {
             Point? userLocation = null;
             var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
@@ -147,7 +148,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 .ToList();
         }
 
-        public async Task<IList<BusinessListModel>> ExploreBusinesses(BusinessExploreModel businessExploreModel)
+        public async Task<IList<BusinessListResponseModel>> ExploreBusinesses(BusinessExploreModel businessExploreModel)
         {
             Point? searchLocation = null;
             var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
@@ -194,13 +195,13 @@ namespace CareGardenApiV1.Repository.Concrete
                 .ToList();
         }
 
-        public async Task<IList<BusinessListModel>> GetBusinessListModelAsync(Guid? id = null)
+        public async Task<IList<BusinessListResponseModel>> GetBusinessListModelAsync(Guid? id = null)
         {
             return await _context.Businesses
                 .AsNoTracking()
                 .Where(x => x.isActive && x.verified)
                 .WhereIf(id.HasValue, x => x.id.Equals(id))
-                .Select(x => new BusinessListModel
+                .Select(x => new BusinessListResponseModel
                 {
                     id = x.id,
                     name = x.name ?? "",
@@ -226,13 +227,13 @@ namespace CareGardenApiV1.Repository.Concrete
                 .ToListAsync();
         }
 
-        public async Task<IList<BusinessListModel>> GetBusinessListForCache(bool cache = true)
+        public async Task<IList<BusinessListResponseModel>> GetBusinessListForCache(bool cache = true)
         {
-            IList<BusinessListModel> businessList = null;
+            IList<BusinessListResponseModel> businessList = null;
 
             if (cache && _memoryCache.TryGetValue(CacheKeys.BusinessList, out object list))
             {
-                businessList = (IList<BusinessListModel>)list;
+                businessList = (IList<BusinessListResponseModel>)list;
             }
             else
             {
@@ -248,11 +249,11 @@ namespace CareGardenApiV1.Repository.Concrete
             return businessList;
         }
 
-        public async Task<BusinessDetailModel> GetBusinessDetailByIdAsync(Guid id)
+        public async Task<BusinessDetailResponseModel> GetBusinessDetailByIdAsync(Guid id)
         {
             return await _context.Businesses
                 .Where(x => x.id == id)
-                .Select(x => new BusinessDetailModel
+                .Select(x => new BusinessDetailResponseModel
                 {
                     id = x.id,
                     name = x.name,
@@ -278,12 +279,12 @@ namespace CareGardenApiV1.Repository.Concrete
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<BusinessDetailModel> GetBusinessDetailByNameForUrlAsync(string nameForUrl)
+        public async Task<BusinessDetailResponseModel> GetBusinessDetailByNameForUrlAsync(string nameForUrl)
         {
             return await _context.Businesses
                 .Where(x => x.nameForUrl.Equals(nameForUrl))
                 .AsNoTracking()
-                .Select(x => new BusinessDetailModel
+                .Select(x => new BusinessDetailResponseModel
                 {
                     id = x.id,
                     name = x.name,
@@ -306,10 +307,10 @@ namespace CareGardenApiV1.Repository.Concrete
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<IList<BusinessDetailModel>> GetBusinessesAsync()
+        public async Task<IList<BusinessDetailResponseModel>> GetBusinessesAsync()
         {
             return await _context.Businesses
-                .Select(x => new BusinessDetailModel
+                .Select(x => new BusinessDetailResponseModel
                 {
                     id = x.id,
                     name = x.name,
@@ -334,7 +335,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 .ToListAsync();
         }
 
-        public async Task<IList<BusinessListModel>> GetBusinessNearByDistanceAsync(BusinessSearchModel businessSearchModel)
+        public async Task<IList<BusinessListResponseModel>> GetBusinessNearByDistanceAsync(BusinessSearchRequestModel businessSearchModel)
         {
             Point? userLocation = null;
             var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
@@ -410,7 +411,7 @@ namespace CareGardenApiV1.Repository.Concrete
             return business;
         }
 
-        public async Task<List<BusinessPagingListModel>> GetBusinessLiteListAsync(BusinessSearchAdminModel searchAdminModel)
+        public async Task<List<BusinessPagingListResponseModel>> GetBusinessLiteListAsync(BusinessSearchAdminRequestModel searchAdminModel)
         {
             var query = _context.Businesses
                 .AsNoTracking()
@@ -423,7 +424,7 @@ namespace CareGardenApiV1.Repository.Concrete
             var totalCount = await query.CountAsync();
 
             var list = await query
-                .Select(x => new BusinessPagingListModel
+                .Select(x => new BusinessPagingListResponseModel
                 {
                     id = x.id,
                     name = x.name,

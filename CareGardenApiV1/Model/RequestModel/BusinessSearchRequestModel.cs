@@ -1,0 +1,18 @@
+﻿using System.Text.Json.Serialization;
+
+namespace CareGardenApiV1.Model.RequestModel
+{
+    public class BusinessSearchRequestModel
+    {
+        public double? latitude { get; set; }
+        public double? longitude { get; set; }
+        public int? page { get; set; }
+        public int? take { get; set; }
+        public string? city { get; set; }
+        [JsonIgnore]
+        public Guid userId{ get; set; } = Guid.Empty;
+
+        [JsonIgnore]
+        public List<Guid?> favoriteBusinessIds { get; set; } = new List<Guid?>();
+    }
+}

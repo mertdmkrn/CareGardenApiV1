@@ -1,11 +1,11 @@
 ﻿using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Repository.Abstract;
-using CareGardenApiV1.Model;
 using Microsoft.EntityFrameworkCore;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
 using Microsoft.Extensions.Caching.Memory;
 using static CareGardenApiV1.Helpers.Constants;
+using CareGardenApiV1.Model.TableModel;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -153,7 +153,7 @@ namespace CareGardenApiV1.Repository.Concrete
             return retVal;
         }
 
-        public async Task<List<CommentSearchResponseModel>> GetSearchCommentsAsync(CommentSearchModel searchModel)
+        public async Task<List<CommentSearchResponseModel>> GetSearchCommentsAsync(CommentSearchRequestModel searchModel)
         {
             bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
 
@@ -189,7 +189,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 .ToListAsync();
         }
 
-        public async Task<List<CommentListResponseModel>> GetSearchCommentListAsync(CommentSearchModel searchModel)
+        public async Task<List<CommentListResponseModel>> GetSearchCommentListAsync(CommentSearchRequestModel searchModel)
         {
             bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
 
@@ -221,13 +221,13 @@ namespace CareGardenApiV1.Repository.Concrete
                 .ToListAsync();
         }
 
-        public async Task<List<CommentPointListModel>> GetCommentPointListForCache(bool cache = true)
+        public async Task<List<CommentPointListResponseModel>> GetCommentPointListForCache(bool cache = true)
         {
-            List<CommentPointListModel> commentPointListModel = null;
+            List<CommentPointListResponseModel> commentPointListModel = null;
 
             if (cache && _memoryCache.TryGetValue(CacheKeys.CommentPointList, out object list))
             {
-                commentPointListModel = (List<CommentPointListModel>)list;
+                commentPointListModel = (List<CommentPointListResponseModel>)list;
             }
             else
             {
@@ -243,13 +243,13 @@ namespace CareGardenApiV1.Repository.Concrete
             return commentPointListModel;
         }
 
-        private async Task<List<CommentPointListModel>> GetCommentPointList()
+        private async Task<List<CommentPointListResponseModel>> GetCommentPointList()
         {
             return await _context.Comments
                 .AsNoTracking()
                 .Where(x => x.commentType == CommentType.User)
                 .Where(x => x.appointment != null && x.appointment.details.Any()) 
-                .Select(x => new CommentPointListModel
+                .Select(x => new CommentPointListResponseModel
                 {
                     businessId = x.businessId,
                     point = x.point,

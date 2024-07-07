@@ -1,6 +1,6 @@
-﻿using CareGardenApiV1.Model;
-using CareGardenApiV1.Model.RequestModel;
+﻿using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
+using CareGardenApiV1.Model.TableModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 
@@ -30,7 +30,7 @@ namespace CareGardenApiV1.Service.Concrete
             return await _notificationRepository.SaveNotificationsAsync(notifications);
         }
 
-        public async Task<NotificationSearchResponseModel> SearchNotificationAsync(NotificationSearchModel notificationSearchModel)
+        public async Task<NotificationSearchResponseModel> SearchNotificationAsync(NotificationSearchRequestModel notificationSearchModel)
         {
             return await _notificationRepository.SearchNotificationAsync(notificationSearchModel);
         }

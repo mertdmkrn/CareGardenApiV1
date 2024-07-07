@@ -4,6 +4,7 @@ using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
+using CareGardenApiV1.Model.TableModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 using Microsoft.AspNetCore.Authorization;
@@ -229,9 +230,9 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("getpopularbusiness")]
-        public async Task<IActionResult> GetPopularBusiness([FromBody] BusinessSearchModel businessSearchModel)
+        public async Task<IActionResult> GetPopularBusiness([FromBody] BusinessSearchRequestModel businessSearchModel)
         {
-            ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
+            ResponseModel<IList<BusinessListResponseModel>> response = new ResponseModel<IList<BusinessListResponseModel>>();
 
             bool isSendNoLocationInfo = (!businessSearchModel.latitude.HasValue || businessSearchModel.latitude == 0)
                                         && (!businessSearchModel.longitude.HasValue || businessSearchModel.longitude == 0)
@@ -259,9 +260,9 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost("getfavoritebusiness")]
         [Authorize(Roles = "User,Admin")]
-        public async Task<IActionResult> GetFavoriteBusiness([FromBody] BusinessSearchModel businessSearchModel)
+        public async Task<IActionResult> GetFavoriteBusiness([FromBody] BusinessSearchRequestModel businessSearchModel)
         {
-            ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
+            ResponseModel<IList<BusinessListResponseModel>> response = new ResponseModel<IList<BusinessListResponseModel>>();
 
             var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
 
@@ -288,9 +289,9 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("getnearbybusiness")]
-        public async Task<IActionResult> GetNearByBusiness([FromBody] BusinessSearchModel businessSearchModel)
+        public async Task<IActionResult> GetNearByBusiness([FromBody] BusinessSearchRequestModel businessSearchModel)
         {
-            ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
+            ResponseModel<IList<BusinessListResponseModel>> response = new ResponseModel<IList<BusinessListResponseModel>>();
 
             if (businessSearchModel.longitude == null || businessSearchModel.latitude == null)
             {
@@ -406,7 +407,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost("changepassword")]
         [Authorize(Roles = "User,Admin")]
-        public async Task<IActionResult> ChangePassword([FromBody] PasswordChangeModel updateUser)
+        public async Task<IActionResult> ChangePassword([FromBody] PasswordChangeRequestModel updateUser)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
 

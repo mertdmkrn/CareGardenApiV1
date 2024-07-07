@@ -21,12 +21,12 @@ namespace CareGardenApiV1.Helpers
         }
         private static void AddDefaultMappings(ConnectionSettings settings)
         {
-            settings.DefaultMappingFor<BusinessDetailModel>(m => m);
+            settings.DefaultMappingFor<BusinessDetailResponseModel>(m => m);
         }
 
         private static void CreateIndex(IElasticClient client, string indexName)
         {
-            var createIndexResponse = client.Indices.Create(indexName, index => index.Map<BusinessDetailModel>(x => x.AutoMap()));
+            var createIndexResponse = client.Indices.Create(indexName, index => index.Map<BusinessDetailResponseModel>(x => x.AutoMap()));
         }
     }
 }

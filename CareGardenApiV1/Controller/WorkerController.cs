@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using CareGardenApiV1.Model.RequestModel;
+using CareGardenApiV1.Model.TableModel;
 
 namespace CareGardenApiV1.Controller
 {
@@ -100,7 +101,7 @@ namespace CareGardenApiV1.Controller
         [Authorize]
         public async Task<IActionResult> GetByBusinessServiceId([FromBody] string? businessServiceId)
         {
-            ResponseModel<List<AppointmentWorkerModel>> response = new ResponseModel<List<AppointmentWorkerModel>>();
+            ResponseModel<List<AppointmentWorkerResponseModel>> response = new ResponseModel<List<AppointmentWorkerResponseModel>>();
 
             if (businessServiceId.IsNullOrEmpty() || !businessServiceId.IsGuid())
             {
@@ -110,7 +111,7 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
-            response.Data = await _workerService.GetWorkersByAppointmentSearchModelAsync(new AppointmentSearchModel()
+            response.Data = await _workerService.GetWorkersByAppointmentSearchModelAsync(new AppointmentSearchRequestModel()
             {
                 businessServiceId = businessServiceId.ToGuid()
             });

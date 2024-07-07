@@ -3,6 +3,7 @@ using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
+using CareGardenApiV1.Model.TableModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 using Hangfire;
@@ -160,7 +161,7 @@ namespace CareGardenApiV1.Controller
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetBusinessListNoCache()
         {
-            ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
+            ResponseModel<IList<BusinessListResponseModel>> response = new ResponseModel<IList<BusinessListResponseModel>>();
             response.Data = await _businessService.GetBusinessListForCache(false);
 
             return Ok(response);
@@ -181,7 +182,7 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetBusinessDetailsById([FromBody] string id)
         {
             var culture = Request.Headers["Language"].ToString().IsNull("en");
-            ResponseModel<BusinessDetailModel> response = new ResponseModel<BusinessDetailModel>();
+            ResponseModel<BusinessDetailResponseModel> response = new ResponseModel<BusinessDetailResponseModel>();
 
             if (!id.IsGuid())
             {
@@ -246,7 +247,7 @@ namespace CareGardenApiV1.Controller
 
             if (popularServices.Any())
             {
-                BusinessServicesInfo businessServiceInfo = new BusinessServicesInfo();
+                BusinessServicesInfoResponseModel businessServiceInfo = new BusinessServicesInfoResponseModel();
                 businessServiceInfo.serviceName = Resource.Resource.PopulerServisler;
                 businessServiceInfo.className = "popular";
 
@@ -269,7 +270,7 @@ namespace CareGardenApiV1.Controller
 
             foreach (var items in businessDetail.businessServices.GroupBy(x => x.serviceId))
             {
-                BusinessServicesInfo businessServiceInfo = new BusinessServicesInfo();
+                BusinessServicesInfoResponseModel businessServiceInfo = new BusinessServicesInfoResponseModel();
                 var service = services.FirstOrDefault(x => x.id == items.Key.Value);
                 businessServiceInfo.serviceName = service != null ? (culture == "en" ? service.nameEn : service.name) : string.Empty;
                 businessServiceInfo.className = service != null ? service.className : string.Empty;
@@ -310,7 +311,7 @@ namespace CareGardenApiV1.Controller
         public async Task<IActionResult> GetBusinessDetailByNameForUrl([FromBody] string nameForUrl)
         {
             var culture = Request.Headers["Language"].ToString().IsNull("en");
-            ResponseModel<BusinessDetailModel> response = new ResponseModel<BusinessDetailModel>();
+            ResponseModel<BusinessDetailResponseModel> response = new ResponseModel<BusinessDetailResponseModel>();
 
             if (nameForUrl.IsNullOrEmpty())
             {
@@ -363,7 +364,7 @@ namespace CareGardenApiV1.Controller
 
             if (popularServices.Any())
             {
-                BusinessServicesInfo businessServiceInfo = new BusinessServicesInfo();
+                BusinessServicesInfoResponseModel businessServiceInfo = new BusinessServicesInfoResponseModel();
                 businessServiceInfo.serviceName = Resource.Resource.PopulerServisler;
                 businessServiceInfo.className = "popular";
 
@@ -386,7 +387,7 @@ namespace CareGardenApiV1.Controller
 
             foreach (var items in businessDetail.businessServices.GroupBy(x => x.serviceId))
             {
-                BusinessServicesInfo businessServiceInfo = new BusinessServicesInfo();
+                BusinessServicesInfoResponseModel businessServiceInfo = new BusinessServicesInfoResponseModel();
                 var service = services.FirstOrDefault(x => x.id == items.Key.Value);
                 businessServiceInfo.serviceName = service != null ? (culture == "en" ? service.nameEn : service.name) : string.Empty;
                 businessServiceInfo.className = service != null ? service.className : string.Empty;
@@ -443,7 +444,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost("setprofilephoto")]
         [Authorize(Roles = "Business,Admin")]
-        public async Task<IActionResult> SetProfilePhoto([FromForm] BusinessFileInfoModel businessFileInfoModel)
+        public async Task<IActionResult> SetProfilePhoto([FromForm] BusinessFileInfoRequestModel businessFileInfoModel)
         {
             ResponseModel<BusinessGallery> response = new ResponseModel<BusinessGallery>();
 
@@ -601,7 +602,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost("saveworkinginfo")]
         [Authorize(Roles = "Business,Admin")]
-        public async Task<IActionResult> SaveWorkingInfo(BusinessWorkInfoModel businessWorkInfoModel)
+        public async Task<IActionResult> SaveWorkingInfo(BusinessWorkInfoRequestModel businessWorkInfoModel)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
 
@@ -665,7 +666,7 @@ namespace CareGardenApiV1.Controller
         /// <returns></returns>
         [HttpPost("addgalleryphoto")]
         [Authorize(Roles = "Business,Admin")]
-        public async Task<IActionResult> AddGalleryPhoto([FromForm] BusinessFileInfoModel businessFileInfoModel)
+        public async Task<IActionResult> AddGalleryPhoto([FromForm] BusinessFileInfoRequestModel businessFileInfoModel)
         {
             ResponseModel<BusinessGallery> response = new ResponseModel<BusinessGallery>();
 

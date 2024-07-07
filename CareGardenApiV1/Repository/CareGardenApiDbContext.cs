@@ -1,4 +1,4 @@
-﻿using CareGardenApiV1.Model;
+﻿using CareGardenApiV1.Model.TableModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace CareGardenApiV1.Repository

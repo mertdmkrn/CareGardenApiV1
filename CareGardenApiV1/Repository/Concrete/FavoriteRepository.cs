@@ -1,6 +1,6 @@
 ﻿using CareGardenApiV1.Repository.Abstract;
-using CareGardenApiV1.Model;
 using Microsoft.EntityFrameworkCore;
+using CareGardenApiV1.Model.TableModel;
 
 namespace CareGardenApiV1.Repository.Concrete
 {

@@ -1,6 +1,6 @@
-﻿using CareGardenApiV1.Model;
-using CareGardenApiV1.Model.RequestModel;
+﻿using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
+using CareGardenApiV1.Model.TableModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 
@@ -35,12 +35,12 @@ namespace CareGardenApiV1.Service.Concrete
             return await _workerRepository.GetWorkersByBusinessIdAsync(businessId);
         }
 
-        public async Task<List<AppointmentWorkerModel>> GetWorkersByAppointmentSearchModelAsync(AppointmentSearchModel searchModel)
+        public async Task<List<AppointmentWorkerResponseModel>> GetWorkersByAppointmentSearchModelAsync(AppointmentSearchRequestModel searchModel)
         {
             return await _workerRepository.GetWorkersByAppointmentSearchModelAsync(searchModel);
         }
 
-        public async Task<List<AppointmentWorkerModel>> GetWorkersByWorkerIdsAsync(List<Guid?> workerIds)
+        public async Task<List<AppointmentWorkerResponseModel>> GetWorkersByWorkerIdsAsync(List<Guid?> workerIds)
         {
             return await _workerRepository.GetWorkersByWorkerIdsAsync(workerIds);
         }

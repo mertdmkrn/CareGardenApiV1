@@ -3,6 +3,7 @@ using CareGardenApiV1.Handler.Model;
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
+using CareGardenApiV1.Model.TableModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 using Hangfire;
@@ -451,7 +452,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("passwordreset")]
-        public async Task<IActionResult> PasswordReset([FromBody] PasswordResetModel updateBusiness)
+        public async Task<IActionResult> PasswordReset([FromBody] PasswordResetRequestModel updateBusiness)
         {
             ResponseModel<Token> response = new ResponseModel<Token>();
 

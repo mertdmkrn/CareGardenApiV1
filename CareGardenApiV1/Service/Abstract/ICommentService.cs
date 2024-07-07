@@ -1,6 +1,6 @@
-﻿using CareGardenApiV1.Model;
-using CareGardenApiV1.Model.RequestModel;
+﻿using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
+using CareGardenApiV1.Model.TableModel;
 
 namespace CareGardenApiV1.Service.Abstract
 {
@@ -9,9 +9,9 @@ namespace CareGardenApiV1.Service.Abstract
         Task<Comment> GetCommentByIdAsync(Guid id);
         Task<List<Comment>> GetCommentsByBusinessIdAsync(Guid businessId);
         Task<List<Comment>> GetCommentsByUserIdAsync(Guid userId);
-        Task<List<CommentSearchResponseModel>> GetSearchCommentsAsync(CommentSearchModel searchModel);
-        Task<List<CommentListResponseModel>> GetSearchCommentListAsync(CommentSearchModel searchModel);
-        Task<List<CommentPointListModel>> GetCommentPointListForCache(Guid? businessId = null, Guid? workerId = null, bool cache = true);
+        Task<List<CommentSearchResponseModel>> GetSearchCommentsAsync(CommentSearchRequestModel searchModel);
+        Task<List<CommentListResponseModel>> GetSearchCommentListAsync(CommentSearchRequestModel searchModel);
+        Task<List<CommentPointListResponseModel>> GetCommentPointListForCache(Guid? businessId = null, Guid? workerId = null, bool cache = true);
         Task<Comment> SaveCommentAsync(Comment comment);
         Task<Comment> UpdateCommentAsync(Comment comment);
         Task<bool> DeleteCommentAsync(Comment comment);

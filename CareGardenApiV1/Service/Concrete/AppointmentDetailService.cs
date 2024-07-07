@@ -1,6 +1,6 @@
 ﻿using CareGardenApiV1.Helpers;
-using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
+using CareGardenApiV1.Model.TableModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 
@@ -30,12 +30,12 @@ namespace CareGardenApiV1.Service.Concrete
             return await _appointmentDetailRepository.GetAppointmentDetailByIdAsync(id);
         }
 
-        public async Task<List<AppointmentDetail>> GetAppointmentDetailsByAppointmentDetailSearchModelAsync(AppointmentSearchModel searchModel)
+        public async Task<List<AppointmentDetail>> GetAppointmentDetailsByAppointmentDetailSearchModelAsync(AppointmentSearchRequestModel searchModel)
         {
             return await _appointmentDetailRepository.GetAppointmentDetailsByAppointmentDetailSearchModelAsync(searchModel);
         }
 
-        public async Task<List<AppointmentDetail>> GetAppointmentDetailsByWorkerIdsAndDateAsync(AppointmentSearchModel searchModel)
+        public async Task<List<AppointmentDetail>> GetAppointmentDetailsByWorkerIdsAndDateAsync(AppointmentSearchRequestModel searchModel)
         {
             return await _appointmentDetailRepository.GetAppointmentDetailsByWorkerIdsAndDateAsync(searchModel);
         }

@@ -2,6 +2,7 @@
 using CareGardenApiV1.Model;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
+using CareGardenApiV1.Model.TableModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 using Microsoft.AspNetCore.Authorization;
@@ -42,7 +43,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("get")]
-        public async Task<IActionResult> Get([FromBody]NotificationSearchModel notificationSearchModel)
+        public async Task<IActionResult> Get([FromBody]NotificationSearchRequestModel notificationSearchModel)
         {
             ResponseModel<NotificationSearchResponseModel> response = new ResponseModel<NotificationSearchResponseModel>();
 
@@ -340,7 +341,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("setread")]
-        public async Task<IActionResult> SetRead([FromBody] IdListSearchModel idListSearchModel)
+        public async Task<IActionResult> SetRead([FromBody] IdListSearchRequestModel idListSearchModel)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
 
@@ -396,7 +397,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("delete")]
-        public async Task<IActionResult> Delete([FromBody] IdListSearchModel idListSearchModel)
+        public async Task<IActionResult> Delete([FromBody] IdListSearchRequestModel idListSearchModel)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
 

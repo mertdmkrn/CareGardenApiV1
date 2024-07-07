@@ -1,6 +1,6 @@
-﻿using CareGardenApiV1.Model;
-using CareGardenApiV1.Model.RequestModel;
+﻿using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
+using CareGardenApiV1.Model.TableModel;
 
 namespace CareGardenApiV1.Repository.Abstract
 {
@@ -8,9 +8,9 @@ namespace CareGardenApiV1.Repository.Abstract
     {
         Task<Worker> GetWorkerByIdAsync(Guid id);
         Task<List<Worker>> GetWorkersByBusinessIdAsync(Guid businessId);
-        Task<List<AppointmentWorkerModel>> GetWorkersByAppointmentSearchModelAsync(AppointmentSearchModel searchModel);
+        Task<List<AppointmentWorkerResponseModel>> GetWorkersByAppointmentSearchModelAsync(AppointmentSearchRequestModel searchModel);
         Task<WorkerDetailResponseModel> GetWorkerDetailByIdAsync(Guid id);
-        Task<List<AppointmentWorkerModel>> GetWorkersByWorkerIdsAsync(List<Guid?> workerIds);
+        Task<List<AppointmentWorkerResponseModel>> GetWorkersByWorkerIdsAsync(List<Guid?> workerIds);
         Task<Worker> SaveWorkerAsync(Worker worker);
         Task<Worker> UpdateWorkerAsync(Worker worker);
         Task<bool> DeleteWorkerAsync(Guid id);

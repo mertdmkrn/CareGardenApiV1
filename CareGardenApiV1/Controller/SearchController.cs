@@ -1,7 +1,9 @@
 ﻿using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model;
+using CareGardenApiV1.Model.OtherModel;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
+using CareGardenApiV1.Model.TableModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
 using Microsoft.AspNetCore.Authorization;
@@ -42,7 +44,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("searchbusinessbykeyword")]
-        public async Task<IActionResult> SearchBusinessByKeyword([FromBody] KeywordSearchModel keywordSearchModel)
+        public async Task<IActionResult> SearchBusinessByKeyword([FromBody] KeywordSearchRequestModel keywordSearchModel)
         {
             var culture = Request.Headers["Language"].ToString().IsNull("en");
             ResponseModel<KeywordSearchResponseModel> response = new ResponseModel<KeywordSearchResponseModel>();
@@ -134,7 +136,7 @@ namespace CareGardenApiV1.Controller
         [HttpPost("searchbusiness")]
         public async Task<IActionResult> SearchBusiness([FromBody] BusinessExploreModel businessExploreModel)
         {
-            ResponseModel<IList<BusinessListModel>> response = new ResponseModel<IList<BusinessListModel>>();
+            ResponseModel<IList<BusinessListResponseModel>> response = new ResponseModel<IList<BusinessListResponseModel>>();
             var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
 
             if (businessExploreModel.sortByType == SortByType.Favorites)
@@ -193,7 +195,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("searchlocation")]
-        public async Task<IActionResult> SearchLocation([FromBody] StringSearchModel searchModel)
+        public async Task<IActionResult> SearchLocation([FromBody] StringSearchRequestModel searchModel)
         {
             ResponseModel<IEnumerable<LocationInfo>> response = new ResponseModel<IEnumerable<LocationInfo>>();
 

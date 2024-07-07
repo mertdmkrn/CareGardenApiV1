@@ -1,12 +1,12 @@
 ﻿using System.Net.Mail;
 using System.Text.RegularExpressions;
-using CareGardenApiV1.Model;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Model.ResponseModel;
 using System.Text;
+using CareGardenApiV1.Model.TableModel;
 
 namespace CareGardenApiV1.Helpers
 {
@@ -199,47 +199,49 @@ namespace CareGardenApiV1.Helpers
                 var today = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Today, "Turkey Standard Time");
 
                 if (workingInfo == null)
+                {
                     return true;
+                }
 
-                if (officialDayAvailable && Constants.OfficialDays.Exists(x => x.date.Equals(today)))
+                if (officialDayAvailable && Constants.OfficialDays.Any(x => x.date.Date == today))
+                {
                     return false;
+                }
 
                 var workHours = workingInfo.GetBusinessWorkInfoHours(today);
 
-                if (workHours.IsNullOrEmpty())
-                    return false;
-
-                var startHours = workHours.Split('-').FirstOrDefault();
-                var endHours = workHours.Split('-').LastOrDefault();
-
-                if (startHours.IsNullOrEmpty() || endHours.IsNullOrEmpty())
-                    return false;
-
-                var startHour = startHours.Split(":")[0].ToInt();
-                var startMinute = startHours.Split(":")[1].ToInt();
-                var businessStartDate = new DateTime(today.Year, today.Month, today.Day, startHour, startMinute, 0);
-
-                var endHour = endHours.Split(":")[0].ToInt();
-                var endMinute = endHours.Split(":")[1].ToInt();
-
-                if (endHour >= 24)
+                if (string.IsNullOrEmpty(workHours))
                 {
-                    endHour = 23;
-                    endMinute = 59;
+                    return false;
                 }
 
-                var businessEndDate = new DateTime(today.Year, today.Month, today.Day, endHour, endMinute, 0);
+                var hours = workHours.Split('-');
+                if (hours.Length != 2)
+                {
+                    return false;
+                }
 
-                if (now >= businessStartDate && now < businessEndDate)
-                    return true;
+                if (!TimeSpan.TryParse(hours[0], out var startTime) || !TimeSpan.TryParse(hours[1], out var endTime))
+                {
+                    return false;
+                }
 
-                return false;
+                var businessStartDate = today.Date.Add(startTime);
+                var businessEndDate = today.Date.Add(endTime);
+
+                if (endTime.Hours >= 24)
+                {
+                    businessEndDate = today.Date.AddDays(1).AddHours(23).AddMinutes(59);
+                }
+
+                return now >= businessStartDate && now < businessEndDate;
             }
             catch (Exception)
             {
                 return false;
             }
         }
+
 
         public static bool GetBusinessOpenSpecialDate(BusinessWorkingInfo workingInfo, bool officialDayAvailable, DateTime? specialDate)
         {
@@ -251,7 +253,7 @@ namespace CareGardenApiV1.Helpers
             if (workingInfo == null)
                 return true;
 
-            if (officialDayAvailable && Constants.OfficialDays.Exists(x => x.date.Equals(specialDate)))
+            if (officialDayAvailable && specialDate.HasValue && Constants.OfficialDays.Exists(x => x.date.Equals(specialDate.Value.Date)))
                 return false;
 
             var workHours = workingInfo.GetBusinessWorkInfoHours(date);
@@ -289,7 +291,7 @@ namespace CareGardenApiV1.Helpers
             if (workingInfo == null)
                 return false;
 
-            if (officialDayAvailable && Constants.OfficialDays.Exists(x => x.date.Equals(date)))
+            if (officialDayAvailable && Constants.OfficialDays.Exists(x => x.date.Equals(date.Date)))
                 return false;
 
             var workHours = workingInfo.GetBusinessWorkInfoHours(date);
@@ -311,60 +313,6 @@ namespace CareGardenApiV1.Helpers
             sumWorkMinutes += endStartTimeDifference % 100;
 
             return sumWorkMinutes - todayWorksMinutes >= 30;
-        }
-
-        public static List<WorkerAvailableTimeModel> GetWorkerAvailableTimes(List<Appointment> appointments, BusinessWorkingInfo businessWorkingInfo, BusinessServiceModel businessService, DateTime? startDate, DateTime? endDate)
-        {
-            List<WorkerAvailableTimeModel> workerAvailableTimeModels = new List<WorkerAvailableTimeModel>();
-
-            var dateDifferenceDays = (int)startDate.DifferenceBetweenDates(endDate, DateType.Day);
-
-            for (int i = 0; i < dateDifferenceDays; i++)
-            {
-                var date = startDate.Value.AddDays(i);
-
-                if (!GetBusinessOpenSpecialDate(businessWorkingInfo, businessWorkingInfo.officialHolidayAvailable, date))
-                    continue;
-
-                var workingHours = businessWorkingInfo.GetBusinessWorkInfoHours(date);
-
-                if (string.IsNullOrEmpty(workingHours))
-                    continue;
-
-                var workingHoursParts = workingHours.Split('-');
-                if (workingHoursParts.Length != 2)
-                    continue;
-
-                if (!TimeSpan.TryParse(workingHoursParts[0], out var startWorkTime) ||
-                    !TimeSpan.TryParse(workingHoursParts[1], out var endWorkTime))
-                    continue;
-
-                var dayStartDate = new DateTime(date.Year, date.Month, date.Day)
-                    .Add(startWorkTime);
-
-                var dayEndDate = new DateTime(date.Year, date.Month, date.Day)
-                    .Add(endWorkTime);
-
-                var serviceDurationMinutes = businessService.maxDuration.IsNull(businessService.minDuration);
-                var numberOfAppointmentsPerDay = (int)Math.Ceiling(dayStartDate.DifferenceBetweenDates(dayEndDate, DateType.Minute) / serviceDurationMinutes);
-
-                for (int j = 0; j < numberOfAppointmentsPerDay; j++)
-                {
-                    WorkerAvailableTimeModel workerAvailableTimeModel = new WorkerAvailableTimeModel();
-
-                    workerAvailableTimeModel.startDate = dayStartDate.AddMinutes(j * serviceDurationMinutes);
-                    workerAvailableTimeModel.endDate = dayStartDate.AddMinutes((j + 1) * serviceDurationMinutes);
-                    workerAvailableTimeModel.dateText = dayStartDate.ToString("dd.MM.yyyy");
-                    workerAvailableTimeModel.hourText = workerAvailableTimeModel.startDate.ToString("HH:mm") + "-" + workerAvailableTimeModel.endDate.ToString("HH:mm");
-
-                    if (appointments.Exists(x => x.startDate >= workerAvailableTimeModel.startDate && x.startDate < workerAvailableTimeModel.endDate))
-                        continue;
-
-                    workerAvailableTimeModels.Add(workerAvailableTimeModel);
-                }
-            }
-
-            return workerAvailableTimeModels;
         }
     }
 }

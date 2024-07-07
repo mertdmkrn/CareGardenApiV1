@@ -1,9 +1,9 @@
 ﻿using CareGardenApiV1.Repository.Abstract;
-using CareGardenApiV1.Model;
 using Microsoft.EntityFrameworkCore;
 using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model.RequestModel;
+using CareGardenApiV1.Model.TableModel;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -48,7 +48,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 .ToListAsync();
         }
 
-        public async Task<List<AppointmentWorkerModel>> GetWorkersByAppointmentSearchModelAsync(AppointmentSearchModel searchModel)
+        public async Task<List<AppointmentWorkerResponseModel>> GetWorkersByAppointmentSearchModelAsync(AppointmentSearchRequestModel searchModel)
         {
             bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
 
@@ -57,7 +57,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 .WhereIf(searchModel.isActive.HasValue, x => x.isActive == searchModel.isActive.Value)
                 .WhereIf(searchModel.businessServiceId.IsNotNullOrEmpty(), x => x.serviceIds.ToLower().Contains(searchModel.businessServiceId.Value.ToString().ToLower()))
                 .WhereIf(searchModel.businessId.IsNotNullOrEmpty(), x => x.businessId == searchModel.businessId)
-                .Select(x => new AppointmentWorkerModel
+                .Select(x => new AppointmentWorkerResponseModel
                 {
                     id = x.id,
                     name = x.name,
@@ -95,14 +95,14 @@ namespace CareGardenApiV1.Repository.Concrete
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<List<AppointmentWorkerModel>> GetWorkersByWorkerIdsAsync(List<Guid?> workerIds)
+        public async Task<List<AppointmentWorkerResponseModel>> GetWorkersByWorkerIdsAsync(List<Guid?> workerIds)
         {
             bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
 
             return await _context.Workers
                 .AsNoTracking()
                 .Where(x => workerIds.Contains(x.id))
-                .Select(x => new AppointmentWorkerModel
+                .Select(x => new AppointmentWorkerResponseModel
                 {
                     id = x.id,
                     isActive = x.isActive,

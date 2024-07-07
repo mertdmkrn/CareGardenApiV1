@@ -6,7 +6,7 @@ namespace CareGardenApiV1.Handler.Abstract
     {
         Task<bool> MakeIndexBusiness();
         Task<bool> UpdateOrCreateIndexBusiness(Guid id);
-        Task<bool> UpdateOrCreateIndexBusiness(BusinessDetailModel businessDetail);
+        Task<bool> UpdateOrCreateIndexBusiness(BusinessDetailResponseModel businessDetail);
         Task<bool> DeleteIndexBusiness(Guid id);
     }
 }

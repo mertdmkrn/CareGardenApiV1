@@ -46,8 +46,8 @@ namespace CareGardenApiV1.Controller
             if (id.IsNullOrEmpty() || !id.IsGuid())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.KayitBulunamadi;
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdErrorMessage));
+                response.Message = Resource.Resource.IdErrorMessage;
                 return Ok(response);
             }
 
@@ -76,8 +76,8 @@ namespace CareGardenApiV1.Controller
             if (businessId.IsNullOrEmpty() || !businessId.IsGuid())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.KayitBulunamadi;
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdErrorMessage));
+                response.Message = Resource.Resource.IdErrorMessage;
                 return Ok(response);
             }
 
@@ -106,8 +106,8 @@ namespace CareGardenApiV1.Controller
             if (businessServiceId.IsNullOrEmpty() || !businessServiceId.IsGuid())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("businessServiceId", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.KayitBulunamadi;
+                response.ValidationErrors.Add(new ValidationError("businessServiceId", Resource.Resource.IdErrorMessage));
+                response.Message = Resource.Resource.IdErrorMessage;
                 return Ok(response);
             }
 
@@ -138,8 +138,8 @@ namespace CareGardenApiV1.Controller
             if (id.IsNullOrEmpty() || !id.IsGuid())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.KayitBulunamadi;
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdErrorMessage));
+                response.Message = Resource.Resource.IdErrorMessage;
                 return Ok(response);
             }
 
@@ -195,37 +195,37 @@ namespace CareGardenApiV1.Controller
             if (worker.name.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("name", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("name", Resource.Resource.NotEmpty));
             }
 
             if (worker.title.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("replyId", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("replyId", Resource.Resource.NotEmpty));
             }
 
             if (!worker.businessId.HasValue)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.NotEmpty));
             }
 
             if (worker.serviceIds.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("serviceIds", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("serviceIds", Resource.Resource.NotEmpty));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.KayitYapilamadi;
+                response.Message = Resource.Resource.RegistrationFailed;
                 return Ok(response);
             }
 
             worker.createdUserId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid).ToGuid();
 
             response.Data = await _workerService.SaveWorkerAsync(worker);
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.RegistrationSuccess;
             return Ok(response);
         }
 
@@ -266,30 +266,30 @@ namespace CareGardenApiV1.Controller
             if (updateWorker.name.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("name", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("name", Resource.Resource.NotEmpty));
             }
 
             if (updateWorker.title.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("replyId", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("replyId", Resource.Resource.NotEmpty));
             }
 
             if (!updateWorker.businessId.HasValue)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.NotEmpty));
             }
 
             if (updateWorker.serviceIds.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("serviceIds", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("serviceIds", Resource.Resource.NotEmpty));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.KayitYapilamadi;
+                response.Message = Resource.Resource.RecordNotUpdated;
                 return Ok(response);
             }
 
@@ -297,7 +297,7 @@ namespace CareGardenApiV1.Controller
 
             if (worker == null)
             {
-                response.Message = Resource.Resource.KayitBulunamadi;
+                response.Message = Resource.Resource.RecordNotFound;
                 return Ok(response);
             }
 
@@ -320,7 +320,7 @@ namespace CareGardenApiV1.Controller
             worker.sundayWorkHours = updateWorker.sundayWorkHours;
 
             response.Data = await _workerService.UpdateWorkerAsync(worker);
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.RecordUpdated;
             return Ok(response);
         }
 
@@ -345,13 +345,13 @@ namespace CareGardenApiV1.Controller
             if (id.IsNullOrEmpty() || !id.IsGuid())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.KayitBulunamadi;
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdErrorMessage));
+                response.Message = Resource.Resource.IdErrorMessage;
                 return Ok(response);
             }
 
             response.Data = await _workerService.DeleteWorkerAsync(id.ToGuid());
-            response.Message = Resource.Resource.KayitSilindi;
+            response.Message = Resource.Resource.RecordDeleted;
 
             return Ok(response);
         }
@@ -377,8 +377,8 @@ namespace CareGardenApiV1.Controller
             if (businessId.IsNullOrEmpty() || !businessId.IsGuid())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.KayitBulunamadi;
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdErrorMessage));
+                response.Message = Resource.Resource.IdErrorMessage;
                 return Ok(response);
             }
 

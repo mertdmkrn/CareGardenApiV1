@@ -31,7 +31,8 @@ namespace CareGardenApiV1.Middleware
         private async Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
-            response.Message = $"Exception : {ex.Message} | {context.Request.Path}";
+            response.ValidationErrors.Add(new ValidationError("errorInfo", $"Exception : {ex.Message} | {context.Request.Path}"));
+            response.Message = $"{Resource.Resource.ErrorMessage} {Resource.Resource.ErrorContactMessage}";
             response.HasError = true;
 
             context.Response.StatusCode = 200;

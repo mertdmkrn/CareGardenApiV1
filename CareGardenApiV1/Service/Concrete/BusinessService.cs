@@ -88,9 +88,9 @@ namespace CareGardenApiV1.Service.Concrete
             return await _businessRepository.SaveBusinessAsync(business);
         }
 
-        public async Task<Business> UpdateBusinessAsync(Business business)
+        public async Task<Business> UpdateBusinessAsync(Business business, bool isPasswordChanged = false)
         {
-            return await _businessRepository.UpdateBusinessAsync(business);
+            return await _businessRepository.UpdateBusinessAsync(business, isPasswordChanged);
         }
 
         public async Task<List<BusinessPagingListResponseModel>> GetBusinessLiteListAsync(BusinessSearchAdminRequestModel searchAdminModel)
@@ -163,6 +163,16 @@ namespace CareGardenApiV1.Service.Concrete
                     : nameForUrl;
 
             return nameForUrl;
+        }
+
+        public async Task<bool> GetBusinessExistsByTelephoneNumberAsync(string telephone)
+        {
+            return await _businessRepository.GetBusinessExistsByTelephoneNumberAsync(telephone);
+        }
+
+        public async Task<bool> GetBusinessExistsByEmailAsync(string email)
+        {
+            return await _businessRepository.GetBusinessExistsByEmailAsync(email);
         }
     }
 }

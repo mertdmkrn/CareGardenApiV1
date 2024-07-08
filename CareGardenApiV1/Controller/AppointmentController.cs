@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using CareGardenApiV1.Helpers;
 using System.Security.Claims;
 using CareGardenApiV1.Model.TableModel;
+
 namespace CareGardenApiV1.Controller
 {
     [ApiController]
@@ -17,7 +18,6 @@ namespace CareGardenApiV1.Controller
     {
         private readonly IAppointmentService _appointmentService;
         private readonly IAppointmentDetailService _appointmentDetailService;
-        private readonly IBusinessWorkingInfoService _businessWorkingInfoService;
         private readonly IBusinessServicesService _businessServicesService;
         private readonly IBusinessService _businessService;
         private readonly IWorkerService _workerService;
@@ -27,7 +27,6 @@ namespace CareGardenApiV1.Controller
         public AppointmentController(
             IAppointmentService appointmentService,
             IAppointmentDetailService appointmentDetailService,
-            IBusinessWorkingInfoService businessWorkingInfoService,
             IBusinessServicesService businessServicesService,
             IBusinessService businessService,
             IWorkerService workerService,
@@ -36,7 +35,6 @@ namespace CareGardenApiV1.Controller
         {
             _appointmentService = appointmentService;
             _appointmentDetailService = appointmentDetailService;
-            _businessWorkingInfoService = businessWorkingInfoService;
             _businessServicesService = businessServicesService;
             _businessService = businessService;
             _workerService = workerService;
@@ -113,8 +111,8 @@ namespace CareGardenApiV1.Controller
             if (id.IsNullOrEmpty() || !id.IsGuid())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.KayitBulunamadi;
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdErrorMessage));
+                response.Message = Resource.Resource.RecordNotFound;
                 return Ok(response);
             }
 
@@ -175,62 +173,62 @@ namespace CareGardenApiV1.Controller
                 if (appointmentSaveModel.userName.IsNullOrEmpty())
                 {
                     response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("userName", Resource.Resource.BuAlaniBosBirakmayiniz));
+                    response.ValidationErrors.Add(new ValidationError("userName", Resource.Resource.NotEmpty));
                 }            
                 
                 if (appointmentSaveModel.userTelephone.IsNullOrEmpty())
                 {
                     response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("userName", Resource.Resource.BuAlaniBosBirakmayiniz));
+                    response.ValidationErrors.Add(new ValidationError("userName", Resource.Resource.NotEmpty));
                 }       
                 
                 if (!appointmentSaveModel.userTelephone.IsValidTelephoneNumber())
                 {
                     response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("userTelephone", Resource.Resource.GecerliTelefonMesaji));
+                    response.ValidationErrors.Add(new ValidationError("userTelephone", Resource.Resource.ValidTelephoneMessage));
                 }
 
 
                 if (appointmentSaveModel.userEmail.IsNullOrEmpty())
                 {
                     response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("userEmail", Resource.Resource.BuAlaniBosBirakmayiniz));
+                    response.ValidationErrors.Add(new ValidationError("userEmail", Resource.Resource.NotEmpty));
                 }
 
                 if (!appointmentSaveModel.userEmail.IsValidEmail())
                 {
                     response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("userTelephone", Resource.Resource.GecerliTelefonMesaji));
+                    response.ValidationErrors.Add(new ValidationError("userTelephone", Resource.Resource.ValidTelephoneMessage));
                 }
             }
 
             if (!appointmentSaveModel.businessId.HasValue)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.NotEmpty));
             }
             
             if (!appointmentSaveModel.startDate.HasValue)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("startDate", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("startDate", Resource.Resource.NotEmpty));
             }
 
             if (appointmentSaveModel.serviceWorkerInfos.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("serviceWorkerInfos", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("serviceWorkerInfos", Resource.Resource.NotEmpty));
             }
 
             if (appointmentSaveModel.serviceWorkerInfos.Exists(x => !x.workerId.HasValue))
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("workerId", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("workerId", Resource.Resource.NotEmpty));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.KayitYapilamadi;
+                response.Message = Resource.Resource.RegistrationFailed;
                 return Ok(response);
             }
 
@@ -245,13 +243,13 @@ namespace CareGardenApiV1.Controller
             if(business == null)
             {
                 response.HasError = true;
-                response.Message = Resource.Resource.KayitYapilamadi;
+                response.Message = Resource.Resource.RegistrationFailed;
                 return Ok(response);
             }
 
             if (isExistsAppointment || !HelperMethods.GetBusinessOpenSpecialDate(business.workingInfo, business.officialDayAvailable, startDate))
             {
-                response.Message = Resource.Resource.RandevuMevcut;
+                response.Message = Resource.Resource.AppointmentAvailable;
                 response.HasError = true;
                 return Ok(response);
             }
@@ -310,7 +308,7 @@ namespace CareGardenApiV1.Controller
             }
 
             response.Data = await _appointmentService.SaveAppointmentAsync(appointment);
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.RegistrationSuccess;
 
             BackgroundJob.Enqueue(() => _businessService.UpdateMemoryBusinessList(appointmentSaveModel.businessId.Value));
 
@@ -339,13 +337,13 @@ namespace CareGardenApiV1.Controller
             if (!appointmentChangeModel.id.HasValue)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.KayitSilinemedi;
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdErrorMessage));
+                response.Message = $"{Resource.Resource.AppointmentStatusNotChanged} {Resource.Resource.ErrorContactMessage}";
                 return Ok(response);
             }
 
             response.Data = await _appointmentService.ChangeStatusAsync(appointmentChangeModel);
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.AppointmentStatusChanged;
             return Ok(response);
         }
 
@@ -372,18 +370,18 @@ namespace CareGardenApiV1.Controller
             if (!appointmentChangeModel.id.HasValue)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdErrorMessage));
             }
 
             if (appointmentChangeModel.cancellationDescription.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("cancellationDescription", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("cancellationDescription", Resource.Resource.NotEmpty));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.KayitYapilamadi;
+                response.Message = $"{Resource.Resource.AppointmentNotCancelled} {Resource.Resource.ErrorContactMessage}";
                 return Ok(response);
             }
 
@@ -391,7 +389,7 @@ namespace CareGardenApiV1.Controller
 
             if (appointment == null || (appointment != null && appointment.userId != userId.ToGuid()))
             {
-                response.Message = Resource.Resource.KayitYapilamadi;
+                response.Message = $"{Resource.Resource.AppointmentNotCancelled} {Resource.Resource.ErrorContactMessage}";
                 response.HasError = true;
                 return Ok(response);
             }
@@ -402,7 +400,7 @@ namespace CareGardenApiV1.Controller
             await _appointmentService.UpdateAppointmentAsync(appointment);
             
             response.Data = true;
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.AppointmentCancelled;
             return Ok(response);
         }
 
@@ -427,16 +425,18 @@ namespace CareGardenApiV1.Controller
             if (!appointmentInfo.businessId.HasValue)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.IdParametreHatasi;
-                return Ok(response);
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdErrorMessage));
             }
 
             if (!appointmentInfo.businessServiceId.HasValue)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("workerId", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.IdParametreHatasi;
+                response.ValidationErrors.Add(new ValidationError("workerId", Resource.Resource.IdErrorMessage));
+            }
+
+            if (response.HasError)
+            {
+                response.Message = $"{Resource.Resource.ErrorMessage} {Resource.Resource.ErrorContactMessage}";
                 return Ok(response);
             }
 
@@ -457,7 +457,7 @@ namespace CareGardenApiV1.Controller
                 if (workers.IsNullOrEmpty())
                 {
                     response.HasError = true;
-                    response.Message = Resource.Resource.KayitBulunamadi;
+                    response.Message = Resource.Resource.RecordNotFound;
                     return Ok(response);
                 }
             }

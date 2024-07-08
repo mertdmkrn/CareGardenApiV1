@@ -117,161 +117,158 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BirDakikaIcindeOnayKoduMesaji" xml:space="preserve">
+  <data name="ConfirmationCodeMessageInOneMinute" xml:space="preserve">
     <value>Bir dakika içinde birden fazla onay kodu alamazsınız.</value>
   </data>
-  <data name="BuAlaniBosBirakmayiniz" xml:space="preserve">
+  <data name="NotEmpty" xml:space="preserve">
     <value>Bu alanı boş bırakmayınız.</value>
   </data>
   <data name="ElasticIndexlemeIslemiBasladi" xml:space="preserve">
     <value>Elastic indexleme işlemi arkaplanda başlamıştır.</value>
   </data>
-  <data name="ElasticSunucusuAktifDegil" xml:space="preserve">
-    <value>Elastic server is not active.</value>
-  </data>
-  <data name="GecerliBirIsimGiriniz" xml:space="preserve">
+  <data name="ValidNameMessage" xml:space="preserve">
     <value>Geçerli bir isim giriniz.</value>
   </data>
-  <data name="GecerliMailMesaji" xml:space="preserve">
+  <data name="ValidEmailMessage" xml:space="preserve">
     <value>Lütfen geçerli bir mail giriniz.</value>
   </data>
-  <data name="GecerliMailTelefonMesaji" xml:space="preserve">
-    <value>Lütfen geçerli bir mail veya telefon numarası giriniz.</value>
+  <data name="ValidMailOrTelephoneMessage" xml:space="preserve">
+    <value>Lütfen geçerli bir e-posta adresi veya telefon numarası giriniz.</value>
   </data>
-  <data name="GecerliTelefonMesaji" xml:space="preserve">
+  <data name="ValidTelephoneMessage" xml:space="preserve">
     <value>Lütfen geçerli bir telefon numarası giriniz.</value>
   </data>
-  <data name="GeriBildirimGonderildi" xml:space="preserve">
-    <value>Thank you for your feedback.</value>
+  <data name="FeedbackSend" xml:space="preserve">
+    <value>Geri bildiriminiz gönderildi. Teşekkür ederiz!</value>
   </data>
-  <data name="GeriBildirimGonderilemedi" xml:space="preserve">
+  <data name="FeedbackNotSend" xml:space="preserve">
     <value>Geri bildirim gönderilemedi.</value>
   </data>
-  <data name="GirdiginizMaileAitKullaniciBulunamadi" xml:space="preserve">
-    <value>Girdiğiniz maile ait kullanıcı bulunamadı.</value>
+  <data name="UserNotFoundEnteredMail" xml:space="preserve">
+    <value>Girdiğiniz e-posta adresine ait kullanıcı bulunamadı.</value>
   </data>
-  <data name="GirdiginizMaileAitKullaniciKayitli" xml:space="preserve">
-    <value>Girdiğiniz maile ait kullanıcı sistemde kayıtlı.</value>
+  <data name="RegisteredUserEnteredMail" xml:space="preserve">
+    <value>Belirttiğiniz e-posta adresi sistemimizde zaten kayıtlı. Lütfen farklı bir e-posta adresi giriniz veya mevcut hesabınıza giriş yapınız.</value>
   </data>
-  <data name="GirdiginizMaileAitSirketBulunamadi" xml:space="preserve">
-    <value>Girdiğiniz maile ait şirket bulunamadı.</value>
+  <data name="BusinessNotFoundEnteredMail" xml:space="preserve">
+    <value>Girdiğiniz e-posta adresine ait işletme bulunamadı.</value>
   </data>
-  <data name="GirdiginizTelefonNumarasinaAitKullaniciKayitli" xml:space="preserve">
-    <value>Girdiğiniz telefon numarasına ait kullanıcı sistemde kayıtlı.</value>
+  <data name="UserFoundEnteredTelephone" xml:space="preserve">
+    <value>Girdiğiniz telefon numarasına kayıtlı bir kullanıcı bulunmaktadır.</value>
   </data>
-  <data name="GirdiginizTelefonNumarasinaAitSirketKayitli" xml:space="preserve">
-    <value>The company belonging to the phone number you entered is registered in the system.</value>
+  <data name="BusinessFoundEnteredTelephone" xml:space="preserve">
+    <value>Girdiğiniz telefon numarasına kayıtlı bir işletme bulunmaktadır.</value>
   </data>
-  <data name="GirilenBilgilereAitKullaniciBulunamadi" xml:space="preserve">
-    <value>Girilen bilgilere ait kullanıcı bulunamadı.</value>
+  <data name="UserNotFoundEnteredInfo" xml:space="preserve">
+    <value>Girdiğiniz bilgilere ait bir kullanıcı bulunamadı.</value>
   </data>
-  <data name="GirilenBilgilereAitSirketBulunamadi" xml:space="preserve">
-    <value>Girilen bilgilere ait şirket bulunamadı.</value>
+  <data name="BusinessNotFoundEnteredInfo" xml:space="preserve">
+    <value>Girdiğiniz bilgilere ait bir işletme bulunamadı.</value>
   </data>
-  <data name="GirisBasarili" xml:space="preserve">
+  <data name="LoginSuccess" xml:space="preserve">
     <value>Giriş başarılı.</value>
   </data>
-  <data name="GirisYapilamadi" xml:space="preserve">
+  <data name="LoginFailed" xml:space="preserve">
     <value>Giriş yapılamadı.</value>
   </data>
-  <data name="GuncellemeYapilamadi" xml:space="preserve">
-    <value>Güncelleme yapılamadı.</value>
+  <data name="RecordNotUpdated" xml:space="preserve">
+    <value>Güncelleme işlemi yapılamadı.</value>
   </data>
-  <data name="GuncelSifreniziDogruGiriniz" xml:space="preserve">
-    <value>Güncel şifrenizi doğru giriniz.</value>
+  <data name="CurrentPasswordNotCorrectly" xml:space="preserve">
+    <value>Lütfen güncel şifrenizi doğru giriniz.</value>
   </data>
-  <data name="HaftaIci" xml:space="preserve">
+  <data name="Weekday" xml:space="preserve">
     <value>hafta içi</value>
   </data>
-  <data name="HaftaSonu" xml:space="preserve">
+  <data name="Weekend" xml:space="preserve">
     <value>hafta sonu</value>
   </data>
-  <data name="IdParametreHatasi" xml:space="preserve">
-    <value>Yapılan istekte geçerli bir id gönderilmedi.</value>
+  <data name="IdErrorMessage" xml:space="preserve">
+    <value>Geçerli bir id gönderilmediğinden dolayı istek işlenemedi.</value>
   </data>
-  <data name="Indirim" xml:space="preserve">
+  <data name="Sale" xml:space="preserve">
     <value>{0}% indirim</value>
   </data>
-  <data name="KayitBasarili" xml:space="preserve">
-    <value>Kayıt başarılı bir şekilde tamamlandı.</value>
+  <data name="RegistrationSuccess" xml:space="preserve">
+    <value>Kayıt işleminiz başarıyla tamamlandı.</value>
   </data>
-  <data name="KayitBulunamadi" xml:space="preserve">
+  <data name="RecordNotFound" xml:space="preserve">
     <value>Kayıt bulunamadı.</value>
   </data>
-  <data name="KayitSilindi" xml:space="preserve">
-    <value>Kayıt silindi.</value>
+  <data name="RecordDeleted" xml:space="preserve">
+    <value>Kayıt başarıyla silindi.</value>
   </data>
-  <data name="KayitSilinemedi" xml:space="preserve">
+  <data name="RecordNotDeleted" xml:space="preserve">
     <value>Kayıt silinemedi.</value>
   </data>
-  <data name="KayitYapilamadi" xml:space="preserve">
-    <value>Kayıt yapılamadı.</value>
+  <data name="RegistrationFailed" xml:space="preserve">
+    <value>Kayıt işlemi sırasında bir hata oluştu.</value>
   </data>
-  <data name="KayitZatenMevcut" xml:space="preserve">
+  <data name="RecordExists" xml:space="preserve">
     <value>{0} kaydı zaten mevcut.</value>
   </data>
-  <data name="KullaniciBulunamadi" xml:space="preserve">
-    <value>Kullanıcı bulunamadi.</value>
+  <data name="UserNotFound" xml:space="preserve">
+    <value>Kullanıcı bulunamadı.</value>
   </data>
-  <data name="OnayKoduDogrulanamadi" xml:space="preserve">
+  <data name="ConfirmationCodeNotVerified" xml:space="preserve">
     <value>Onay kodu doğrulanamadı.</value>
   </data>
-  <data name="OnayKoduDogrulandi" xml:space="preserve">
+  <data name="ConfirmationCodeVerified" xml:space="preserve">
     <value>Onay kodu doğrulandı.</value>
   </data>
-  <data name="OnayKoduGonderildi" xml:space="preserve">
+  <data name="ConfirmationCodeSend" xml:space="preserve">
     <value>Onay kodu gönderildi.</value>
   </data>
-  <data name="OnayKoduGonderilemedi" xml:space="preserve">
+  <data name="ConfirmationCodeNotSend" xml:space="preserve">
     <value>Onay kodu gönderilemedi.</value>
   </data>
-  <data name="OnayKoduZamanAsiminaUgradi" xml:space="preserve">
-    <value>Onay kodu zaman aşımına uğradı. Lütfen yeniden kod isteyin.</value>
+  <data name="ConfirmationCodeExpired" xml:space="preserve">
+    <value>Onay kodunun süresi doldu. Lütfen yeni bir kod isteyin.</value>
   </data>
-  <data name="OnayMesaji" xml:space="preserve">
-    <value>CareGarden' a hoşgeldin. Onay Kodu : {0}</value>
+  <data name="ConfirmationMessage" xml:space="preserve">
+    <value>CareGarden' a hoşgeldiniz! Onay Kodu : {0}</value>
   </data>
-  <data name="PopulerServisler" xml:space="preserve">
+  <data name="PopularServices" xml:space="preserve">
     <value>Popüler Servisler</value>
   </data>
-  <data name="RandevuIptalUyari" xml:space="preserve">
-    <value>Randevuya 9 saat kala randevuyu iptal etmek güvenilirliğinizi azaltır. İptal etmek istiyor musunuz?</value>
+  <data name="AppointmentCancelWarning" xml:space="preserve">
+    <value>Randevuya 9 saat kala randevuyu iptal etmek, güvenilirliğinizi azaltabilir. İptal etmek istiyor musunuz?</value>
   </data>
-  <data name="RenkKoduHatasi" xml:space="preserve">
+  <data name="ColorCodeErrorMessage" xml:space="preserve">
     <value>Renk kodu 3 veya 6 haneli olmalı.</value>
   </data>
-  <data name="ResimYuklemeBasarili" xml:space="preserve">
+  <data name="ImageUploaded" xml:space="preserve">
     <value>Resim başarılı bir şekilde yüklendi. </value>
   </data>
-  <data name="Sifre8KarakterOlmali" xml:space="preserve">
+  <data name="PasswordMustBeEightCharacters" xml:space="preserve">
     <value>Şifre en az 8 karakter olmalı.</value>
   </data>
-  <data name="SifrelerEsitOlmali" xml:space="preserve">
-    <value>Şifreler eşit olmalı.</value>
+  <data name="PasswordsMustBeEqual" xml:space="preserve">
+    <value>Girdiğiniz şifreler birbiriyle eşleşmiyor.</value>
   </data>
-  <data name="SifreYenileme" xml:space="preserve">
+  <data name="ResetPassword" xml:space="preserve">
     <value>Şifre Yenileme</value>
   </data>
-  <data name="SifreYenilemeBasarili" xml:space="preserve">
-    <value>Şifre yenileme işlemi başarılı.</value>
+  <data name="ResetPasswordSuccess" xml:space="preserve">
+    <value>Şifre yenileme işlemi başarıyla tamamlandı.</value>
   </data>
-  <data name="SifreYenilemedi" xml:space="preserve">
-    <value>Şifre yenilemedi.</value>
+  <data name="ResetPasswordFailed" xml:space="preserve">
+    <value>Şifre yenileme işlemi başarısız oldu.</value>
   </data>
-  <data name="SifreYenilemeMailMesaji" xml:space="preserve">
+  <data name="ResetPasswordMailMessage" xml:space="preserve">
     <value>Şifre yenileme işlemi için onay kodu {0}.</value>
   </data>
-  <data name="SifreYenilemeMesaji" xml:space="preserve">
-    <value>Şifrenizi unuttuysanız şifremi unuttum kısmından şifrenizi yenileyebilirsiniz.</value>
+  <data name="ResetPasswordMessage" xml:space="preserve">
+    <value>Eğer şifrenizi unuttuysanız, 'Şifremi Unuttum' seçeneğini kullanarak şifrenizi yenileyebilirsiniz</value>
   </data>
-  <data name="SirketBulunamadi" xml:space="preserve">
-    <value>Şirket bulunamadı.</value>
+  <data name="BusinessNotFound" xml:space="preserve">
+    <value>İşletme bulunamadı.</value>
   </data>
-  <data name="YetkinizYok" xml:space="preserve">
-    <value>Yetkiniz yok.</value>
+  <data name="NotPermission" xml:space="preserve">
+    <value>Bu işlemi gerçekleştirmek için yetkiniz yok. Lütfen gerekli izinler için sistem yöneticinizle iletişime geçiniz.</value>
   </data>
-  <data name="RandevuMevcut" xml:space="preserve">
-    <value>Seçili tarihte bir randevu alındığı için randevu yapılamadı. Lütfen tekrar randevu alınız.</value>
+  <data name="AppointmentAvailable" xml:space="preserve">
+    <value>Seçtiğiniz tarihte bir randevu alındığı için randevu yapılamadı. Lütfen başka bir tarih seçerek tekrar deneyiniz.</value>
   </data>
   <data name="Anonymous" xml:space="preserve">
     <value>Anonim</value>
@@ -279,7 +276,61 @@
   <data name="ConfirmationCodeForAppointment" xml:space="preserve">
     <value>Randevuyu tamamlamak için onay kodu {0}.</value>
   </data>
-  <data name="String1" xml:space="preserve">
-    <value />
+  <data name="BusinessNotVerified" xml:space="preserve">
+    <value>İşletme doğrulanamadı.</value>
+  </data>
+  <data name="BusinessVerified" xml:space="preserve">
+    <value>İşletme doğrulandı.</value>
+  </data>
+  <data name="AppointmentCancelled" xml:space="preserve">
+    <value>Randevu başarıyla iptal edildi.</value>
+  </data>
+  <data name="AppointmentNotCancelled" xml:space="preserve">
+    <value>Randevunun iptal edilmesi sırasında bir hata oluştu.</value>
+  </data>
+  <data name="AppointmentStatusChanged" xml:space="preserve">
+    <value>Randevunun durumu başarıyla güncellendi.</value>
+  </data>
+  <data name="AppointmentStatusNotChanged" xml:space="preserve">
+    <value>Randevunun durumu güncellenirken bir hata oluştu.</value>
+  </data>
+  <data name="ErrorContactMessage" xml:space="preserve">
+    <value>Lütfen daha sonra tekrar deneyiniz veya destek ekibimizle iletişime geçiniz.</value>
+  </data>
+  <data name="ErrorMessage" xml:space="preserve">
+    <value>Bir hata oluştu.</value>
+  </data>
+  <data name="ImageNotUploaded" xml:space="preserve">
+    <value>Resim yüklenirken bir hata oluştu.</value>
+  </data>
+  <data name="RecordUpdated" xml:space="preserve">
+    <value>Güncelleme işleminiz başarıyla tamamlandı.</value>
+  </data>
+  <data name="BusinessFoundEnteredMail" xml:space="preserve">
+    <value>Girdiğiniz e-posta adresine ait kayıtlı bir işletme bulunmaktadır.</value>
+  </data>
+  <data name="UserFoundEnteredMail" xml:space="preserve">
+    <value>Girdiğiniz e-posta adresine ait bir kullanucu bulunmaktadır.</value>
+  </data>
+  <data name="AllMessagesRead" xml:space="preserve">
+    <value>Tüm mesajlar okundu olarak işaretlendi.</value>
+  </data>
+  <data name="RecordsDeleted" xml:space="preserve">
+    <value>Kayıtlar başarıyla silindi.</value>
+  </data>
+  <data name="RecordsNotDeleted" xml:space="preserve">
+    <value>Kayıtlar silinemedi.</value>
+  </data>
+  <data name="LocationNotUpdated" xml:space="preserve">
+    <value>Konum bilginiz güncellenirken bir hata oluştu.</value>
+  </data>
+  <data name="LocationUpdated" xml:space="preserve">
+    <value>Konum bilginiz güncellendi.</value>
+  </data>
+  <data name="LoginFailedUserMessage" xml:space="preserve">
+    <value>Girdiğiniz e-posta adresi veya parola hatalı.</value>
+  </data>
+  <data name="WorkerPriceErrorMessage" xml:space="preserve">
+    <value>Çalışana özel fiyat, servis fiyatından yüksek olamaz.</value>
   </data>
 </root>

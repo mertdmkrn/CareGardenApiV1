@@ -43,19 +43,12 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("get")]
-        public async Task<IActionResult> Get([FromBody]NotificationSearchRequestModel notificationSearchModel)
+        public async Task<IActionResult> Get([FromBody] NotificationSearchRequestModel notificationSearchModel)
         {
             ResponseModel<NotificationSearchResponseModel> response = new ResponseModel<NotificationSearchResponseModel>();
 
             var id = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
             var userRole = HelperMethods.GetClaimInfo(Request, ClaimTypes.Role);
-
-            if (id.IsNullOrEmpty() && !notificationSearchModel.userId.HasValue && !notificationSearchModel.businessId.HasValue)
-            {
-                response.HasError = true;
-                response.Message = Resource.Resource.KullaniciBulunamadi;
-                return Ok(response);
-            }
 
             if (!notificationSearchModel.userId.HasValue && !notificationSearchModel.businessId.HasValue || (notificationSearchModel.userId == Guid.Empty && notificationSearchModel.businessId == Guid.Empty))
             {
@@ -71,8 +64,8 @@ namespace CareGardenApiV1.Controller
 
             var model = await _notificationService.SearchNotificationAsync(notificationSearchModel);
 
-            if (model.notifications.Exists(x => x.type == NotificationType.Business && x.redirectId.HasValue)) 
-            { 
+            if (model.notifications.Exists(x => x.type == NotificationType.Business && x.redirectId.HasValue))
+            {
                 var businesses = await _businessService.GetBusinessListForCache();
                 model.notifications = model.notifications
                     .Select(x =>
@@ -117,48 +110,48 @@ namespace CareGardenApiV1.Controller
             if (notification.title.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("title", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("title", Resource.Resource.NotEmpty));
             }
 
             if (notification.titleEn.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("titleEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("titleEn", Resource.Resource.NotEmpty));
             }
 
             if (notification.description.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("description", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("description", Resource.Resource.NotEmpty));
             }
 
             if (notification.descriptionEn.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("descriptionEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("descriptionEn", Resource.Resource.NotEmpty));
             }
 
             if (!notification.userId.HasValue && !notification.businessId.HasValue)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("userId", Resource.Resource.BuAlaniBosBirakmayiniz));
-                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("userId", Resource.Resource.NotEmpty));
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.NotEmpty));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.KayitYapilamadi;
+                response.Message = Resource.Resource.RegistrationFailed;
                 return Ok(response);
-            }      
+            }
 
             response.Data = await _notificationService.SaveNotificationAsync(notification);
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.RegistrationSuccess;
 
-            if(notification.userId.HasValue)
+            if (notification.userId.HasValue)
             {
                 await _userService.UpdateHasNotificationAsync(new List<Guid>() { notification.userId.Value }, true);
             }
-            else if(notification.businessId.HasValue)
+            else if (notification.businessId.HasValue)
             {
                 await _businessService.UpdateHasNotificationAsync(new List<Guid>() { notification.businessId.Value }, true);
             }
@@ -194,30 +187,30 @@ namespace CareGardenApiV1.Controller
             if (notification.title.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("title", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("title", Resource.Resource.NotEmpty));
             }
 
             if (notification.titleEn.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("titleEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("titleEn", Resource.Resource.NotEmpty));
             }
 
             if (notification.description.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("description", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("description", Resource.Resource.NotEmpty));
             }
 
             if (notification.descriptionEn.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("descriptionEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("descriptionEn", Resource.Resource.NotEmpty));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.KayitYapilamadi;
+                response.Message = Resource.Resource.RegistrationFailed;
                 return Ok(response);
             }
 
@@ -241,7 +234,7 @@ namespace CareGardenApiV1.Controller
 
             response.Data = await _notificationService.SaveNotificationsAsync(notifications);
             await _userService.UpdateHasNotificationAsync(userIds, true);
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.RegistrationSuccess;
 
             return Ok(response);
         }
@@ -273,30 +266,30 @@ namespace CareGardenApiV1.Controller
             if (notification.title.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("title", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("title", Resource.Resource.NotEmpty));
             }
 
             if (notification.titleEn.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("titleEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("titleEn", Resource.Resource.NotEmpty));
             }
 
             if (notification.description.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("description", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("description", Resource.Resource.NotEmpty));
             }
 
             if (notification.descriptionEn.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("descriptionEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("descriptionEn", Resource.Resource.NotEmpty));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.KayitYapilamadi;
+                response.Message = Resource.Resource.RegistrationFailed;
                 return Ok(response);
             }
 
@@ -320,7 +313,7 @@ namespace CareGardenApiV1.Controller
 
             response.Data = await _notificationService.SaveNotificationsAsync(notifications);
             await _businessService.UpdateHasNotificationAsync(businessIds, true);
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.RegistrationSuccess;
 
             return Ok(response);
         }
@@ -350,25 +343,15 @@ namespace CareGardenApiV1.Controller
 
             if (idListSearchModel.ids.IsNullOrEmpty())
             {
-                if(id.IsNullOrEmpty())
+                if (userRole.Equals("Business"))
                 {
-                    response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("ids", Resource.Resource.BuAlaniBosBirakmayiniz));
-                    response.Message = Resource.Resource.KayitYapilamadi;
-                    return Ok(response);
+                    response.Data = await _notificationService.UpdateNotificationsReadAsync(null, id.ToGuid());
+                    await _businessService.UpdateHasNotificationAsync(new List<Guid>() { id.ToGuid() }, false);
                 }
                 else
                 {
-                    if (userRole.Equals("Business"))
-                    {
-                        response.Data = await _notificationService.UpdateNotificationsReadAsync(null, id.ToGuid());
-                        await _businessService.UpdateHasNotificationAsync(new List<Guid>() { id.ToGuid() }, false);
-                    }
-                    else
-                    {
-                        response.Data = await _notificationService.UpdateNotificationsReadAsync(id.ToGuid(), null);
-                        await _userService.UpdateHasNotificationAsync(new List<Guid>() { id.ToGuid() }, false);
-                    }
+                    response.Data = await _notificationService.UpdateNotificationsReadAsync(id.ToGuid(), null);
+                    await _userService.UpdateHasNotificationAsync(new List<Guid>() { id.ToGuid() }, false);
                 }
             }
             else
@@ -376,7 +359,7 @@ namespace CareGardenApiV1.Controller
                 response.Data = await _notificationService.UpdateNotificationsReadAsync(idListSearchModel.ids);
             }
 
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.AllMessagesRead;
 
             return Ok(response);
         }
@@ -404,17 +387,17 @@ namespace CareGardenApiV1.Controller
             if (idListSearchModel.ids.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("ids", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("ids", Resource.Resource.NotEmpty));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.KayitSilinemedi;
+                response.Message = Resource.Resource.RecordsNotDeleted;
                 return Ok(response);
             }
 
             response.Data = await _notificationService.DeleteNotificationsAsync(idListSearchModel.ids);
-            response.Message = Resource.Resource.KayitSilindi;
+            response.Message = Resource.Resource.RecordsDeleted;
 
             return Ok(response);
         }

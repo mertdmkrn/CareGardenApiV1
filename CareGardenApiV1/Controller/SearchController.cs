@@ -52,8 +52,8 @@ namespace CareGardenApiV1.Controller
             if (keywordSearchModel.keyWord.IsNullOrEmpty() || keywordSearchModel.keyWord.Length < 3)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("keyword", Resource.Resource.BuAlaniBosBirakmayiniz));
-                response.Message = Resource.Resource.BuAlaniBosBirakmayiniz;
+                response.ValidationErrors.Add(new ValidationError("keyword", Resource.Resource.NotEmpty));
+                response.Message = Resource.Resource.ErrorMessage;
             }
 
             if (response.HasError)
@@ -202,8 +202,8 @@ namespace CareGardenApiV1.Controller
             if (searchModel.keyWord.IsNullOrEmpty() || searchModel.keyWord.Length < 3)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("keyword", Resource.Resource.BuAlaniBosBirakmayiniz));
-                response.Message = Resource.Resource.BuAlaniBosBirakmayiniz;
+                response.ValidationErrors.Add(new ValidationError("keyword", Resource.Resource.NotEmpty));
+                response.Message = Resource.Resource.ErrorMessage;
             }
 
             if (response.HasError)

@@ -12,18 +12,6 @@ namespace CareGardenApiV1.Controller
     [ApiController]
     public class DefinitionController : ControllerBase
     {
-        private readonly CareGardenApiDbContext _context;
-        private readonly IBusinessPropertiesService _businessPropertiesService;
-        private readonly IBusinessService _businessService;
-
-
-        public DefinitionController(CareGardenApiDbContext context, IBusinessService businessService, IBusinessPropertiesService businessPropertiesService)
-        {
-            _context = context;
-            _businessService = businessService;
-            _businessPropertiesService = businessPropertiesService;
-        }
-
         /// <summary>
         /// Get Cities
         /// </summary>
@@ -36,31 +24,6 @@ namespace CareGardenApiV1.Controller
             response.Data = Constants.Cities;
 
             return Ok(response);
-        }
-
-        /// <summary>
-        /// Get Cities
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        [Route("definition/setlocation")]
-        public async Task<IActionResult> SetLocation()
-        {
-            var businesses = await _context.Businesses.Where(x => x.location == null).ToListAsync();
-
-            foreach (var business in businesses)
-            {
-                if (business.latitude > 0 && business.longitude > 0)
-                {
-                    var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
-                    business.location = gf.CreatePoint(new NetTopologySuite.Geometries.Coordinate(business.latitude, business.longitude));
-                }
-            }
-
-            _context.Businesses.UpdateRange(businesses);
-            await _context.SaveChangesAsync();
-
-            return Ok();
         }
 
         /// <summary>

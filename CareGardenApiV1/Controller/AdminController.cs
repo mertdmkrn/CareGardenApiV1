@@ -35,8 +35,7 @@ namespace CareGardenApiV1.Controller
             IFaqService faqService,
             IFileHandler fileHandler,
             IMemoryCache memoryCache,
-            IMailHandler mailHandler,
-            IElasticHandler elasticHandler)
+            IMailHandler mailHandler)
         {
             _businessService = businessService;
             _userService = userService;
@@ -68,12 +67,12 @@ namespace CareGardenApiV1.Controller
             if (updateBusiness.id == null)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.NotEmpty));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.OnayKoduGonderilemedi;
+                response.Message = Resource.Resource.BusinessNotVerified;
                 response.HasError = true;
                 return Ok(response);
             }
@@ -82,7 +81,7 @@ namespace CareGardenApiV1.Controller
 
             if (business == null)
             {
-                response.Message = Resource.Resource.SirketBulunamadi;
+                response.Message = $"{Resource.Resource.BusinessNotFound} {Resource.Resource.BusinessNotVerified}";
                 response.HasError = true;
                 return Ok(response);
             }
@@ -91,7 +90,7 @@ namespace CareGardenApiV1.Controller
             business.verified = updateBusiness.verified;
 
             await _businessService.UpdateBusinessAsync(business);
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.BusinessVerified;
             response.Data = true;
 
             return Ok(response);
@@ -146,48 +145,48 @@ namespace CareGardenApiV1.Controller
             if (user.email.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.NotEmpty));
             }
 
             if (!user.email.IsNullOrEmpty() && !user.email.IsValidEmail())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.GecerliMailMesaji));
+                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.ValidEmailMessage));
             }
 
             if (!user.telephone.IsValidTelephoneNumber())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("telephoneNumber", Resource.Resource.GecerliTelefonMesaji));
+                response.ValidationErrors.Add(new ValidationError("telephoneNumber", Resource.Resource.ValidTelephoneMessage));
             }
 
             if (user.password.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.NotEmpty));
             }
 
             if (user.password.IsNotNullOrEmpty() && !user.password.Length.Between(8, 20))
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.Sifre8KarakterOlmali));
+                response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.PasswordMustBeEightCharacters));
             }
 
             if (user.fullName.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("fullName", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("fullName", Resource.Resource.NotEmpty));
             }
 
             if (!user.fullName.IsNullOrEmpty() && !user.fullName.IsValidFullName())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("fullName", Resource.Resource.GecerliBirIsimGiriniz));
+                response.ValidationErrors.Add(new ValidationError("fullName", Resource.Resource.ValidNameMessage));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.KayitYapilamadi;
+                response.Message = Resource.Resource.RegistrationFailed;
                 return Ok(response);
             }
 
@@ -196,7 +195,7 @@ namespace CareGardenApiV1.Controller
             if (systemUser != null)
             {
                 response.HasError = true;
-                response.Message += Resource.Resource.GirdiginizMaileAitKullaniciKayitli;
+                response.Message = Resource.Resource.RegisteredUserEnteredMail;
                 return Ok(response);
             }
 
@@ -214,7 +213,7 @@ namespace CareGardenApiV1.Controller
             user.role = "Admin";
 
             user = await _userService.SaveUserAsync(user);
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.RegistrationSuccess;
 
             await _mailHandler.SendEmailAsync(
                 new MailRequest()
@@ -243,13 +242,13 @@ namespace CareGardenApiV1.Controller
             { 
                 response.HasError = true;
                 response.Data = false;
-                response.Message = Resource.Resource.YetkinizYok;
+                response.Message = Resource.Resource.NotPermission;
             }
 
             User user = new User{ id = userId };
 
             response.Data = await _userService.DeleteUserAsync(user);
-            response.Message = Resource.Resource.KayitSilindi;
+            response.Message = Resource.Resource.RecordDeleted;
 
             return Ok(response);
         }
@@ -266,13 +265,13 @@ namespace CareGardenApiV1.Controller
             if (file == null)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("file", Resource.Resource.BuAlaniBosBirakmayiniz));
-                response.Message = Resource.Resource.BuAlaniBosBirakmayiniz;
+                response.ValidationErrors.Add(new ValidationError("file", Resource.Resource.NotEmpty));
+                response.Message = Resource.Resource.ImageNotUploaded;
                 return Ok(response);
             }
 
             response.Data = await _fileHandler.UploadFreeImageServer(file);
-            response.Message = Resource.Resource.ResimYuklemeBasarili;
+            response.Message = Resource.Resource.ImageUploaded;
 
             return Ok(response);
         }
@@ -302,45 +301,45 @@ namespace CareGardenApiV1.Controller
             if (faq.question.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("question", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("question", Resource.Resource.NotEmpty));
             }
 
             if (faq.questionEn.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("questionEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("questionEn", Resource.Resource.NotEmpty));
             }
 
             if (faq.answer.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("answer", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("answer", Resource.Resource.NotEmpty));
             }
 
             if (faq.answerEn.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("answerEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("answerEn", Resource.Resource.NotEmpty));
             }
 
             if (faq.category.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("category", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("category", Resource.Resource.NotEmpty));
             }
 
             var index = Constants.FaqCategories.IndexOf(faq.category);
 
             if (response.HasError && index < 0)
             {
-                response.Message = Resource.Resource.KayitYapilamadi;
+                response.Message = Resource.Resource.RegistrationFailed;
                 return Ok(response);
             }
 
             faq.categoryEn = Constants.FaqEnCategories[index];
 
             response.Data = await _faqService.SaveFaqAsync(faq);
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.RegistrationSuccess;
             _memoryCache.Remove("faqs");
 
             return Ok(response);
@@ -372,38 +371,38 @@ namespace CareGardenApiV1.Controller
             if (updateFaq.question.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("question", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("question", Resource.Resource.NotEmpty));
             }
 
             if (updateFaq.questionEn.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("questionEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("questionEn", Resource.Resource.NotEmpty));
             }
 
             if (updateFaq.answer.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("answer", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("answer", Resource.Resource.NotEmpty));
             }
 
             if (updateFaq.answerEn.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("answerEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("answerEn", Resource.Resource.NotEmpty));
             }
 
             if (updateFaq.category.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("category", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("category", Resource.Resource.NotEmpty));
             }
 
             var index = Constants.FaqCategories.IndexOf(updateFaq.category);
 
             if (response.HasError && index < 0)
             {
-                response.Message = Resource.Resource.GuncellemeYapilamadi;
+                response.Message = Resource.Resource.RecordNotUpdated;
                 return Ok(response);
             }
 
@@ -419,7 +418,7 @@ namespace CareGardenApiV1.Controller
             _memoryCache.Remove("faqs");
 
             response.Data = await _faqService.UpdateFaqAsync(faq);
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.RecordUpdated;
 
             return Ok(response);
         }
@@ -436,23 +435,23 @@ namespace CareGardenApiV1.Controller
             if (id.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.NotEmpty));
             }
 
             if (!id.IsGuid())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdErrorMessage));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.KayitSilinemedi;
+                response.Message = Resource.Resource.RecordNotDeleted;
                 return Ok(response);
             }
 
             response.Data = await _faqService.DeleteFaqAsync(id.ToGuid());
-            response.Message = Resource.Resource.KayitSilindi;
+            response.Message = Resource.Resource.RecordDeleted;
             _memoryCache.Remove("faqs");
 
             return Ok(response);
@@ -470,18 +469,18 @@ namespace CareGardenApiV1.Controller
             if (id.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.NotEmpty));
             }
 
             if (!id.IsGuid())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdErrorMessage));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.KayitBulunamadi;
+                response.Message = Resource.Resource.RecordNotFound;
                 return Ok(response);
             }
 

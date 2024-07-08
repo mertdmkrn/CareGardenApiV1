@@ -41,8 +41,8 @@ namespace CareGardenApiV1.Controller
             if (id.IsNullOrEmpty() || !id.IsGuid())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.KayitBulunamadi;
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdErrorMessage));
+                response.Message = Resource.Resource.IdErrorMessage;
                 return Ok(response);
             }
 
@@ -71,8 +71,8 @@ namespace CareGardenApiV1.Controller
             if (!workerServicePrice.businessServiceId.HasValue && !workerServicePrice.workerId.HasValue)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.KayitBulunamadi;
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdErrorMessage));
+                response.Message = Resource.Resource.RecordNotFound;
                 return Ok(response);
             }
 
@@ -102,18 +102,18 @@ namespace CareGardenApiV1.Controller
             if (!workerServicePrice.businessServiceId.HasValue)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("businessServiceId", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("businessServiceId", Resource.Resource.NotEmpty));
             }
 
             if (!workerServicePrice.workerId.HasValue)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("workerId", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("workerId", Resource.Resource.NotEmpty));
             }
             
             if (response.HasError)
             {
-                response.Message = Resource.Resource.KayitYapilamadi;
+                response.Message = Resource.Resource.RegistrationFailed;
                 return Ok(response);
             }
             
@@ -122,12 +122,12 @@ namespace CareGardenApiV1.Controller
             if (businessService == null || businessService.price > workerServicePrice.price)
             {
                 response.HasError = true;
-                response.Message = Resource.Resource.KayitYapilamadi; // Hata mesajı eklenecek.
+                response.Message = Resource.Resource.WorkerPriceErrorMessage;
                 return Ok(response);
             }
 
             response.Data = await _workerServicePriceService.SaveWorkerServicePriceAsync(workerServicePrice);
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.RegistrationSuccess;
             return Ok(response);
         }
 
@@ -150,7 +150,7 @@ namespace CareGardenApiV1.Controller
             ResponseModel<bool> response = new ResponseModel<bool>();
            
             response.Data = await _workerServicePriceService.UpdateWorkerServicePriceAsync(workerServicePrice);
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.RecordUpdated;
             return Ok(response);
         }
 
@@ -174,13 +174,13 @@ namespace CareGardenApiV1.Controller
             if (id.IsNullOrEmpty() || !id.IsGuid())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.KayitBulunamadi;
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdErrorMessage));
+                response.Message = Resource.Resource.IdErrorMessage;
                 return Ok(response);
             }
 
             response.Data = await _workerServicePriceService.DeleteWorkerServicePriceAsync(id.ToGuid());
-            response.Message = Resource.Resource.KayitSilindi;
+            response.Message = Resource.Resource.RecordDeleted;
 
             return Ok(response);
         }

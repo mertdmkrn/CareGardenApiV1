@@ -104,6 +104,18 @@ namespace CareGardenApiV1.Repository.Concrete
                 .FirstOrDefaultAsync(x => x.telephone == telephone);
         }
 
+        public async Task<bool> GetBusinessExistsByTelephoneNumberAsync(string telephone)
+        {
+            return await _context.Businesses
+                .AnyAsync(x => x.telephone.Equals(telephone));
+        }
+
+        public async Task<bool> GetBusinessExistsByEmailAsync(string email)
+        {
+            return await _context.Businesses
+                .AnyAsync(x => x.email.Equals(email));
+        }
+
         public async Task<IList<BusinessListResponseModel>> GetBusinessByUserFavorites(BusinessSearchRequestModel businessSearchModel)
         {
             Point? userLocation = null;
@@ -389,7 +401,7 @@ namespace CareGardenApiV1.Repository.Concrete
         public async Task<Business> SaveBusinessAsync(Business business)
         {
             business.password = business.password.HashString();
-            business.createDate = DateTime.UtcNow;
+            business.createDate = DateTime.Now;
             business.updateDate = business.createDate;
 
             await _context.Businesses.AddAsync(business);
@@ -397,11 +409,11 @@ namespace CareGardenApiV1.Repository.Concrete
             return business;
         }
 
-        public async Task<Business> UpdateBusinessAsync(Business business)
+        public async Task<Business> UpdateBusinessAsync(Business business, bool isPasswordChanged = false)
         {
-            business.updateDate = DateTime.UtcNow;
+            business.updateDate = DateTime.Now;
 
-            if (business.password.IsNotNullOrEmpty() && business.password.Length <= 8)
+            if (isPasswordChanged)
             {
                 business.password = business.password.HashString();
             }

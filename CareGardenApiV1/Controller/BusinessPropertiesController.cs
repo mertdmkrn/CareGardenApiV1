@@ -33,8 +33,8 @@ namespace CareGardenApiV1.Controller
             if (!id.IsGuid())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                response.Message += Resource.Resource.IdParametreHatasi;
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdErrorMessage));
+                response.Message = Resource.Resource.IdErrorMessage;
             }
 
             if (response.HasError)
@@ -56,8 +56,8 @@ namespace CareGardenApiV1.Controller
             if (!businessId.IsGuid())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
-                response.Message += Resource.Resource.IdParametreHatasi;
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdErrorMessage));
+                response.Message = Resource.Resource.IdErrorMessage;
             }
 
             if (response.HasError)
@@ -80,8 +80,8 @@ namespace CareGardenApiV1.Controller
             if (!businessId.IsGuid())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
-                response.Message += Resource.Resource.IdParametreHatasi;
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdErrorMessage));
+                response.Message = Resource.Resource.IdErrorMessage;
             }
 
             if (response.HasError)
@@ -113,24 +113,24 @@ namespace CareGardenApiV1.Controller
             if (businessProperties.key.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("key", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("key", Resource.Resource.NotEmpty));
             }
 
             if (businessProperties.value.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("value", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("value", Resource.Resource.NotEmpty));
             }
 
             if (!businessProperties.businessId.HasValue)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.NotEmpty));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.KayitYapilamadi;
+                response.Message = Resource.Resource.RegistrationFailed;
                 return Ok(response);
             }
 
@@ -139,12 +139,12 @@ namespace CareGardenApiV1.Controller
             if (data != null)
             {
                 response.HasError = true;
-                response.Message = string.Format(Resource.Resource.KayitZatenMevcut, businessProperties.key);
+                response.Message = string.Format(Resource.Resource.RecordExists, businessProperties.key);
                 return Ok(response);
             }
 
             response.Data = await _businessPropertiesService.SaveBusinessPropertiesAsync(businessProperties);
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.RegistrationSuccess;
 
             return Ok(response);
         }
@@ -172,18 +172,18 @@ namespace CareGardenApiV1.Controller
             if (updateBusinessProperties.key.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("key", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("key", Resource.Resource.NotEmpty));
             }
 
             if (updateBusinessProperties.value.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("value", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("value", Resource.Resource.NotEmpty));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.GuncellemeYapilamadi;
+                response.Message = Resource.Resource.RecordNotUpdated;
                 return Ok(response);
             }
 
@@ -191,7 +191,7 @@ namespace CareGardenApiV1.Controller
 
             if (businessProperties == null)
             {
-                response.Message = updateBusinessProperties.id + " " + Resource.Resource.KayitBulunamadi;
+                response.Message = $"{updateBusinessProperties.id} {Resource.Resource.RecordNotFound}";
                 return Ok(response);
             }
 
@@ -202,7 +202,7 @@ namespace CareGardenApiV1.Controller
                 if (data != null)
                 {
                     response.HasError = true;
-                    response.Message = string.Format(Resource.Resource.KayitZatenMevcut, businessProperties.key);
+                    response.Message = string.Format(Resource.Resource.RecordExists, businessProperties.key);
                     return Ok(response);
                 }
             }
@@ -211,7 +211,7 @@ namespace CareGardenApiV1.Controller
             businessProperties.value = updateBusinessProperties.value;
 
             response.Data = await _businessPropertiesService.UpdateBusinessPropertiesAsync(businessProperties);
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.RegistrationSuccess;
 
             return Ok(response);
         }
@@ -226,7 +226,7 @@ namespace CareGardenApiV1.Controller
             ResponseModel<bool> response = new ResponseModel<bool>();
 
             response.Data = await _businessPropertiesService.DeleteBusinessPropertiesAsync(businessProperties);
-            response.Message = Resource.Resource.KayitSilindi;
+            response.Message = Resource.Resource.RecordDeleted;
             return Ok(response);
         }
     }

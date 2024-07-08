@@ -67,8 +67,8 @@ namespace CareGardenApiV1.Controller
             if (id.IsNullOrEmpty() || !id.IsGuid())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.KayitBulunamadi;
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdErrorMessage));
+                response.Message = Resource.Resource.ErrorMessage;
                 return Ok(response);
             }
 
@@ -102,8 +102,8 @@ namespace CareGardenApiV1.Controller
             {
                 ResponseModel<string> response = new ResponseModel<string>();
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.KayitBulunamadi;
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdErrorMessage));
+                response.Message = Resource.Resource.ErrorMessage;
                 return Ok(response);
             }
 
@@ -125,7 +125,7 @@ namespace CareGardenApiV1.Controller
             {
                 ResponseModel<string> response = new ResponseModel<string>();
                 response.HasError = true;
-                response.Message = Resource.Resource.KayitBulunamadi;
+                response.Message = Resource.Resource.RecordNotFound;
                 return Ok(response);
             }
 
@@ -210,29 +210,29 @@ namespace CareGardenApiV1.Controller
             if (setting.name.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("name", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("name", Resource.Resource.NotEmpty));
             }
 
             if (setting.description.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("description", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("description", Resource.Resource.NotEmpty));
             }
 
             if (setting.value.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("valuw", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("valuw", Resource.Resource.NotEmpty));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.KayitYapilamadi;
+                response.Message = Resource.Resource.RegistrationFailed;
                 return Ok(response);
             }
 
             response.Data = await _settingService.SaveSettingAsync(setting);
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.RegistrationSuccess;
             _memoryCache.Remove(cacheKey);
 
             return Ok(response);
@@ -260,12 +260,12 @@ namespace CareGardenApiV1.Controller
             if (updateSetting.value.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("value", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("value", Resource.Resource.NotEmpty));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.KayitYapilamadi;
+                response.Message = Resource.Resource.RegistrationFailed;
                 return Ok(response);
             }
 
@@ -284,14 +284,14 @@ namespace CareGardenApiV1.Controller
 
             if (setting == null)
             {
-                response.Message = Resource.Resource.KayitBulunamadi;
+                response.Message = Resource.Resource.RecordNotFound;
                 return Ok(response);
             }
 
             setting.value = updateSetting.value;   
 
             response.Data = await _settingService.UpdateSettingAsync(setting);
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.RegistrationSuccess;
             _memoryCache.Remove(cacheKey);
 
             return Ok(response);
@@ -316,13 +316,13 @@ namespace CareGardenApiV1.Controller
             if (id.IsNullOrEmpty() || !id.IsGuid())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.KayitBulunamadi;
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdErrorMessage));
+                response.Message = Resource.Resource.RecordNotFound;
                 return Ok(response);
             }
 
             response.Data = await _settingService.DeleteSettingAsync(id.ToGuid());
-            response.Message = Resource.Resource.KayitSilindi;
+            response.Message = Resource.Resource.RecordDeleted;
             _memoryCache.Remove(cacheKey);
 
             return Ok(response);

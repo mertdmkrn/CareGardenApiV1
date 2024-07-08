@@ -117,8 +117,8 @@ namespace CareGardenApiV1.Controller
             if (!businessId.IsGuid())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.IdParametreHatasi;
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdErrorMessage));
+                response.Message = Resource.Resource.IdErrorMessage;
             }
 
             if (response.HasError)
@@ -129,7 +129,7 @@ namespace CareGardenApiV1.Controller
             if (response.Data == null)
             {
                 response.HasError = true;
-                response.Message = $"{businessId} id {Resource.Resource.KayitBulunamadi}";
+                response.Message = $"{businessId} id {Resource.Resource.RecordNotFound}";
                 return Ok(response);
             }
 
@@ -148,8 +148,8 @@ namespace CareGardenApiV1.Controller
             if (!id.IsGuid())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.IdParametreHatasi;
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdErrorMessage));
+                response.Message = Resource.Resource.IdErrorMessage;
             }
 
             if (response.HasError)
@@ -160,7 +160,7 @@ namespace CareGardenApiV1.Controller
             if (response.Data == null)
             {
                 response.HasError = true;
-                response.Message = $"{id} id {Resource.Resource.KayitBulunamadi}";
+                response.Message = $"{id} id {Resource.Resource.RecordNotFound}";
                 return Ok(response);
             }
 
@@ -200,41 +200,43 @@ namespace CareGardenApiV1.Controller
             if (campaign.path.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("path", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("path", Resource.Resource.NotEmpty));
             }
 
             if (campaign.title.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("title", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("title", Resource.Resource.NotEmpty));
             }
 
             if (campaign.titleEn.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("titleEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("titleEn", Resource.Resource.NotEmpty));
             }
 
             if (campaign.condition.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("condition", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("condition", Resource.Resource.NotEmpty));
             }
 
             if (campaign.conditionEn.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("conditionEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("conditionEn", Resource.Resource.NotEmpty));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.KayitYapilamadi;
+                response.Message = Resource.Resource.RegistrationFailed;
                 return Ok(response);
             }
 
             campaign = await _campaignService.SaveCampaignAsync(campaign);
             response.Data = campaign;
+            response.Message = Resource.Resource.RegistrationSuccess;
+
             _memoryCache.Remove(cacheKey);
 
             return Ok(response);
@@ -274,36 +276,36 @@ namespace CareGardenApiV1.Controller
             if (updateCampaign.path.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("path", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("path", Resource.Resource.NotEmpty));
             }
 
             if (updateCampaign.title.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("title", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("title", Resource.Resource.NotEmpty));
             }
 
             if (updateCampaign.titleEn.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("titleEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("titleEn", Resource.Resource.NotEmpty));
             }
 
             if (updateCampaign.condition.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("condition", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("condition", Resource.Resource.NotEmpty));
             }
 
             if (updateCampaign.conditionEn.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("conditionEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("conditionEn", Resource.Resource.NotEmpty));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.GuncellemeYapilamadi;
+                response.Message = Resource.Resource.RecordNotUpdated;
                 return Ok(response);
             }
 
@@ -312,7 +314,7 @@ namespace CareGardenApiV1.Controller
             if (campaign == null)
             {
                 response.HasError = true;
-                response.Message += $"{updateCampaign.id} id {Resource.Resource.KayitBulunamadi}";
+                response.Message = $"{updateCampaign.id} id {Resource.Resource.RecordNotFound}";
                 return Ok(response);
             }
 
@@ -332,6 +334,8 @@ namespace CareGardenApiV1.Controller
 
             campaign = await _campaignService.UpdateCampaignAsync(campaign);
             response.Data = campaign;
+            response.Message = Resource.Resource.RecordUpdated;
+
             _memoryCache.Remove(cacheKey);
 
             return Ok(response);
@@ -350,12 +354,12 @@ namespace CareGardenApiV1.Controller
             if (!id.IsGuid())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdErrorMessage));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.KayitSilinemedi;
+                response.Message = Resource.Resource.RecordNotDeleted;
                 return Ok(response);
             }
 
@@ -364,12 +368,13 @@ namespace CareGardenApiV1.Controller
             if (campaign == null)
             {
                 response.HasError = true;
-                response.Message += $"{id} id {Resource.Resource.KayitBulunamadi}";
+                response.Message = $"{id} id {Resource.Resource.RecordNotFound}";
                 return Ok(response);
             }
 
             response.Data = await _campaignService.DeleteCampaignAsync(campaign);
             _memoryCache.Remove(cacheKey);
+            response.Message = Resource.Resource.RecordDeleted;
 
             return Ok(response);
         }

@@ -10,6 +10,8 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<User> GetAdminByEmailAndPasswordAsync(string email, string password);
         Task<User> GetUserByEmailAsync(string email);
         Task<User> GetUserByTelephoneNumberAsync(string telephoneNumber);
+        Task<bool> GetUserExistsByEmailAsync(string email);
+        Task<bool> GetUserExistsByTelephoneNumberAsync(string telephoneNumber);
         Task<List<UserAdminResponseModel>> GetUsersAsync(UserSearchAdminRequestModel userSearchAdminModel);
         Task<User> SaveUserAsync(User user);
         Task<User> UpdateUserAsync(User user, bool isPasswordChanged = false);

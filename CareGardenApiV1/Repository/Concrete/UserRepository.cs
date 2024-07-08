@@ -111,6 +111,18 @@ namespace CareGardenApiV1.Repository.Concrete
                 .FirstOrDefaultAsync(x => x.telephone.Equals(telephoneNumber));
         }
 
+        public async Task<bool> GetUserExistsByEmailAsync(string email)
+        {
+            return await _context.Users
+                .AnyAsync(x => x.email.Equals(email));
+        }
+
+        public async Task<bool> GetUserExistsByTelephoneNumberAsync(string telephoneNumber)
+        {
+            return await _context.Users
+                .AnyAsync(x => x.telephone.Equals(telephoneNumber));
+        }
+
         public async Task<List<string>> GetAdminEmailListAsync()
         {
             return await _context.Users

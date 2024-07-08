@@ -50,13 +50,6 @@ namespace CareGardenApiV1.Controller
             var id = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
             var userRole = HelperMethods.GetClaimInfo(Request, ClaimTypes.Role);
 
-            if (id.IsNullOrEmpty() || userRole.IsNullOrEmpty())
-            {
-                response.HasError = true;
-                response.Message = Resource.Resource.KullaniciBulunamadi;
-                return Ok(response);
-            }
-
             if(userRole.Equals("Business"))
             {
                 commentSearchModel.businessId = id.ToGuid();
@@ -198,30 +191,23 @@ namespace CareGardenApiV1.Controller
 
             var id = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
             var userRole = HelperMethods.GetClaimInfo(Request, ClaimTypes.Role);
-
-            if (id.IsNullOrEmpty() || userRole.IsNullOrEmpty())
-            {
-                response.HasError = true;
-                response.Message = Resource.Resource.KullaniciBulunamadi;
-                return Ok(response);
-            }
             
             if (userRole.Equals("Business") && !comment.replyId.HasValue)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("replyId", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("replyId", Resource.Resource.NotEmpty));
             }
 
             if (!userRole.Equals("Business") && !comment.businessId.HasValue)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.NotEmpty));
             }
 
             if (!userRole.Equals("Business") && comment.appointmentId.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("appointmentId", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("appointmentId", Resource.Resource.NotEmpty));
 
             }
             
@@ -232,7 +218,7 @@ namespace CareGardenApiV1.Controller
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.KayitYapilamadi;
+                response.Message = Resource.Resource.RegistrationFailed;
                 return Ok(response);
             }
 
@@ -255,7 +241,7 @@ namespace CareGardenApiV1.Controller
             }
 
             response.Data = true;
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.RegistrationSuccess;
 
             if (comment.businessId.HasValue)
             {
@@ -292,16 +278,9 @@ namespace CareGardenApiV1.Controller
             var id = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
             var userRole = HelperMethods.GetClaimInfo(Request, ClaimTypes.Role);
 
-            if (id.IsNullOrEmpty() || userRole.IsNullOrEmpty())
-            {
-                response.HasError = true;
-                response.Message = Resource.Resource.KullaniciBulunamadi;
-                return Ok(response);
-            }
-
             if (response.HasError)
             {
-                response.Message = Resource.Resource.KayitYapilamadi;
+                response.Message = Resource.Resource.RecordNotUpdated;
                 return Ok(response);
             }
             
@@ -323,7 +302,7 @@ namespace CareGardenApiV1.Controller
             }
 
             response.Data = true;
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.RecordUpdated;
 
             return Ok(response);
         }
@@ -353,7 +332,7 @@ namespace CareGardenApiV1.Controller
             await _commentService.DeleteCommentByIdAsync(id);
 
             response.Data = true;
-            response.Message = Resource.Resource.KayitSilindi;
+            response.Message = Resource.Resource.RecordDeleted;
 
             return Ok(response);
         }

@@ -21,7 +21,6 @@ namespace CareGardenApiV1.Controller
             _favoriteService = favoriteService;
         }
 
-
         /// <summary>
         /// Get Favorite Businesses By Session User
         /// </summary>
@@ -66,7 +65,7 @@ namespace CareGardenApiV1.Controller
             await _favoriteService.SaveFavoriteAsync(favorite);
 
             response.Data = true;
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.RegistrationSuccess;
 
             return Ok(response);
         }
@@ -95,7 +94,7 @@ namespace CareGardenApiV1.Controller
             await _favoriteService.DeleteFavoriteByBusinessIdAndUserIdAsync(userId.ToGuid(), businessId);
 
             response.Data = true;
-            response.Message = Resource.Resource.KayitSilindi;
+            response.Message = Resource.Resource.RecordDeleted;
 
             return Ok(response);
         }

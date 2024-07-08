@@ -54,8 +54,8 @@ namespace CareGardenApiV1.Controller
             if (!id.IsGuid())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
-                response.Message += Resource.Resource.IdParametreHatasi;
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdErrorMessage));
+                response.Message = Resource.Resource.IdErrorMessage;
             }
 
             if (response.HasError)
@@ -66,7 +66,7 @@ namespace CareGardenApiV1.Controller
             if (response.Data == null)
             {
                 response.HasError = true;
-                response.Message += $"{id} id {Resource.Resource.KullaniciBulunamadi}";
+                response.Message = $"{id} id {Resource.Resource.UserNotFound}";
                 return Ok(response);
             }
 
@@ -87,7 +87,7 @@ namespace CareGardenApiV1.Controller
             if (user == null)
             {
                 response.HasError = true;
-                response.Message = Resource.Resource.KullaniciBulunamadi;
+                response.Message = Resource.Resource.UserNotFound;
                 return Ok(response);
             }
 
@@ -109,18 +109,18 @@ namespace CareGardenApiV1.Controller
             if (email.Subject.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("subject", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("subject", Resource.Resource.NotEmpty));
             }
 
             if (email.Body.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("body", Resource.Resource.GecerliMailMesaji));
+                response.ValidationErrors.Add(new ValidationError("body", Resource.Resource.ValidEmailMessage));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.GeriBildirimGonderilemedi;
+                response.Message = Resource.Resource.FeedbackNotSend;
                 return Ok(response);
             }
 
@@ -134,7 +134,7 @@ namespace CareGardenApiV1.Controller
 
             await _mailHandler.SendEmailAsync(email);
 
-            response.Message = Resource.Resource.GeriBildirimGonderildi;
+            response.Message = Resource.Resource.FeedbackSend;
             response.Data = true;
 
             return Ok(response);
@@ -153,8 +153,8 @@ namespace CareGardenApiV1.Controller
             if (file == null)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("file", Resource.Resource.BuAlaniBosBirakmayiniz));
-                response.Message = Resource.Resource.BuAlaniBosBirakmayiniz;
+                response.ValidationErrors.Add(new ValidationError("file", Resource.Resource.NotEmpty));
+                response.Message = Resource.Resource.ErrorMessage;
                 return Ok(response);
             }
 
@@ -163,7 +163,7 @@ namespace CareGardenApiV1.Controller
             if (user == null)
             {
                 response.HasError = true;
-                response.Message = Resource.Resource.KullaniciBulunamadi;
+                response.Message = Resource.Resource.UserNotFound;
                 return Ok(response);
             }
 
@@ -176,7 +176,7 @@ namespace CareGardenApiV1.Controller
 
             await _userService.UpdateUserAsync(user);
 
-            response.Message = Resource.Resource.ResimYuklemeBasarili;
+            response.Message = Resource.Resource.ImageUploaded;
             response.Data = user.imageUrl;
 
             return Ok(response);
@@ -195,12 +195,12 @@ namespace CareGardenApiV1.Controller
             if (!id.IsGuid())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdParametreHatasi));
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdErrorMessage));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.KayitSilinemedi;
+                response.Message = Resource.Resource.RecordNotDeleted;
                 return Ok(response);
             }
 
@@ -209,7 +209,7 @@ namespace CareGardenApiV1.Controller
             if (user == null)
             {
                 response.HasError = true;
-                response.Message = $"{id} id {Resource.Resource.KullaniciBulunamadi}";
+                response.Message = $"{id} id {Resource.Resource.UserNotFound}";
                 return Ok(response);
             }
 
@@ -324,42 +324,42 @@ namespace CareGardenApiV1.Controller
             if (updateUser.fullName.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("firstname", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("firstname", Resource.Resource.NotEmpty));
             }
 
             if (updateUser.city.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("city", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("city", Resource.Resource.NotEmpty));
             }
 
             if (!updateUser.birthDate.HasValue)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("birthDate", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("birthDate", Resource.Resource.NotEmpty));
             }
 
             if (!updateUser.fullName.IsValidFullName())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("fullName", Resource.Resource.GecerliBirIsimGiriniz));
+                response.ValidationErrors.Add(new ValidationError("fullName", Resource.Resource.ValidNameMessage));
             }
 
             if (updateUser.email.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.NotEmpty));
             }
 
             if (!updateUser.email.IsNullOrEmpty() && !updateUser.email.IsValidEmail())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.GecerliMailMesaji));
+                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.ValidEmailMessage));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.GuncellemeYapilamadi;
+                response.Message = Resource.Resource.RecordNotUpdated;
                 return Ok(response);
             }
 
@@ -368,7 +368,7 @@ namespace CareGardenApiV1.Controller
             if (user == null)
             {
                 response.HasError = true;
-                response.Message = Resource.Resource.KullaniciBulunamadi;
+                response.Message = Resource.Resource.UserNotFound;
                 return Ok(response);
             }
 
@@ -381,7 +381,7 @@ namespace CareGardenApiV1.Controller
 
             await _userService.UpdateUserAsync(user);
             response.Data = await _userService.GetUserResponseModelById(user.id);
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.RegistrationSuccess;
 
             return Ok(response);
         }
@@ -409,49 +409,49 @@ namespace CareGardenApiV1.Controller
             if (updateUser.currentPassword.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("currentPassword", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("currentPassword", Resource.Resource.NotEmpty));
             }
 
             if (updateUser.newPassword.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("newPassword", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("newPassword", Resource.Resource.NotEmpty));
             }
 
             if (updateUser.newRetryPassword.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("newRetryPassword", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("newRetryPassword", Resource.Resource.NotEmpty));
             }
 
             if (updateUser.currentPassword.IsNotNullOrEmpty() && !updateUser.currentPassword.Length.Between(8, 20))
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("currentPassword", Resource.Resource.Sifre8KarakterOlmali));
+                response.ValidationErrors.Add(new ValidationError("currentPassword", Resource.Resource.PasswordMustBeEightCharacters));
             }
 
             if (updateUser.newPassword.IsNotNullOrEmpty() && !updateUser.newPassword.Length.Between(8, 20))
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("newPassword", Resource.Resource.Sifre8KarakterOlmali));
+                response.ValidationErrors.Add(new ValidationError("newPassword", Resource.Resource.PasswordMustBeEightCharacters));
             }
 
             if (updateUser.newRetryPassword.IsNotNullOrEmpty() && !updateUser.newRetryPassword.Length.Between(8, 20))
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("newRetryPassword", Resource.Resource.Sifre8KarakterOlmali));
+                response.ValidationErrors.Add(new ValidationError("newRetryPassword", Resource.Resource.PasswordMustBeEightCharacters));
             }
 
             if (!updateUser.newPassword.Equals(updateUser.newRetryPassword))
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("newPassword", Resource.Resource.SifrelerEsitOlmali));
-                response.ValidationErrors.Add(new ValidationError("newRetryPassword", Resource.Resource.SifrelerEsitOlmali));
+                response.ValidationErrors.Add(new ValidationError("newPassword", Resource.Resource.PasswordsMustBeEqual));
+                response.ValidationErrors.Add(new ValidationError("newRetryPassword", Resource.Resource.PasswordsMustBeEqual));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.GuncellemeYapilamadi;
+                response.Message = Resource.Resource.ResetPasswordFailed;
                 return Ok(response);
             }
 
@@ -460,14 +460,14 @@ namespace CareGardenApiV1.Controller
             if (user == null)
             {
                 response.HasError = true;
-                response.Message = Resource.Resource.KullaniciBulunamadi;
+                response.Message = Resource.Resource.UserNotFound;
                 return Ok(response);
             }
 
             if (user.password != updateUser.currentPassword.HashString())
             {
                 response.HasError = true;
-                response.Message = Resource.Resource.GuncelSifreniziDogruGiriniz;
+                response.Message = Resource.Resource.CurrentPasswordNotCorrectly;
                 return Ok(response);
             }
 
@@ -475,7 +475,7 @@ namespace CareGardenApiV1.Controller
             await _userService.UpdateUserAsync(user, true);
 
             response.Data = true;
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.ResetPasswordSuccess;
 
             return Ok(response);
         }
@@ -502,18 +502,18 @@ namespace CareGardenApiV1.Controller
             if (!updateUser.latitude.HasValue || updateUser.latitude <= 0)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("latitude", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("latitude", Resource.Resource.NotEmpty));
             }
 
             if (!updateUser.longitude.HasValue || updateUser.longitude <= 0)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("longitude", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("longitude", Resource.Resource.NotEmpty));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.GuncellemeYapilamadi;
+                response.Message = $"{Resource.Resource.LocationNotUpdated} {Resource.Resource.ErrorContactMessage}";
                 return Ok(response);
             }
 
@@ -522,7 +522,7 @@ namespace CareGardenApiV1.Controller
             if (user == null)
             {
                 response.HasError = true;
-                response.Message = Resource.Resource.KullaniciBulunamadi;
+                response.Message = Resource.Resource.UserNotFound;
                 return Ok(response);
             }
 
@@ -537,7 +537,7 @@ namespace CareGardenApiV1.Controller
 
             await _userService.UpdateUserAsync(user);
             response.Data = true;
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.LocationUpdated;
 
             return Ok(response);
         }

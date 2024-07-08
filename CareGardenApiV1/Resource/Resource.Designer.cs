@@ -61,6 +61,15 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tüm mesajlar okundu olarak işaretlendi..
+        /// </summary>
+        public static string AllMessagesRead {
+            get {
+                return ResourceManager.GetString("AllMessagesRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Anonim.
         /// </summary>
         public static string Anonymous {
@@ -70,20 +79,137 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bir dakika içinde birden fazla onay kodu alamazsınız..
+        ///   Looks up a localized string similar to Seçtiğiniz tarihte bir randevu alındığı için randevu yapılamadı. Lütfen başka bir tarih seçerek tekrar deneyiniz..
         /// </summary>
-        public static string BirDakikaIcindeOnayKoduMesaji {
+        public static string AppointmentAvailable {
             get {
-                return ResourceManager.GetString("BirDakikaIcindeOnayKoduMesaji", resourceCulture);
+                return ResourceManager.GetString("AppointmentAvailable", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bu alanı boş bırakmayınız..
+        ///   Looks up a localized string similar to Randevu başarıyla iptal edildi..
         /// </summary>
-        public static string BuAlaniBosBirakmayiniz {
+        public static string AppointmentCancelled {
             get {
-                return ResourceManager.GetString("BuAlaniBosBirakmayiniz", resourceCulture);
+                return ResourceManager.GetString("AppointmentCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Randevuya 9 saat kala randevuyu iptal etmek, güvenilirliğinizi azaltabilir. İptal etmek istiyor musunuz?.
+        /// </summary>
+        public static string AppointmentCancelWarning {
+            get {
+                return ResourceManager.GetString("AppointmentCancelWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Randevunun iptal edilmesi sırasında bir hata oluştu..
+        /// </summary>
+        public static string AppointmentNotCancelled {
+            get {
+                return ResourceManager.GetString("AppointmentNotCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Randevunun durumu başarıyla güncellendi..
+        /// </summary>
+        public static string AppointmentStatusChanged {
+            get {
+                return ResourceManager.GetString("AppointmentStatusChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Randevunun durumu güncellenirken bir hata oluştu..
+        /// </summary>
+        public static string AppointmentStatusNotChanged {
+            get {
+                return ResourceManager.GetString("AppointmentStatusNotChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Girdiğiniz e-posta adresine ait kayıtlı bir işletme bulunmaktadır..
+        /// </summary>
+        public static string BusinessFoundEnteredMail {
+            get {
+                return ResourceManager.GetString("BusinessFoundEnteredMail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Girdiğiniz telefon numarasına kayıtlı bir işletme bulunmaktadır..
+        /// </summary>
+        public static string BusinessFoundEnteredTelephone {
+            get {
+                return ResourceManager.GetString("BusinessFoundEnteredTelephone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to İşletme bulunamadı..
+        /// </summary>
+        public static string BusinessNotFound {
+            get {
+                return ResourceManager.GetString("BusinessNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Girdiğiniz bilgilere ait bir işletme bulunamadı..
+        /// </summary>
+        public static string BusinessNotFoundEnteredInfo {
+            get {
+                return ResourceManager.GetString("BusinessNotFoundEnteredInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Girdiğiniz e-posta adresine ait işletme bulunamadı..
+        /// </summary>
+        public static string BusinessNotFoundEnteredMail {
+            get {
+                return ResourceManager.GetString("BusinessNotFoundEnteredMail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to İşletme doğrulanamadı..
+        /// </summary>
+        public static string BusinessNotVerified {
+            get {
+                return ResourceManager.GetString("BusinessNotVerified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to İşletme doğrulandı..
+        /// </summary>
+        public static string BusinessVerified {
+            get {
+                return ResourceManager.GetString("BusinessVerified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Renk kodu 3 veya 6 haneli olmalı..
+        /// </summary>
+        public static string ColorCodeErrorMessage {
+            get {
+                return ResourceManager.GetString("ColorCodeErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Onay kodunun süresi doldu. Lütfen yeni bir kod isteyin..
+        /// </summary>
+        public static string ConfirmationCodeExpired {
+            get {
+                return ResourceManager.GetString("ConfirmationCodeExpired", resourceCulture);
             }
         }
         
@@ -97,6 +223,69 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bir dakika içinde birden fazla onay kodu alamazsınız..
+        /// </summary>
+        public static string ConfirmationCodeMessageInOneMinute {
+            get {
+                return ResourceManager.GetString("ConfirmationCodeMessageInOneMinute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Onay kodu gönderilemedi..
+        /// </summary>
+        public static string ConfirmationCodeNotSend {
+            get {
+                return ResourceManager.GetString("ConfirmationCodeNotSend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Onay kodu doğrulanamadı..
+        /// </summary>
+        public static string ConfirmationCodeNotVerified {
+            get {
+                return ResourceManager.GetString("ConfirmationCodeNotVerified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Onay kodu gönderildi..
+        /// </summary>
+        public static string ConfirmationCodeSend {
+            get {
+                return ResourceManager.GetString("ConfirmationCodeSend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Onay kodu doğrulandı..
+        /// </summary>
+        public static string ConfirmationCodeVerified {
+            get {
+                return ResourceManager.GetString("ConfirmationCodeVerified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CareGarden&apos; a hoşgeldiniz! Onay Kodu : {0}.
+        /// </summary>
+        public static string ConfirmationMessage {
+            get {
+                return ResourceManager.GetString("ConfirmationMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lütfen güncel şifrenizi doğru giriniz..
+        /// </summary>
+        public static string CurrentPasswordNotCorrectly {
+            get {
+                return ResourceManager.GetString("CurrentPasswordNotCorrectly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Elastic indexleme işlemi arkaplanda başlamıştır..
         /// </summary>
         public static string ElasticIndexlemeIslemiBasladi {
@@ -106,452 +295,416 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Elastic server is not active..
+        ///   Looks up a localized string similar to Lütfen daha sonra tekrar deneyiniz veya destek ekibimizle iletişime geçiniz..
         /// </summary>
-        public static string ElasticSunucusuAktifDegil {
+        public static string ErrorContactMessage {
             get {
-                return ResourceManager.GetString("ElasticSunucusuAktifDegil", resourceCulture);
+                return ResourceManager.GetString("ErrorContactMessage", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Geçerli bir isim giriniz..
+        ///   Looks up a localized string similar to Bir hata oluştu..
         /// </summary>
-        public static string GecerliBirIsimGiriniz {
+        public static string ErrorMessage {
             get {
-                return ResourceManager.GetString("GecerliBirIsimGiriniz", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Lütfen geçerli bir mail giriniz..
-        /// </summary>
-        public static string GecerliMailMesaji {
-            get {
-                return ResourceManager.GetString("GecerliMailMesaji", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Lütfen geçerli bir mail veya telefon numarası giriniz..
-        /// </summary>
-        public static string GecerliMailTelefonMesaji {
-            get {
-                return ResourceManager.GetString("GecerliMailTelefonMesaji", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Lütfen geçerli bir telefon numarası giriniz..
-        /// </summary>
-        public static string GecerliTelefonMesaji {
-            get {
-                return ResourceManager.GetString("GecerliTelefonMesaji", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Thank you for your feedback..
-        /// </summary>
-        public static string GeriBildirimGonderildi {
-            get {
-                return ResourceManager.GetString("GeriBildirimGonderildi", resourceCulture);
+                return ResourceManager.GetString("ErrorMessage", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Geri bildirim gönderilemedi..
         /// </summary>
-        public static string GeriBildirimGonderilemedi {
+        public static string FeedbackNotSend {
             get {
-                return ResourceManager.GetString("GeriBildirimGonderilemedi", resourceCulture);
+                return ResourceManager.GetString("FeedbackNotSend", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Girdiğiniz maile ait kullanıcı bulunamadı..
+        ///   Looks up a localized string similar to Geri bildiriminiz gönderildi. Teşekkür ederiz!.
         /// </summary>
-        public static string GirdiginizMaileAitKullaniciBulunamadi {
+        public static string FeedbackSend {
             get {
-                return ResourceManager.GetString("GirdiginizMaileAitKullaniciBulunamadi", resourceCulture);
+                return ResourceManager.GetString("FeedbackSend", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Girdiğiniz maile ait kullanıcı sistemde kayıtlı..
+        ///   Looks up a localized string similar to Geçerli bir id gönderilmediğinden dolayı istek işlenemedi..
         /// </summary>
-        public static string GirdiginizMaileAitKullaniciKayitli {
+        public static string IdErrorMessage {
             get {
-                return ResourceManager.GetString("GirdiginizMaileAitKullaniciKayitli", resourceCulture);
+                return ResourceManager.GetString("IdErrorMessage", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Girdiğiniz maile ait şirket bulunamadı..
+        ///   Looks up a localized string similar to Resim yüklenirken bir hata oluştu..
         /// </summary>
-        public static string GirdiginizMaileAitSirketBulunamadi {
+        public static string ImageNotUploaded {
             get {
-                return ResourceManager.GetString("GirdiginizMaileAitSirketBulunamadi", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Girdiğiniz telefon numarasına ait kullanıcı sistemde kayıtlı..
-        /// </summary>
-        public static string GirdiginizTelefonNumarasinaAitKullaniciKayitli {
-            get {
-                return ResourceManager.GetString("GirdiginizTelefonNumarasinaAitKullaniciKayitli", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The company belonging to the phone number you entered is registered in the system..
-        /// </summary>
-        public static string GirdiginizTelefonNumarasinaAitSirketKayitli {
-            get {
-                return ResourceManager.GetString("GirdiginizTelefonNumarasinaAitSirketKayitli", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Girilen bilgilere ait kullanıcı bulunamadı..
-        /// </summary>
-        public static string GirilenBilgilereAitKullaniciBulunamadi {
-            get {
-                return ResourceManager.GetString("GirilenBilgilereAitKullaniciBulunamadi", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Girilen bilgilere ait şirket bulunamadı..
-        /// </summary>
-        public static string GirilenBilgilereAitSirketBulunamadi {
-            get {
-                return ResourceManager.GetString("GirilenBilgilereAitSirketBulunamadi", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Giriş başarılı..
-        /// </summary>
-        public static string GirisBasarili {
-            get {
-                return ResourceManager.GetString("GirisBasarili", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Giriş yapılamadı..
-        /// </summary>
-        public static string GirisYapilamadi {
-            get {
-                return ResourceManager.GetString("GirisYapilamadi", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Güncelleme yapılamadı..
-        /// </summary>
-        public static string GuncellemeYapilamadi {
-            get {
-                return ResourceManager.GetString("GuncellemeYapilamadi", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Güncel şifrenizi doğru giriniz..
-        /// </summary>
-        public static string GuncelSifreniziDogruGiriniz {
-            get {
-                return ResourceManager.GetString("GuncelSifreniziDogruGiriniz", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to hafta içi.
-        /// </summary>
-        public static string HaftaIci {
-            get {
-                return ResourceManager.GetString("HaftaIci", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to hafta sonu.
-        /// </summary>
-        public static string HaftaSonu {
-            get {
-                return ResourceManager.GetString("HaftaSonu", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Yapılan istekte geçerli bir id gönderilmedi..
-        /// </summary>
-        public static string IdParametreHatasi {
-            get {
-                return ResourceManager.GetString("IdParametreHatasi", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0}% indirim.
-        /// </summary>
-        public static string Indirim {
-            get {
-                return ResourceManager.GetString("Indirim", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Kayıt başarılı bir şekilde tamamlandı..
-        /// </summary>
-        public static string KayitBasarili {
-            get {
-                return ResourceManager.GetString("KayitBasarili", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Kayıt bulunamadı..
-        /// </summary>
-        public static string KayitBulunamadi {
-            get {
-                return ResourceManager.GetString("KayitBulunamadi", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Kayıt silindi..
-        /// </summary>
-        public static string KayitSilindi {
-            get {
-                return ResourceManager.GetString("KayitSilindi", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Kayıt silinemedi..
-        /// </summary>
-        public static string KayitSilinemedi {
-            get {
-                return ResourceManager.GetString("KayitSilinemedi", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Kayıt yapılamadı..
-        /// </summary>
-        public static string KayitYapilamadi {
-            get {
-                return ResourceManager.GetString("KayitYapilamadi", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} kaydı zaten mevcut..
-        /// </summary>
-        public static string KayitZatenMevcut {
-            get {
-                return ResourceManager.GetString("KayitZatenMevcut", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Kullanıcı bulunamadi..
-        /// </summary>
-        public static string KullaniciBulunamadi {
-            get {
-                return ResourceManager.GetString("KullaniciBulunamadi", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Onay kodu doğrulanamadı..
-        /// </summary>
-        public static string OnayKoduDogrulanamadi {
-            get {
-                return ResourceManager.GetString("OnayKoduDogrulanamadi", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Onay kodu doğrulandı..
-        /// </summary>
-        public static string OnayKoduDogrulandi {
-            get {
-                return ResourceManager.GetString("OnayKoduDogrulandi", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Onay kodu gönderildi..
-        /// </summary>
-        public static string OnayKoduGonderildi {
-            get {
-                return ResourceManager.GetString("OnayKoduGonderildi", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Onay kodu gönderilemedi..
-        /// </summary>
-        public static string OnayKoduGonderilemedi {
-            get {
-                return ResourceManager.GetString("OnayKoduGonderilemedi", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Onay kodu zaman aşımına uğradı. Lütfen yeniden kod isteyin..
-        /// </summary>
-        public static string OnayKoduZamanAsiminaUgradi {
-            get {
-                return ResourceManager.GetString("OnayKoduZamanAsiminaUgradi", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to CareGarden&apos; a hoşgeldin. Onay Kodu : {0}.
-        /// </summary>
-        public static string OnayMesaji {
-            get {
-                return ResourceManager.GetString("OnayMesaji", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Popüler Servisler.
-        /// </summary>
-        public static string PopulerServisler {
-            get {
-                return ResourceManager.GetString("PopulerServisler", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Randevuya 9 saat kala randevuyu iptal etmek güvenilirliğinizi azaltır. İptal etmek istiyor musunuz?.
-        /// </summary>
-        public static string RandevuIptalUyari {
-            get {
-                return ResourceManager.GetString("RandevuIptalUyari", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Seçili tarihte bir randevu alındığı için randevu yapılamadı. Lütfen tekrar randevu alınız..
-        /// </summary>
-        public static string RandevuMevcut {
-            get {
-                return ResourceManager.GetString("RandevuMevcut", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Renk kodu 3 veya 6 haneli olmalı..
-        /// </summary>
-        public static string RenkKoduHatasi {
-            get {
-                return ResourceManager.GetString("RenkKoduHatasi", resourceCulture);
+                return ResourceManager.GetString("ImageNotUploaded", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Resim başarılı bir şekilde yüklendi. .
         /// </summary>
-        public static string ResimYuklemeBasarili {
+        public static string ImageUploaded {
             get {
-                return ResourceManager.GetString("ResimYuklemeBasarili", resourceCulture);
+                return ResourceManager.GetString("ImageUploaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Konum bilginiz güncellenirken bir hata oluştu..
+        /// </summary>
+        public static string LocationNotUpdated {
+            get {
+                return ResourceManager.GetString("LocationNotUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Konum bilginiz güncellendi..
+        /// </summary>
+        public static string LocationUpdated {
+            get {
+                return ResourceManager.GetString("LocationUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Giriş yapılamadı..
+        /// </summary>
+        public static string LoginFailed {
+            get {
+                return ResourceManager.GetString("LoginFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Girdiğiniz e-posta adresi veya parola hatalı..
+        /// </summary>
+        public static string LoginFailedUserMessage {
+            get {
+                return ResourceManager.GetString("LoginFailedUserMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Giriş başarılı..
+        /// </summary>
+        public static string LoginSuccess {
+            get {
+                return ResourceManager.GetString("LoginSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bu alanı boş bırakmayınız..
+        /// </summary>
+        public static string NotEmpty {
+            get {
+                return ResourceManager.GetString("NotEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bu işlemi gerçekleştirmek için yetkiniz yok. Lütfen gerekli izinler için sistem yöneticinizle iletişime geçiniz..
+        /// </summary>
+        public static string NotPermission {
+            get {
+                return ResourceManager.GetString("NotPermission", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Şifre en az 8 karakter olmalı..
         /// </summary>
-        public static string Sifre8KarakterOlmali {
+        public static string PasswordMustBeEightCharacters {
             get {
-                return ResourceManager.GetString("Sifre8KarakterOlmali", resourceCulture);
+                return ResourceManager.GetString("PasswordMustBeEightCharacters", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Şifreler eşit olmalı..
+        ///   Looks up a localized string similar to Girdiğiniz şifreler birbiriyle eşleşmiyor..
         /// </summary>
-        public static string SifrelerEsitOlmali {
+        public static string PasswordsMustBeEqual {
             get {
-                return ResourceManager.GetString("SifrelerEsitOlmali", resourceCulture);
+                return ResourceManager.GetString("PasswordsMustBeEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Popüler Servisler.
+        /// </summary>
+        public static string PopularServices {
+            get {
+                return ResourceManager.GetString("PopularServices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kayıt başarıyla silindi..
+        /// </summary>
+        public static string RecordDeleted {
+            get {
+                return ResourceManager.GetString("RecordDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} kaydı zaten mevcut..
+        /// </summary>
+        public static string RecordExists {
+            get {
+                return ResourceManager.GetString("RecordExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kayıt silinemedi..
+        /// </summary>
+        public static string RecordNotDeleted {
+            get {
+                return ResourceManager.GetString("RecordNotDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kayıt bulunamadı..
+        /// </summary>
+        public static string RecordNotFound {
+            get {
+                return ResourceManager.GetString("RecordNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Güncelleme işlemi yapılamadı..
+        /// </summary>
+        public static string RecordNotUpdated {
+            get {
+                return ResourceManager.GetString("RecordNotUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kayıtlar başarıyla silindi..
+        /// </summary>
+        public static string RecordsDeleted {
+            get {
+                return ResourceManager.GetString("RecordsDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kayıtlar silinemedi..
+        /// </summary>
+        public static string RecordsNotDeleted {
+            get {
+                return ResourceManager.GetString("RecordsNotDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Güncelleme işleminiz başarıyla tamamlandı..
+        /// </summary>
+        public static string RecordUpdated {
+            get {
+                return ResourceManager.GetString("RecordUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Belirttiğiniz e-posta adresi sistemimizde zaten kayıtlı. Lütfen farklı bir e-posta adresi giriniz veya mevcut hesabınıza giriş yapınız..
+        /// </summary>
+        public static string RegisteredUserEnteredMail {
+            get {
+                return ResourceManager.GetString("RegisteredUserEnteredMail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kayıt işlemi sırasında bir hata oluştu..
+        /// </summary>
+        public static string RegistrationFailed {
+            get {
+                return ResourceManager.GetString("RegistrationFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kayıt işleminiz başarıyla tamamlandı..
+        /// </summary>
+        public static string RegistrationSuccess {
+            get {
+                return ResourceManager.GetString("RegistrationSuccess", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Şifre Yenileme.
         /// </summary>
-        public static string SifreYenileme {
+        public static string ResetPassword {
             get {
-                return ResourceManager.GetString("SifreYenileme", resourceCulture);
+                return ResourceManager.GetString("ResetPassword", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Şifre yenileme işlemi başarılı..
+        ///   Looks up a localized string similar to Şifre yenileme işlemi başarısız oldu..
         /// </summary>
-        public static string SifreYenilemeBasarili {
+        public static string ResetPasswordFailed {
             get {
-                return ResourceManager.GetString("SifreYenilemeBasarili", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Şifre yenilemedi..
-        /// </summary>
-        public static string SifreYenilemedi {
-            get {
-                return ResourceManager.GetString("SifreYenilemedi", resourceCulture);
+                return ResourceManager.GetString("ResetPasswordFailed", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Şifre yenileme işlemi için onay kodu {0}..
         /// </summary>
-        public static string SifreYenilemeMailMesaji {
+        public static string ResetPasswordMailMessage {
             get {
-                return ResourceManager.GetString("SifreYenilemeMailMesaji", resourceCulture);
+                return ResourceManager.GetString("ResetPasswordMailMessage", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Şifrenizi unuttuysanız şifremi unuttum kısmından şifrenizi yenileyebilirsiniz..
+        ///   Looks up a localized string similar to Eğer şifrenizi unuttuysanız, &apos;Şifremi Unuttum&apos; seçeneğini kullanarak şifrenizi yenileyebilirsiniz.
         /// </summary>
-        public static string SifreYenilemeMesaji {
+        public static string ResetPasswordMessage {
             get {
-                return ResourceManager.GetString("SifreYenilemeMesaji", resourceCulture);
+                return ResourceManager.GetString("ResetPasswordMessage", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Şirket bulunamadı..
+        ///   Looks up a localized string similar to Şifre yenileme işlemi başarıyla tamamlandı..
         /// </summary>
-        public static string SirketBulunamadi {
+        public static string ResetPasswordSuccess {
             get {
-                return ResourceManager.GetString("SirketBulunamadi", resourceCulture);
+                return ResourceManager.GetString("ResetPasswordSuccess", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to {0}% indirim.
         /// </summary>
-        public static string String1 {
+        public static string Sale {
             get {
-                return ResourceManager.GetString("String1", resourceCulture);
+                return ResourceManager.GetString("Sale", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Yetkiniz yok..
+        ///   Looks up a localized string similar to Girdiğiniz e-posta adresine ait bir kullanucu bulunmaktadır..
         /// </summary>
-        public static string YetkinizYok {
+        public static string UserFoundEnteredMail {
             get {
-                return ResourceManager.GetString("YetkinizYok", resourceCulture);
+                return ResourceManager.GetString("UserFoundEnteredMail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Girdiğiniz telefon numarasına kayıtlı bir kullanıcı bulunmaktadır..
+        /// </summary>
+        public static string UserFoundEnteredTelephone {
+            get {
+                return ResourceManager.GetString("UserFoundEnteredTelephone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kullanıcı bulunamadı..
+        /// </summary>
+        public static string UserNotFound {
+            get {
+                return ResourceManager.GetString("UserNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Girdiğiniz bilgilere ait bir kullanıcı bulunamadı..
+        /// </summary>
+        public static string UserNotFoundEnteredInfo {
+            get {
+                return ResourceManager.GetString("UserNotFoundEnteredInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Girdiğiniz e-posta adresine ait kullanıcı bulunamadı..
+        /// </summary>
+        public static string UserNotFoundEnteredMail {
+            get {
+                return ResourceManager.GetString("UserNotFoundEnteredMail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lütfen geçerli bir mail giriniz..
+        /// </summary>
+        public static string ValidEmailMessage {
+            get {
+                return ResourceManager.GetString("ValidEmailMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lütfen geçerli bir e-posta adresi veya telefon numarası giriniz..
+        /// </summary>
+        public static string ValidMailOrTelephoneMessage {
+            get {
+                return ResourceManager.GetString("ValidMailOrTelephoneMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geçerli bir isim giriniz..
+        /// </summary>
+        public static string ValidNameMessage {
+            get {
+                return ResourceManager.GetString("ValidNameMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lütfen geçerli bir telefon numarası giriniz..
+        /// </summary>
+        public static string ValidTelephoneMessage {
+            get {
+                return ResourceManager.GetString("ValidTelephoneMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to hafta içi.
+        /// </summary>
+        public static string Weekday {
+            get {
+                return ResourceManager.GetString("Weekday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to hafta sonu.
+        /// </summary>
+        public static string Weekend {
+            get {
+                return ResourceManager.GetString("Weekend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Çalışana özel fiyat, servis fiyatından yüksek olamaz..
+        /// </summary>
+        public static string WorkerPriceErrorMessage {
+            get {
+                return ResourceManager.GetString("WorkerPriceErrorMessage", resourceCulture);
             }
         }
     }

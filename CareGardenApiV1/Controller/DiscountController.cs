@@ -45,8 +45,8 @@ namespace CareGardenApiV1.Controller
             if (!discount.businessId.HasValue)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.KayitBulunamadi;
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdErrorMessage));
+                response.Message = Resource.Resource.IdErrorMessage;
                 return Ok(response);
             }
 
@@ -84,36 +84,36 @@ namespace CareGardenApiV1.Controller
             if (!discount.businessId.HasValue)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
+                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdErrorMessage));
             }
 
             if (discount.description.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("description", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("description", Resource.Resource.NotEmpty));
             }
 
 
             if (discount.descriptionEn.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("descriptionEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("descriptionEn", Resource.Resource.NotEmpty));
             }
 
             if (discount.rate <= 0)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("rate", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("rate", Resource.Resource.NotEmpty));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.KayitYapilamadi;
+                response.Message = Resource.Resource.RegistrationFailed;
                 return Ok(response);
             }
 
             response.Data = await _discountService.SaveDiscountAsync(discount);
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.RegistrationSuccess;
             
             if (discount.businessId.HasValue)
             {
@@ -149,25 +149,24 @@ namespace CareGardenApiV1.Controller
             if (updateDiscount.description.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("description", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("description", Resource.Resource.NotEmpty));
             }
-
 
             if (updateDiscount.descriptionEn.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("descriptionEn", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("descriptionEn", Resource.Resource.NotEmpty));
             }
 
             if (updateDiscount.rate <= 0)
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("rate", Resource.Resource.BuAlaniBosBirakmayiniz));
+                response.ValidationErrors.Add(new ValidationError("rate", Resource.Resource.NotEmpty));
             }
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.KayitYapilamadi;
+                response.Message = Resource.Resource.RecordNotUpdated;
                 return Ok(response);
             }
 
@@ -176,7 +175,7 @@ namespace CareGardenApiV1.Controller
 
             if (discount == null)
             {
-                response.Message = Resource.Resource.KayitBulunamadi;
+                response.Message = Resource.Resource.RecordNotFound;
                 return Ok(response);
             }
 
@@ -189,7 +188,7 @@ namespace CareGardenApiV1.Controller
             discount.colorCode = updateDiscount.colorCode;
 
             response.Data = await _discountService.UpdateDiscountAsync(discount);
-            response.Message = Resource.Resource.KayitBasarili;
+            response.Message = Resource.Resource.RecordUpdated;
 
             if(discount.businessId.HasValue)
             {
@@ -216,24 +215,16 @@ namespace CareGardenApiV1.Controller
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
 
-            if (id.IsNullOrEmpty() || !id.IsGuid())
-            {
-                response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("businessId", Resource.Resource.IdParametreHatasi));
-                response.Message = Resource.Resource.KayitBulunamadi;
-                return Ok(response);
-            }
-
             var discount = await _discountService.GetDiscountByIdAsync(id.ToGuid());
 
             if (discount == null)
             {
-                response.Message = Resource.Resource.KayitBulunamadi;
+                response.Message = Resource.Resource.RecordNotFound;
                 return Ok(response);
             }
 
             response.Data = await _discountService.DeleteDiscountAsync(discount);
-            response.Message = Resource.Resource.KayitSilindi;
+            response.Message = Resource.Resource.RecordDeleted;
 
             if (discount.businessId.HasValue)
             {

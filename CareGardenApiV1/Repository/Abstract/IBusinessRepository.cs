@@ -22,8 +22,10 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<IList<BusinessListResponseModel>> GetBusinessByUserFavorites(BusinessSearchRequestModel businessSearchModel);
         Task<IList<BusinessListResponseModel>> GetBusinessByPopularAsync(BusinessSearchRequestModel businessSearchModel);
         Task<IList<BusinessListResponseModel>> ExploreBusinesses(BusinessExploreModel businessExploreModel);
+        Task<bool> GetBusinessExistsByTelephoneNumberAsync(string telephone);
+        Task<bool> GetBusinessExistsByEmailAsync(string email);
         Task<Business> SaveBusinessAsync(Business business);
-        Task<Business> UpdateBusinessAsync(Business business);
+        Task<Business> UpdateBusinessAsync(Business business, bool isPasswordChanged = false);
         Task<bool> DeleteBusinessAsync(Business business);
         Task<List<Guid>> GetBusinessIds();
         Task<bool> UpdateHasNotificationAsync(List<Guid> businessIds, bool value);

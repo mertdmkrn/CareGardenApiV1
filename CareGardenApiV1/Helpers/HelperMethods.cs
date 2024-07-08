@@ -251,7 +251,7 @@ namespace CareGardenApiV1.Helpers
             var date = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(specialDate.Value, "Turkey Standard Time");
 
             if (workingInfo == null)
-                return true;
+                return false;
 
             if (officialDayAvailable && specialDate.HasValue && Constants.OfficialDays.Exists(x => x.date.Equals(specialDate.Value.Date)))
                 return false;

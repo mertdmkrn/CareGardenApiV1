@@ -330,4 +330,22 @@
   <data name="WorkerPriceErrorMessage" xml:space="preserve">
     <value>The employee-specific price cannot be higher than the service price.</value>
   </data>
+  <data name="PasswordResetLinkExpired" xml:space="preserve">
+    <value>The password reset link has expired. Please request a password reset link.</value>
+  </data>
+  <data name="PasswordResetLinkMessage" xml:space="preserve">
+    <value>To continue with your password reset process, please click &lt;a href='{0}' target='_blank'&gt;here&lt;/a&gt;.</value>
+  </data>
+  <data name="PasswordResetLinkMessageInOneHour" xml:space="preserve">
+    <value>You cannot request more than one password reset link within an hour.</value>
+  </data>
+  <data name="PasswordResetLinkNotFound" xml:space="preserve">
+    <value>Such a link could not be found.</value>
+  </data>
+  <data name="PasswordResetLinkNotSend" xml:space="preserve">
+    <value>Password reset link could not be sent.</value>
+  </data>
+  <data name="PasswordResetLinkSend" xml:space="preserve">
+    <value>Password reset link sent.</value>
+  </data>
 </root>

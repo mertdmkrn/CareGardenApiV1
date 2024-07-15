@@ -22,12 +22,6 @@ namespace CareGardenApiV1.Repository.Concrete
             _memoryCache = memoryCache;
         }
 
-        public async Task<Business> GetBusinessByEmailAndPasswordAsync(string email, string password)
-        {
-            return await _context.Businesses
-                .FirstOrDefaultAsync(x => x.email == email && x.password == password.HashString());
-        }
-
         public async Task<Business> GetBusinessByEmailAsync(string email)
         {
             return await _context.Businesses
@@ -400,7 +394,6 @@ namespace CareGardenApiV1.Repository.Concrete
 
         public async Task<Business> SaveBusinessAsync(Business business)
         {
-            business.password = business.password.HashString();
             business.createDate = DateTime.Now;
             business.updateDate = business.createDate;
 
@@ -409,14 +402,9 @@ namespace CareGardenApiV1.Repository.Concrete
             return business;
         }
 
-        public async Task<Business> UpdateBusinessAsync(Business business, bool isPasswordChanged = false)
+        public async Task<Business> UpdateBusinessAsync(Business business)
         {
             business.updateDate = DateTime.Now;
-
-            if (isPasswordChanged)
-            {
-                business.password = business.password.HashString();
-            }
 
             _context.Businesses.Update(business);
             await _context.SaveChangesAsync();

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CareGardenApiV1.Controller
 {
     [ApiController]
-    [Authorize(Roles = "Admin,Business")]
+    [Authorize(Roles = "BusinessAdmin,Admin,Business")]
     [Route("workerserviceprice")]
     public class WorkerServicePriceController : ControllerBase
     {

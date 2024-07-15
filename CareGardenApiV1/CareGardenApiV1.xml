@@ -340,6 +340,25 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.Save(CareGardenApiV1.Model.RequestModel.BusinessAdminSaveBusinessRequestModel)">
+             <summary>
+             Save Business By Admin
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "name" : "Mert Kuaför",
+                    "address" : "Merkez, Eski Büyükdere Cd. 37/B, 34416 Kağıthane/İstanbul",
+                    "website": "https://caregarden.app/",
+                    "mobileOrOnlineServiceOnly": false,
+                    "serviceIds": "00000000-0000-0000-0000-000000000000;00000000-0000-0000-0000-000000000001"
+                    "workerSizeType": 2
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.BusinessController.Update(CareGardenApiV1.Model.TableModel.Business)">
              <summary>
              Update Business
@@ -426,83 +445,6 @@
             Delete Business
             </summary>
             <returns></returns>
-        </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessLoginController.SendTelephoneConfirmationCode(System.String)">
-            <summary>
-            Send Telephone Confirmation Code
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessLoginController.SendEmailConfirmationCode(System.String)">
-            <summary>
-            Send Email Confirmation Code
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessLoginController.VerifyConfirmationCode(CareGardenApiV1.Model.TableModel.ConfirmationInfo)">
-             <summary>
-             Verify Confirmation Code
-             </summary>
-             <remarks>
-             **Sample request body:**
-            
-                 { 
-                    "target": "+905467335939",
-                    "code": "7391"
-                 }
-            
-             </remarks>
-             <returns></returns>
-        </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessLoginController.Save(CareGardenApiV1.Model.TableModel.Business)">
-             <summary>
-             Save Business
-             </summary>
-             <remarks>
-             **Sample request body:**
-            
-                 { 
-                    "name" : "MERT BEAUTY",
-                    "email": "mertdmkrn37@gmail.com",
-                    "password": "stms5581",
-                    "retryPassword": "stms5581",
-                    "telephone": "+905467335939"
-                 }
-            
-             </remarks>
-             <returns></returns>
-        </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessLoginController.BusinessLogin(CareGardenApiV1.Model.TableModel.Business)">
-             <summary>
-             Login Business
-             </summary>
-             <remarks>
-             **Sample request body:**
-            
-                 { 
-                    "email": "mertdmkrn37@gmail.com",
-                    "password": "stms5581"
-                 }
-            
-             </remarks>
-             <returns></returns>
-        </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessLoginController.PasswordReset(CareGardenApiV1.Model.RequestModel.PasswordResetRequestModel)">
-             <summary>
-             Business Password Reset
-             </summary>
-             <remarks>
-             **Sample request body:**
-            
-                 { 
-                    "email": "mertdmkrn37@gmail.com",
-                    "password": "mert1453",
-                    "retryPassword": "mert1453",
-                    "verifiedCode": "9112"
-                 }
-            
-             </remarks>
-             <returns></returns>
         </member>
         <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.GetById(System.String)">
             <summary>
@@ -628,6 +570,151 @@
         <member name="M:CareGardenApiV1.Controller.BusinessServicesController.Delete(System.String)">
             <summary>
             Delete BusinessService
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.GetById(System.String)">
+            <summary>
+            Get User By Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.Get">
+            <summary>
+            Get Session Business User
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.SetProfilePhoto(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            User Set Profile Photo
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.Delete(System.String)">
+            <summary>
+            Delete User
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.Update(CareGardenApiV1.Model.TableModel.BusinessUser)">
+             <summary>
+             Update User
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "fullName" : "Mert DEMİRKIRAN",
+                    "email" : "mertdmkrn37@gmail.com",
+                    "birthDate": "1998-08-01",
+                    "gender": 1,
+                    "city": "İstanbul",
+                    "services": "Make Up;Beauty Saloon"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.ChangePassword(CareGardenApiV1.Model.RequestModel.PasswordChangeRequestModel)">
+             <summary>
+             Business User Change Password
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "currentPassword" : "12345678",
+                    "newPassword" : "87654321",
+                    "newRetryPassword": "87654321"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.Save(CareGardenApiV1.Model.TableModel.BusinessUser)">
+             <summary>
+             Save Business User
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "fullName" : "Mert DEMİRKIRAN",
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "stms5581",
+                    "retryPassword": "stms5581",
+                    "telephone": "+905467335939"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.UserLogin(CareGardenApiV1.Model.TableModel.BusinessUser)">
+             <summary>
+             User Login Control
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "stms5581"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.SendPasswordResetLink(System.String)">
+             <summary>
+             Send Password Reset Link
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "mertdmkrn37@gmail.com",
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.SendPasswordResetLink(CareGardenApiV1.Model.RequestModel.PasswordResetRequestModel)">
+             <summary>
+             Send Password Reset Link
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "email": "mertdmkrn37@gmail.com",
+                    "linkId": "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.PasswordReset(CareGardenApiV1.Model.RequestModel.PasswordResetRequestModel)">
+             <summary>
+             User Password Reset
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "mert1453",
+                    "retryPassword": "mert1453"
+                    "linkId": "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.GetFaqs">
+            <summary>
+            Get Faqs
             </summary>
             <returns></returns>
         </member>
@@ -1634,6 +1721,18 @@
         <member name="M:CareGardenApiV1.Migrations.CareGardenV1.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV2">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV2.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV2.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="T:CareGardenApiV1.Resource.Resource">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -1853,6 +1952,36 @@
         <member name="P:CareGardenApiV1.Resource.Resource.PasswordMustBeEightCharacters">
             <summary>
               Looks up a localized string similar to Şifre en az 8 karakter olmalı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.PasswordResetLinkExpired">
+            <summary>
+              Looks up a localized string similar to Şifre sıfırlama bağlantısı süresi doldu. Lütfen bir şifre sıfırlama bağlantısı talep edin..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.PasswordResetLinkMessage">
+            <summary>
+              Looks up a localized string similar to Şifre yenileme işleminize devam etmek için &lt;a href=&apos;{0}&apos; target=&apos;_blank&apos;&gt;buraya&lt;/a&gt; tıklayabilirsiz..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.PasswordResetLinkMessageInOneHour">
+            <summary>
+              Looks up a localized string similar to Bir saat içinde birden fazla şifre yenileme bağlantısı alamazsınız..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.PasswordResetLinkNotFound">
+            <summary>
+              Looks up a localized string similar to Password reset link not found..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.PasswordResetLinkNotSend">
+            <summary>
+              Looks up a localized string similar to Şifre yenileme bağlantısı gönderilemedi..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.PasswordResetLinkSend">
+            <summary>
+              Looks up a localized string similar to Şifre yenileme bağlantısı gönderildi..
             </summary>
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.PasswordsMustBeEqual">

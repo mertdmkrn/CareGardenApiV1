@@ -29,11 +29,6 @@ namespace CareGardenApiV1.Service.Concrete
             return await _businessRepository.ExploreBusinesses(businessExploreModel);
         }
 
-        public async Task<Business> GetBusinessByEmailAndPasswordAsync(string email, string password)
-        {
-            return await _businessRepository.GetBusinessByEmailAndPasswordAsync(email, password);
-        }
-
         public async Task<Business> GetBusinessByEmailAsync(string email)
         {
             return await _businessRepository.GetBusinessByEmailAsync(email);
@@ -88,9 +83,9 @@ namespace CareGardenApiV1.Service.Concrete
             return await _businessRepository.SaveBusinessAsync(business);
         }
 
-        public async Task<Business> UpdateBusinessAsync(Business business, bool isPasswordChanged = false)
+        public async Task<Business> UpdateBusinessAsync(Business business)
         {
-            return await _businessRepository.UpdateBusinessAsync(business, isPasswordChanged);
+            return await _businessRepository.UpdateBusinessAsync(business);
         }
 
         public async Task<List<BusinessPagingListResponseModel>> GetBusinessLiteListAsync(BusinessSearchAdminRequestModel searchAdminModel)

@@ -43,12 +43,12 @@ namespace CareGardenApiV1.Service.Concrete
             return await _businessPropertiesRepository.SaveBusinessPropertiesAsync(businessProperties);
         }
 
-        public async Task<bool> SaveStaticBusinessPropertiesAsync(Guid businessId)
+        public async Task<bool> SaveStaticBusinessPropertiesAsync(Guid businessId, string website = null)
         {
             List<BusinessProperties> businessPropertiesList = new List<BusinessProperties>()
             {
                 new BusinessProperties(){ businessId = businessId, key = "Instagram"},
-                new BusinessProperties(){ businessId = businessId, key = "Website"},
+                new BusinessProperties(){ businessId = businessId, key = "Website", value = website},
                 new BusinessProperties(){ businessId = businessId, key = "Twitter"},
                 new BusinessProperties(){ businessId = businessId, key = "Facebook"}
             };

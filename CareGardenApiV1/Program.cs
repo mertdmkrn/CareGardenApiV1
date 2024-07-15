@@ -23,6 +23,8 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using CareGardenApiV1.Repository;
 using System.Text.Json.Serialization;
+using Nominatim.API.Interfaces;
+using Nominatim.API.Web;
 
 internal class Program
 {
@@ -124,6 +126,7 @@ internal class Program
 
         builder.Services.AddHangfire(x => x.UsePostgreSqlStorage(builder.Configuration["ConnectionStrings:AWSHangfirePostgreSQL"]));
         builder.Services.AddHangfireServer();
+        builder.Services.AddHttpClient();
 
         var app = builder.Build();
         app.UseIpRateLimiting();
@@ -169,11 +172,13 @@ internal class Program
         builder.Services.AddSingleton<IMailHandler, MailHandler>();
         builder.Services.AddSingleton<ISmsHandler, SmsHandler>();
         builder.Services.AddSingleton<IFileHandler, FileHandler>();
+        builder.Services.AddSingleton<INominatimWebInterface, NominatimWebInterface>();
 
         builder.Services.AddScoped<ILoggerHandler, LoggerHandler>();
         builder.Services.AddScoped<IElasticHandler, ElasticHandler>();
 
         builder.Services.AddScoped<IBusinessRepository, BusinessRepository>();
+        builder.Services.AddScoped<IBusinessUserRepository, BusinessUserRepository>();
         builder.Services.AddScoped<IBusinessGalleryRepository, BusinessGalleryRepository>();
         builder.Services.AddScoped<IBusinessPropertiesRepository, BusinessPropertiesRepository>();
         builder.Services.AddScoped<IBusinessServicesRepository, BusinessServicesRepository>();
@@ -194,8 +199,10 @@ internal class Program
         builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
         builder.Services.AddScoped<IAppointmentDetailRepository, AppointmentDetailRepository>();
         builder.Services.AddScoped<IWorkerServicePriceRepository, WorkerServicePriceRepository>();
+        builder.Services.AddScoped<IResetLinkRepository, ResetLinkRepository>();
 
         builder.Services.AddScoped<IBusinessService, BusinessService>();
+        builder.Services.AddScoped<IBusinessUserService, BusinessUserService>();
         builder.Services.AddScoped<IBusinessGalleryService, BusinessGalleryService>();
         builder.Services.AddScoped<IBusinessPropertiesService, BusinessPropertiesService>();
         builder.Services.AddScoped<IBusinessServicesService, BusinessServicesService>();
@@ -216,5 +223,6 @@ internal class Program
         builder.Services.AddScoped<INotificationService, NotificationService>();
         builder.Services.AddScoped<IAppointmentDetailService, AppointmentDetailService>();
         builder.Services.AddScoped<IWorkerServicePriceService, WorkerServicePriceService>();
+        builder.Services.AddScoped<IResetLinkService, ResetLinkService>();
     }
 }

@@ -5,6 +5,7 @@ namespace CareGardenApiV1.Helpers
     public static class Constants
     {
         public static bool IsTurkish = Resource.Resource.Culture.ToString().Equals("tr");
+        public static string BusinessAdminPanelUrl = "https://mertdmkrn.github.io/cg-business/#/";
 
         public static class CacheKeys
         {

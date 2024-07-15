@@ -119,4 +119,13 @@
         Campaign,
         Business
     }
+
+    public enum WorkerSizeType
+    {
+        Unspecified,
+        JustMe,
+        TwoFivePeople,
+        SixTenPeople,
+        ElevenPlusPeople
+    }
 }

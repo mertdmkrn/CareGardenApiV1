@@ -49,6 +49,15 @@ namespace CareGardenApiV1.Repository
                 .OnDelete(DeleteBehavior.SetNull);
             });
 
+            builder.Entity<BusinessUser>(entity =>
+            {
+                entity.HasOne(d => d.business)
+                .WithMany(p => p.businessUsers)
+                .HasForeignKey(d => d.businessId)
+                .HasConstraintName("FK_BusinessUsers_Business_businessId")
+                .OnDelete(DeleteBehavior.SetNull);
+            });
+
             builder.Entity<BusinessGallery>(entity =>
             {
                 entity.HasOne(d => d.business)
@@ -223,6 +232,7 @@ namespace CareGardenApiV1.Repository
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<AppointmentDetail> AppointmentDetails { get; set; }
         public DbSet<Business> Businesses { get; set; }
+        public DbSet<BusinessUser> BusinessUsers { get; set; }
         public DbSet<BusinessGallery> BusinessGalleries { get; set; }
         public DbSet<BusinessProperties> BusinessProperties { get; set; }
         public DbSet<BusinessServiceModel> BusinessServices { get; set; }
@@ -240,5 +250,6 @@ namespace CareGardenApiV1.Repository
         public DbSet<Setting> Settings { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<WorkerServicePrice> WorkerServicePrices { get; set; }
+        public DbSet<ResetLink> ResetLinks { get; set; }
     }
 }

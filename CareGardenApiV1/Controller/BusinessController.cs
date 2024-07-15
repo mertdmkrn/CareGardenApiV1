@@ -10,6 +10,7 @@ using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Nominatim.API.Interfaces;
 using System.Security.Claims;
 
 namespace CareGardenApiV1.Controller
@@ -19,8 +20,11 @@ namespace CareGardenApiV1.Controller
     public class BusinessController : ControllerBase
     {
         private readonly IBusinessService _businessService;
+        private readonly IBusinessUserService _businessUserService;
         private readonly IBusinessWorkingInfoService _businessWorkingInfoService;
         private readonly IBusinessGalleryService _businessGalleryService;
+        private readonly IBusinessPropertiesService _businessPropertiesService;
+        private readonly INominatimWebInterface _nominatimWebInterface;
         private readonly IServicesService _servicesService;
         private readonly ICommentService _commentService;
         private readonly IMemoryCache _memoryCache;
@@ -28,16 +32,22 @@ namespace CareGardenApiV1.Controller
 
         public BusinessController(
             IBusinessService businessService,
+            IBusinessUserService businessUserService,
             IBusinessWorkingInfoService businessWorkingInfoService,
             IBusinessGalleryService businessGalleryService,
+            IBusinessPropertiesService businessPropertiesService,
+            INominatimWebInterface nominatimWebInterface,
             IServicesService servicesService,
             ICommentService commentService,
             IMemoryCache memoryCache,
             IFileHandler fileHandler)
         {
             _businessService = businessService;
+            _businessUserService = businessUserService;
             _businessWorkingInfoService = businessWorkingInfoService;
             _businessGalleryService = businessGalleryService;
+            _businessPropertiesService = businessPropertiesService;
+            _nominatimWebInterface = nominatimWebInterface;
             _servicesService = servicesService;
             _memoryCache = memoryCache;
             _fileHandler = fileHandler;
@@ -80,9 +90,6 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
-            response.Data.password = null;
-            response.Data.retryPassword = null;
-
             return Ok(response);
         }
 
@@ -121,9 +128,6 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
-            response.Data.password = null;
-            response.Data.retryPassword = null;
-
             return Ok(response);
         }
 
@@ -132,7 +136,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("get")]
-        [Authorize(Roles = "Business")]
+        [Authorize(Roles = "BusinessAdmin,BusinessWorker,Business")]
         public async Task<IActionResult> Get()
         {
             ResponseModel<Business> response = new ResponseModel<Business>();
@@ -146,7 +150,6 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
-            business.password = null;
             response.Data = business;
 
             return Ok(response);
@@ -451,7 +454,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("setprofilephoto")]
-        [Authorize(Roles = "Business,Admin")]
+        [Authorize(Roles = "BusinessAdmin,Business,Admin")]
         public async Task<IActionResult> SetProfilePhoto([FromForm] BusinessFileInfoRequestModel businessFileInfoModel)
         {
             ResponseModel<BusinessGallery> response = new ResponseModel<BusinessGallery>();
@@ -507,6 +510,117 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
+        /// Save Business By Admin
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "name" : "Mert Kuaför",
+        ///        "address" : "Merkez, Eski Büyükdere Cd. 37/B, 34416 Kağıthane/İstanbul",
+        ///        "website": "https://caregarden.app/",
+        ///        "mobileOrOnlineServiceOnly": false,
+        ///        "serviceIds": "00000000-0000-0000-0000-000000000000;00000000-0000-0000-0000-000000000001"
+        ///        "workerSizeType": 2
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost("save")]
+        [Authorize(Roles = "BusinessAdmin")]
+        public async Task<IActionResult> Save([FromBody] BusinessAdminSaveBusinessRequestModel requestModel)
+        {
+            ResponseModel<Business> response = new ResponseModel<Business>();
+
+            if (requestModel.name.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("name", Resource.Resource.NotEmpty));
+            }
+
+            if (!requestModel.name.IsNullOrEmpty() && !requestModel.name.IsValidFullName())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("name", Resource.Resource.ValidNameMessage));
+            }
+
+            if (requestModel.address.IsNullOrEmpty() && !requestModel.mobileOrOnlineServiceOnly)
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("address", Resource.Resource.NotEmpty));
+            }
+
+            if (requestModel.serviceIds.IsNullOrEmpty() || requestModel.serviceIds?.Length < 32)
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("serviceIds", Resource.Resource.NotEmpty));
+            }
+
+            if (requestModel.workerSizeType == WorkerSizeType.Unspecified)
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("workerSizeType", Resource.Resource.NotEmpty));
+            }
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.RegistrationFailed;
+                return Ok(response);
+            }
+
+            var businessUser = await HelperMethods.GetSessionBusinessUser(Request, _businessUserService);
+
+            var isExistsBusiness = await _businessService.GetBusinessExistsByEmailAsync(businessUser.email);
+
+            if (isExistsBusiness)
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.BusinessFoundEnteredMail;
+                return Ok(response);
+            }
+
+            isExistsBusiness = await _businessService.GetBusinessExistsByTelephoneNumberAsync(businessUser.telephone);
+
+            if (isExistsBusiness)
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.BusinessFoundEnteredTelephone;
+                return Ok(response);
+            }
+
+            Business business = new Business { 
+                name = requestModel.name,
+                address = requestModel.address,
+                mobileOrOnlineServiceOnly = requestModel.mobileOrOnlineServiceOnly,
+                serviceIds = requestModel.serviceIds,
+                workingSizeType = requestModel.workerSizeType,
+                email = businessUser.email,
+                telephone = businessUser.telephone
+            };
+
+            business.nameForUrl = await _businessService.GetNameForUrl(business);
+            await HelperMethods.SetBusinessLocationInfoByAddress(business, _nominatimWebInterface);
+
+            if (business.latitude > 0 && business.longitude > 0)
+            {
+                var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
+                business.location = gf.CreatePoint(new NetTopologySuite.Geometries.Coordinate(business.latitude, business.longitude));
+            }
+
+            business = await _businessService.SaveBusinessAsync(business);
+
+            businessUser.businessId = business.id;
+            await _businessUserService.UpdateBusinessUserAsync(businessUser);
+
+            BackgroundJob.Enqueue(() => _businessPropertiesService.SaveStaticBusinessPropertiesAsync(business.id, requestModel.website));
+
+            response.Data = business;
+            response.Message = Resource.Resource.RegistrationSuccess;
+
+            return Ok(response);
+        }
+
+        /// <summary>
         /// Update Business
         /// </summary>
         /// <remarks>
@@ -531,7 +645,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("update")]
-        [Authorize(Roles = "Business,Admin")]
+        [Authorize(Roles = "BusinessAdmin,Business,Admin")]
         public async Task<IActionResult> Update(Business updateBusiness)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -611,7 +725,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("saveworkinginfo")]
-        [Authorize(Roles = "Business,Admin")]
+        [Authorize(Roles = "BusinessAdmin,Business,Admin")]
         public async Task<IActionResult> SaveWorkingInfo(BusinessWorkInfoRequestModel businessWorkInfoModel)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -676,7 +790,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("addgalleryphoto")]
-        [Authorize(Roles = "Business,Admin")]
+        [Authorize(Roles = "BusinessAdmin,Business,Admin")]
         public async Task<IActionResult> AddGalleryPhoto([FromForm] BusinessFileInfoRequestModel businessFileInfoModel)
         {
             ResponseModel<BusinessGallery> response = new ResponseModel<BusinessGallery>();
@@ -750,7 +864,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("updategalleryphoto")]
-        [Authorize(Roles = "Business,Admin")]
+        [Authorize(Roles = "BusinessAdmin,Business,Admin")]
         public async Task<IActionResult> UpdateGalleryPhoto([FromBody] BusinessGallery updateBusinessGallery)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -780,7 +894,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("deletegalleryphoto")]
-        [Authorize(Roles = "Business,Admin")]
+        [Authorize(Roles = "BusinessAdmin,Business,Admin")]
         public async Task<IActionResult> DeleteGalleryPhoto([FromBody] string id)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
@@ -809,7 +923,7 @@ namespace CareGardenApiV1.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost("delete")]
-        [Authorize(Roles = "Business,Admin")]
+        [Authorize(Roles = "BusinessAdmin,Business,Admin")]
         public async Task<IActionResult> Delete([FromBody] Business business)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();

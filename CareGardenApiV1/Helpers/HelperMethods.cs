@@ -8,6 +8,9 @@ using CareGardenApiV1.Model.ResponseModel;
 using System.Text;
 using CareGardenApiV1.Model.TableModel;
 using CareGardenApiV1.Model.OtherModel;
+using Nominatim.API.Geocoders;
+using Nominatim.API.Models;
+using Nominatim.API.Interfaces;
 namespace CareGardenApiV1.Helpers
 {
     public static class HelperMethods
@@ -51,17 +54,9 @@ namespace CareGardenApiV1.Helpers
 
         public async static Task<User> GetSessionUser(HttpRequest request, IUserService userService)
         {
-            var tokenString = request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            var token = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
+            var userId = GetClaimInfo(request, ClaimTypes.PrimarySid);
 
-            if (token == null)
-            {
-                return null;
-            }
-
-            var userId = token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.PrimarySid)?.Value?.ToString();
-
-            if (!userId.IsGuid())
+            if (userId.IsNullOrEmpty() || !userId.IsGuid())
             {
                 return null;
             }
@@ -69,24 +64,41 @@ namespace CareGardenApiV1.Helpers
             return await userService.GetUserById(userId.ToGuid());
         }
 
-        public async static Task<UserResponseModel> GetSessionUserResponseModel(HttpRequest request, IUserService userService)
+        public async static Task<BusinessUser> GetSessionBusinessUser(HttpRequest request, IBusinessUserService businessService)
         {
-            var tokenString = request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            var token = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
+            var businessUserId = GetClaimInfo(request, ClaimTypes.PrimarySid);
 
-            if (token == null)
+            if (businessUserId.IsNullOrEmpty() || !businessUserId.IsGuid())
             {
                 return null;
             }
 
-            var userId = token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.PrimarySid)?.Value?.ToString();
+            return await businessService.GetBusinessUserById(businessUserId.ToGuid());
+        }
 
-            if (!userId.IsGuid())
+
+        public async static Task<UserResponseModel> GetSessionUserResponseModel(HttpRequest request, IUserService userService)
+        {
+            var userId = GetClaimInfo(request, ClaimTypes.PrimarySid);
+
+            if (userId.IsNullOrEmpty() || !userId.IsGuid())
             {
                 return null;
             }
 
             return await userService.GetUserResponseModelById(userId.ToGuid());
+        }
+
+        public async static Task<BusinessUserResponseModel> GetSessionBusinessUserResponseModel(HttpRequest request, IBusinessUserService businessUserService)
+        {
+            var businessUserId = GetClaimInfo(request, ClaimTypes.PrimarySid);
+
+            if (businessUserId.IsNullOrEmpty() || !businessUserId.IsGuid())
+            {
+                return null;
+            }
+
+            return await businessUserService.GetBusinessUserResponseModelById(businessUserId.ToGuid());
         }
 
         public static string GetClaimInfo(HttpRequest request, string type)
@@ -357,6 +369,26 @@ namespace CareGardenApiV1.Helpers
         private static double degreesToRadians(double degrees)
         {
             return degrees * Math.PI / 180;
+        }
+
+        public async static Task<bool> SetBusinessLocationInfoByAddress(Business business, INominatimWebInterface nominatimWebInterface)
+        {
+            if (!(business != null && !business.address.IsNullOrEmpty())) return false;
+
+            ForwardGeocoder geocoder = new ForwardGeocoder(nominatimWebInterface);
+            var geocodeResult = await geocoder.Geocode(new ForwardGeocodeRequest { queryString = business.address.Replace("/", ",") });
+
+            if (geocodeResult != null && geocodeResult.Length > 0)
+            {
+                var firstResult = geocodeResult[0];
+                business.city = firstResult.Address?.State;
+                business.province = firstResult.Address?.City;
+                business.district = firstResult.Address?.Suburb;
+                business.latitude = firstResult.Latitude;
+                business.longitude = firstResult.Longitude;
+            }
+
+            return true;
         }
     }
 }

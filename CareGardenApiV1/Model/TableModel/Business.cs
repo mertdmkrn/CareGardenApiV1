@@ -29,6 +29,7 @@ namespace CareGardenApiV1.Model.TableModel
             complains = new HashSet<Complain>();
             discounts = new HashSet<Discount>();
             notifications = new HashSet<Notification>();
+            businessUsers = new HashSet<BusinessUser>();
         }
 
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -64,12 +65,6 @@ namespace CareGardenApiV1.Model.TableModel
         [MaxLength(100)]
         public string? email { get; set; }
 
-        [MaxLength(50)]
-        public string? password { get; set; }
-
-        [NotMapped]
-        public string? retryPassword { get; set; }
-
         public double latitude { get; set; }
         public double longitude { get; set; }
 
@@ -80,6 +75,8 @@ namespace CareGardenApiV1.Model.TableModel
         public DateTime? createDate { get; set; }
         public DateTime? updateDate { get; set; }
         public WorkingGenderType workingGenderType { get; set; }
+        public WorkerSizeType workingSizeType { get; set; }
+        public string? serviceIds { get; set; }
         public bool officialHolidayAvailable { get; set; }
         public int appointmentTimeInterval { get; set; }
         public int appointmentPeopleCount { get; set; }
@@ -91,6 +88,8 @@ namespace CareGardenApiV1.Model.TableModel
         public string? logoUrl { get; set; }
 
         public bool hasNotification { get; set; }
+        public bool mobileOrOnlineServiceOnly { get; set; }
+
 
         public virtual ICollection<Comment> comments { get; set; }
         public virtual ICollection<BusinessGallery> galleries { get; set; }
@@ -107,5 +106,8 @@ namespace CareGardenApiV1.Model.TableModel
 
         [JsonIgnore]
         public virtual ICollection<Notification> notifications { get; set; }
+
+        [JsonIgnore]
+        public virtual ICollection<BusinessUser> businessUsers { get; set; }
     }
 }

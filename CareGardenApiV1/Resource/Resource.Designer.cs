@@ -430,6 +430,60 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Şifre sıfırlama bağlantısı süresi doldu. Lütfen bir şifre sıfırlama bağlantısı talep edin..
+        /// </summary>
+        public static string PasswordResetLinkExpired {
+            get {
+                return ResourceManager.GetString("PasswordResetLinkExpired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Şifre yenileme işleminize devam etmek için &lt;a href=&apos;{0}&apos; target=&apos;_blank&apos;&gt;buraya&lt;/a&gt; tıklayabilirsiz..
+        /// </summary>
+        public static string PasswordResetLinkMessage {
+            get {
+                return ResourceManager.GetString("PasswordResetLinkMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bir saat içinde birden fazla şifre yenileme bağlantısı alamazsınız..
+        /// </summary>
+        public static string PasswordResetLinkMessageInOneHour {
+            get {
+                return ResourceManager.GetString("PasswordResetLinkMessageInOneHour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password reset link not found..
+        /// </summary>
+        public static string PasswordResetLinkNotFound {
+            get {
+                return ResourceManager.GetString("PasswordResetLinkNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Şifre yenileme bağlantısı gönderilemedi..
+        /// </summary>
+        public static string PasswordResetLinkNotSend {
+            get {
+                return ResourceManager.GetString("PasswordResetLinkNotSend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Şifre yenileme bağlantısı gönderildi..
+        /// </summary>
+        public static string PasswordResetLinkSend {
+            get {
+                return ResourceManager.GetString("PasswordResetLinkSend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Girdiğiniz şifreler birbiriyle eşleşmiyor..
         /// </summary>
         public static string PasswordsMustBeEqual {

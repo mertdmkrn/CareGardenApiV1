@@ -9,7 +9,6 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<Business> GetBusinessByIdAsync(Guid id);
         Task<Business> GetBusinessAllByIdAsync(Guid id);
         Task<List<Tuple<string, string>>> GetBusinessSelectListAsync();
-        Task<Business> GetBusinessByEmailAndPasswordAsync(string email, string password);
         Task<Business> GetBusinessByEmailAsync(string email);
         Task<Business> GetBusinessByTelephoneNumberAsync(string telephone);
         Task<List<BusinessPagingListResponseModel>> GetBusinessLiteListAsync(BusinessSearchAdminRequestModel searchAdminModel);
@@ -25,7 +24,7 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<bool> GetBusinessExistsByTelephoneNumberAsync(string telephone);
         Task<bool> GetBusinessExistsByEmailAsync(string email);
         Task<Business> SaveBusinessAsync(Business business);
-        Task<Business> UpdateBusinessAsync(Business business, bool isPasswordChanged = false);
+        Task<Business> UpdateBusinessAsync(Business business);
         Task<bool> DeleteBusinessAsync(Business business);
         Task<bool> UpdateMemoryBusinessList(Guid id);
         Task<List<Guid>> GetBusinessIds();

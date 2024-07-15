@@ -1,4 +1,6 @@
-﻿namespace CareGardenApiV1.Model.ResponseModel
+﻿using CareGardenApiV1.Model.TableModel;
+
+namespace CareGardenApiV1.Model.ResponseModel
 {
     public class BusinessUserResponseModel
     {
@@ -12,5 +14,6 @@
         public int gender { get; set; }
         public DateTime? birthDate { get; set; }
         public bool hasNotification { get; set; }
+        public Business? business { get; set; }
     }
 }

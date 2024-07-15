@@ -125,7 +125,8 @@ namespace CareGardenApiV1.Repository.Concrete
                     imageUrl = x.imageUrl,
                     birthDate = x.birthDate,
                     gender = (int)x.gender,
-                    hasNotification = x.hasNotification
+                    hasNotification = x.hasNotification,
+                    business = x.business
                 })
                 .FirstOrDefaultAsync();
         }

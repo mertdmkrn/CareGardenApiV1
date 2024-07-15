@@ -128,7 +128,7 @@ namespace CareGardenApiV1.Helpers
                 return null;
             }
 
-            var businessId = token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.PrimarySid)?.Value?.ToString();
+            var businessId = token.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.BusinessId)?.Value?.ToString();
 
             if (!businessId.IsGuid())
             {

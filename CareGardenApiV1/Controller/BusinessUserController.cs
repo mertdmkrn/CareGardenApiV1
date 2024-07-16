@@ -21,6 +21,7 @@ namespace CareGardenApiV1.Controller
         private readonly IBusinessUserService _businessUserService;
         private readonly IFaqService _faqService;
         private readonly IResetLinkService _resetLinkService;
+        private readonly IConfirmationService _confirmationService;
         private readonly ITokenHandler _tokenHandler;
         private readonly IFileHandler _fileHandler;
         private readonly IMemoryCache _memoryCache;
@@ -30,6 +31,7 @@ namespace CareGardenApiV1.Controller
             IBusinessUserService businessUserService,
             IFaqService faqService,
             IResetLinkService resetLinkService,
+            IConfirmationService confirmationService,
             ITokenHandler tokenHandler,
             IFileHandler fileHandler,
             IMemoryCache memoryCache,
@@ -38,6 +40,7 @@ namespace CareGardenApiV1.Controller
             _businessUserService = businessUserService;
             _faqService = faqService;
             _resetLinkService = resetLinkService;
+            _confirmationService = confirmationService;
             _tokenHandler = tokenHandler;
             _fileHandler = fileHandler;
             _memoryCache = memoryCache;
@@ -98,6 +101,66 @@ namespace CareGardenApiV1.Controller
 
             return Ok(response);
         }
+
+        /// <summary>
+        /// Send Telephone Confirmation Code
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("sendtelephoneconfirmationcode")]
+        public async Task<IActionResult> SendTelephoneConfirmationCode([FromBody] string telephoneNumber)
+        {
+            ResponseModel<int> response = new ResponseModel<int>();
+            int confirmationCode = new Random().Next(1000, 9999);
+
+            if (telephoneNumber.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("telephoneNumber", Resource.Resource.NotEmpty));
+            }
+
+            if (!telephoneNumber.IsValidTelephoneNumber())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("telephoneNumber", Resource.Resource.ValidTelephoneMessage));
+            }
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.ConfirmationCodeNotSend;
+                response.HasError = true;
+                return Ok(response);
+            }
+
+            var isExistUser = await _businessUserService.GetBusinessUserExistsByTelephoneNumberAsync(telephoneNumber);
+
+            if (isExistUser)
+            {
+                response.HasError = true;
+                response.Message = $"{Resource.Resource.UserFoundEnteredTelephone} {Resource.Resource.ResetPasswordMessage}";
+                return Ok(response);
+            }
+
+            var systemConfirmationInfo = await _confirmationService.GetConfirmationInfo(telephoneNumber);
+
+            if (systemConfirmationInfo != null && systemConfirmationInfo.createDate.DifferenceBetweenDates(DateTime.Now, DateType.Minute) < 1)
+            {
+                response.Message = Resource.Resource.ConfirmationCodeMessageInOneMinute;
+                response.HasError = true;
+                return Ok(response);
+            }
+
+            string smsMessage = string.Format(Resource.Resource.ConfirmationMessage, confirmationCode);
+
+            //var sendSms = await _smsHandler.SendSmsAsync(smsMessage, telephoneNumber);
+
+            await _confirmationService.SaveConfirmationInfoAsync(telephoneNumber, confirmationCode.ToString());
+
+            response.Message = $"{Resource.Resource.ConfirmationCodeSend} {smsMessage}";
+            response.Data = confirmationCode;
+
+            return Ok(response);
+        }
+
 
         /// <summary>
         /// User Set Profile Photo

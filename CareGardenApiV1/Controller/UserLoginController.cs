@@ -16,7 +16,7 @@ namespace CareGardenApiV1.Controller
     public class UserLoginController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IConfirmationService _contirmationService;
+        private readonly IConfirmationService _confirmationService;
         private readonly ITokenHandler _tokenHandler;
         private readonly ISmsHandler _smsHandler;
         private readonly IMailHandler _mailHandler;
@@ -24,14 +24,14 @@ namespace CareGardenApiV1.Controller
 
         public UserLoginController(
             IUserService userService,
-            IConfirmationService contirmationService,
+            IConfirmationService confirmationService,
             ITokenHandler tokenHandler,
             ISmsHandler smsHandler,
             IMailHandler mailHandler,
             ILoggerHandler loggerHandler)
         {
             _userService = userService;
-            _contirmationService = contirmationService;
+            _confirmationService = confirmationService;
             _tokenHandler = tokenHandler;
             _smsHandler = smsHandler;
             _mailHandler = mailHandler;
@@ -76,7 +76,7 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
-            var systemConfirmationInfo = await _contirmationService.GetConfirmationInfo(telephoneNumber);
+            var systemConfirmationInfo = await _confirmationService.GetConfirmationInfo(telephoneNumber);
 
             if (systemConfirmationInfo != null && systemConfirmationInfo.createDate.DifferenceBetweenDates(DateTime.Now, DateType.Minute) < 1)
             {
@@ -89,7 +89,7 @@ namespace CareGardenApiV1.Controller
 
             //var sendSms = await _smsHandler.SendSmsAsync(smsMessage, telephoneNumber);
 
-            await _contirmationService.SaveConfirmationInfoAsync(telephoneNumber, confirmationCode.ToString());
+            await _confirmationService.SaveConfirmationInfoAsync(telephoneNumber, confirmationCode.ToString());
 
             response.Message = $"{Resource.Resource.ConfirmationCodeSend} {smsMessage}";
             response.Data = confirmationCode;
@@ -134,7 +134,7 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
-            var systemConfirmationInfo = await _contirmationService.GetConfirmationInfo(email);
+            var systemConfirmationInfo = await _confirmationService.GetConfirmationInfo(email);
 
             if (systemConfirmationInfo != null && Math.Abs(systemConfirmationInfo.createDate.DifferenceBetweenDates(DateTime.Now, DateType.Minute)) < 1)
             {
@@ -156,7 +156,7 @@ namespace CareGardenApiV1.Controller
 
             BackgroundJob.Enqueue(() => _mailHandler.SendEmailAsync(mailRequest));
 
-            await _contirmationService.SaveConfirmationInfoAsync(email, confirmationCode.ToString());
+            await _confirmationService.SaveConfirmationInfoAsync(email, confirmationCode.ToString());
 
             response.Message = Resource.Resource.ConfirmationCodeSend;
             response.Data = true;
@@ -193,7 +193,7 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
-            var systemConfirmationInfo = await _contirmationService.GetConfirmationInfo(telephoneNumber);
+            var systemConfirmationInfo = await _confirmationService.GetConfirmationInfo(telephoneNumber);
 
             if (systemConfirmationInfo != null && systemConfirmationInfo.createDate.DifferenceBetweenDates(DateTime.Now, DateType.Minute) < 1)
             {
@@ -206,7 +206,7 @@ namespace CareGardenApiV1.Controller
 
             //var sendSms = await _smsHandler.SendSmsAsync(smsMessage, telephoneNumber);
 
-            await _contirmationService.SaveConfirmationInfoAsync(telephoneNumber, confirmationCode.ToString());
+            await _confirmationService.SaveConfirmationInfoAsync(telephoneNumber, confirmationCode.ToString());
 
             response.Message = $"{Resource.Resource.ConfirmationCodeSend} {smsMessage}";
             response.Data = confirmationCode;
@@ -258,7 +258,7 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
-            var systemConfirmationInfo = await _contirmationService.GetConfirmationInfo(confirmationInfo.target);
+            var systemConfirmationInfo = await _confirmationService.GetConfirmationInfo(confirmationInfo.target);
 
             if (systemConfirmationInfo == null)
             {
@@ -282,7 +282,7 @@ namespace CareGardenApiV1.Controller
             }
 
             systemConfirmationInfo.createDate = systemConfirmationInfo.createDate.Value.AddDays(-1);
-            await _contirmationService.SaveConfirmationInfoAsync(systemConfirmationInfo);
+            await _confirmationService.SaveConfirmationInfoAsync(systemConfirmationInfo);
 
             response.Message = Resource.Resource.ConfirmationCodeVerified;
             response.Data = true;
@@ -554,7 +554,7 @@ namespace CareGardenApiV1.Controller
                 return Ok(response);
             }
 
-            var systemConfirmationInfo = await _contirmationService.GetConfirmationInfo(updateUser.email);
+            var systemConfirmationInfo = await _confirmationService.GetConfirmationInfo(updateUser.email);
 
             if (systemConfirmationInfo == null || !systemConfirmationInfo.code.IsNull("").Equals(updateUser.verifiedCode))
             {

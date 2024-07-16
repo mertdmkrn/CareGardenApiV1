@@ -651,6 +651,24 @@
              </remarks>
              <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.Validate(CareGardenApiV1.Model.TableModel.BusinessUser)">
+             <summary>
+             Validate Business User
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "fullName" : "Mert DEMİRKIRAN",
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "stms5581",
+                    "retryPassword": "stms5581",
+                    "telephone": "+905467335939"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.BusinessUserController.UserLogin(CareGardenApiV1.Model.TableModel.BusinessUser)">
              <summary>
              User Login Control

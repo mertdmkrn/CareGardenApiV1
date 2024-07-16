@@ -651,7 +651,7 @@ namespace CareGardenApiV1.Controller
 
             if (response.HasError)
             {
-                response.Message = Resource.Resource.ConfirmationCodeNotSend;
+                response.Message = Resource.Resource.PasswordResetLinkNotFound;
                 response.HasError = true;
                 return Ok(response);
             }

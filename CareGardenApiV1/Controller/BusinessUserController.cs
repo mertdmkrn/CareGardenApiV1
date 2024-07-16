@@ -468,6 +468,109 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
+        /// Validate Business User
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "fullName" : "Mert DEMİRKIRAN",
+        ///        "email": "mertdmkrn37@gmail.com",
+        ///        "password": "stms5581",
+        ///        "retryPassword": "stms5581",
+        ///        "telephone": "+905467335939"
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost("validate")]
+        public async Task<IActionResult> Validate([FromBody] BusinessUser businessUser)
+        {
+            ResponseModel<bool> response = new ResponseModel<bool>();
+
+            if (businessUser.email.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.NotEmpty));
+            }
+
+            if (!businessUser.email.IsNullOrEmpty() && !businessUser.email.IsValidEmail())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("email", Resource.Resource.ValidEmailMessage));
+            }
+
+            if (!businessUser.telephone.IsValidTelephoneNumber())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("telephoneNumber", Resource.Resource.ValidTelephoneMessage));
+            }
+
+            if (businessUser.password.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.NotEmpty));
+            }
+
+            if (businessUser.retryPassword.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.NotEmpty));
+            }
+
+            if (businessUser.password.IsNotNullOrEmpty() && !businessUser.password.Length.Between(8, 20))
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.PasswordMustBeEightCharacters));
+            }
+
+            if (businessUser.retryPassword.IsNotNullOrEmpty() && !businessUser.retryPassword.Length.Between(8, 20))
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.PasswordMustBeEightCharacters));
+            }
+
+
+            if (!businessUser.password.IsNullOrEmpty() && !businessUser.password.Equals(businessUser.retryPassword))
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("password", Resource.Resource.PasswordsMustBeEqual));
+                response.ValidationErrors.Add(new ValidationError("retryPassword", Resource.Resource.PasswordsMustBeEqual));
+            }
+
+            if (businessUser.fullName.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("fullName", Resource.Resource.NotEmpty));
+            }
+
+            if (!businessUser.fullName.IsNullOrEmpty() && !businessUser.fullName.IsValidFullName())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("fullName", Resource.Resource.ValidNameMessage));
+            }
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.RegistrationFailed;
+                return Ok(response);
+            }
+
+            var systemBusinessUser = await _businessUserService.GetBusinessUserByEmailAsync(businessUser.email);
+
+            if (systemBusinessUser != null)
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.RegisteredUserEnteredMail;
+                return Ok(response);
+            }
+
+            response.Data = true;
+
+            return Ok(response);
+        }
+
+        /// <summary>
         /// User Login Control
         /// </summary>
         /// <remarks>

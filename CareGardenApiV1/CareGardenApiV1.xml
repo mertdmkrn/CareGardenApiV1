@@ -585,6 +585,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.SendTelephoneConfirmationCode(System.String)">
+            <summary>
+            Send Telephone Confirmation Code
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.BusinessUserController.SetProfilePhoto(Microsoft.AspNetCore.Http.IFormFile)">
             <summary>
             User Set Profile Photo
@@ -1733,22 +1739,16 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Migrations.CareGardenV1.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="T:CareGardenApiV1.Migrations.InitialCreate">
             <inheritdoc />
         </member>
-        <member name="M:CareGardenApiV1.Migrations.CareGardenV1.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:CareGardenApiV1.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="T:CareGardenApiV1.Migrations.CareGardenV2">
+        <member name="M:CareGardenApiV1.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:CareGardenApiV1.Migrations.CareGardenV2.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:CareGardenApiV1.Migrations.CareGardenV2.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:CareGardenApiV1.Migrations.CareGardenV2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:CareGardenApiV1.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:CareGardenApiV1.Resource.Resource">

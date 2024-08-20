@@ -17,6 +17,7 @@ namespace CareGardenApiV1.Model.TableModel
         {
             details = new HashSet<AppointmentDetail>();
             comments = new HashSet<Comment>();
+            businessPayments = new HashSet<BusinessPayment>();
         }
 
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -63,11 +64,9 @@ namespace CareGardenApiV1.Model.TableModel
         public Comment? comment { get; set; }
 
 
-
         public virtual ICollection<AppointmentDetail> details { get; set; }
-
         public virtual ICollection<Comment> comments { get; set; }
-
+        public virtual ICollection<BusinessPayment> businessPayments { get; set; }
 
     }
 }

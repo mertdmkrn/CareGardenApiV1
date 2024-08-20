@@ -23,6 +23,7 @@ namespace CareGardenApiV1.Model.TableModel
             appointments = new HashSet<Appointment>();
             properties = new HashSet<BusinessProperties>();
             paymentInfos = new HashSet<PaymentInfo>();
+            businessPayments = new HashSet<BusinessPayment>();
             favorites = new HashSet<Favorite>();
             workers = new HashSet<Worker>();
             campaigns = new HashSet<Campaign>();
@@ -98,6 +99,7 @@ namespace CareGardenApiV1.Model.TableModel
         public virtual ICollection<Appointment> appointments { get; set; }
         public virtual ICollection<BusinessProperties> properties { get; set; }
         public virtual ICollection<PaymentInfo> paymentInfos { get; set; }
+        public virtual ICollection<BusinessPayment> businessPayments { get; set; }
         public virtual ICollection<Favorite> favorites { get; set; }
         public virtual ICollection<Worker> workers { get; set; }
         public virtual ICollection<Campaign> campaigns { get; set; }

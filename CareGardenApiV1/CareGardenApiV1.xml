@@ -446,6 +446,58 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessPaymentController.GetById(System.String)">
+            <summary>
+            Get BusinessPayment By Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessPaymentController.Search(CareGardenApiV1.Model.RequestModel.BusinessPaymentSearchRequestModel)">
+            <summary>
+            Search BusinessPayment
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessPaymentController.Save(CareGardenApiV1.Model.TableModel.BusinessPayment)">
+             <summary>
+             Save BusinessPayment
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "description": "Açıklama.",
+                    "appointmentId": "00000000-0000-0000-0000-000000000000",
+                    "date": "2024-08-20"
+                    "amount": 5000
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessPaymentController.Update(CareGardenApiV1.Model.TableModel.BusinessPayment)">
+             <summary>
+             Update BusinessProperties
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "description": "Açıklama.",
+                    "date": "2024-08-20"
+                    "amount": 5000
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessPaymentController.Delete(System.String)">
+            <summary>
+            Delete BusinessProperties
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.GetById(System.String)">
             <summary>
             Get BusinessProperties By Id
@@ -1749,6 +1801,18 @@
             <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.MigrationV1">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.MigrationV1.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.MigrationV1.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.MigrationV1.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:CareGardenApiV1.Resource.Resource">

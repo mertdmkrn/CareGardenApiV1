@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using CareGardenApiV1.Helpers;
+using System.Xml.Linq;
 
 namespace CareGardenApiV1.Model.TableModel
 {
@@ -11,6 +12,11 @@ namespace CareGardenApiV1.Model.TableModel
     [Index(nameof(telephone))]
     public class BusinessUser
     {
+        public BusinessUser()
+        {
+            businessPayments = new HashSet<BusinessPayment>();
+        }
+
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid id { get; set; } = Guid.Empty;
 
@@ -53,5 +59,7 @@ namespace CareGardenApiV1.Model.TableModel
 
         [JsonIgnore]
         public Business? business { get; set; }
+
+        public virtual ICollection<BusinessPayment> businessPayments { get; set; }
     }
 }

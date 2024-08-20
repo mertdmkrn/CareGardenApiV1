@@ -63,17 +63,12 @@ namespace CareGardenApiV1.Helpers
 
         public static int ToInt(this string number, int defaultInt = 0)
         {
-            int resultNum = defaultInt;
-            try
+            if (int.TryParse(number, out int resultNum))
             {
-                if (!string.IsNullOrEmpty(number))
-                    resultNum = Convert.ToInt32(number);
-            }
-            catch
-            {
+                return resultNum;
             }
 
-            return resultNum;
+            return defaultInt;
         }
 
         public static int ToInt(this double number, int defaultInt = 0)

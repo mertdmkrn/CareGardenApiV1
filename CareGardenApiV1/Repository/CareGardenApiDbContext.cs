@@ -100,6 +100,29 @@ namespace CareGardenApiV1.Repository
                 .OnDelete(DeleteBehavior.Cascade);
             });
 
+
+            builder.Entity<BusinessPayment>(entity =>
+            {
+                entity.HasOne(d => d.business)
+                .WithMany(p => p.businessPayments)
+                .HasForeignKey(d => d.businessId)
+                .HasConstraintName("FK_BusinessPayment_Business_businessId")
+                .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(d => d.appointment)
+                .WithMany(p => p.businessPayments)
+                .HasForeignKey(d => d.appointmentId)
+                .HasConstraintName("FK_BusinessPayment_Appointment_appointmentId")
+                .OnDelete(DeleteBehavior.SetNull);
+
+
+                entity.HasOne(d => d.businessUser)
+                .WithMany(p => p.businessPayments)
+                .HasForeignKey(d => d.businessUserId)
+                .HasConstraintName("FK_BusinessPayment_BusinessUser_businessUserId")
+                .OnDelete(DeleteBehavior.SetNull);
+            });
+
             builder.Entity<Campaign>(entity =>
             {
                 entity.HasOne(d => d.business)
@@ -237,6 +260,7 @@ namespace CareGardenApiV1.Repository
         public DbSet<BusinessProperties> BusinessProperties { get; set; }
         public DbSet<BusinessServiceModel> BusinessServices { get; set; }
         public DbSet<BusinessWorkingInfo> BusinessWorkingInfos { get; set; }
+        public DbSet<BusinessPayment> BusinessPayments { get; set; }
         public DbSet<Campaign> Campaigns { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Complain> Complains { get; set; }

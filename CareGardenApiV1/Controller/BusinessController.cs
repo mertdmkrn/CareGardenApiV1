@@ -735,13 +735,7 @@ namespace CareGardenApiV1.Controller
                 response.HasError = true;
                 response.ValidationErrors.Add(new ValidationError("businessWorkingInfo", Resource.Resource.NotEmpty));
             }
-
-            if (businessWorkInfoModel.appointmentPeopleCount == 0)
-            {
-                response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("appointmentPeopleCount", Resource.Resource.NotEmpty));
-            }
-
+            
             if (businessWorkInfoModel.appointmentTimeInterval == 0)
             {
                 response.HasError = true;

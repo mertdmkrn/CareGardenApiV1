@@ -381,6 +381,7 @@ namespace CareGardenApiV1.Controller
                 response.Data = false;
             }
 
+            response.Data = true;
             return Ok(response);
         }
 

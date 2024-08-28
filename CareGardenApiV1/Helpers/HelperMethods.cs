@@ -47,9 +47,9 @@ namespace CareGardenApiV1.Helpers
         {
             if (string.IsNullOrEmpty(telephoneNumber)) return false;
 
-            string regex = @"^\+(\d{1,4})[\s-]?\(?\d{1,4}?\)?[\s-]?\d{1,4}[\s-]?\d{1,4}[\s-]?\d{1,9}$";
+            string pattern = @"^[+]{1}(?:[0-9\\-\\(\\)\\/\\.]\\s?){6,15}[0-9]{1}$";
 
-            return Regex.IsMatch(telephoneNumber, regex, RegexOptions.IgnoreCase);
+            return Regex.IsMatch(telephoneNumber, pattern, RegexOptions.IgnoreCase);
         }
 
         public async static Task<User> GetSessionUser(HttpRequest request, IUserService userService)

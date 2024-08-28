@@ -179,7 +179,7 @@ namespace CareGardenApiV1.Controller
                 if (appointmentSaveModel.userTelephone.IsNullOrEmpty())
                 {
                     response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("userName", Resource.Resource.NotEmpty));
+                    response.ValidationErrors.Add(new ValidationError("userTelephone", Resource.Resource.NotEmpty));
                 }       
                 
                 if (!appointmentSaveModel.userTelephone.IsValidTelephoneNumber())
@@ -198,7 +198,7 @@ namespace CareGardenApiV1.Controller
                 if (!appointmentSaveModel.userEmail.IsValidEmail())
                 {
                     response.HasError = true;
-                    response.ValidationErrors.Add(new ValidationError("userTelephone", Resource.Resource.ValidTelephoneMessage));
+                    response.ValidationErrors.Add(new ValidationError("userEmail", Resource.Resource.ValidEmailMessage));
                 }
             }
 

@@ -330,7 +330,7 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("validate")]
-        public async Task<IActionResult> Validate([FromBody] AppointmentSaveRequestModel appointmentSaveModel)
+        public async Task<IActionResult> Validate([FromBody] AppointmentSaveValidateRequestModel appointmentModel)
         {
             ResponseModel<bool> response = new ResponseModel<bool>();
 
@@ -342,32 +342,32 @@ namespace CareGardenApiV1.Controller
             }
             else
             {
-                if (appointmentSaveModel.userName.IsNullOrEmpty())
+                if (appointmentModel.userName.IsNullOrEmpty())
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("userName", Resource.Resource.NotEmpty));
                 }
 
-                if (appointmentSaveModel.userTelephone.IsNullOrEmpty())
+                if (appointmentModel.userTelephone.IsNullOrEmpty())
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("userTelephone", Resource.Resource.NotEmpty));
                 }
 
-                if (!appointmentSaveModel.userTelephone.IsValidTelephoneNumber())
+                if (!appointmentModel.userTelephone.IsValidTelephoneNumber())
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("userTelephone",
                         Resource.Resource.ValidTelephoneMessage));
                 }
 
-                if (appointmentSaveModel.userEmail.IsNullOrEmpty())
+                if (appointmentModel.userEmail.IsNullOrEmpty())
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("userEmail", Resource.Resource.NotEmpty));
                 }
 
-                if (!appointmentSaveModel.userEmail.IsValidEmail())
+                if (!appointmentModel.userEmail.IsValidEmail())
                 {
                     response.HasError = true;
                     response.ValidationErrors.Add(new ValidationError("userEmail",

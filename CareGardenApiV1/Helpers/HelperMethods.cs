@@ -47,7 +47,7 @@ namespace CareGardenApiV1.Helpers
         {
             if (string.IsNullOrEmpty(telephoneNumber)) return false;
 
-            string pattern = @"^[+]{1}(?:[0-9\\-\\(\\)\\/\\.]\\s?){6,15}[0-9]{1}$";
+            string pattern = @"^\(?:([+]\d{1,4})[-.\s]?)?(?:[(](\d{1,3})[)][-.\s]?)?(\d{1,4})[-.\s]?(\d{1,4})[-.\s]?(\d{1,9})$";
 
             return Regex.IsMatch(telephoneNumber, pattern, RegexOptions.IgnoreCase);
         }

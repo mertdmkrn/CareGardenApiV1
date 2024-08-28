@@ -315,7 +315,76 @@ namespace CareGardenApiV1.Controller
             return Ok(response);
         }
 
-    
+        /// <summary>
+        /// Validate Appoinment
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        ///     { 
+        ///        "userName" : "Mert Demirkıran",
+        ///        "userEmail" : "mertdmkrn37@gmail.com",
+        ///        "userTelephone" : "+905467335939",
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost("validate")]
+        public async Task<IActionResult> Validate([FromBody] AppointmentSaveRequestModel appointmentSaveModel)
+        {
+            ResponseModel<bool> response = new ResponseModel<bool>();
+
+            var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
+
+            if (!userId.IsNullOrEmpty())
+            {
+                response.Data = true;
+            }
+            else
+            {
+                if (appointmentSaveModel.userName.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("userName", Resource.Resource.NotEmpty));
+                }
+
+                if (appointmentSaveModel.userTelephone.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("userTelephone", Resource.Resource.NotEmpty));
+                }
+
+                if (!appointmentSaveModel.userTelephone.IsValidTelephoneNumber())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("userTelephone",
+                        Resource.Resource.ValidTelephoneMessage));
+                }
+
+                if (appointmentSaveModel.userEmail.IsNullOrEmpty())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("userEmail", Resource.Resource.NotEmpty));
+                }
+
+                if (!appointmentSaveModel.userEmail.IsValidEmail())
+                {
+                    response.HasError = true;
+                    response.ValidationErrors.Add(new ValidationError("userEmail",
+                        Resource.Resource.ValidEmailMessage));
+                }
+            }
+
+            if (response.HasError)
+            {
+                response.Message = Resource.Resource.RegistrationFailed;
+                response.Data = false;
+            }
+
+            return Ok(response);
+        }
+
+
         /// <summary>
         /// Change Appointment Status
         /// </summary>

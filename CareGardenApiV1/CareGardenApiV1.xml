@@ -194,6 +194,22 @@
              </remarks>
              <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.Validate(CareGardenApiV1.Model.RequestModel.AppointmentSaveValidateRequestModel)">
+             <summary>
+             Validate Appoinment
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "userName" : "Mert Demirkıran",
+                    "userEmail" : "mertdmkrn37@gmail.com",
+                    "userTelephone" : "+905467335939",
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.AppointmentController.Update(CareGardenApiV1.Model.RequestModel.AppointmentChangeRequestModel)">
              <summary>
              Change Appointment Status

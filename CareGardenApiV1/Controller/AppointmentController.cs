@@ -324,7 +324,7 @@ namespace CareGardenApiV1.Controller
         ///     { 
         ///        "userName" : "Mert Demirkıran",
         ///        "userEmail" : "mertdmkrn37@gmail.com",
-        ///        "userTelephone" : "+905467335939",
+        ///        "userTelephone" : "+905467335939"
         ///     }
         ///
         /// </remarks>
@@ -379,6 +379,7 @@ namespace CareGardenApiV1.Controller
             {
                 response.Message = Resource.Resource.RegistrationFailed;
                 response.Data = false;
+                return Ok(response);
             }
 
             response.Data = true;

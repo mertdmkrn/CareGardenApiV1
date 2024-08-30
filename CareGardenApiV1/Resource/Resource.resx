@@ -351,4 +351,10 @@
   <data name="PasswordResetLinkSend" xml:space="preserve">
     <value>Şifre yenileme bağlantısı gönderildi.</value>
   </data>
+  <data name="StartDateNotBiggerEndDate" xml:space="preserve">
+    <value>Başlangıç tarihi bitiş tarihinin büyük olamaz.</value>
+  </data>
+  <data name="DateMaxRangeError" xml:space="preserve">
+    <value>Tarih aralağı maximum bir ay olmalıdır.</value>
+  </data>
 </root>

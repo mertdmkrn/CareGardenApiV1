@@ -11,8 +11,8 @@ public class BusinessAdminAppointmentReportInfo
     public string userName { get; set; }
     public string userImageUrl { get; set; }
     public string userTelephone { get; set; }
-    public DateTime date { get; set; }
-    public string duration { get; set; }
+    public DateTime? date { get; set; }
+    public double totalDuration { get; set; }
     public List<BusinessAdminAppointmentReportWorkerInfo> workerInfos { get; set; }
 }
 

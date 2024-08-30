@@ -1,6 +1,9 @@
-﻿using CareGardenApiV1.Repository.Abstract;
+﻿using CareGardenApiV1.Helpers;
+using CareGardenApiV1.Model.RequestModel;
+using CareGardenApiV1.Repository.Abstract;
 using Microsoft.EntityFrameworkCore;
 using CareGardenApiV1.Model.ResponseModel;
+using CareGardenApiV1.Model.TableModel;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -13,7 +16,6 @@ namespace CareGardenApiV1.Repository.Concrete
             _context = context;
         }
 
-       
         public async Task<List<BusinessAdminEarningReportData>> GetBusinessAdminEarningReportDataAsync(Guid businessId)
         {
             return await _context.BusinessPayments
@@ -24,9 +26,113 @@ namespace CareGardenApiV1.Repository.Concrete
                 {
                     date = g.Key,
                     earning = g.Sum(a => a.amount),
-                    dayStr = g.Key.ToString("ddd", Resource.Resource.Culture) 
+                    dayStr = g.Key.ToString("ddd", Resource.Resource.Culture)
                 })
                 .ToListAsync();
+        }
+
+        public async Task<int> GetCustomerCountAsync(Guid businessId)
+        {
+            return await _context.Appointments
+                .AsNoTracking()
+                .Where(x => x.businessId == businessId)
+                .GroupBy(x => new { x.userId, x.userTelephone })
+                .Select(g => g.Key)
+                .CountAsync();
+        }
+
+        public async Task<Dictionary<AppointmentStatus, int>> GetAppointmentStatusCountAsync(Guid businessId)
+        {
+            var statuses = new[] { AppointmentStatus.Pending, AppointmentStatus.Approved };
+
+            return await _context.Appointments
+                .AsNoTracking()
+                .Where(x => x.businessId == businessId)
+                .Where(x => statuses.Contains(x.status))
+                .GroupBy(x => x.status)
+                .Select(g => new
+                {
+                    Status = g.Key,
+                    Count = g.Count()
+                })
+                .ToDictionaryAsync(x => x.Status, x => x.Count);
+        }
+        
+        public async Task<List<BusinessAdminWorkerReportResponseModel>> GetWorkerReportAsync(BusinessAdminReportRequestModel requestModel)
+        {
+            return await _context.AppointmentDetails
+                .AsNoTracking()
+                .Where(x => x.appointment.businessId == requestModel.businessId)
+                .Where(x => x.appointment.status == AppointmentStatus.Completed)
+                .Where(x => x.appointment.startDate >= requestModel.startDate && x.appointment.startDate <= requestModel.endDate)
+                .GroupBy(x => new { x.worker.name, x.worker.path, x.worker.title })
+                .Select(g => new BusinessAdminWorkerReportResponseModel
+                {
+                    workerName = g.Key.name,
+                    workerImageUrl = g.Key.path,
+                    workerTitle = g.Key.title,
+                    appointmentCount = g.Count(),
+                    totalEarning = g.Sum(a => a.price)
+                })
+                .ToListAsync();
+        }
+
+        public async Task<List<BusinessAdminServiceReportData>> GetServiceReportDatasAsync(BusinessAdminReportRequestModel requestModel)
+        {
+            return await _context.AppointmentDetails
+                .AsNoTracking()
+                .Where(x => x.appointment.businessId == requestModel.businessId)
+                .Where(x => x.appointment.status == AppointmentStatus.Completed)
+                .Where(x => x.appointment.startDate >= requestModel.startDate && x.appointment.startDate <= requestModel.endDate)
+                .GroupBy(x => new
+                {
+                    businessServiceName = (Constants.IsTurkish ? x.businessService.name : x.businessService.nameEn),
+                    serviceName = (Constants.IsTurkish
+                        ? x.businessService.service.name
+                        : x.businessService.service.nameEn)
+                })
+                .Select(g => new BusinessAdminServiceReportData
+                {
+                    businessServiceName = g.Key.businessServiceName,
+                    serviceName = g.Key.serviceName,
+                    appointmentCount = g.Count()
+                })
+                .ToListAsync();
+        }
+
+        public async Task<BusinessAdminAppointmentReportResponseModel> GetAppointmentReportAsync(BusinessAdminReportRequestModel requestModel)
+        {
+            var query = _context.Appointments
+                .AsNoTracking()
+                .Where(x => x.businessId == requestModel.businessId)
+                .Where(x => x.status == AppointmentStatus.Approved)
+                .Where(x => x.startDate >= requestModel.startDate && x.startDate <= requestModel.endDate);
+
+            var totalItems = await query.CountAsync();
+
+            var appointments = await query
+                .Skip(requestModel.page * requestModel.take)
+                .Take(requestModel.take)
+                .Select(x => new BusinessAdminAppointmentReportInfo
+                {
+                    date = x.startDate,
+                    totalDuration = x.endDate.DifferenceBetweenDates(x.startDate, DateType.Minute),
+                    userTelephone = x.user != null ? x.user.telephone : x.userTelephone,
+                    userName = x.user != null ? x.user.fullName : x.userName,
+                    userImageUrl = x.user != null ? x.user.imageUrl : null,
+                    workerInfos = x.details.Select(d => new BusinessAdminAppointmentReportWorkerInfo
+                    {
+                        imageUrl = d.worker.path,
+                        name = d.worker.name
+                    }).ToList()
+                })
+                .ToListAsync();
+
+            return new BusinessAdminAppointmentReportResponseModel
+            {
+                reportInfos = appointments,
+                itemCount = totalItems
+            };
         }
     }
 }

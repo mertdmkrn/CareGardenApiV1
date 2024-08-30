@@ -200,6 +200,9 @@ internal class Program
         builder.Services.AddScoped<IAppointmentDetailRepository, AppointmentDetailRepository>();
         builder.Services.AddScoped<IWorkerServicePriceRepository, WorkerServicePriceRepository>();
         builder.Services.AddScoped<IResetLinkRepository, ResetLinkRepository>();
+        builder.Services.AddScoped<IBusinessCustomerRepository, BusinessCustomerRepository>();
+        builder.Services.AddScoped<IBusinessPaymentRepository, BusinessPaymentRepository>();
+        builder.Services.AddScoped<IBusinessAdminRepository, BusinessAdminRepository>();
 
         builder.Services.AddScoped<IBusinessService, BusinessService>();
         builder.Services.AddScoped<IBusinessUserService, BusinessUserService>();
@@ -224,5 +227,8 @@ internal class Program
         builder.Services.AddScoped<IAppointmentDetailService, AppointmentDetailService>();
         builder.Services.AddScoped<IWorkerServicePriceService, WorkerServicePriceService>();
         builder.Services.AddScoped<IResetLinkService, ResetLinkService>();
+        builder.Services.AddScoped<IBusinessCustomerService, BusinessCustomerService>();
+        builder.Services.AddScoped<IBusinessPaymentService, BusinessPaymentService>();
+        builder.Services.AddScoped<IBusinessAdminService, BusinessAdminService>();
     }
 }

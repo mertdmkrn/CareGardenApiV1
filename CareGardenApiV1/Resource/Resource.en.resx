@@ -348,4 +348,10 @@
   <data name="PasswordResetLinkSend" xml:space="preserve">
     <value>Password reset link sent.</value>
   </data>
+  <data name="StartDateNotBiggerEndDate" xml:space="preserve">
+    <value>The start date cannot be later than the end date.</value>
+  </data>
+  <data name="DateMaxRangeError" xml:space="preserve">
+    <value>The date range must not exceed one month.</value>
+  </data>
 </root>

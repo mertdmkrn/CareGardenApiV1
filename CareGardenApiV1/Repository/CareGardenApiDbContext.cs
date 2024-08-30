@@ -122,6 +122,15 @@ namespace CareGardenApiV1.Repository
                 .HasConstraintName("FK_BusinessPayment_BusinessUser_businessUserId")
                 .OnDelete(DeleteBehavior.SetNull);
             });
+            
+            builder.Entity<BusinessCustomer>(entity =>
+            {
+                entity.HasOne(d => d.business)
+                    .WithMany(p => p.customers)
+                    .HasForeignKey(d => d.businessId)
+                    .HasConstraintName("FK_BusinessCustomers_Business_businessId")
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
 
             builder.Entity<Campaign>(entity =>
             {
@@ -261,6 +270,7 @@ namespace CareGardenApiV1.Repository
         public DbSet<BusinessServiceModel> BusinessServices { get; set; }
         public DbSet<BusinessWorkingInfo> BusinessWorkingInfos { get; set; }
         public DbSet<BusinessPayment> BusinessPayments { get; set; }
+        public DbSet<BusinessCustomer> BusinessCustomers { get; set; }
         public DbSet<Campaign> Campaigns { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Complain> Complains { get; set; }

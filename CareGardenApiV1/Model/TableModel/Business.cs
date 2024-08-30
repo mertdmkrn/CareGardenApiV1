@@ -31,6 +31,7 @@ namespace CareGardenApiV1.Model.TableModel
             discounts = new HashSet<Discount>();
             notifications = new HashSet<Notification>();
             businessUsers = new HashSet<BusinessUser>();
+            customers = new HashSet<BusinessCustomer>();
         }
 
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -111,5 +112,8 @@ namespace CareGardenApiV1.Model.TableModel
 
         [JsonIgnore]
         public virtual ICollection<BusinessUser> businessUsers { get; set; }
+        
+        [JsonIgnore]
+        public virtual ICollection<BusinessCustomer> customers { get; set; }
     }
 }

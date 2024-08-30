@@ -49,7 +49,7 @@ namespace CareGardenApiV1.Controller
         /// Search BusinessPayment
         /// </summary>
         /// <returns></returns>
-        [HttpPost("getbybusinessid")]
+        [HttpPost("search")]
         public async Task<IActionResult> Search([FromBody] BusinessPaymentSearchRequestModel requestModel)
         {
             ResponseModel<List<BusinessPayment>> response = new ResponseModel<List<BusinessPayment>>();
@@ -100,7 +100,7 @@ namespace CareGardenApiV1.Controller
         }
 
         /// <summary>
-        /// Update BusinessProperties
+        /// Update BusinessPayment
         /// </summary>
         /// <remarks>
         /// **Sample request body:**

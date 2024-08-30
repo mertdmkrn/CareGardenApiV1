@@ -4,7 +4,7 @@ public class BusinessAdminEarningReportResponseModel
 {
     public List<BusinessAdminEarningReportData> dailyList { get; set; }
     public double lastWeekEarning { get; set; }
-    public int lastWeekEarningPercentage { get; set; }
+    public double lastWeekEarningPercentage { get; set; }
 }
 
 public class BusinessAdminEarningReportData

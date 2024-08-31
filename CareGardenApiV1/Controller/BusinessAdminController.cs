@@ -75,7 +75,7 @@ namespace CareGardenApiV1.Controller
                 response.Message = Resource.Resource.StartDateNotBiggerEndDate;
             }
             
-            if (requestModel.endDate.DifferenceBetweenDates(requestModel.startDate, DateType.Day) > 31)
+            if (requestModel.startDate.DifferenceBetweenDates(requestModel.endDate, DateType.Day) > 31)
             {
                 response.HasError = true;
                 response.Message = Resource.Resource.DateMaxRangeError;
@@ -117,7 +117,7 @@ namespace CareGardenApiV1.Controller
                 response.Message = Resource.Resource.StartDateNotBiggerEndDate;
             }
             
-            if (requestModel.endDate.DifferenceBetweenDates(requestModel.startDate, DateType.Day) > 31)
+            if (requestModel.startDate.DifferenceBetweenDates(requestModel.endDate, DateType.Day) > 31)
             {
                 response.HasError = true;
                 response.Message = Resource.Resource.DateMaxRangeError;
@@ -161,7 +161,7 @@ namespace CareGardenApiV1.Controller
                 response.Message = Resource.Resource.StartDateNotBiggerEndDate;
             }
             
-            if (requestModel.endDate.DifferenceBetweenDates(requestModel.startDate, DateType.Day) > 31)
+            if (requestModel.startDate.DifferenceBetweenDates(requestModel.endDate, DateType.Day) > 31)
             {
                 response.HasError = true;
                 response.Message = Resource.Resource.DateMaxRangeError;

@@ -20,13 +20,12 @@ namespace CareGardenApiV1.Repository.Concrete
         {
             return await _context.BusinessPayments
                 .AsNoTracking()
-                .Where(x => x.businessId == businessId && x.date < DateTime.Today.AddDays(-14))
+                .Where(x => x.businessId == businessId && x.date >= DateTime.Today.AddDays(-14))
                 .GroupBy(x => x.date.Date)
                 .Select(g => new BusinessAdminEarningReportData
                 {
                     date = g.Key,
-                    earning = g.Sum(a => a.amount),
-                    dayStr = g.Key.ToString("ddd", Resource.Resource.Culture)
+                    earning = g.Sum(a => a.amount)
                 })
                 .ToListAsync();
         }
@@ -64,7 +63,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 .AsNoTracking()
                 .Where(x => x.appointment.businessId == requestModel.businessId)
                 .Where(x => x.appointment.status == AppointmentStatus.Completed)
-                .Where(x => x.appointment.startDate >= requestModel.startDate && x.appointment.startDate <= requestModel.endDate)
+                .Where(x => x.date >= requestModel.startDate && x.date <= requestModel.endDate)
                 .GroupBy(x => new { x.worker.name, x.worker.path, x.worker.title })
                 .Select(g => new BusinessAdminWorkerReportResponseModel
                 {
@@ -74,6 +73,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     appointmentCount = g.Count(),
                     totalEarning = g.Sum(a => a.price)
                 })
+                .OrderByDescending(x => x.appointmentCount)
                 .ToListAsync();
         }
 
@@ -83,7 +83,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 .AsNoTracking()
                 .Where(x => x.appointment.businessId == requestModel.businessId)
                 .Where(x => x.appointment.status == AppointmentStatus.Completed)
-                .Where(x => x.appointment.startDate >= requestModel.startDate && x.appointment.startDate <= requestModel.endDate)
+                .Where(x => x.date >= requestModel.startDate && x.date <= requestModel.endDate)
                 .GroupBy(x => new
                 {
                     businessServiceName = (Constants.IsTurkish ? x.businessService.name : x.businessService.nameEn),
@@ -116,7 +116,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 .Select(x => new BusinessAdminAppointmentReportInfo
                 {
                     date = x.startDate,
-                    totalDuration = x.endDate.DifferenceBetweenDates(x.startDate, DateType.Minute),
+                    totalDuration = x.startDate.DifferenceBetweenDates(x.endDate, DateType.Minute).FormatDuration(),
                     userTelephone = x.user != null ? x.user.telephone : x.userTelephone,
                     userName = x.user != null ? x.user.fullName : x.userName,
                     userImageUrl = x.user != null ? x.user.imageUrl : null,

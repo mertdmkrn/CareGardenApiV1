@@ -284,5 +284,16 @@ namespace CareGardenApiV1.Helpers
 
             return name;
         }
+
+        public static string FormatDuration(this double totalDuration)
+        {
+            int duration = Math.Abs(totalDuration).ToInt();
+            int hours = duration / 60;
+            int minutes = duration % 60;
+            string hoursStr = Constants.IsTurkish ? "sa" : "hrs";
+            string minutesStr = Constants.IsTurkish ? "dk" : "min";
+
+            return $"{hours} {hoursStr} {minutes.ToString().PadLeft(2,'0')} {minutesStr}";
+        }
     }
 }

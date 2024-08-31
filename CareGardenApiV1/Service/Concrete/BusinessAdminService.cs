@@ -21,19 +21,32 @@ namespace CareGardenApiV1.Service.Concrete
         {
             var responseModel = new BusinessAdminEarningReportResponseModel();
     
-            responseModel.dailyList = await _businessAdminRepository.GetBusinessAdminEarningReportDataAsync(businessId);
+            var dailyList = await _businessAdminRepository.GetBusinessAdminEarningReportDataAsync(businessId);
 
-            responseModel.lastWeekEarning = responseModel.dailyList
-                .Where(x => x.date >= DateTime.Today.AddDays(-7))
-                .Sum(x => x.earning);
+            responseModel.dailyList = new();
+
+            for (int i = 6; i >= 0; i--)
+            {
+                var date = DateTime.Today.AddDays(-i);
+                var dailyItem = dailyList.FirstOrDefault(x => x.date == date);
+
+                responseModel.dailyList.Add(new BusinessAdminEarningReportData
+                {
+                    date = date,
+                    dayStr = date.ToString("ddd", Resource.Resource.Culture),
+                    earning = dailyItem?.earning ?? 0
+                });
+
+                responseModel.lastWeekEarning += dailyItem?.earning ?? 0;
+            }
             
-            var totalEarning = responseModel.dailyList.Sum(x => x.earning);
+            var totalEarning = dailyList.Sum(x => x.earning);
 
             if (totalEarning == 0 || responseModel.lastWeekEarning == 0) return responseModel;
             
             var twoWeeksAgoEarning = totalEarning - responseModel.lastWeekEarning;
-            responseModel.lastWeekEarningPercentage = twoWeeksAgoEarning != 0 
-                ? (responseModel.lastWeekEarning / twoWeeksAgoEarning) * 100 - 100
+            responseModel.lastWeekEarningPercentage = twoWeeksAgoEarning != 0
+                ? Math.Round((responseModel.lastWeekEarning / twoWeeksAgoEarning) * 100 - 100, 2, MidpointRounding.ToPositiveInfinity)
                 : 0;
 
             return responseModel;

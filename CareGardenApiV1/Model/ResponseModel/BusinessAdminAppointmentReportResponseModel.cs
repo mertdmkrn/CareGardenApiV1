@@ -12,7 +12,7 @@ public class BusinessAdminAppointmentReportInfo
     public string userImageUrl { get; set; }
     public string userTelephone { get; set; }
     public DateTime? date { get; set; }
-    public double totalDuration { get; set; }
+    public string totalDuration { get; set; }
     public List<BusinessAdminAppointmentReportWorkerInfo> workerInfos { get; set; }
 }
 

@@ -1,0 +1,1958 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CareGardenApiV1</name>
+    </assembly>
+    <members>
+        <member name="M:CareGardenApiV1.Controller.AdminController.VerifyBusiness(CareGardenApiV1.Model.TableModel.Business)">
+             <summary>
+             It is used for activation and verification of Business.
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                { 
+                    "id" : "9D2B0228-4D0D-4C23-8B49-01A698857709",
+                    "isActive" : true,
+                    "verified" : true
+                }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AdminController.GetUsers(CareGardenApiV1.Model.RequestModel.UserSearchAdminRequestModel)">
+             <summary>
+             Get Users.
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "email": "mertdmkrn37@gmail.com",
+                    "gender": 3,
+                    "city": "İstanbul",
+                    "role": "ADMIN",
+                    "page": 0,
+                    "take": 20
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AdminController.Save(CareGardenApiV1.Model.TableModel.User)">
+             <summary>
+             Save Admin.
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "fullName" : "Mert DEMİRKIRAN",
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "12345678",
+                    "telephone": "+905467335939"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AdminController.DeleteUser(System.Guid)">
+            <summary>
+            Delete User
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AdminController.UploadFile(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            It is used to upload a new file and get a url.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AdminController.SaveFaq(CareGardenApiV1.Model.TableModel.Faq)">
+             <summary>
+             Save Faq
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "question" : "Biz Kimiz?",
+                    "questionEn": "Who Us?",
+                    "answer": "En iyisiyiz.",
+                    "answerEn": "We are the best.",
+                    "category": "Kayıt",
+                    "sortOrder": 1
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AdminController.UpdateFaq(CareGardenApiV1.Model.TableModel.Faq)">
+             <summary>
+             Update Faq
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id": "00000000-0000-0000-0000-000000000000",
+                    "question": "Biz Kimiz?",
+                    "questionEn": "Who Us?",
+                    "answer": "En iyisiyiz.",
+                    "answerEn": "We are the best.",
+                    "category": "Kayıt",
+                    "sortOrder": 2
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AdminController.DeleteFaq(System.String)">
+            <summary>
+            Delete Faq
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AdminController.GetFaq(System.String)">
+            <summary>
+            Get Faq By Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AdminController.GetFaqCategories">
+            <summary>
+            Get Faq Categories
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AdminController.SearchBusiness(CareGardenApiV1.Model.RequestModel.BusinessSearchAdminRequestModel)">
+            <summary>
+            Search Business
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.Get(CareGardenApiV1.Model.RequestModel.AppointmentSearchRequestModel)">
+             <summary>
+             Get Appointments
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "isHistory" : false,
+                    "page" : 0,
+                    "take" : 5
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.GetById(System.String)">
+             <summary>
+             Get Appointment By Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.Save(CareGardenApiV1.Model.RequestModel.AppointmentSaveRequestModel)">
+             <summary>
+             Save Appoinment
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "businessId" : "00000000-0000-0000-0000-000000000000",
+                    "userName" : "Mert Demirkıran",
+                    "userEmail" : "mertdmkrn37@gmail.com",
+                    "userTelephone" : "+905467335939",
+                    "description" : "Yeniden geliyorum.",
+                    "startDate" : "2024-10-07T15:00",
+                    "serviceWorkerInfos" : [
+                         {
+                             "businessServiceId" : "00000000-0000-0000-0000-000000000000",
+                             "workerId" : "00000000-0000-0000-0000-000000000000"
+                         },
+                         {
+                             "businessServiceId" : "00000000-0000-0000-0000-000000000000",
+                             "workerId" : "00000000-0000-0000-0000-000000000000"
+                         },
+                         {
+                             "businessServiceId" : "00000000-0000-0000-0000-000000000000",
+                             "workerId" : "00000000-0000-0000-0000-000000000000"
+                         }
+                     ]
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.Validate(CareGardenApiV1.Model.RequestModel.AppointmentSaveValidateRequestModel)">
+             <summary>
+             Validate Appoinment
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "userName" : "Mert Demirkıran",
+                    "userEmail" : "mertdmkrn37@gmail.com",
+                    "userTelephone" : "+905467335939"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.Update(CareGardenApiV1.Model.RequestModel.AppointmentChangeRequestModel)">
+             <summary>
+             Change Appointment Status
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "status" : 1
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.Cancel(CareGardenApiV1.Model.RequestModel.AppointmentChangeRequestModel)">
+             <summary>
+             Appointment Cancel
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "cancellationDescription" : "Lorem ipsum."
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.GetWorkersProvideService(CareGardenApiV1.Model.RequestModel.AppointmentSearchRequestModel)">
+             <summary>
+             Get Workers Provide Service 
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "businessId" : "00000000-0000-0000-0000-000000000000",
+                    "businessServiceId" : "00000000-0000-0000-0000-000000000000"
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.AppointmentController.GetAppointmentDates(CareGardenApiV1.Model.RequestModel.AppointmentDatesRequestModel)">
+             <summary>
+             Get Appointment Dates 
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 {
+                     "businessId" : "00000000-0000-0000-0000-000000000000",
+                     "page" : 0,
+                     "hasGetAnyAvailibityWorker" : false,
+                     "serviceWorkerInfos" : [
+                         {
+                             "businessServiceId" : "00000000-0000-0000-0000-000000000000",
+                             "workerId" : "00000000-0000-0000-0000-000000000000"
+                         },
+                         {
+                             "businessServiceId" : "00000000-0000-0000-0000-000000000000",
+                             "workerId" : "00000000-0000-0000-0000-000000000000"
+                         },
+                         {
+                             "businessServiceId" : "00000000-0000-0000-0000-000000000000",
+                             "workerId" : "00000000-0000-0000-0000-000000000000"
+                         }
+                     ]
+                 }
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessAdminController.GetTotalData">
+            <summary>
+            Get Total Datas
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessAdminController.GetEarningReport">
+            <summary>
+            Get Earning Report
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessAdminController.GetWorkerReport(CareGardenApiV1.Model.RequestModel.BusinessAdminReportRequestModel)">
+             <summary>
+             Get Worker Report
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "startDate": "2024-08-01",
+                    "endDate": "2024-09-01"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessAdminController.GetServiceReport(CareGardenApiV1.Model.RequestModel.BusinessAdminReportRequestModel)">
+             <summary>
+             Get Service Report
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "startDate": "2024-08-01",
+                    "endDate": "2024-09-01"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessAdminController.GetAppointmentReport(CareGardenApiV1.Model.RequestModel.BusinessAdminReportRequestModel)">
+             <summary>
+             Get Appointment Report
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "startDate": "2024-08-01T00:00:00",
+                    "endDate": "2024-08-01T23:59:59",
+                    "page": 0,
+                    "take": 5
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.GetInfoById(System.String)">
+             <summary>
+             Get Business Info By Id (Brings only its own information)
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+             "00000000-0000-0000-0000-000000000000"
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.GetById(System.String)">
+             <summary>
+             Get Business By Id (It also brings relationship table information)
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+             "00000000-0000-0000-0000-000000000000"
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.Get">
+            <summary>
+            Get Session Business
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessListNoCache">
+            <summary>
+            Get Business List No Cache
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessDetailsById(System.String)">
+             <summary>
+             Get Business Details By Id (Can be used for business detail page.)
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+             "00000000-0000-0000-0000-000000000000"
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessDetailByNameForUrl(System.String)">
+             <summary>
+             Get Business Detail By NameforUrl (Can be used for fast appointment page.)
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+             "tolga-beauty-house"
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessNames">
+            <summary>
+            Get Business Names
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.SetProfilePhoto(CareGardenApiV1.Model.RequestModel.BusinessFileInfoRequestModel)">
+            <summary>
+            Set Profile Photo
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.Save(CareGardenApiV1.Model.RequestModel.BusinessAdminSaveBusinessRequestModel)">
+             <summary>
+             Save Business By Admin
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "name" : "Mert Kuaför",
+                    "address" : "Merkez, Eski Büyükdere Cd. 37/B, 34416 Kağıthane/İstanbul",
+                    "website": "https://caregarden.app/",
+                    "mobileOrOnlineServiceOnly": false,
+                    "serviceIds": "00000000-0000-0000-0000-000000000000;00000000-0000-0000-0000-000000000001"
+                    "workerSizeType": 2
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.Update(CareGardenApiV1.Model.TableModel.Business)">
+             <summary>
+             Update Business
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "name" : "Mert Kuaför",
+                    "address" : "Merkez, Eski Büyükdere Cd. 37/B, 34416 Kağıthane/İstanbul",
+                    "telephone" : "+905467335892",
+                    "latitude": "41.08611",
+                    "longitude": "29.00717",
+                    "city": "İstanbul",
+                    "province": "Kağıthane",
+                    "district": "Çeliktepe Mah.",
+                    "description": "Tesettür saç kesim, bakım, boya, kalıcı makyaj, microblading, manikür, pedikür, kaynak saç.",
+                    "descriptionEn": "Hijab haircut, care, coloring, permanent makeup, microblading, manicure, pedicure, hair welding.",
+                    "isFeatured": true,
+                    "logoUrl": "safdsf.jpg",
+                    "hasPromotion": true
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.SaveWorkingInfo(CareGardenApiV1.Model.RequestModel.BusinessWorkInfoRequestModel)">
+             <summary>
+             Save Business Working Info
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "businessWorkingInfo" : {
+                         "mondayWorkHours" : "09:00-21:00",
+                         "tuesdayWorkHours" : "09:00-21:00",
+                         "wednesdayWorkHours" : "09:00-21:00",
+                         "thursdayWorkHours" : "09:00-21:00",
+                         "fridayWorkHours" : "09:00-21:00",
+                         "saturdayWorkHours" : "09:00-13:00",
+                         "sundayWorkHours" : null
+                    },
+                    "appointmentTimeInterval" : 30,
+                    "appointmentPeopleCount" : 5,
+                    "officialHolidayAvailable" : true,
+                    "workingGenderType" : 0
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.AddGalleryPhoto(CareGardenApiV1.Model.RequestModel.BusinessFileInfoRequestModel)">
+            <summary>
+            Add Gallery Photo
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.UpdateGalleryPhoto(CareGardenApiV1.Model.TableModel.BusinessGallery)">
+             <summary>
+             Update Gallery Photo
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "isSliderPhoto" : true,
+                    "isProfilePhoto" : true,
+                    "sortOrder" : 1
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.DeleteGalleryPhoto(System.String)">
+            <summary>
+            Delete Gallery Photo
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessController.Delete(CareGardenApiV1.Model.TableModel.Business)">
+            <summary>
+            Delete Business
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessCustomerController.GetById(System.String)">
+            <summary>
+            Get BusinessCustomer By Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessCustomerController.GetByBusinessId(System.String)">
+            <summary>
+            Get BusinessCustomer By Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessCustomerController.Save(CareGardenApiV1.Model.TableModel.BusinessCustomer)">
+             <summary>
+             Save BusinessCustomer
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "fullName": "Mert Demirkıran",
+                    "email": "mertdmkrn37@gmail.com",
+                    "telephone": "+905467335939",
+                    "gender": 1
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessCustomerController.Update(CareGardenApiV1.Model.TableModel.BusinessCustomer)">
+             <summary>
+             Update BusinessProperties
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "description": "Açıklama.",
+                    "date": "2024-08-20"
+                    "amount": 5000
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessCustomerController.Delete(System.String)">
+            <summary>
+            Delete BusinessProperties
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessPaymentController.GetById(System.String)">
+            <summary>
+            Get BusinessPayment By Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessPaymentController.Search(CareGardenApiV1.Model.RequestModel.BusinessPaymentSearchRequestModel)">
+            <summary>
+            Search BusinessPayment
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessPaymentController.Save(CareGardenApiV1.Model.TableModel.BusinessPayment)">
+             <summary>
+             Save BusinessPayment
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "description": "Açıklama.",
+                    "appointmentId": "00000000-0000-0000-0000-000000000000",
+                    "date": "2024-08-20"
+                    "amount": 5000
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessPaymentController.Update(CareGardenApiV1.Model.TableModel.BusinessPayment)">
+             <summary>
+             Update BusinessPayment
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "description": "Açıklama.",
+                    "date": "2024-08-20"
+                    "amount": 5000
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessPaymentController.Delete(System.String)">
+            <summary>
+            Delete BusinessProperties
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.GetById(System.String)">
+            <summary>
+            Get BusinessProperties By Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.GetByBusinessId(System.String)">
+            <summary>
+            Get BusinessProperties By Business Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.GetByBusinessIdWithKey(System.String,System.String)">
+            <summary>
+            Get BusinessProperties By Business Id And Key
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.Save(CareGardenApiV1.Model.TableModel.BusinessProperties)">
+             <summary>
+             Save BusinessProperties
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "key" : "WhatsappUrl",
+                    "address" : "https://web.whatsapp.com/",
+                    "businessId" : "00000000-0000-0000-0000-000000000000",
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.Update(CareGardenApiV1.Model.TableModel.BusinessProperties)">
+             <summary>
+             Update BusinessProperties
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "key" : "FacebookUrl",
+                    "address" : "https://web.whatsapp.com/",
+                    "businessId" : "00000000-0000-0000-0000-000000000000",
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessPropertiesController.Delete(CareGardenApiV1.Model.TableModel.BusinessProperties)">
+            <summary>
+            Delete BusinessProperties
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessServicesController.GetById(System.String)">
+            <summary>
+            Get Service By Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessServicesController.GetByServiceId(System.String)">
+            <summary>
+            Get Service By Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessServicesController.GetByBusinessId(System.String)">
+            <summary>
+            Get Service By Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessServicesController.Save(CareGardenApiV1.Model.TableModel.BusinessServiceModel)">
+             <summary>
+             Save Business Service
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "businessId" : "00000000-0000-0000-0000-000000000000",
+                    "serviceId": "00000000-0000-0000-0000-000000000000",
+                    "name": "Saç Kesim",
+                    "nameEn": "Hair Cut",
+                    "spot": "Tam isteğinize göre bir saç kesime hazır olun.",
+                    "spotEn": "Get ready for a haircut just to your liking.",
+                    "minDuration": 30,
+                    "maxDuration": 45,
+                    "price": 150
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessServicesController.Update(CareGardenApiV1.Model.TableModel.BusinessServiceModel)">
+             <summary>
+             Update Business Service
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "businessId" : "00000000-0000-0000-0000-000000000000",
+                    "serviceId": "00000000-0000-0000-0000-000000000000",
+                    "name": "Saç Kesim",
+                    "nameEn": "Hair Cut",
+                    "spot": "Tam isteğinize göre bir saç kesime hazır olun.",
+                    "spotEn": "Get ready for a haircut just to your liking.",
+                    "minDuration": 30,
+                    "maxDuration": 45,
+                    "price": 150,
+                    "isPopular": true
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessServicesController.Delete(System.String)">
+            <summary>
+            Delete BusinessService
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.GetById(System.String)">
+            <summary>
+            Get User By Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.Get">
+            <summary>
+            Get Session Business User
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.SendTelephoneConfirmationCode(System.String)">
+            <summary>
+            Send Telephone Confirmation Code
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.SetProfilePhoto(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            User Set Profile Photo
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.Delete(System.String)">
+            <summary>
+            Delete User
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.Update(CareGardenApiV1.Model.TableModel.BusinessUser)">
+             <summary>
+             Update User
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "fullName" : "Mert DEMİRKIRAN",
+                    "email" : "mertdmkrn37@gmail.com",
+                    "birthDate": "1998-08-01",
+                    "gender": 1,
+                    "city": "İstanbul",
+                    "services": "Make Up;Beauty Saloon"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.ChangePassword(CareGardenApiV1.Model.RequestModel.PasswordChangeRequestModel)">
+             <summary>
+             Business User Change Password
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "currentPassword" : "12345678",
+                    "newPassword" : "87654321",
+                    "newRetryPassword": "87654321"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.Save(CareGardenApiV1.Model.TableModel.BusinessUser)">
+             <summary>
+             Save Business User
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "fullName" : "Mert DEMİRKIRAN",
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "stms5581",
+                    "retryPassword": "stms5581",
+                    "telephone": "+905467335939"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.Validate(CareGardenApiV1.Model.TableModel.BusinessUser)">
+             <summary>
+             Validate Business User
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "fullName" : "Mert DEMİRKIRAN",
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "stms5581",
+                    "retryPassword": "stms5581",
+                    "telephone": "+905467335939"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.UserLogin(CareGardenApiV1.Model.TableModel.BusinessUser)">
+             <summary>
+             User Login Control
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "stms5581"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.SendPasswordResetLink(System.String)">
+             <summary>
+             Send Password Reset Link
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "mertdmkrn37@gmail.com",
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.SendPasswordResetLink(CareGardenApiV1.Model.RequestModel.PasswordResetRequestModel)">
+             <summary>
+             Send Password Reset Link
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "email": "mertdmkrn37@gmail.com",
+                    "linkId": "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.PasswordReset(CareGardenApiV1.Model.RequestModel.PasswordResetRequestModel)">
+             <summary>
+             User Password Reset
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "mert1453",
+                    "retryPassword": "mert1453"
+                    "linkId": "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessUserController.GetFaqs">
+            <summary>
+            Get Faqs
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.CampaignController.GetAll">
+            <summary>
+            Get Campaigns
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.CampaignController.GetActives(System.String)">
+            <summary>
+            Get Active Campaigns
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.CampaignController.GetByBusinessId(System.String)">
+            <summary>
+            Get Campaign By BusinessId
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.CampaignController.GetById(System.String)">
+            <summary>
+            Get Campaign By Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.CampaignController.Save(CareGardenApiV1.Model.TableModel.Campaign)">
+             <summary>
+             Save Campaign (Role = 'Admin')
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "path" : "https://www.google.com",
+                    "url": "https://www.google.com",
+                    "businessId": "00000000-0000-0000-0000-000000000000",
+                    "title": "Lorem",
+                    "titleEn": "Lorem",
+                    "about": "Lorem",
+                    "aboutEn": "Lorem",
+                    "condition": "Lorem",
+                    "conditionEn": "Lorem",
+                    "expireDate": "2024-05-01",
+                    "isActive" : true,
+                    "sortOrder" : 1
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.CampaignController.Update(CareGardenApiV1.Model.TableModel.Campaign)">
+             <summary>
+             Update Campaign (Role = 'Admin')
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "path" : "https://www.google.com",
+                    "url": "https://www.google.com",
+                    "businessId": "00000000-0000-0000-0000-000000000000",
+                    "title": "Lorem",
+                    "titleEn": "Lorem",
+                    "about": "Lorem",
+                    "aboutEn": "Lorem",
+                    "condition": "Lorem",
+                    "conditionEn": "Lorem",
+                    "expireDate": "2024-05-01",
+                    "isActive" : true,
+                    "sortOrder" : 1
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.CampaignController.Delete(System.String)">
+            <summary>
+            Delete Campaign (Role = 'Admin')
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.CommentController.Get(CareGardenApiV1.Model.RequestModel.CommentSearchRequestModel)">
+             <summary>
+             Get Comment By Business Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "page": 0,
+                    "take": 5
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.CommentController.GetByBusinessId(System.Guid)">
+             <summary>
+             Get Comment By Business Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.CommentController.Search(CareGardenApiV1.Model.RequestModel.CommentSearchRequestModel)">
+             <summary>
+             Search Comments
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "businessId": "00000000-0000-0000-0000-000000000000",
+                    "filterType": 0,
+                    "orderType": 0,
+                    "page": 1,
+                    "take": 10
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.CommentController.GetStatisticsByBusinessId(System.Guid)">
+             <summary>
+             Get Statistics By Business Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.CommentController.GetCommentByUserId(System.Guid)">
+             <summary>
+             Get Comment By User Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.CommentController.Save(CareGardenApiV1.Model.TableModel.Comment)">
+             <summary>
+             Save Comment (İşyeri cevabı ise replyId dolu olacak. Cevap verilen yorumun id si yazılması yeterli. Kullanıcı yorum yapmışsa businessId dolu olmalı.)
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "userId" : "00000000-0000-0000-0000-000000000000",
+                    "businessId" : "00000000-0000-0000-0000-000000000000",
+                    "appointmentId" : "00000000-0000-0000-0000-000000000000",
+                    "replyId" : "00000000-0000-0000-0000-000000000000",
+                    "comment" : "Harika bir hizmet teşekkürler.",
+                    "point" : 5
+                    "aspectsOfPoint" : "1~2",
+                    "workerPoint" : 5
+                    "aspectsOfWorkerPoint" : "1~2",
+                    "isShowProfile": true
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.CommentController.Update(CareGardenApiV1.Model.TableModel.Comment)">
+             <summary>
+             Update Comment
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "comment" : "Harika bir hizmet teşekkürler.",
+                    "point" : 5
+                    "aspectsOfPoint" : "1~2",
+                    "workerPoint" : 5
+                    "aspectsOfWorkerPoint" : "1~2",
+                    "isShowProfile": true
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:CareGardenApiV1.Controller.CommentController.Delete(System.Guid)" -->
+        <member name="M:CareGardenApiV1.Controller.DefinitionController.GetCities">
+            <summary>
+            Get Cities
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.DefinitionController.GetStarChips">
+            <summary>
+            Get Cities
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.DiscountController.GetByBusinessId(CareGardenApiV1.Model.TableModel.Discount)">
+             <summary>
+             Get Discount By Business Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "businessId": "00000000-0000-0000-0000-000000000000",
+                    "isActive": true
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.DiscountController.Save(CareGardenApiV1.Model.TableModel.Discount)">
+             <summary>
+             Save Discount
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "businessId": "00000000-0000-0000-0000-000000000000",
+                    "isActive": true,
+                    "description": "Bugün tüm servislerde",
+                    "descriptionEn": "Every services today",
+                    "rate": 20,
+                    "type": 0,
+                    "colorCode": "#335657"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.DiscountController.Update(CareGardenApiV1.Model.TableModel.Discount)">
+             <summary>
+             Update Discount
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id": "00000000-0000-0000-0000-000000000000",
+                    "isActive": false,
+                    "description": "Bugün tüm servislerde",
+                    "descriptionEn": "Every services today",
+                    "rate": 20,
+                    "type": 0,
+                    "colorCode": "#335657"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.DiscountController.DeleteByBusinessId(System.String)">
+             <summary>
+             Delete Discount
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.FavoriteController.Get">
+            <summary>
+            Get Favorite Businesses By Session User
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.FavoriteController.Add(System.Guid)">
+             <summary>
+             Add Favorite
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:CareGardenApiV1.Controller.FavoriteController.Delete(System.Guid)" -->
+        <!-- Badly formed XML comment ignored for member "M:CareGardenApiV1.Controller.NotificationController.Get(CareGardenApiV1.Model.RequestModel.NotificationSearchRequestModel)" -->
+        <member name="M:CareGardenApiV1.Controller.NotificationController.Save(CareGardenApiV1.Model.TableModel.Notification)">
+             <summary>
+             Save Notification (Publish Date is the date the notification will start to appear. If null, it will appear immediately.)
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "userId": "00000000-0000-0000-0000-000000000000",
+                    "businessId": null,
+                    "publishDate": "2024-03-29T08:30:00",
+                    "title": "BİLGİLENDİRME",
+                    "titleEn": "INFORMATION",
+                    "description": "CareGarden' a hoşgeldin.",
+                    "description": "CareGarden' a hoşgeldin.",
+                    "type": 0,
+                    "redirectId": null,
+                    "redirectUrl": null
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.NotificationController.SaveAllUsers(CareGardenApiV1.Model.TableModel.Notification)">
+             <summary>
+             Save Notification All Users (Publish Date is the date the notification will start to appear. If null, it will appear immediately.)
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "publishDate": "2024-03-29T08:30:00",
+                    "title": "BİLGİLENDİRME",
+                    "titleEn": "INFORMATION",
+                    "description": "CareGarden' a hoşgeldin."
+                    "descriptionEn": "Welcome to CareGarden."
+                    "type": 0
+                    "redirectId": null,
+                    "redirectUrl": null
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.NotificationController.SaveAllBusinesses(CareGardenApiV1.Model.TableModel.Notification)">
+             <summary>
+             Save Notification All Businesses (Publish Date is the date the notification will start to appear. If null, it will appear immediately.)
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "publishDate": "2024-03-29T08:30:00",
+                    "title": "BİLGİLENDİRME",
+                    "titleEn": "INFORMATION",
+                    "description": "CareGarden' a hoşgeldin."
+                    "descriptionEn": "Welcome to CareGarden."
+                    "type": 0
+                    "redirectId": null,
+                    "redirectUrl": null
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.NotificationController.SetRead(CareGardenApiV1.Model.RequestModel.IdListSearchRequestModel)">
+             <summary>
+             Notification Set Read ({} boş gönderildiğinde session daki kullanıcının tüm bildirimleri okundu yapar.)
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "ids": [
+                         "00000000-0000-0000-0000-000000000000",
+                         "00000000-0000-0000-0000-000000000001"
+                    ]
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.NotificationController.Delete(CareGardenApiV1.Model.RequestModel.IdListSearchRequestModel)">
+             <summary>
+             Delete Notifications
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "ids": [
+                         "00000000-0000-0000-0000-000000000000",
+                         "00000000-0000-0000-0000-000000000001"
+                    ]
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.SearchController.SearchBusinessByKeyword(CareGardenApiV1.Model.RequestModel.KeywordSearchRequestModel)">
+            <summary>
+            Get Search By Keyword
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.SearchController.SearchBusiness(CareGardenApiV1.Model.RequestModel.BusinessExploreModel)">
+             <summary>
+             Get Search
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "latitude": "41.08611",
+                    "longitude": "29.00717",
+                    "page": 0,
+                    "take": 5,
+                    "isStartPage": true
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.SearchController.SearchLocation(CareGardenApiV1.Model.RequestModel.StringSearchRequestModel)">
+            <summary>
+            Get Search Location
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.SearchController.GetLocations">
+            <summary>
+            Get Locations
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.ServicesController.GetAll">
+            <summary>
+            Get Services
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.ServicesController.GetById(System.String)">
+            <summary>
+            Get Service By Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.ServicesController.GetByName(System.String)">
+            <summary>
+            Get Service By Name
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.ServicesController.GetByNameEn(System.String)">
+            <summary>
+            Get Service By NameEn
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.ServicesController.Save(CareGardenApiV1.Model.TableModel.Services)">
+             <summary>
+             Save Service (Role = 'Admin')
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "name" : "Makyaj",
+                    "nameEn": "Make Up",
+                    "className": "makeup",
+                    "colorCode": "358541",
+                    "sortOrder": 1
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.ServicesController.Update(CareGardenApiV1.Model.TableModel.Services)">
+             <summary>
+             Update Service (Role = 'Admin')
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "name" : "Makyaj",
+                    "nameEn": "Make Up",
+                    "className": "makeup",
+                    "colorCode": "564564",
+                    "sortOrder": 1
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.ServicesController.Delete(System.String)">
+            <summary>
+            Delete Service (Role = 'Admin')
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.SettingController.GetAll">
+            <summary>
+            Get All Settings
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.SettingController.GetById(System.String)">
+             <summary>
+             Get Setting By Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+             "00000000-0000-0000-0000-000000000000"
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.SettingController.GetByName(System.String)">
+             <summary>
+             Get Setting By Name
+             </summary>
+             <remarks>
+             **Sample request body:**
+             
+             "MailSubject"
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.SettingController.Save(CareGardenApiV1.Model.TableModel.Setting)">
+             <summary>
+             Save Setting
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "name" : "Title",
+                    "description" : "Mobil uygulama başlık.",
+                    "type" : 0,
+                    "value" : "CareGarden"
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.SettingController.Update(CareGardenApiV1.Model.TableModel.Setting)">
+             <summary>
+             Update Worker
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id": "00000000-0000-0000-0000-000000000000",
+                    "value": "Care Garden"
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.SettingController.Delete(System.String)">
+             <summary>
+             Delete Setting By Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+             "00000000-0000-0000-0000-000000000000"
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.GetById(System.String)">
+            <summary>
+            Get User By Id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.Get">
+            <summary>
+            Get Session User
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.SendFeedBack(CareGardenApiV1.Handler.Model.MailRequest)">
+            <summary>
+            User Send FeedBack
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.SetProfilePhoto(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            User Set Profile Photo
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.Delete(System.String)">
+            <summary>
+            Delete User
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.GetPopularBusiness(CareGardenApiV1.Model.RequestModel.BusinessSearchRequestModel)">
+            <summary>
+            User Get Popular Business
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.GetFavoriteBusiness(CareGardenApiV1.Model.RequestModel.BusinessSearchRequestModel)">
+            <summary>
+            User Get Favorite Business
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.GetNearByBusiness(CareGardenApiV1.Model.RequestModel.BusinessSearchRequestModel)">
+            <summary>
+            User Get Near By Business
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.Update(CareGardenApiV1.Model.TableModel.User)">
+             <summary>
+             Update User
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "fullName" : "Mert DEMİRKIRAN",
+                    "email" : "mertdmkrn37@gmail.com",
+                    "birthDate": "1998-08-01",
+                    "gender": 1,
+                    "city": "İstanbul",
+                    "services": "Make Up;Beauty Saloon"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.ChangePassword(CareGardenApiV1.Model.RequestModel.PasswordChangeRequestModel)">
+             <summary>
+             User Change Password
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "currentPassword" : "12345678",
+                    "newPassword" : "87654321",
+                    "newRetryPassword": "87654321"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.UpdateLocation(CareGardenApiV1.Model.TableModel.User)">
+             <summary>
+             Update User Location
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "latitude" : 32,
+                    "longitude": 31
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.GetFaqs">
+            <summary>
+            Get Faqs
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserLoginController.SendTelephoneConfirmationCode(System.String)">
+            <summary>
+            Send Telephone Confirmation Code
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserLoginController.SendEmailConfirmationCode(System.String)">
+            <summary>
+            Send Email Confirmation Code
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserLoginController.SendCodeForAppointment(System.String)">
+            <summary>
+            Send Code For Appointment Code
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserLoginController.VerifyConfirmationCode(CareGardenApiV1.Model.TableModel.ConfirmationInfo)">
+             <summary>
+             Verify Confirmation Code
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "target": "+905467335939",
+                    "code": "7391"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserLoginController.Save(CareGardenApiV1.Model.TableModel.User)">
+             <summary>
+             Save User
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "fullName" : "Mert DEMİRKIRAN",
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "stms5581",
+                    "retryPassword": "stms5581",
+                    "telephone": "+905467335939"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserLoginController.UserLogin(CareGardenApiV1.Model.TableModel.User)">
+             <summary>
+             User Login Control
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "stms5581"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserLoginController.PasswordReset(CareGardenApiV1.Model.RequestModel.PasswordResetRequestModel)">
+             <summary>
+             User Password Reset
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "mert1453",
+                    "retryPassword": "mert1453",
+                    "verifiedCode": "9112"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.UserLoginController.AdminLogin(CareGardenApiV1.Model.TableModel.User)">
+             <summary>
+             Admin Login Control
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "email": "mertdmkrn37@gmail.com",
+                    "password": "stms5581"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerController.GetById(System.String)">
+             <summary>
+             Get Worker By Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerController.GetByBusinessId(System.String)">
+             <summary>
+             Get Worker By Business Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerController.GetByBusinessServiceId(System.String)">
+             <summary>
+             Get Worker By Business Service Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerController.GetDetailById(System.String)">
+             <summary>
+             Get Worker By Business Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerController.Save(CareGardenApiV1.Model.TableModel.Worker)">
+             <summary>
+             Save Worker
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "name" : "Mert DEMİRKIRAN",
+                    "title" : "Hair Stylist",
+                    "titleEn" : "Hair Stylist",
+                    "about" : "Lorem ipsum",
+                    "aboutEn" : "Lorem ipsum",
+                    "path" : "mert.jpg",
+                    "businessId" : "00000000-0000-0000-0000-000000000000",
+                    "serviceIds" : "00000000-0000-0000-0000-000000000000;00000000-0000-0000-0000-000000000001",
+                    "mondayWorkHours" : "09:00-21:00",
+                    "tuesdayWorkHours" : "09:00-21:00",
+                    "wednesdayWorkHours" : "09:00-21:00",
+                    "thursdayWorkHours" : "09:00-21:00",
+                    "fridayWorkHours" : "09:00-21:00",
+                    "saturdayWorkHours" : "09:00-13:00",
+                    "sundayWorkHours" : null,
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerController.Update(CareGardenApiV1.Model.TableModel.Worker)">
+             <summary>
+             Update Worker
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "name" : "Mert DEMİRKIRAN",
+                    "title" : "Hair Stylist",
+                    "titleEn" : "Hair Stylist",
+                    "about" : "Lorem ipsum",
+                    "aboutEn" : "Lorem ipsum",
+                    "path" : "mert.jpg",
+                    "businessId" : "00000000-0000-0000-0000-000000000000",
+                    "serviceIds" : "00000000-0000-0000-0000-000000000000;00000000-0000-0000-0000-000000000001",
+                    "mondayWorkHours" : "09:00-21:00",
+                    "tuesdayWorkHours" : "09:00-21:00",
+                    "wednesdayWorkHours" : "09:00-21:00",
+                    "thursdayWorkHours" : "09:00-21:00",
+                    "fridayWorkHours" : "09:00-21:00",
+                    "saturdayWorkHours" : "09:00-13:00",
+                    "sundayWorkHours" : null,
+                    "isActive" : true
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerController.Delete(System.String)">
+             <summary>
+             Get Worker By Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerController.DeleteByBusinessId(System.String)">
+             <summary>
+             Get Worker By Busimess Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerServicePriceController.GetById(System.String)">
+             <summary>
+             Get Worker Service Price By Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerServicePriceController.Search(CareGardenApiV1.Model.TableModel.WorkerServicePrice)">
+             <summary>
+             Search Worker Service Prices
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    businessServiceId: "00000000-0000-0000-0000-000000000000",
+                    workerId: "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerServicePriceController.Save(CareGardenApiV1.Model.TableModel.WorkerServicePrice)">
+             <summary>
+             Save Worker Servive Price
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "businessServiceId" : "00000000-0000-0000-0000-000000000000",
+                    "workerId" : "00000000-0000-0000-0000-000000000000",
+                    "price" : 1000
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerServicePriceController.Update(CareGardenApiV1.Model.TableModel.WorkerServicePrice)">
+             <summary>
+             Update Worker Service Price
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "id" : "00000000-0000-0000-0000-000000000000",
+                    "price" : 1000
+                 }
+                 
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="M:CareGardenApiV1.Controller.WorkerServicePriceController.Delete(System.String)">
+             <summary>
+             Delete Worker Service Price By Id
+             </summary>
+             <remarks>
+             **Sample request body:**
+            
+                 { 
+                    "00000000-0000-0000-0000-000000000000"
+                 }
+            
+             </remarks>
+             <returns></returns>
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.MigrationV1">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.MigrationV1.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.MigrationV1.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.MigrationV1.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CareGardenApiV1.Migrations.MigrationV2">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.MigrationV2.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.MigrationV2.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.MigrationV2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

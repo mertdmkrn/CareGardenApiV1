@@ -63,11 +63,17 @@ namespace CareGardenApiV1.Controller
             ResponseModel<List<AppointmentListResponseModel>> response = new ResponseModel<List<AppointmentListResponseModel>>();
 
             var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid);
+            var userRole = HelperMethods.GetClaimInfo(Request, ClaimTypes.Role);
 
             searchModel.userId = userId.ToGuid();
             searchModel.startDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, "Turkey Standard Time");
             searchModel.page ??= 0;
             searchModel.take ??= 5;
+
+            if (userRole.Equals("Admin"))
+            {
+                searchModel.email = HelperMethods.GetClaimInfo(Request, ClaimTypes.Email);
+            }
 
             response.Data = await _appointmentService.GetAppointmentsListModelByAppointmentSearchModelAsync(searchModel);
             

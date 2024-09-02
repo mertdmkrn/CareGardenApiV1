@@ -66,7 +66,8 @@ namespace CareGardenApiV1.Repository.Concrete
             {
                 return await _context.Appointments
                     .AsNoTracking()
-                    .Where(x => x.userId.Equals(searchModel.userId))
+                    .WhereIf(searchModel.email.IsNullOrEmpty(), x => x.userId.Equals(searchModel.userId))
+                    .WhereIf(!searchModel.email.IsNullOrEmpty(), x => x.userId.Equals(searchModel.userId) || x.userEmail.Equals(searchModel.email))
                     .WhereIf(searchModel.isHistory.Value, x => x.startDate < searchModel.startDate)
                     .WhereIf(!searchModel.isHistory.Value, x => x.startDate >= searchModel.startDate)
                     .Select(x => new AppointmentListResponseModel
@@ -123,7 +124,8 @@ namespace CareGardenApiV1.Repository.Concrete
             {
                 return await _context.Appointments
                     .AsNoTracking()
-                    .Where(x => x.userId.Equals(searchModel.userId))
+                    .WhereIf(searchModel.email.IsNullOrEmpty(), x => x.userId.Equals(searchModel.userId))
+                    .WhereIf(!searchModel.email.IsNullOrEmpty(), x => x.userId.Equals(searchModel.userId) || x.userEmail.Equals(searchModel.email))
                     .Select(x => new AppointmentListResponseModel
                     {
                         id = x.id,

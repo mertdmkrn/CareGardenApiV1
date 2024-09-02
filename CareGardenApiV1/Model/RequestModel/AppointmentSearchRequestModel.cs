@@ -13,6 +13,7 @@ namespace CareGardenApiV1.Model.RequestModel
         public HashSet<Guid> workerIds { get; set; } = new();
         public DateTime? startDate  { get; set; }
         public DateTime? endDate { get; set; }
+        public string? email { get; set; }
         public AppointmentStatus status { get; set; } = AppointmentStatus.All;
 
         public int? page { get; set; }

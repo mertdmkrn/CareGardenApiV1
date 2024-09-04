@@ -205,6 +205,9 @@ namespace CareGardenApiV1.Controller
 
             businessDetail.isOpen = HelperMethods.GetBusinessOpen(businessDetail.businessWorkingInfo, businessDetail.officialDayAvailable);
             businessDetail.averageRating = Math.Round(businessDetail.averageRating, 1);
+            
+            if (!culture.Equals("tr"))
+                businessDetail.description = businessDetail.descriptionEn.IsNull(businessDetail.description);
 
             var pointList = await _commentService.GetCommentPointListForCache(businessId: id.ToGuid());
 
@@ -272,6 +275,8 @@ namespace CareGardenApiV1.Controller
                     item.discountRate = activeDiscount?.rate??0; 
                     item.discountPrice = item.price * (1 - (item.discountRate / 100));
                     
+                    if (!culture.Equals("tr")) item.name = item.nameEn.IsNull(item.name);
+                    
                     businessServiceInfo.businessServices.Add(item);
                 }
 
@@ -295,6 +300,8 @@ namespace CareGardenApiV1.Controller
                     
                     item.discountRate = activeDiscount?.rate??0; 
                     item.discountPrice = item.price * (1 - (item.discountRate / 100));
+
+                    if (!culture.Equals("tr")) item.name = item.nameEn.IsNull(item.name);
                     
                     businessServiceInfo.businessServices.Add(item);
                 }
@@ -343,7 +350,10 @@ namespace CareGardenApiV1.Controller
 
             businessDetail.isOpen = HelperMethods.GetBusinessOpen(businessDetail.businessWorkingInfo, businessDetail.officialDayAvailable);
             businessDetail.averageRating = Math.Round(businessDetail.averageRating, 1);
-
+           
+            if (!culture.Equals("tr"))
+                businessDetail.description = businessDetail.descriptionEn.IsNull(businessDetail.description);
+            
             var services = new List<Services>();
 
             if (_memoryCache.TryGetValue("services", out object list))
@@ -389,6 +399,8 @@ namespace CareGardenApiV1.Controller
 
                     item.discountRate = activeDiscount?.rate ?? 0;
                     item.discountPrice = item.price * (1 - (item.discountRate / 100));
+                    
+                    if (!culture.Equals("tr")) item.name = item.nameEn.IsNull(item.name);
 
                     businessServiceInfo.businessServices.Add(item);
                 }
@@ -400,7 +412,7 @@ namespace CareGardenApiV1.Controller
             {
                 BusinessServicesInfoResponseModel businessServiceInfo = new BusinessServicesInfoResponseModel();
                 var service = services.FirstOrDefault(x => x.id == items.Key.Value);
-                businessServiceInfo.serviceName = service != null ? (culture == "en" ? service.nameEn : service.name) : string.Empty;
+                businessServiceInfo.serviceName = service != null ? (culture == "tr" ? service.name : service.nameEn) : string.Empty;
                 businessServiceInfo.className = service != null ? service.className : string.Empty;
 
                 foreach (var item in items)
@@ -413,6 +425,8 @@ namespace CareGardenApiV1.Controller
 
                     item.discountRate = activeDiscount?.rate ?? 0;
                     item.discountPrice = item.price * (1 - (item.discountRate / 100));
+                    
+                    if (!culture.Equals("tr")) item.name = item.nameEn.IsNull(item.name);
 
                     businessServiceInfo.businessServices.Add(item);
                 }
@@ -674,7 +688,7 @@ namespace CareGardenApiV1.Controller
             business.logoUrl = updateBusiness.logoUrl.IsNull(business.logoUrl);
             business.isFeatured = updateBusiness.isFeatured;
             business.hasPromotion = updateBusiness.hasPromotion;
-            business.nameForUrl = await _businessService.GetNameForUrl(business);
+            //business.nameForUrl = await _businessService.GetNameForUrl(business);
 
             if (updateBusiness.latitude > 0 && updateBusiness.longitude > 0)
             {

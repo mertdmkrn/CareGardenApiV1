@@ -69,7 +69,7 @@ namespace CareGardenApiV1.Controller
 
             var isExistUser = await _userService.GetUserExistsByTelephoneNumberAsync(telephoneNumber);
 
-            if (!isExistUser)
+            if (isExistUser)
             {
                 response.HasError = true;
                 response.Message = $"{Resource.Resource.UserFoundEnteredTelephone} {Resource.Resource.ResetPasswordMessage}";

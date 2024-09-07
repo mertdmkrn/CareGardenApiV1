@@ -104,8 +104,6 @@ namespace CareGardenApiV1.Repository.Concrete
                 .OrderByDescending(x => x.appointmentCount)
                 .ThenBy(x => x.serviceName)
                 .ThenBy(x => x.businessServiceName)
-                .Skip(requestModel.page * requestModel.take)
-                .Take(requestModel.take)
                 .ToListAsync();
         }
 

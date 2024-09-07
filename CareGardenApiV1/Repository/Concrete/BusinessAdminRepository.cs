@@ -74,6 +74,10 @@ namespace CareGardenApiV1.Repository.Concrete
                     totalEarning = g.Sum(a => a.price)
                 })
                 .OrderByDescending(x => x.appointmentCount)
+                .ThenByDescending(x => x.totalEarning)
+                .ThenBy(x => x.workerName)
+                .Skip(requestModel.page * requestModel.take)
+                .Take(requestModel.take)
                 .ToListAsync();
         }
 
@@ -97,6 +101,11 @@ namespace CareGardenApiV1.Repository.Concrete
                     serviceName = g.Key.serviceName,
                     appointmentCount = g.Count()
                 })
+                .OrderByDescending(x => x.appointmentCount)
+                .ThenBy(x => x.serviceName)
+                .ThenBy(x => x.businessServiceName)
+                .Skip(requestModel.page * requestModel.take)
+                .Take(requestModel.take)
                 .ToListAsync();
         }
 

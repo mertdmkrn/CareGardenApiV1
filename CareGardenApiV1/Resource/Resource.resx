@@ -310,7 +310,7 @@
     <value>Girdiğiniz e-posta adresine ait kayıtlı bir işletme bulunmaktadır.</value>
   </data>
   <data name="UserFoundEnteredMail" xml:space="preserve">
-    <value>Girdiğiniz e-posta adresine ait bir kullanucu bulunmaktadır.</value>
+    <value>Girdiğiniz e-posta adresine ait bir kullanıcı bulunmaktadır.</value>
   </data>
   <data name="AllMessagesRead" xml:space="preserve">
     <value>Tüm mesajlar okundu olarak işaretlendi.</value>

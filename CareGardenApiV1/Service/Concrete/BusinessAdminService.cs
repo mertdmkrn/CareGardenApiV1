@@ -86,7 +86,7 @@ namespace CareGardenApiV1.Service.Concrete
                     businessServiceName = x.businessServiceName,
                     appointmentCount = x.appointmentCount,
                     percentage = totalAppointmentCount > 0
-                        ? Math.Round((x.appointmentCount / (double)totalAppointmentCount) * 100, 2)
+                        ? Math.Round((x.appointmentCount / (double)totalAppointmentCount) * 100, 1, MidpointRounding.ToEven)
                         : 0
                 })
                 .OrderByDescending(x => x.percentage)
@@ -100,7 +100,7 @@ namespace CareGardenApiV1.Service.Concrete
                     serviceName = g.Key,
                     appointmentCount = g.Sum(x => x.appointmentCount),
                     percentage = totalAppointmentCount > 0
-                        ? Math.Round((g.Sum(x => x.appointmentCount) / (double)totalAppointmentCount) * 100, 2)
+                        ? Math.Round((g.Sum(x => x.appointmentCount) / (double)totalAppointmentCount) * 100, 1, MidpointRounding.ToEven)
                         : 0
                 })
                 .OrderByDescending(x => x.percentage)

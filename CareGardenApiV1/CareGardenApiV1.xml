@@ -1954,5 +1954,421 @@
         <member name="M:CareGardenApiV1.Migrations.MigrationV2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:CareGardenApiV1.Resource.Resource">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.AllMessagesRead">
+            <summary>
+              Looks up a localized string similar to Tüm mesajlar okundu olarak işaretlendi..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.Anonymous">
+            <summary>
+              Looks up a localized string similar to Anonim.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.AppointmentAvailable">
+            <summary>
+              Looks up a localized string similar to Seçtiğiniz tarihte bir randevu alındığı için randevu yapılamadı. Lütfen başka bir tarih seçerek tekrar deneyiniz..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.AppointmentCancelled">
+            <summary>
+              Looks up a localized string similar to Randevu başarıyla iptal edildi..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.AppointmentCancelWarning">
+            <summary>
+              Looks up a localized string similar to Randevuya 9 saat kala randevuyu iptal etmek, güvenilirliğinizi azaltabilir. İptal etmek istiyor musunuz?.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.AppointmentNotCancelled">
+            <summary>
+              Looks up a localized string similar to Randevunun iptal edilmesi sırasında bir hata oluştu..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.AppointmentStatusChanged">
+            <summary>
+              Looks up a localized string similar to Randevunun durumu başarıyla güncellendi..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.AppointmentStatusNotChanged">
+            <summary>
+              Looks up a localized string similar to Randevunun durumu güncellenirken bir hata oluştu..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.BusinessFoundEnteredMail">
+            <summary>
+              Looks up a localized string similar to Girdiğiniz e-posta adresine ait kayıtlı bir işletme bulunmaktadır..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.BusinessFoundEnteredTelephone">
+            <summary>
+              Looks up a localized string similar to Girdiğiniz telefon numarasına kayıtlı bir işletme bulunmaktadır..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.BusinessNotFound">
+            <summary>
+              Looks up a localized string similar to İşletme bulunamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.BusinessNotFoundEnteredInfo">
+            <summary>
+              Looks up a localized string similar to Girdiğiniz bilgilere ait bir işletme bulunamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.BusinessNotFoundEnteredMail">
+            <summary>
+              Looks up a localized string similar to Girdiğiniz e-posta adresine ait işletme bulunamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.BusinessNotVerified">
+            <summary>
+              Looks up a localized string similar to İşletme doğrulanamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.BusinessVerified">
+            <summary>
+              Looks up a localized string similar to İşletme doğrulandı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ColorCodeErrorMessage">
+            <summary>
+              Looks up a localized string similar to Renk kodu 3 veya 6 haneli olmalı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ConfirmationCodeExpired">
+            <summary>
+              Looks up a localized string similar to Onay kodunun süresi doldu. Lütfen yeni bir kod isteyin..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ConfirmationCodeForAppointment">
+            <summary>
+              Looks up a localized string similar to Randevuyu tamamlamak için onay kodu {0}..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ConfirmationCodeMessageInOneMinute">
+            <summary>
+              Looks up a localized string similar to Bir dakika içinde birden fazla onay kodu alamazsınız..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ConfirmationCodeNotSend">
+            <summary>
+              Looks up a localized string similar to Onay kodu gönderilemedi..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ConfirmationCodeNotVerified">
+            <summary>
+              Looks up a localized string similar to Onay kodu doğrulanamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ConfirmationCodeSend">
+            <summary>
+              Looks up a localized string similar to Onay kodu gönderildi..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ConfirmationCodeVerified">
+            <summary>
+              Looks up a localized string similar to Onay kodu doğrulandı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ConfirmationMessage">
+            <summary>
+              Looks up a localized string similar to CareGarden&apos; a hoşgeldiniz! Onay Kodu : {0}.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.CurrentPasswordNotCorrectly">
+            <summary>
+              Looks up a localized string similar to Lütfen güncel şifrenizi doğru giriniz..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.DateMaxRangeError">
+            <summary>
+              Looks up a localized string similar to Tarih aralağı maximum bir ay olmalıdır..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ElasticIndexlemeIslemiBasladi">
+            <summary>
+              Looks up a localized string similar to Elastic indexleme işlemi arkaplanda başlamıştır..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ErrorContactMessage">
+            <summary>
+              Looks up a localized string similar to Lütfen daha sonra tekrar deneyiniz veya destek ekibimizle iletişime geçiniz..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ErrorMessage">
+            <summary>
+              Looks up a localized string similar to Bir hata oluştu..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.FeedbackNotSend">
+            <summary>
+              Looks up a localized string similar to Geri bildirim gönderilemedi..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.FeedbackSend">
+            <summary>
+              Looks up a localized string similar to Geri bildiriminiz gönderildi. Teşekkür ederiz!.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.IdErrorMessage">
+            <summary>
+              Looks up a localized string similar to Geçerli bir id gönderilmediğinden dolayı istek işlenemedi..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ImageNotUploaded">
+            <summary>
+              Looks up a localized string similar to Resim yüklenirken bir hata oluştu..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ImageUploaded">
+            <summary>
+              Looks up a localized string similar to Resim başarılı bir şekilde yüklendi. .
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.LocationNotUpdated">
+            <summary>
+              Looks up a localized string similar to Konum bilginiz güncellenirken bir hata oluştu..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.LocationUpdated">
+            <summary>
+              Looks up a localized string similar to Konum bilginiz güncellendi..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.LoginFailed">
+            <summary>
+              Looks up a localized string similar to Giriş yapılamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.LoginFailedUserMessage">
+            <summary>
+              Looks up a localized string similar to Girdiğiniz e-posta adresi veya parola hatalı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.LoginSuccess">
+            <summary>
+              Looks up a localized string similar to Giriş başarılı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.NotEmpty">
+            <summary>
+              Looks up a localized string similar to Bu alanı boş bırakmayınız..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.NotPermission">
+            <summary>
+              Looks up a localized string similar to Bu işlemi gerçekleştirmek için yetkiniz yok. Lütfen gerekli izinler için sistem yöneticinizle iletişime geçiniz..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.PasswordMustBeEightCharacters">
+            <summary>
+              Looks up a localized string similar to Şifre en az 8 karakter olmalı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.PasswordResetLinkExpired">
+            <summary>
+              Looks up a localized string similar to Şifre sıfırlama bağlantısı süresi doldu. Lütfen bir şifre sıfırlama bağlantısı talep edin..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.PasswordResetLinkMessage">
+            <summary>
+              Looks up a localized string similar to Şifre yenileme işleminize devam etmek için &lt;a href=&apos;{0}&apos; target=&apos;_blank&apos;&gt;buraya&lt;/a&gt; tıklayabilirsiz..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.PasswordResetLinkMessageInOneHour">
+            <summary>
+              Looks up a localized string similar to Bir saat içinde birden fazla şifre yenileme bağlantısı alamazsınız..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.PasswordResetLinkNotFound">
+            <summary>
+              Looks up a localized string similar to Password reset link not found..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.PasswordResetLinkNotSend">
+            <summary>
+              Looks up a localized string similar to Şifre yenileme bağlantısı gönderilemedi..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.PasswordResetLinkSend">
+            <summary>
+              Looks up a localized string similar to Şifre yenileme bağlantısı gönderildi..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.PasswordsMustBeEqual">
+            <summary>
+              Looks up a localized string similar to Girdiğiniz şifreler birbiriyle eşleşmiyor..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.PopularServices">
+            <summary>
+              Looks up a localized string similar to Popüler Servisler.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.RecordDeleted">
+            <summary>
+              Looks up a localized string similar to Kayıt başarıyla silindi..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.RecordExists">
+            <summary>
+              Looks up a localized string similar to {0} kaydı zaten mevcut..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.RecordNotDeleted">
+            <summary>
+              Looks up a localized string similar to Kayıt silinemedi..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.RecordNotFound">
+            <summary>
+              Looks up a localized string similar to Kayıt bulunamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.RecordNotUpdated">
+            <summary>
+              Looks up a localized string similar to Güncelleme işlemi yapılamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.RecordsDeleted">
+            <summary>
+              Looks up a localized string similar to Kayıtlar başarıyla silindi..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.RecordsNotDeleted">
+            <summary>
+              Looks up a localized string similar to Kayıtlar silinemedi..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.RecordUpdated">
+            <summary>
+              Looks up a localized string similar to Güncelleme işleminiz başarıyla tamamlandı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.RegisteredUserEnteredMail">
+            <summary>
+              Looks up a localized string similar to Belirttiğiniz e-posta adresi sistemimizde zaten kayıtlı. Lütfen farklı bir e-posta adresi giriniz veya mevcut hesabınıza giriş yapınız..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.RegistrationFailed">
+            <summary>
+              Looks up a localized string similar to Kayıt işlemi sırasında bir hata oluştu..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.RegistrationSuccess">
+            <summary>
+              Looks up a localized string similar to Kayıt işleminiz başarıyla tamamlandı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ResetPassword">
+            <summary>
+              Looks up a localized string similar to Şifre Yenileme.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ResetPasswordFailed">
+            <summary>
+              Looks up a localized string similar to Şifre yenileme işlemi başarısız oldu..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ResetPasswordMailMessage">
+            <summary>
+              Looks up a localized string similar to Şifre yenileme işlemi için onay kodu {0}..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ResetPasswordMessage">
+            <summary>
+              Looks up a localized string similar to Eğer şifrenizi unuttuysanız, &apos;Şifremi Unuttum&apos; seçeneğini kullanarak şifrenizi yenileyebilirsiniz.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ResetPasswordSuccess">
+            <summary>
+              Looks up a localized string similar to Şifre yenileme işlemi başarıyla tamamlandı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.Sale">
+            <summary>
+              Looks up a localized string similar to {0}% indirim.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.StartDateNotBiggerEndDate">
+            <summary>
+              Looks up a localized string similar to Başlangıç tarihi bitiş tarihinin büyük olamaz..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.UserFoundEnteredMail">
+            <summary>
+              Looks up a localized string similar to Girdiğiniz e-posta adresine ait bir kullanıcı bulunmaktadır..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.UserFoundEnteredTelephone">
+            <summary>
+              Looks up a localized string similar to Girdiğiniz telefon numarasına kayıtlı bir kullanıcı bulunmaktadır..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.UserNotFound">
+            <summary>
+              Looks up a localized string similar to Kullanıcı bulunamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.UserNotFoundEnteredInfo">
+            <summary>
+              Looks up a localized string similar to Girdiğiniz bilgilere ait bir kullanıcı bulunamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.UserNotFoundEnteredMail">
+            <summary>
+              Looks up a localized string similar to Girdiğiniz e-posta adresine ait kullanıcı bulunamadı..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ValidEmailMessage">
+            <summary>
+              Looks up a localized string similar to Lütfen geçerli bir mail giriniz..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ValidMailOrTelephoneMessage">
+            <summary>
+              Looks up a localized string similar to Lütfen geçerli bir e-posta adresi veya telefon numarası giriniz..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ValidNameMessage">
+            <summary>
+              Looks up a localized string similar to Geçerli bir isim giriniz..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.ValidTelephoneMessage">
+            <summary>
+              Looks up a localized string similar to Lütfen geçerli bir telefon numarası giriniz..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.Weekday">
+            <summary>
+              Looks up a localized string similar to hafta içi.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.Weekend">
+            <summary>
+              Looks up a localized string similar to hafta sonu.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.WorkerPriceErrorMessage">
+            <summary>
+              Looks up a localized string similar to Çalışana özel fiyat, servis fiyatından yüksek olamaz..
+            </summary>
+        </member>
     </members>
 </doc>

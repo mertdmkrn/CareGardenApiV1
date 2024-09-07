@@ -104,7 +104,6 @@ namespace CareGardenApiV1.Service.Concrete
                         : 0
                 })
                 .OrderByDescending(x => x.percentage)
-                .Take(6)
                 .ToList();
 
             return serviceReportResponseModel;

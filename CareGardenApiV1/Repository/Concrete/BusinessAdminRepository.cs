@@ -84,6 +84,8 @@ namespace CareGardenApiV1.Repository.Concrete
 
         public async Task<List<BusinessAdminServiceReportData>> GetServiceReportDatasAsync(BusinessAdminReportRequestModel requestModel)
         {
+            var isTurkish = Resource.Resource.Culture.ToString().Contains("tr");
+
             return await _context.AppointmentDetails
                 .AsNoTracking()
                 .Where(x => x.appointment.businessId == requestModel.businessId)
@@ -91,8 +93,8 @@ namespace CareGardenApiV1.Repository.Concrete
                 .Where(x => x.date >= requestModel.startDate && x.date <= requestModel.endDate)
                 .GroupBy(x => new
                 {
-                    businessServiceName = (Constants.IsTurkish ? x.businessService.name : x.businessService.nameEn),
-                    serviceName = (Constants.IsTurkish
+                    businessServiceName = (isTurkish ? x.businessService.name : x.businessService.nameEn),
+                    serviceName = (isTurkish
                         ? x.businessService.service.name
                         : x.businessService.service.nameEn)
                 })

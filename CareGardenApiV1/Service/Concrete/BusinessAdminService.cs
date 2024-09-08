@@ -89,8 +89,7 @@ namespace CareGardenApiV1.Service.Concrete
                         ? Math.Round((x.appointmentCount / (double)totalAppointmentCount) * 100, 1, MidpointRounding.ToEven)
                         : 0
                 })
-                .OrderByDescending(x => x.percentage)
-                .Take(5)
+                .OrderByDescending(x => x.appointmentCount)
                 .ToList();
             
             serviceReportResponseModel.serviceDatas = serviceReportDatas
@@ -105,6 +104,7 @@ namespace CareGardenApiV1.Service.Concrete
                 })
                 .OrderByDescending(x => x.percentage)
                 .ToList();
+
 
             return serviceReportResponseModel;
         }

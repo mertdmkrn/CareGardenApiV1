@@ -287,11 +287,13 @@ namespace CareGardenApiV1.Helpers
 
         public static string FormatDuration(this double totalDuration)
         {
+            var isTurkish = Resource.Resource.Culture.ToString().Contains("tr");
+
             int duration = Math.Abs(totalDuration).ToInt();
             int hours = duration / 60;
             int minutes = duration % 60;
-            string hoursStr = Constants.IsTurkish ? "sa" : "hrs";
-            string minutesStr = Constants.IsTurkish ? "dk" : "min";
+            string hoursStr = isTurkish ? "sa" : "hrs";
+            string minutesStr = isTurkish ? "dk" : "min";
 
             return $"{hours} {hoursStr} {minutes.ToString().PadLeft(2,'0')} {minutesStr}";
         }

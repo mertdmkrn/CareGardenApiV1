@@ -118,8 +118,7 @@ namespace CareGardenApiV1.Repository.Concrete
             var totalItems = await query.CountAsync();
 
             var appointments = await query
-                .Skip(requestModel.page * requestModel.take)
-                .Take(requestModel.take)
+
                 .Select(x => new BusinessAdminAppointmentReportInfo
                 {
                     date = x.startDate,
@@ -134,6 +133,9 @@ namespace CareGardenApiV1.Repository.Concrete
                         name = d.worker.name
                     }).ToList()
                 })
+                .OrderBy(x => x.date)
+                .Skip(requestModel.page * requestModel.take)
+                .Take(requestModel.take)
                 .ToListAsync();
 
             return new BusinessAdminAppointmentReportResponseModel

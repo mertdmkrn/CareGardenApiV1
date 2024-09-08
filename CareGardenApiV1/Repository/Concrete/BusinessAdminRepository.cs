@@ -123,6 +123,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 .Select(x => new BusinessAdminAppointmentReportInfo
                 {
                     date = x.startDate,
+                    hour = x.startDate.HasValue ? x.startDate.Value.ToString("hh:mm") : "",
                     totalDuration = x.startDate.DifferenceBetweenDates(x.endDate, DateType.Minute).FormatDuration(),
                     userTelephone = x.user != null ? x.user.telephone : x.userTelephone,
                     userName = x.user != null ? x.user.fullName : x.userName,

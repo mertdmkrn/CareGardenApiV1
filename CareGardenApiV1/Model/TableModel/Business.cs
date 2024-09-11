@@ -8,6 +8,7 @@ using CareGardenApiV1.Helpers;
 namespace CareGardenApiV1.Model.TableModel
 {
     [Table("Business")]
+    [Index(nameof(id))]
     [Index(nameof(email))]
     [Index(nameof(telephone))]
     [Index(nameof(city))]

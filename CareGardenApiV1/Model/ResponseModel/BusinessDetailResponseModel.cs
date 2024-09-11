@@ -12,9 +12,6 @@ namespace CareGardenApiV1.Model.ResponseModel
         public string telephone { get; set; }
         public string description { get; set; }
         public string logoUrl { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string descriptionEn { get; set; }
         public double discountRate { get; set; }
         public double averageRating { get; set; }
         public int countRating { get; set; }
@@ -27,7 +24,7 @@ namespace CareGardenApiV1.Model.ResponseModel
         public BusinessWorkingInfo businessWorkingInfo { get; set; } = new BusinessWorkingInfo();
         public ICollection<BusinessServicesInfoResponseModel> businessServicesInfos { get; set; } = new HashSet<BusinessServicesInfoResponseModel>();
         public ICollection<BusinessGallery> assets { get; set; } = new HashSet<BusinessGallery>();
-        public ICollection<Worker> workers { get; set; } = new HashSet<Worker>();
+        public ICollection<WorkerDetailResponseModel> workers { get; set; } = new HashSet<WorkerDetailResponseModel>();
         public ICollection<BusinessProperties> properties { get; set; } = new HashSet<BusinessProperties>();
 
         public ICollection<Discount> discounts { get; set; } = new HashSet<Discount>();

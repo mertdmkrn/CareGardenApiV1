@@ -212,11 +212,28 @@ namespace CareGardenApiV1.Repository.Concrete
                     id = x.id,
                     name = x.name ?? "",
                     nameForUrl = x.nameForUrl ?? "",
-                    discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
+
+                    discountRate = x.discounts
+                        .Where(d => d.isActive)
+                        .Select(d => d.rate)
+                        .FirstOrDefault(),
+
                     workingGenderType = (int)x.workingGenderType,
-                    imageUrl = x.galleries.FirstOrDefault(x => x.isProfilePhoto).imageUrl,
-                    averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == CommentType.User).Average(x => x.point) : 0,
-                    countRating = x.comments.Where(x => x.commentType == CommentType.User).Count(),
+
+                    imageUrl = x.galleries
+                        .Where(g => g.isProfilePhoto)
+                        .Select(g => g.imageUrl)
+                        .FirstOrDefault(),
+
+                    averageRating = x.comments
+                    .Where(c => c.commentType == CommentType.User)
+                    .Select(c => (double?)c.point)
+                    .DefaultIfEmpty()
+                    .Average() ?? 0,
+
+                    countRating = x.comments
+                        .Count(c => c.commentType == CommentType.User),
+
                     location = x.location,
                     logoUrl = x.logoUrl,
                     city = x.city,
@@ -225,10 +242,34 @@ namespace CareGardenApiV1.Repository.Concrete
                     officialDayAvailable = x.officialHolidayAvailable,
                     appointmentTimeInterval = x.appointmentTimeInterval,
                     createDate = x.createDate,
-                    workingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null,
-                    serviceIds = x.services.Any() ? x.services.Select(x => x.serviceId).Distinct().ToList() : null,
-                    discounts = x.discounts.Any() ? x.discounts.Select(x => new Discount { isActive = x.isActive, rate = x.rate, serviceIds = x.serviceIds, type = x.type }).ToList() : null,
-                    appointments = x.appointments.Any() ? x.appointments.Where(x => x.startDate >= DateTime.Today.AddMonths(-2)).Select(x => new Appointment { startDate = x.startDate, endDate = x.endDate }).ToList() : null
+
+                    workingInfo = x.workingInfos
+                        .FirstOrDefault(),
+
+                    serviceIds = x.services
+                        .Select(s => s.serviceId)
+                        .Distinct()
+                        .ToList(),
+
+                    discounts = x.discounts
+                        .Where(d => d.isActive)
+                        .Select(d => new Discount
+                        {
+                            isActive = d.isActive,
+                            rate = d.rate,
+                            serviceIds = d.serviceIds,
+                            type = d.type
+                        })
+                        .ToList(),
+
+                    appointments = x.appointments
+                        .Where(a => a.startDate >= DateTime.Today.AddMonths(-2))
+                        .Select(a => new Appointment
+                        {
+                            startDate = a.startDate,
+                            endDate = a.endDate
+                        })
+                        .ToList()
                 })
                 .ToListAsync();
         }
@@ -257,7 +298,10 @@ namespace CareGardenApiV1.Repository.Concrete
 
         public async Task<BusinessDetailResponseModel> GetBusinessDetailByIdAsync(Guid id)
         {
-            return await _context.Businesses
+            bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
+
+            var business = await _context.Businesses
+                .AsNoTracking()
                 .Where(x => x.id == id)
                 .Select(x => new BusinessDetailResponseModel
                 {
@@ -265,29 +309,62 @@ namespace CareGardenApiV1.Repository.Concrete
                     name = x.name,
                     address = x.address,
                     telephone = x.telephone,
-                    description = x.description,
-                    descriptionEn = x.descriptionEn,
+
+                    description = isTurkish ? x.description : (x.descriptionEn ?? x.description),
+
                     workingGenderType = x.workingGenderType,
                     logoUrl = x.logoUrl,
                     latitude = x.latitude,
                     longitude = x.longitude,
-                    discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
-                    averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == CommentType.User).Average(x => x.point) : 0,
-                    countRating = x.comments.Where(x => x.commentType == CommentType.User).Count(),
-                    businessWorkingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null,
-                    discounts = x.discounts.Where(x => x.isActive).ToList(),
+
+                    averageRating = x.comments
+                    .Where(c => c.commentType == CommentType.User)
+                    .Select(c => (double?)c.point)
+                    .DefaultIfEmpty()
+                    .Average() ?? 0,
+
+                    countRating = x.comments
+                        .Count(c => c.commentType == CommentType.User),
+
+                    businessWorkingInfo = x.workingInfos
+                        .FirstOrDefault(),
+
+                    discounts = x.discounts
+                        .Where(d => d.isActive)
+                        .ToList(),
+
                     assets = x.galleries,
-                    businessServices = x.services,
-                    workers = x.workers,
+
+                    workers = x.workers
+                        .Select(w => new WorkerDetailResponseModel
+                        {
+                            id = w.id,
+                            name = w.name,
+                            path = w.path,
+                            title = isTurkish ? (w.title ?? w.titleEn) : (w.titleEn ?? w.title)
+                        })
+                        .ToList(),
+
                     properties = x.properties
                 })
-                .AsNoTracking()
                 .FirstOrDefaultAsync();
+
+            if(business != null)
+            {
+                business.businessServices = await _context.BusinessServices
+                    .AsNoTracking()
+                    .Where(x => x.businessId == business.id)
+                    .ToListAsync();
+            }
+
+            return business;
         }
 
         public async Task<BusinessDetailResponseModel> GetBusinessDetailByNameForUrlAsync(string nameForUrl)
         {
-            return await _context.Businesses
+            bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
+
+            var business = await _context.Businesses
                 .Where(x => x.nameForUrl.Equals(nameForUrl))
                 .AsNoTracking()
                 .Select(x => new BusinessDetailResponseModel
@@ -296,25 +373,49 @@ namespace CareGardenApiV1.Repository.Concrete
                     name = x.name,
                     address = x.address,
                     telephone = x.telephone,
-                    description = x.description,
-                    descriptionEn = x.descriptionEn,
+
+                    description = isTurkish ? x.description : (x.descriptionEn ?? x.description),
+
                     workingGenderType = x.workingGenderType,
                     logoUrl = x.logoUrl,
                     latitude = x.latitude,
                     longitude = x.longitude,
-                    discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
-                    averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == CommentType.User).Average(x => x.point) : 0,
-                    countRating = x.comments.Where(x => x.commentType == CommentType.User).Count(),
-                    businessWorkingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null,
-                    discounts = x.discounts.Where(x => x.isActive).ToList(),
-                    businessServices = x.services,
+
+                    averageRating = x.comments
+                        .Where(c => c.commentType == CommentType.User)
+                        .Select(c => (double?)c.point)
+                        .DefaultIfEmpty()
+                        .Average() ?? 0,
+
+                    countRating = x.comments
+                        .Count(c => c.commentType == CommentType.User),
+
+                    businessWorkingInfo = x.workingInfos
+                        .FirstOrDefault(),
+
+                    discounts = x.discounts
+                        .Where(d => d.isActive)
+                        .ToList(),
+
                     properties = x.properties
                 })
                 .FirstOrDefaultAsync();
+
+            if (business != null)
+            {
+                business.businessServices = await _context.BusinessServices
+                    .AsNoTracking()
+                    .Where(x => x.businessId == business.id)
+                    .ToListAsync();
+            }
+
+            return business;
         }
 
         public async Task<IList<BusinessDetailResponseModel>> GetBusinessesAsync()
         {
+            bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
+
             return await _context.Businesses
                 .Select(x => new BusinessDetailResponseModel
                 {
@@ -322,20 +423,35 @@ namespace CareGardenApiV1.Repository.Concrete
                     name = x.name,
                     address = x.address,
                     telephone = x.telephone,
-                    description = x.description,
-                    descriptionEn = x.descriptionEn,
+
+                    description = isTurkish ? x.description : (x.descriptionEn ?? x.description),
+
                     workingGenderType = x.workingGenderType,
                     latitude = x.latitude,
                     longitude = x.longitude,
-                    discountRate = x.discounts.Any() ? x.discounts.Where(x => x.isActive).Select(x => x.rate).FirstOrDefault() : 0,
                     officialDayAvailable = x.officialHolidayAvailable,
                     isFeatured = x.isFeatured,
                     hasPromotion = x.hasPromotion,
-                    averageRating = x.comments.Any() ? x.comments.Where(x => x.commentType == CommentType.User).Average(x => x.point) : 0,
-                    countRating = x.comments.Where(x => x.commentType == CommentType.User).Count(),
-                    businessWorkingInfo = x.workingInfos.Any() ? x.workingInfos.FirstOrDefault() : null,
-                    assets = x.galleries.ToList(),
-                    businessServices = x.services.ToList()
+
+                    discountRate = x.discounts
+                        .Where(d => d.isActive)
+                        .Select(d => d.rate)
+                        .FirstOrDefault(),
+
+                    averageRating = x.comments
+                        .Where(c => c.commentType == CommentType.User)
+                        .Select(c => (double?)c.point)
+                        .DefaultIfEmpty()
+                        .Average() ?? 0,
+
+                    countRating = x.comments
+                        .Count(c => c.commentType == CommentType.User),
+
+                    businessWorkingInfo = x.workingInfos
+                        .FirstOrDefault(),
+
+                    assets = x.galleries,
+                    businessServices = x.services
                 })
                 .AsNoTracking()
                 .ToListAsync();

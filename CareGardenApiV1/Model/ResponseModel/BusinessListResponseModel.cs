@@ -11,30 +11,6 @@ namespace CareGardenApiV1.Model.ResponseModel
         {
         }
 
-        public BusinessListResponseModel(BusinessDetailResponseModel businessDetailModel, GeometryFactory? gf, Point? userLocation)
-        {
-            Point? businessLocation = null;
-
-            if (businessDetailModel.latitude > 0 && businessDetailModel.longitude > 0)
-            {
-                businessLocation = gf.CreatePoint(new Coordinate(businessDetailModel.latitude, businessDetailModel.longitude));
-            }
-
-            id = businessDetailModel.id;
-            name = businessDetailModel.name;
-            averageRating = businessDetailModel.averageRating;
-            countRating = businessDetailModel.countRating;
-            workingGenderType = (int)businessDetailModel.workingGenderType;
-            imageUrl = businessDetailModel.assets.FirstOrDefault(x => x.isProfilePhoto)?.imageUrl;
-            isFeatured = businessDetailModel.isFeatured;
-            hasPromotion = businessDetailModel.hasPromotion;
-            workingInfo = businessDetailModel.businessWorkingInfo;
-            distance = userLocation != null && businessLocation != null 
-                        ? Math.Round(businessLocation.Distance(gf.CreateGeometry(userLocation)) * Constants.DistanceValue, 1)
-                        : 0;
-            isOpen = HelperMethods.GetBusinessOpen(workingInfo, businessDetailModel.officialDayAvailable);
-        }
-
         public Guid id { get; set; }
         public string name { get; set; }
         public string nameForUrl { get; set; }

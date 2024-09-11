@@ -205,11 +205,8 @@ namespace CareGardenApiV1.Controller
 
             businessDetail.isOpen = HelperMethods.GetBusinessOpen(businessDetail.businessWorkingInfo, businessDetail.officialDayAvailable);
             businessDetail.averageRating = Math.Round(businessDetail.averageRating, 1);
-            
-            if (!culture.Equals("tr"))
-                businessDetail.description = businessDetail.descriptionEn.IsNull(businessDetail.description);
 
-            var pointList = await _commentService.GetCommentPointListForCache(businessId: id.ToGuid());
+            var pointList = await _commentService.GetCommentPointListForCache(businessId: id.ToGuid(), cache: true);
 
             if (!pointList.IsNullOrEmpty())
             {
@@ -258,56 +255,71 @@ namespace CareGardenApiV1.Controller
 
             var popularServices = businessDetail.businessServices.Where(x => x.isPopular);
 
+
             if (popularServices.Any())
             {
-                BusinessServicesInfoResponseModel businessServiceInfo = new BusinessServicesInfoResponseModel();
-                businessServiceInfo.serviceName = Resource.Resource.PopularServices;
-                businessServiceInfo.className = "popular";
+                var businessServiceInfo = new BusinessServicesInfoResponseModel
+                {
+                    serviceName = Resource.Resource.PopularServices,
+                    className = "popular"
+                };
 
-                foreach (var item in popularServices)
+                Parallel.ForEach(popularServices, item =>
                 {
                     var activeDiscount = (activeDiscounts?
                         .Where(x => x.serviceIds.Contains(item.serviceId.Value.ToString()) || x.serviceIds.IsNullOrEmpty()))
                         .MaxBy(x => x.rate);
 
                     setDiscountTitle(activeDiscount);
-                    
-                    item.discountRate = activeDiscount?.rate??0; 
-                    item.discountPrice = item.price * (1 - (item.discountRate / 100));
-                    
-                    if (!culture.Equals("tr")) item.name = item.nameEn.IsNull(item.name);
-                    
-                    businessServiceInfo.businessServices.Add(item);
-                }
 
-                businessDetail.businessServicesInfos.Add(businessServiceInfo);
+                    item.discountRate = activeDiscount?.rate ?? 0;
+                    item.discountPrice = item.price * (1 - (item.discountRate / 100));
+
+                    if (!culture.Equals("tr")) item.name = item.nameEn.IsNull(item.name);
+
+                    lock (businessServiceInfo.businessServices)
+                    {
+                        businessServiceInfo.businessServices.Add(item);
+                    }
+                });
+
+                lock (businessDetail.businessServicesInfos)
+                {
+                    businessDetail.businessServicesInfos.Add(businessServiceInfo);
+                }
             }
 
-            foreach (var items in businessDetail.businessServices.GroupBy(x => x.serviceId))
+            Parallel.ForEach(businessDetail.businessServices.GroupBy(x => x.serviceId), items =>
             {
-                BusinessServicesInfoResponseModel businessServiceInfo = new BusinessServicesInfoResponseModel();
+                var businessServiceInfo = new BusinessServicesInfoResponseModel();
                 var service = services.FirstOrDefault(x => x.id == items.Key.Value);
-                businessServiceInfo.serviceName = service != null ? (culture == "en" ? service.nameEn : service.name) : string.Empty;
+                businessServiceInfo.serviceName = service != null ? (culture == "tr" ? service.name : service.nameEn) : string.Empty;
                 businessServiceInfo.className = service != null ? service.className : string.Empty;
 
-                foreach (var item in items)
+                Parallel.ForEach(items, item =>
                 {
                     var activeDiscount = (activeDiscounts?
-                            .Where(x =>x.serviceIds.Contains(item.serviceId.Value.ToString()) || x.serviceIds.IsNullOrEmpty()))
+                        .Where(x => x.serviceIds.Contains(item.serviceId.Value.ToString()) || x.serviceIds.IsNullOrEmpty()))
                         .MaxBy(x => x.rate);
 
                     setDiscountTitle(activeDiscount);
-                    
-                    item.discountRate = activeDiscount?.rate??0; 
+
+                    item.discountRate = activeDiscount?.rate ?? 0;
                     item.discountPrice = item.price * (1 - (item.discountRate / 100));
 
                     if (!culture.Equals("tr")) item.name = item.nameEn.IsNull(item.name);
-                    
-                    businessServiceInfo.businessServices.Add(item);
-                }
 
-                businessDetail.businessServicesInfos.Add(businessServiceInfo);
-            }
+                    lock (businessServiceInfo.businessServices)
+                    {
+                        businessServiceInfo.businessServices.Add(item);
+                    }
+                });
+
+                lock (businessDetail.businessServicesInfos)
+                {
+                    businessDetail.businessServicesInfos.Add(businessServiceInfo);
+                }
+            });
 
             response.Data = businessDetail;
 
@@ -350,9 +362,6 @@ namespace CareGardenApiV1.Controller
 
             businessDetail.isOpen = HelperMethods.GetBusinessOpen(businessDetail.businessWorkingInfo, businessDetail.officialDayAvailable);
             businessDetail.averageRating = Math.Round(businessDetail.averageRating, 1);
-           
-            if (!culture.Equals("tr"))
-                businessDetail.description = businessDetail.descriptionEn.IsNull(businessDetail.description);
             
             var services = new List<Services>();
 
@@ -385,11 +394,13 @@ namespace CareGardenApiV1.Controller
 
             if (popularServices.Any())
             {
-                BusinessServicesInfoResponseModel businessServiceInfo = new BusinessServicesInfoResponseModel();
-                businessServiceInfo.serviceName = Resource.Resource.PopularServices;
-                businessServiceInfo.className = "popular";
+                var businessServiceInfo = new BusinessServicesInfoResponseModel
+                {
+                    serviceName = Resource.Resource.PopularServices,
+                    className = "popular"
+                };
 
-                foreach (var item in popularServices)
+                Parallel.ForEach(popularServices, item =>
                 {
                     var activeDiscount = (activeDiscounts?
                         .Where(x => x.serviceIds.Contains(item.serviceId.Value.ToString()) || x.serviceIds.IsNullOrEmpty()))
@@ -399,23 +410,29 @@ namespace CareGardenApiV1.Controller
 
                     item.discountRate = activeDiscount?.rate ?? 0;
                     item.discountPrice = item.price * (1 - (item.discountRate / 100));
-                    
+
                     if (!culture.Equals("tr")) item.name = item.nameEn.IsNull(item.name);
 
-                    businessServiceInfo.businessServices.Add(item);
-                }
+                    lock (businessServiceInfo.businessServices)
+                    {
+                        businessServiceInfo.businessServices.Add(item);
+                    }
+                });
 
-                businessDetail.businessServicesInfos.Add(businessServiceInfo);
+                lock (businessDetail.businessServicesInfos)
+                {
+                    businessDetail.businessServicesInfos.Add(businessServiceInfo);
+                }
             }
 
-            foreach (var items in businessDetail.businessServices.GroupBy(x => x.serviceId))
+            Parallel.ForEach(businessDetail.businessServices.GroupBy(x => x.serviceId), items =>
             {
-                BusinessServicesInfoResponseModel businessServiceInfo = new BusinessServicesInfoResponseModel();
+                var businessServiceInfo = new BusinessServicesInfoResponseModel();
                 var service = services.FirstOrDefault(x => x.id == items.Key.Value);
                 businessServiceInfo.serviceName = service != null ? (culture == "tr" ? service.name : service.nameEn) : string.Empty;
                 businessServiceInfo.className = service != null ? service.className : string.Empty;
 
-                foreach (var item in items)
+                Parallel.ForEach(items, item =>
                 {
                     var activeDiscount = (activeDiscounts?
                         .Where(x => x.serviceIds.Contains(item.serviceId.Value.ToString()) || x.serviceIds.IsNullOrEmpty()))
@@ -425,14 +442,20 @@ namespace CareGardenApiV1.Controller
 
                     item.discountRate = activeDiscount?.rate ?? 0;
                     item.discountPrice = item.price * (1 - (item.discountRate / 100));
-                    
+
                     if (!culture.Equals("tr")) item.name = item.nameEn.IsNull(item.name);
 
-                    businessServiceInfo.businessServices.Add(item);
-                }
+                    lock (businessServiceInfo.businessServices)
+                    {
+                        businessServiceInfo.businessServices.Add(item);
+                    }
+                });
 
-                businessDetail.businessServicesInfos.Add(businessServiceInfo);
-            }
+                lock (businessDetail.businessServicesInfos)
+                {
+                    businessDetail.businessServicesInfos.Add(businessServiceInfo);
+                }
+            });
 
             response.Data = businessDetail;
 

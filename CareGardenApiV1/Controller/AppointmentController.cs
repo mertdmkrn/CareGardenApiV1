@@ -585,7 +585,7 @@ namespace CareGardenApiV1.Controller
             var discounts = business.discounts?
                 .Where(x => x.serviceIds.IsNullOrEmpty() || x.serviceIds.Contains(businessService.serviceId.Value.ToString()));
 
-            var nowDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now.AddMinutes(business.appointmentTimeInterval), "Turkey Standard Time");
+            var nowDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now.AddMinutes(business.appointmentTimeInterval.IsNull(30)), "Turkey Standard Time");
             var pastAppointments = await _appointmentDetailService.GetAppointmentDetailsByWorkerIdsAndDateAsync(new AppointmentSearchRequestModel { startDate = nowDate, workerIds = workers.Select(x => x.id).ToHashSet() });
             var workerServicePrices = await _workerServicePriceService.GetWorkerServicePricesSearchAsync(businessServiceId: appointmentInfo.businessServiceId.Value);
             var pointList = await _commentService.GetCommentPointListForCache(businessId: appointmentInfo.businessId);
@@ -610,7 +610,7 @@ namespace CareGardenApiV1.Controller
                         }
                     }
 
-                    setWorkerAvailableDate(worker, business.appointmentTimeInterval, businessStartDate, nowDate, pastAppointments);
+                    setWorkerAvailableDate(worker, business.appointmentTimeInterval.IsNull(30), businessStartDate, nowDate, pastAppointments);
 
                     if (!worker.availableDate.HasValue)
                     {
@@ -740,7 +740,7 @@ namespace CareGardenApiV1.Controller
 
             var intervalDay = 7;
 
-            var nowDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now.AddMinutes(business.appointmentTimeInterval), "Turkey Standard Time");
+            var nowDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now.AddMinutes(business.appointmentTimeInterval.IsNull(30)), "Turkey Standard Time");
             var startDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Today.AddDays(intervalDay * appointmentInfo.page), "Turkey Standard Time");
             var endDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Today.AddDays(intervalDay * (appointmentInfo.page + 1)), "Turkey Standard Time");
 
@@ -824,7 +824,7 @@ namespace CareGardenApiV1.Controller
                 {
                     if (tempDate < nowDate)
                     {
-                        tempDate = tempDate.AddMinutes(business.appointmentTimeInterval);
+                        tempDate = tempDate.AddMinutes(business.appointmentTimeInterval.IsNull(30));
                         continue;
                     }
 
@@ -849,7 +849,7 @@ namespace CareGardenApiV1.Controller
                         model.dateList.Add(timeModel);
                     }
 
-                    tempDate = tempDate.AddMinutes(business.appointmentTimeInterval);
+                    tempDate = tempDate.AddMinutes(business.appointmentTimeInterval.IsNull(30));
                 }
 
                 model.isActive = model.isActive && !model.dateList.IsNullOrEmpty();

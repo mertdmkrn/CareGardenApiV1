@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using CareGardenApiV1.Helpers;
 using System.Security.Claims;
 using CareGardenApiV1.Model.TableModel;
+using System.Collections.Concurrent;
 
 namespace CareGardenApiV1.Controller
 {
@@ -728,10 +729,48 @@ namespace CareGardenApiV1.Controller
                     businessId = appointmentInfo.businessId,
                     isActive = true
                 })
-                : await _workerService.GetWorkersByWorkerIdsAsync(appointmentInfo.serviceWorkerInfos
-                    .Select(x => x.workerId).ToList());
+                : await _workerService
+                .GetWorkersByWorkerIdsAsync(appointmentInfo.serviceWorkerInfos.Select(x => x.workerId).ToList());
 
-            Dictionary<DayOfWeek, List<Tuple<TimeSpan, TimeSpan>>> workersWorkTimesDict = new();
+            var intervalDay = 7;
+
+            var nowDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now.AddMinutes(business.appointmentTimeInterval.IsNull(30)), "Turkey Standard Time");
+            var startDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Today.AddDays(intervalDay * appointmentInfo.page), "Turkey Standard Time");
+            var endDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Today.AddDays(intervalDay * (appointmentInfo.page + 1)), "Turkey Standard Time");
+
+            var pastAppointments = await _appointmentDetailService.GetAppointmentDetailsByWorkerIdsAndDateAsync(new AppointmentSearchRequestModel { startDate = nowDate, endDate = endDate, workerIds = workers.Select(x => x.id).ToHashSet() });
+
+            if (appointmentInfo.hasGetAnyAvailibityWorker)
+            {
+                var groupingPastAppointments = pastAppointments?
+                    .GroupBy(x => x.workerId.Value)
+                    .ToList();
+
+                foreach (var item in appointmentInfo.serviceWorkerInfos)
+                {
+                    var businessServiceId = item.businessServiceId.ToString();
+                    var serviceWorkers = workers
+                        .Where(x => x.serviceIds.IsNull("").Contains(businessServiceId))
+                        .WhereIf(!groupingPastAppointments.IsNullOrEmpty(), x => !groupingPastAppointments.Any(g => g.Key.Equals(x.id)))
+                        .OrderBy(x => x.price)
+                        .ToList();
+
+                    if (serviceWorkers.IsNullOrEmpty())
+                    {
+                        serviceWorkers = workers;
+                    }
+
+                    var worker = serviceWorkers.FirstOrDefault();
+
+                    item.workerId = worker?.id;
+                }
+
+                workers = workers
+                    .Where(x => appointmentInfo.serviceWorkerInfos.Exists(s => s.workerId == x.id))
+                    .ToList();
+            }
+
+            ConcurrentDictionary<DayOfWeek, List<Tuple<TimeSpan, TimeSpan>>> workersWorkTimesDict = new();
 
             await Parallel.ForEachAsync(workers, _parallelOptions, async (worker, ct) =>
             {
@@ -743,37 +782,7 @@ namespace CareGardenApiV1.Controller
                 setWorkerTimes(worker.saturdayWorkHours, DayOfWeek.Saturday, workersWorkTimesDict);
                 setWorkerTimes(worker.sundayWorkHours, DayOfWeek.Sunday, workersWorkTimesDict);
             });
-            
-            var intervalDay = 7;
 
-            var nowDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now.AddMinutes(business.appointmentTimeInterval.IsNull(30)), "Turkey Standard Time");
-            var startDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Today.AddDays(intervalDay * appointmentInfo.page), "Turkey Standard Time");
-            var endDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Today.AddDays(intervalDay * (appointmentInfo.page + 1)), "Turkey Standard Time");
-
-            var pastAppointments = await _appointmentDetailService.GetAppointmentDetailsByWorkerIdsAndDateAsync(new AppointmentSearchRequestModel { startDate = nowDate, endDate = endDate, workerIds = workers.Select(x => x.id).ToHashSet() });
-
-            if (appointmentInfo.hasGetAnyAvailibityWorker)
-            {
-                var groupingPastAppointments = pastAppointments.GroupBy(x => x.workerId.Value).ToList();
-               
-                await Parallel.ForEachAsync(appointmentInfo.serviceWorkerInfos, _parallelOptions, async (item, ct) =>
-                {
-                    var serviceWorkers = workers
-                        .Where(x => x.serviceIds.IsNull("").Contains(item.businessServiceId.ToString()))
-                        .Where(x => !groupingPastAppointments.Any(g => g.Key.Equals(x.id)))
-                        .OrderBy(x => x.price)
-                        .ToList();
-                    
-                    if (serviceWorkers.IsNullOrEmpty())
-                    {
-                        serviceWorkers = workers;
-                    }
-
-                    var worker = serviceWorkers.FirstOrDefault();
-
-                    item.workerId = worker?.id;
-                });
-            }
 
             List<AppointmentAvailableTimeResponseModel> models = new();
 
@@ -811,6 +820,8 @@ namespace CareGardenApiV1.Controller
                     }
                     return;
                 }
+
+                workingHoursParts[1] = workingHoursParts[1] == "24:00" ? "23:59" : workingHoursParts[1];
 
                 if (!TimeSpan.TryParse(workingHoursParts[0], out var startWorkTime) ||
                     !TimeSpan.TryParse(workingHoursParts[1], out var endWorkTime))
@@ -872,20 +883,20 @@ namespace CareGardenApiV1.Controller
             
             response.Data = new AppointmentAvailableInfoModel()
             {
-                dateInfos = models,
+                dateInfos = models.OrderBy(x => x.date).ToList(),
                 serviceWorkerInfos = appointmentInfo.serviceWorkerInfos
             };
 
             return Ok(response);
         }
 
-        private void setWorkerTimes(string workHours, DayOfWeek dayOfWeek, Dictionary<DayOfWeek, List<Tuple<TimeSpan, TimeSpan>>> workersWorkTimesDict)
+        private void setWorkerTimes(string workHours, DayOfWeek dayOfWeek, ConcurrentDictionary<DayOfWeek, List<Tuple<TimeSpan, TimeSpan>>> workersWorkTimesDict)
         {
             if (!workHours.IsNullOrEmpty())
             {
                 var workHoursArr = workHours.Split('-');
                 var startTime = TimeSpan.Parse(workHoursArr.FirstOrDefault());
-                var endTime = TimeSpan.Parse(workHoursArr.LastOrDefault());
+                var endTime = TimeSpan.Parse(workHoursArr.LastOrDefault() == "24:00" ? "23:59" : workHoursArr.LastOrDefault());
                 var tuple = Tuple.Create(startTime, endTime);
 
                 if (!workersWorkTimesDict.ContainsKey(dayOfWeek))
@@ -893,9 +904,10 @@ namespace CareGardenApiV1.Controller
                     workersWorkTimesDict[dayOfWeek] = new List<Tuple<TimeSpan, TimeSpan>>();
                 }
 
-                lock (workersWorkTimesDict)
+                lock (workersWorkTimesDict[dayOfWeek])
                 {
                     workersWorkTimesDict[dayOfWeek].Add(tuple);
+
                 }
             }
         }

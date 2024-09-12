@@ -23,6 +23,10 @@ namespace CareGardenApiV1.Controller
         private readonly IWorkerService _workerService;
         private readonly IWorkerServicePriceService _workerServicePriceService;
         private readonly ICommentService _commentService;
+        private readonly ParallelOptions _parallelOptions = new()
+        {
+            MaxDegreeOfParallelism = 20
+        };
 
         public AppointmentController(
             IAppointmentService appointmentService,
@@ -590,24 +594,22 @@ namespace CareGardenApiV1.Controller
             var workerServicePrices = await _workerServicePriceService.GetWorkerServicePricesSearchAsync(businessServiceId: appointmentInfo.businessServiceId.Value);
             var pointList = await _commentService.GetCommentPointListForCache(businessId: appointmentInfo.businessId);
             bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
-
-            foreach (var worker in workers)
+            
+            await Parallel.ForEachAsync(workers, _parallelOptions, async (worker, ct) =>
             {
                 var businessStartDate = nowDate;
                 var intervalDay = 14;
                 var workerServicePrice = workerServicePrices?.FirstOrDefault(x => x.workerId.Equals(worker.id));
                 var price = workerServicePrice?.price ?? businessService?.price ?? 0;
 
-                while (!worker.availableDate.HasValue)
+                while (!worker.availableDate.HasValue && intervalDay > 0)
                 {
                     bool businessIsOpen = HelperMethods.GetBusinessOpenSpecialDate(business.workingInfo, business.officialDayAvailable, businessStartDate);
-                    if (!businessIsOpen)
+                    
+                    while (!businessIsOpen)
                     {
-                        while (!businessIsOpen)
-                        {
-                            businessStartDate = businessStartDate.AddDays(1);
-                            businessIsOpen = HelperMethods.GetBusinessOpenSpecialDate(business.workingInfo, business.officialDayAvailable, businessStartDate);
-                        }
+                        businessStartDate = businessStartDate.AddDays(1);
+                        businessIsOpen = HelperMethods.GetBusinessOpenSpecialDate(business.workingInfo, business.officialDayAvailable, businessStartDate);
                     }
 
                     setWorkerAvailableDate(worker, business.appointmentTimeInterval.IsNull(30), businessStartDate, nowDate, pastAppointments);
@@ -616,37 +618,37 @@ namespace CareGardenApiV1.Controller
                     {
                         businessStartDate = businessStartDate.AddDays(1);
                         intervalDay--;
-
-                        if (intervalDay == 0) break;
                     }
                 }
 
                 worker.isActive = worker.availableDate.HasValue;
-                worker.availableDateStr = worker.isActive ? worker.availableDate.Value.ToString((isTurkish ? "dd/MM HH:mm" : "MM/dd h:mm tt"), Resource.Resource.Culture) : string.Empty;
+                worker.availableDateStr = worker.isActive 
+                    ? worker.availableDate.Value.ToString(isTurkish ? "dd/MM HH:mm" : "MM/dd h:mm tt", Resource.Resource.Culture) 
+                    : string.Empty;
 
-                var activeDiscount = worker.isActive
-                    ? discounts?
-                        .Where(x => x.type == DiscountType.AllDay
-                                    || (x.type == DiscountType.WeekDay && worker.availableDate.Value.DayOfWeek >= DayOfWeek.Monday && worker.availableDate.Value.DayOfWeek <= DayOfWeek.Friday)
-                                    || (x.type == DiscountType.WeekEnd && worker.availableDate.Value.DayOfWeek == DayOfWeek.Saturday || worker.availableDate.Value.DayOfWeek == DayOfWeek.Sunday))
+                var activeDiscount = worker.isActive 
+                    ? discounts?.Where(x => 
+                        x.type == DiscountType.AllDay 
+                        || (x.type == DiscountType.WeekDay && worker.availableDate.Value.DayOfWeek >= DayOfWeek.Monday && worker.availableDate.Value.DayOfWeek <= DayOfWeek.Friday)
+                        || (x.type == DiscountType.WeekEnd && (worker.availableDate.Value.DayOfWeek == DayOfWeek.Saturday || worker.availableDate.Value.DayOfWeek == DayOfWeek.Sunday)))
                         .MaxBy(x => x.rate)
-                    : discounts?.Where(x => x.type == DiscountType.AllDay).FirstOrDefault();
+                    : discounts?.FirstOrDefault(x => x.type == DiscountType.AllDay);
 
                 worker.price = price;
                 worker.discountRate = activeDiscount?.rate ?? 0;
                 worker.discountPrice = price * (1 - (worker.discountRate / 100));
 
-                if(!pointList.IsNullOrEmpty())
+                if (!pointList.IsNullOrEmpty())
                 {
                     var points = pointList.Where(x => x.workerIds.Contains(worker.id));
 
-                    if(!points.IsNullOrEmpty())
+                    if (!points.IsNullOrEmpty())
                     {
                         worker.countRating = points.Count();
                         worker.rating = points.Average(x => x.point);
                     }
                 }
-            }
+            });
         }
 
         private void setWorkerAvailableDate(AppointmentWorkerResponseModel worker, int appointmentTimeInterval, DateTime businessStartDate, DateTime nowDate, IEnumerable<AppointmentDetail> pastAppointments)
@@ -670,12 +672,16 @@ namespace CareGardenApiV1.Controller
                 if (date < nowDate)
                     continue;
 
-                if (pastAppointments == null || (pastAppointments != null && !pastAppointments.Any(x => x.date == date && x.workerId.Equals(worker.id))))
+                var isAppointmentPast = pastAppointments?
+                    .Any(x => x.date == date && x.workerId.Equals(worker.id)) ?? false;
+
+                if (!isAppointmentPast)
                 {
                     worker.availableDate = date;
                     break;
                 }
             }
+
         }
 
         /// <summary>
@@ -725,9 +731,9 @@ namespace CareGardenApiV1.Controller
                 : await _workerService.GetWorkersByWorkerIdsAsync(appointmentInfo.serviceWorkerInfos
                     .Select(x => x.workerId).ToList());
 
-            Dictionary<DayOfWeek, List<Tuple<TimeSpan, TimeSpan>>> workersWorkTimesDict = new Dictionary<DayOfWeek, List<Tuple<TimeSpan, TimeSpan>>>();
+            Dictionary<DayOfWeek, List<Tuple<TimeSpan, TimeSpan>>> workersWorkTimesDict = new();
 
-            foreach (var worker in workers)
+            await Parallel.ForEachAsync(workers, _parallelOptions, async (worker, ct) =>
             {
                 setWorkerTimes(worker.mondayWorkHours, DayOfWeek.Monday, workersWorkTimesDict);
                 setWorkerTimes(worker.tuesdayWorkHours, DayOfWeek.Tuesday, workersWorkTimesDict);
@@ -736,8 +742,8 @@ namespace CareGardenApiV1.Controller
                 setWorkerTimes(worker.fridayWorkHours, DayOfWeek.Friday, workersWorkTimesDict);
                 setWorkerTimes(worker.saturdayWorkHours, DayOfWeek.Saturday, workersWorkTimesDict);
                 setWorkerTimes(worker.sundayWorkHours, DayOfWeek.Sunday, workersWorkTimesDict);
-            }
-
+            });
+            
             var intervalDay = 7;
 
             var nowDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now.AddMinutes(business.appointmentTimeInterval.IsNull(30)), "Turkey Standard Time");
@@ -750,19 +756,14 @@ namespace CareGardenApiV1.Controller
             {
                 var groupingPastAppointments = pastAppointments.GroupBy(x => x.workerId.Value).ToList();
                
-                foreach (var item in appointmentInfo.serviceWorkerInfos)
+                await Parallel.ForEachAsync(appointmentInfo.serviceWorkerInfos, _parallelOptions, async (item, ct) =>
                 {
                     var serviceWorkers = workers
                         .Where(x => x.serviceIds.IsNull("").Contains(item.businessServiceId.ToString()))
                         .Where(x => !groupingPastAppointments.Any(g => g.Key.Equals(x.id)))
                         .OrderBy(x => x.price)
-                        .ToList()
-                        ??
-                        workers
-                        .Where(x => x.serviceIds.IsNull("").Contains(item.businessServiceId.ToString()))
-                        .OrderBy(x => x.price)
                         .ToList();
-
+                    
                     if (serviceWorkers.IsNullOrEmpty())
                     {
                         serviceWorkers = workers;
@@ -771,12 +772,12 @@ namespace CareGardenApiV1.Controller
                     var worker = serviceWorkers.FirstOrDefault();
 
                     item.workerId = worker?.id;
-                }
+                });
             }
 
             List<AppointmentAvailableTimeResponseModel> models = new();
 
-            for (int i = 0; i < intervalDay; i++)
+            await Parallel.ForEachAsync(Enumerable.Range(0, intervalDay), async (i, ct) =>
             {
                 var date = startDate.AddDays(i);
 
@@ -788,13 +789,14 @@ namespace CareGardenApiV1.Controller
                 if (!isBusinessOpen)
                 {
                     model.isActive = false;
-                    models.Add(model);
-                    continue;
+                    lock (models)
+                    {
+                        models.Add(model);
+                    }
+                    return;
                 }
-                else
-                {
-                    model.isActive = true;
-                }
+
+                model.isActive = true;
 
                 string businessWorkHours = HelperMethods.GetBusinessWorkInfoHours(business.workingInfo, date);
 
@@ -803,16 +805,22 @@ namespace CareGardenApiV1.Controller
                 if (workingHoursParts.Length != 2)
                 {
                     model.isActive = false;
-                    models.Add(model);
-                    continue;
+                    lock (models)
+                    {
+                        models.Add(model);
+                    }
+                    return;
                 }
 
                 if (!TimeSpan.TryParse(workingHoursParts[0], out var startWorkTime) ||
                     !TimeSpan.TryParse(workingHoursParts[1], out var endWorkTime))
                 {
                     model.isActive = false;
-                    models.Add(model);
-                    continue;
+                    lock (models)
+                    {
+                        models.Add(model);
+                    }
+                    return;
                 }
 
                 var startWorkDate = new DateTime(date.Year, date.Month, date.Day).Add(startWorkTime);
@@ -840,13 +848,15 @@ namespace CareGardenApiV1.Controller
                         ? workersWorkTimesDict[tempDate.DayOfWeek]
                         : null;
 
-
                     timeModel.isActive = workTimeTuples != null && !pastAppointments.Exists(x => x.date == tempDate)
                                          && !workTimeTuples.Exists(x => x.Item1 > hourTimeSpan && x.Item2 < hourTimeSpan);
 
                     if (timeModel.isActive)
                     {
-                        model.dateList.Add(timeModel);
+                        lock (model)
+                        {
+                            model.dateList.Add(timeModel);
+                        }
                     }
 
                     tempDate = tempDate.AddMinutes(business.appointmentTimeInterval.IsNull(30));
@@ -854,9 +864,12 @@ namespace CareGardenApiV1.Controller
 
                 model.isActive = model.isActive && !model.dateList.IsNullOrEmpty();
 
-                models.Add(model);
-            }
-
+                lock (models)
+                {
+                    models.Add(model);
+                }
+            });
+            
             response.Data = new AppointmentAvailableInfoModel()
             {
                 dateInfos = models,
@@ -880,7 +893,10 @@ namespace CareGardenApiV1.Controller
                     workersWorkTimesDict[dayOfWeek] = new List<Tuple<TimeSpan, TimeSpan>>();
                 }
 
-                workersWorkTimesDict[dayOfWeek].Add(tuple);
+                lock (workersWorkTimesDict)
+                {
+                    workersWorkTimesDict[dayOfWeek].Add(tuple);
+                }
             }
         }
     }

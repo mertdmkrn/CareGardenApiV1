@@ -601,7 +601,9 @@ namespace CareGardenApiV1.Controller
             {
                 var businessStartDate = nowDate;
                 var intervalDay = 14;
-                var price = workerServicePricesDict?.GetValueOrDefault(worker.id) ?? businessService?.price ?? 0;
+                var price = (workerServicePricesDict != null && workerServicePricesDict.ContainsKey(worker.id))
+                    ? workerServicePricesDict[worker.id]
+                    : businessService?.price ?? 0;
 
                 while (!worker.availableDate.HasValue && intervalDay > 0)
                 {

@@ -552,7 +552,6 @@ namespace CareGardenApiV1.Controller
                 .ThenBy(x => x.name)
                 .ToList();
 
-
             if (workers.Exists(x => x.availableDate.HasValue))
             {
                 workers.Insert(0, new AppointmentWorkerResponseModel
@@ -595,18 +594,19 @@ namespace CareGardenApiV1.Controller
             var workerServicePrices = await _workerServicePriceService.GetWorkerServicePricesSearchAsync(businessServiceId: appointmentInfo.businessServiceId.Value);
             var pointList = await _commentService.GetCommentPointListForCache(businessId: appointmentInfo.businessId);
             bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
-            
+
+            var workerServicePricesDict = workerServicePrices?.ToDictionary(x => x.workerId, x => x.price);
+
             await Parallel.ForEachAsync(workers, _parallelOptions, async (worker, ct) =>
             {
                 var businessStartDate = nowDate;
                 var intervalDay = 14;
-                var workerServicePrice = workerServicePrices?.FirstOrDefault(x => x.workerId.Equals(worker.id));
-                var price = workerServicePrice?.price ?? businessService?.price ?? 0;
+                var price = workerServicePricesDict?.GetValueOrDefault(worker.id) ?? businessService?.price ?? 0;
 
                 while (!worker.availableDate.HasValue && intervalDay > 0)
                 {
                     bool businessIsOpen = HelperMethods.GetBusinessOpenSpecialDate(business.workingInfo, business.officialDayAvailable, businessStartDate);
-                    
+
                     while (!businessIsOpen)
                     {
                         businessStartDate = businessStartDate.AddDays(1);
@@ -623,21 +623,28 @@ namespace CareGardenApiV1.Controller
                 }
 
                 worker.isActive = worker.availableDate.HasValue;
-                worker.availableDateStr = worker.isActive 
-                    ? worker.availableDate.Value.ToString(isTurkish ? "dd/MM HH:mm" : "MM/dd h:mm tt", Resource.Resource.Culture) 
+                worker.availableDateStr = worker.isActive
+                    ? worker.availableDate.Value.ToString(isTurkish ? "dd/MM HH:mm" : "MM/dd h:mm tt", Resource.Resource.Culture)
                     : string.Empty;
 
-                var activeDiscount = worker.isActive 
-                    ? discounts?.Where(x => 
-                        x.type == DiscountType.AllDay 
-                        || (x.type == DiscountType.WeekDay && worker.availableDate.Value.DayOfWeek >= DayOfWeek.Monday && worker.availableDate.Value.DayOfWeek <= DayOfWeek.Friday)
-                        || (x.type == DiscountType.WeekEnd && (worker.availableDate.Value.DayOfWeek == DayOfWeek.Saturday || worker.availableDate.Value.DayOfWeek == DayOfWeek.Sunday)))
-                        .MaxBy(x => x.rate)
-                    : discounts?.FirstOrDefault(x => x.type == DiscountType.AllDay);
+                if (worker.isActive)
+                {
+                    var availableDay = worker.availableDate.Value.DayOfWeek;
+                    var activeDiscount = discounts?.Where(x =>
+                        x.type == DiscountType.AllDay ||
+                        (x.type == DiscountType.WeekDay && availableDay >= DayOfWeek.Monday && availableDay <= DayOfWeek.Friday) ||
+                        (x.type == DiscountType.WeekEnd && (availableDay == DayOfWeek.Saturday || availableDay == DayOfWeek.Sunday)))
+                        .MaxBy(x => x.rate);
 
-                worker.price = price;
-                worker.discountRate = activeDiscount?.rate ?? 0;
+                    worker.discountRate = activeDiscount?.rate ?? 0;
+                }
+                else
+                {
+                    worker.discountRate = discounts?.FirstOrDefault(x => x.type == DiscountType.AllDay)?.rate ?? 0;
+                }
+
                 worker.discountPrice = price * (1 - (worker.discountRate / 100));
+                worker.price = price;
 
                 if (!pointList.IsNullOrEmpty())
                 {
@@ -661,11 +668,11 @@ namespace CareGardenApiV1.Controller
 
             if (workingHoursParts.Length != 2) return;
 
+            workingHoursParts[1] = workingHoursParts[1] == "24:00" ? "23:59" : workingHoursParts[1];
+
             if (!TimeSpan.TryParse(workingHoursParts[0], out var startWorkTime) ||
                 !TimeSpan.TryParse(workingHoursParts[1], out var endWorkTime))
                 return;
-
-            workingHoursParts[1] = workingHoursParts[1] == "24:00" ? "23:59" : workingHoursParts[1];
 
             var startDate = new DateTime(businessStartDate.Year, businessStartDate.Month, businessStartDate.Day).Add(startWorkTime);
             var endDate = new DateTime(businessStartDate.Year, businessStartDate.Month, businessStartDate.Day).Add(endWorkTime);

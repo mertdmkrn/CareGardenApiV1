@@ -248,12 +248,12 @@ namespace CareGardenApiV1.Repository.Concrete
             return await _context.Comments
                 .AsNoTracking()
                 .Where(x => x.commentType == CommentType.User)
-                .Where(x => x.appointment != null && x.appointment.details.Any()) 
+                .Where(x => x.appointment != null && x.appointment.details.Any())
                 .Select(x => new CommentPointListResponseModel
                 {
                     businessId = x.businessId,
                     point = x.point,
-                    workerIds = x.appointment.details.Select(x => x.workerId)
+                    workerIds = x.appointment.details.Select(d => d.workerId)
                 })
                 .ToListAsync();
         }

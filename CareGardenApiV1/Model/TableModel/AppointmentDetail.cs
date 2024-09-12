@@ -9,6 +9,9 @@ namespace CareGardenApiV1.Model.TableModel
     [Table("AppointmentDetail")]
     [Index(nameof(appointmentId))]
     [Index(nameof(workerId))]
+    [Index(nameof(businessServiceId))]
+    [Index(nameof(date))]
+    [Index(nameof(id))]
     public class AppointmentDetail
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]

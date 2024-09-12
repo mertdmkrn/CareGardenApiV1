@@ -341,7 +341,8 @@ namespace CareGardenApiV1.Repository.Concrete
                             id = w.id,
                             name = w.name,
                             path = w.path,
-                            title = isTurkish ? (w.title ?? w.titleEn) : (w.titleEn ?? w.title)
+                            title = isTurkish ? (w.title ?? w.titleEn) : (w.titleEn ?? w.title),
+                            isActive = w.isActive
                         })
                         .ToList(),
 

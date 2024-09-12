@@ -11,6 +11,7 @@ namespace CareGardenApiV1.Model.ResponseModel
         public string? about { get; set; }
         public double point { get; set; }
         public int countRating { get; set; }
+        public bool isActive { get; set; }
 
         public List<WorkerDetailServiceInfo> serviceInfos { get; set; }
         [JsonIgnore]

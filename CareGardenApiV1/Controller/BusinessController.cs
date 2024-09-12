@@ -604,30 +604,32 @@ namespace CareGardenApiV1.Controller
         /// </remarks>
         /// <returns></returns>
         [HttpPost("getdetailbynameforurl2")]
-        public async Task<IActionResult> GetBusinessDetailByNameForUrl2([FromBody] string id)
+        public async Task<IActionResult> GetBusinessDetailByNameForUrl2([FromBody] string nameForUrl)
         {
             var culture = Request.Headers["Language"].ToString().IsNull("en");
-            var response = new ResponseModel<BusinessDetailResponseModel>();
+            ResponseModel<BusinessDetailResponseModel> response = new ResponseModel<BusinessDetailResponseModel>();
 
-            if (!id.IsGuid())
+            if (nameForUrl.IsNullOrEmpty())
             {
                 response.HasError = true;
-                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdErrorMessage));
+                response.ValidationErrors.Add(new ValidationError("nameForUrl", Resource.Resource.NotEmpty));
                 response.Message = $"{Resource.Resource.ErrorMessage} {Resource.Resource.ErrorContactMessage}";
                 return Ok(response);
             }
 
-            var businessDetail = await _businessService.GetBusinessDetailByIdAsync(id.ToGuid());
+            var businessDetail = await _businessService.GetBusinessDetailByNameForUrlAsync(nameForUrl);
 
             if (businessDetail == null)
             {
                 response.HasError = true;
-                response.Message = Resource.Resource.BusinessNotFound;
+                response.ValidationErrors.Add(new ValidationError("errorInfo", Resource.Resource.BusinessNotFound));
+                response.Message = $"{Resource.Resource.ErrorMessage} {Resource.Resource.ErrorContactMessage}";
                 return Ok(response);
             }
 
             businessDetail.isOpen = HelperMethods.GetBusinessOpen(businessDetail.businessWorkingInfo, businessDetail.officialDayAvailable);
             businessDetail.averageRating = Math.Round(businessDetail.averageRating, 1);
+
 
             var services = _memoryCache.TryGetValue("services", out var cachedServices)
                 ? (List<Services>)cachedServices
@@ -693,7 +695,7 @@ namespace CareGardenApiV1.Controller
                     serviceName = Resource.Resource.PopularServices,
                     className = "popular",
                     businessServices = popularBusinessServices,
-                    sortOrder = 0,
+                    sortOrder = -1,
                 };
             }
 

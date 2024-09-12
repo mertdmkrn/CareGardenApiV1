@@ -665,6 +665,8 @@ namespace CareGardenApiV1.Controller
                 !TimeSpan.TryParse(workingHoursParts[1], out var endWorkTime))
                 return;
 
+            workingHoursParts[1] = workingHoursParts[1] == "24:00" ? "23:59" : workingHoursParts[1];
+
             var startDate = new DateTime(businessStartDate.Year, businessStartDate.Month, businessStartDate.Day).Add(startWorkTime);
             var endDate = new DateTime(businessStartDate.Year, businessStartDate.Month, businessStartDate.Day).Add(endWorkTime);
 

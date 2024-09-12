@@ -29,7 +29,11 @@ namespace CareGardenApiV1.Controller
         private readonly ICommentService _commentService;
         private readonly IMemoryCache _memoryCache;
         private readonly IFileHandler _fileHandler;
-
+        private readonly ParallelOptions _parallelOptions = new()
+        {
+            MaxDegreeOfParallelism = 20
+        };
+        
         public BusinessController(
             IBusinessService businessService,
             IBusinessUserService businessUserService,
@@ -253,10 +257,11 @@ namespace CareGardenApiV1.Controller
                 .OrderBy(x => x.rate)
                 .ToList();
 
-            var popularServices = businessDetail.businessServices.Where(x => x.isPopular);
-
-
-            if (popularServices.Any())
+            var popularServices = businessDetail.businessServices
+                .Where(x => x.isPopular)
+                .ToList();
+            
+            if (!popularServices.IsNullOrEmpty())
             {
                 var businessServiceInfo = new BusinessServicesInfoResponseModel
                 {
@@ -264,7 +269,7 @@ namespace CareGardenApiV1.Controller
                     className = "popular"
                 };
 
-                Parallel.ForEach(popularServices, item =>
+                await Parallel.ForEachAsync(popularServices, _parallelOptions, async (item, ct) =>
                 {
                     var activeDiscount = (activeDiscounts?
                         .Where(x => x.serviceIds.Contains(item.serviceId.Value.ToString()) || x.serviceIds.IsNullOrEmpty()))
@@ -288,15 +293,15 @@ namespace CareGardenApiV1.Controller
                     businessDetail.businessServicesInfos.Add(businessServiceInfo);
                 }
             }
-
-            Parallel.ForEach(businessDetail.businessServices.GroupBy(x => x.serviceId), items =>
+            
+            await Parallel.ForEachAsync(businessDetail.businessServices.GroupBy(x => x.serviceId), _parallelOptions, async (items, ct) =>
             {
                 var businessServiceInfo = new BusinessServicesInfoResponseModel();
                 var service = services.FirstOrDefault(x => x.id == items.Key.Value);
                 businessServiceInfo.serviceName = service != null ? (culture == "tr" ? service.name : service.nameEn) : string.Empty;
                 businessServiceInfo.className = service != null ? service.className : string.Empty;
 
-                Parallel.ForEach(items, item =>
+                foreach (var item in items)
                 {
                     var activeDiscount = (activeDiscounts?
                         .Where(x => x.serviceIds.Contains(item.serviceId.Value.ToString()) || x.serviceIds.IsNullOrEmpty()))
@@ -309,11 +314,8 @@ namespace CareGardenApiV1.Controller
 
                     if (!culture.Equals("tr")) item.name = item.nameEn.IsNull(item.name);
 
-                    lock (businessServiceInfo.businessServices)
-                    {
-                        businessServiceInfo.businessServices.Add(item);
-                    }
-                });
+                    businessServiceInfo.businessServices.Add(item);
+                }
 
                 lock (businessDetail.businessServicesInfos)
                 {
@@ -390,9 +392,11 @@ namespace CareGardenApiV1.Controller
                 .OrderBy(x => x.rate)
                 .ToList();
 
-            var popularServices = businessDetail.businessServices.Where(x => x.isPopular);
-
-            if (popularServices.Any())
+            var popularServices = businessDetail.businessServices
+                .Where(x => x.isPopular)
+                .ToList();
+            
+            if (!popularServices.IsNullOrEmpty())
             {
                 var businessServiceInfo = new BusinessServicesInfoResponseModel
                 {
@@ -400,7 +404,7 @@ namespace CareGardenApiV1.Controller
                     className = "popular"
                 };
 
-                Parallel.ForEach(popularServices, item =>
+                await Parallel.ForEachAsync(popularServices, _parallelOptions, async (item, ct) =>
                 {
                     var activeDiscount = (activeDiscounts?
                         .Where(x => x.serviceIds.Contains(item.serviceId.Value.ToString()) || x.serviceIds.IsNullOrEmpty()))
@@ -424,15 +428,15 @@ namespace CareGardenApiV1.Controller
                     businessDetail.businessServicesInfos.Add(businessServiceInfo);
                 }
             }
-
-            Parallel.ForEach(businessDetail.businessServices.GroupBy(x => x.serviceId), items =>
+            
+            await Parallel.ForEachAsync(businessDetail.businessServices.GroupBy(x => x.serviceId), _parallelOptions, async (items, ct) =>
             {
                 var businessServiceInfo = new BusinessServicesInfoResponseModel();
                 var service = services.FirstOrDefault(x => x.id == items.Key.Value);
                 businessServiceInfo.serviceName = service != null ? (culture == "tr" ? service.name : service.nameEn) : string.Empty;
                 businessServiceInfo.className = service != null ? service.className : string.Empty;
 
-                Parallel.ForEach(items, item =>
+                foreach (var item in items)
                 {
                     var activeDiscount = (activeDiscounts?
                         .Where(x => x.serviceIds.Contains(item.serviceId.Value.ToString()) || x.serviceIds.IsNullOrEmpty()))
@@ -445,18 +449,15 @@ namespace CareGardenApiV1.Controller
 
                     if (!culture.Equals("tr")) item.name = item.nameEn.IsNull(item.name);
 
-                    lock (businessServiceInfo.businessServices)
-                    {
-                        businessServiceInfo.businessServices.Add(item);
-                    }
-                });
+                    businessServiceInfo.businessServices.Add(item);
+                }
 
                 lock (businessDetail.businessServicesInfos)
                 {
                     businessDetail.businessServicesInfos.Add(businessServiceInfo);
                 }
             });
-
+            
             response.Data = businessDetail;
 
             return Ok(response);

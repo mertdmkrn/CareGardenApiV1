@@ -379,18 +379,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessDetailsById(System.String)">
-             <summary>
-             Get Business Details By Id (Can be used for business detail page.)
-             </summary>
-             <remarks>
-             **Sample request body:**
-            
-             "00000000-0000-0000-0000-000000000000"
-            
-             </remarks>
-             <returns></returns>
-        </member>
         <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessDetails2ById(System.String)">
              <summary>
              Get Business Details By Id (Can be used for business detail page.)
@@ -399,18 +387,6 @@
              **Sample request body:**
             
              "00000000-0000-0000-0000-000000000000"
-            
-             </remarks>
-             <returns></returns>
-        </member>
-        <member name="M:CareGardenApiV1.Controller.BusinessController.GetBusinessDetailByNameForUrl(System.String)">
-             <summary>
-             Get Business Detail By NameforUrl (Can be used for fast appointment page.)
-             </summary>
-             <remarks>
-             **Sample request body:**
-            
-             "tolga-beauty-house"
             
              </remarks>
              <returns></returns>

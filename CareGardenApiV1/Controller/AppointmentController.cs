@@ -24,10 +24,6 @@ namespace CareGardenApiV1.Controller
         private readonly IWorkerService _workerService;
         private readonly IWorkerServicePriceService _workerServicePriceService;
         private readonly ICommentService _commentService;
-        private readonly ParallelOptions _parallelOptions = new()
-        {
-            MaxDegreeOfParallelism = 20
-        };
 
         public AppointmentController(
             IAppointmentService appointmentService,
@@ -597,7 +593,7 @@ namespace CareGardenApiV1.Controller
 
             var workerServicePricesDict = workerServicePrices?.ToDictionary(x => x.workerId, x => x.price);
 
-            await Parallel.ForEachAsync(workers, _parallelOptions, async (worker, ct) =>
+            foreach (var worker in workers)
             {
                 var businessStartDate = nowDate;
                 var intervalDay = 14;
@@ -658,7 +654,7 @@ namespace CareGardenApiV1.Controller
                         worker.rating = points.Average(x => x.point);
                     }
                 }
-            });
+            }
         }
 
         private void setWorkerAvailableDate(AppointmentWorkerResponseModel worker, int appointmentTimeInterval, DateTime businessStartDate, DateTime nowDate, IEnumerable<AppointmentDetail> pastAppointments)
@@ -781,9 +777,9 @@ namespace CareGardenApiV1.Controller
                     .ToList();
             }
 
-            ConcurrentDictionary<DayOfWeek, List<Tuple<TimeSpan, TimeSpan>>> workersWorkTimesDict = new();
+            Dictionary<DayOfWeek, List<Tuple<TimeSpan, TimeSpan>>> workersWorkTimesDict = new();
 
-            await Parallel.ForEachAsync(workers, _parallelOptions, async (worker, ct) =>
+            foreach (var worker in workers)
             {
                 setWorkerTimes(worker.mondayWorkHours, DayOfWeek.Monday, workersWorkTimesDict);
                 setWorkerTimes(worker.tuesdayWorkHours, DayOfWeek.Tuesday, workersWorkTimesDict);
@@ -792,28 +788,26 @@ namespace CareGardenApiV1.Controller
                 setWorkerTimes(worker.fridayWorkHours, DayOfWeek.Friday, workersWorkTimesDict);
                 setWorkerTimes(worker.saturdayWorkHours, DayOfWeek.Saturday, workersWorkTimesDict);
                 setWorkerTimes(worker.sundayWorkHours, DayOfWeek.Sunday, workersWorkTimesDict);
-            });
-
+            }
 
             List<AppointmentAvailableTimeResponseModel> models = new();
 
-            await Parallel.ForEachAsync(Enumerable.Range(0, intervalDay), async (i, ct) =>
+            for (int i = 0; i < intervalDay; i++)
             {
                 var date = startDate.AddDays(i);
 
-                AppointmentAvailableTimeResponseModel model = new();
-                model.date = date;
+                AppointmentAvailableTimeResponseModel model = new()
+                {
+                    date = date
+                };
 
                 bool isBusinessOpen = HelperMethods.GetBusinessOpenSpecialDate(business.workingInfo, business.officialDayAvailable, date);
 
                 if (!isBusinessOpen)
                 {
                     model.isActive = false;
-                    lock (models)
-                    {
-                        models.Add(model);
-                    }
-                    return;
+                    models.Add(model);
+                    continue;
                 }
 
                 model.isActive = true;
@@ -825,11 +819,8 @@ namespace CareGardenApiV1.Controller
                 if (workingHoursParts.Length != 2)
                 {
                     model.isActive = false;
-                    lock (models)
-                    {
-                        models.Add(model);
-                    }
-                    return;
+                    models.Add(model);
+                    continue;
                 }
 
                 workingHoursParts[1] = workingHoursParts[1] == "24:00" ? "23:59" : workingHoursParts[1];
@@ -838,11 +829,8 @@ namespace CareGardenApiV1.Controller
                     !TimeSpan.TryParse(workingHoursParts[1], out var endWorkTime))
                 {
                     model.isActive = false;
-                    lock (models)
-                    {
-                        models.Add(model);
-                    }
-                    return;
+                    models.Add(model);
+                    continue;
                 }
 
                 var startWorkDate = new DateTime(date.Year, date.Month, date.Day).Add(startWorkTime);
@@ -860,9 +848,11 @@ namespace CareGardenApiV1.Controller
 
                     if (tempDate >= endWorkDate) break;
 
-                    TimeModel timeModel = new();
-                    timeModel.date = tempDate;
-                    timeModel.hourStr = $"{tempDate.Hour.ToString().PadLeft(2, '0')}:{tempDate.Minute.ToString().PadLeft(2, '0')}";
+                    TimeModel timeModel = new()
+                    {
+                        date = tempDate,
+                        hourStr = $"{tempDate.Hour.ToString().PadLeft(2, '0')}:{tempDate.Minute.ToString().PadLeft(2, '0')}"
+                    };
 
                     var hourTimeSpan = TimeSpan.Parse(timeModel.hourStr);
 
@@ -875,33 +865,26 @@ namespace CareGardenApiV1.Controller
 
                     if (timeModel.isActive)
                     {
-                        lock (model)
-                        {
-                            model.dateList.Add(timeModel);
-                        }
+                        model.dateList.Add(timeModel);
                     }
 
                     tempDate = tempDate.AddMinutes(business.appointmentTimeInterval.IsNull(30));
                 }
 
                 model.isActive = model.isActive && !model.dateList.IsNullOrEmpty();
+                models.Add(model);
+            }
 
-                lock (models)
-                {
-                    models.Add(model);
-                }
-            });
-            
             response.Data = new AppointmentAvailableInfoModel()
             {
-                dateInfos = models.OrderBy(x => x.date).ToList(),
+                dateInfos = models,
                 serviceWorkerInfos = appointmentInfo.serviceWorkerInfos
             };
 
             return Ok(response);
         }
 
-        private void setWorkerTimes(string workHours, DayOfWeek dayOfWeek, ConcurrentDictionary<DayOfWeek, List<Tuple<TimeSpan, TimeSpan>>> workersWorkTimesDict)
+        private void setWorkerTimes(string workHours, DayOfWeek dayOfWeek, Dictionary<DayOfWeek, List<Tuple<TimeSpan, TimeSpan>>> workersWorkTimesDict)
         {
             if (!workHours.IsNullOrEmpty())
             {
@@ -915,11 +898,7 @@ namespace CareGardenApiV1.Controller
                     workersWorkTimesDict[dayOfWeek] = new List<Tuple<TimeSpan, TimeSpan>>();
                 }
 
-                lock (workersWorkTimesDict[dayOfWeek])
-                {
-                    workersWorkTimesDict[dayOfWeek].Add(tuple);
-
-                }
+                workersWorkTimesDict[dayOfWeek].Add(tuple);
             }
         }
     }

@@ -173,7 +173,6 @@ namespace CareGardenApiV1.Controller
             return Ok(response);
         }
 
-
         /// <summary>
         /// Get Business Details By Id (Can be used for business detail page.)
         /// </summary>
@@ -200,7 +199,7 @@ namespace CareGardenApiV1.Controller
 
             var businessDetail = await _businessService.GetBusinessDetailByIdAsync(id.ToGuid());
 
-            if(businessDetail == null)
+            if (businessDetail == null)
             {
                 response.HasError = true;
                 response.Message = Resource.Resource.BusinessNotFound;
@@ -219,7 +218,7 @@ namespace CareGardenApiV1.Controller
                     {
                         var points = pointList.Where(p => p.workerIds.Contains(x.id));
 
-                        if(!points.IsNullOrEmpty())
+                        if (!points.IsNullOrEmpty())
                         {
                             x.countRating = points.Count();
                             x.point = points.Average(x => x.point);
@@ -260,7 +259,7 @@ namespace CareGardenApiV1.Controller
             var popularServices = businessDetail.businessServices
                 .Where(x => x.isPopular)
                 .ToList();
-            
+
             if (!popularServices.IsNullOrEmpty())
             {
                 var businessServiceInfo = new BusinessServicesInfoResponseModel
@@ -293,7 +292,7 @@ namespace CareGardenApiV1.Controller
                     businessDetail.businessServicesInfos.Add(businessServiceInfo);
                 }
             }
-            
+
             await Parallel.ForEachAsync(businessDetail.businessServices.GroupBy(x => x.serviceId), _parallelOptions, async (items, ct) =>
             {
                 var businessServiceInfo = new BusinessServicesInfoResponseModel();
@@ -322,6 +321,137 @@ namespace CareGardenApiV1.Controller
                     businessDetail.businessServicesInfos.Add(businessServiceInfo);
                 }
             });
+
+            response.Data = businessDetail;
+
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Get Business Details By Id (Can be used for business detail page.)
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        /// "00000000-0000-0000-0000-000000000000"
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost("getdetails2")]
+        public async Task<IActionResult> GetBusinessDetails2ById([FromBody] string id)
+        {
+            var culture = Request.Headers["Language"].ToString().IsNull("en");
+            var response = new ResponseModel<BusinessDetailResponseModel>();
+
+            if (!id.IsGuid())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdErrorMessage));
+                response.Message = $"{Resource.Resource.ErrorMessage} {Resource.Resource.ErrorContactMessage}";
+                return Ok(response);
+            }
+
+            var businessDetail = await _businessService.GetBusinessDetailByIdAsync(id.ToGuid());
+
+            if (businessDetail == null)
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.BusinessNotFound;
+                return Ok(response);
+            }
+
+            businessDetail.isOpen = HelperMethods.GetBusinessOpen(businessDetail.businessWorkingInfo, businessDetail.officialDayAvailable);
+            businessDetail.averageRating = Math.Round(businessDetail.averageRating, 1);
+
+            var pointList = await _commentService.GetCommentPointListForCache(businessId: id.ToGuid(), cache: true);
+
+            if (!pointList.IsNullOrEmpty())
+            {
+                businessDetail.workers = businessDetail.workers
+                    .Select(x =>
+                    {
+                        var points = pointList.Where(p => p.workerIds.Contains(x.id)).ToList();
+                        if (points.Any())
+                        {
+                            x.countRating = points.Count();
+                            x.point = points.Average(p => p.point);
+                        }
+                        return x;
+                    })
+                    .ToList();
+            }
+
+            var services = _memoryCache.TryGetValue("services", out var cachedServices)
+                ? (List<Services>)cachedServices
+                : await _servicesService.GetServicesAsync();
+
+            if (services != cachedServices)
+            {
+                _memoryCache.Set("services", services, new MemoryCacheEntryOptions
+                {
+                    Priority = CacheItemPriority.Normal
+                });
+            }
+
+            var discountMultiplier = 1.0;
+            var activeDiscounts = businessDetail.discounts?
+                .Where(x => x.type == DiscountType.AllDay
+                            || (x.type == DiscountType.WeekDay &&
+                                DateTime.Today.DayOfWeek >= DayOfWeek.Monday &&
+                                DateTime.Today.DayOfWeek <= DayOfWeek.Friday)
+                            || (x.type == DiscountType.WeekEnd &&
+                                (DateTime.Today.DayOfWeek == DayOfWeek.Saturday ||
+                                  DateTime.Today.DayOfWeek == DayOfWeek.Sunday)))
+                .OrderByDescending(x => x.rate)
+                .ToList();
+
+            var popularBusinessServices = new List<BusinessServiceModel>();
+            var groupedServices = businessDetail.businessServices.GroupBy(x => x.serviceId);
+
+            foreach (var items in groupedServices)
+            {
+                var businessServiceInfo = new BusinessServicesInfoResponseModel();
+                var service = services.FirstOrDefault(x => x.id == items.Key.Value);
+                businessServiceInfo.serviceName = service != null ? (culture == "tr" ? service.name : service.nameEn) : string.Empty;
+                businessServiceInfo.className = service?.className ?? string.Empty;
+                businessServiceInfo.sortOrder = service?.sortOrder ?? 0;
+
+                foreach (var item in items)
+                {
+                    var activeDiscount = (activeDiscounts?
+                        .Where(x => x.serviceIds.Contains(item.serviceId.Value.ToString()) || x.serviceIds.IsNullOrEmpty()))
+                        .MaxBy(x => x.rate);
+
+                    setDiscountTitle(activeDiscount);
+
+                    item.discountRate = activeDiscount?.rate ?? 0;
+                    item.discountPrice = item.price * (1 - (item.discountRate / 100));
+
+                    if (!culture.Equals("tr"))
+                        item.name = item.nameEn.IsNull(item.name);
+
+                    businessServiceInfo.businessServices.Add(item);
+
+                    if (item.isPopular) popularBusinessServices.Add(item);
+                }
+
+                businessDetail.businessServicesInfos.Add(businessServiceInfo);
+            }
+
+            if (popularBusinessServices.Any())
+            {
+                var businessServiceInfo = new BusinessServicesInfoResponseModel
+                {
+                    serviceName = Resource.Resource.PopularServices,
+                    className = "popular",
+                    businessServices = popularBusinessServices,
+                    sortOrder = 0,
+                };
+            }
+
+            businessDetail.businessServicesInfos = businessDetail.businessServicesInfos
+                .OrderBy(x => x.sortOrder)
+                .ToList();
 
             response.Data = businessDetail;
 
@@ -458,6 +588,119 @@ namespace CareGardenApiV1.Controller
                 }
             });
             
+            response.Data = businessDetail;
+
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Get Business Details By Id (Can be used for business detail page.)
+        /// </summary>
+        /// <remarks>
+        /// **Sample request body:**
+        ///
+        /// "00000000-0000-0000-0000-000000000000"
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost("getdetailbynameforurl2")]
+        public async Task<IActionResult> GetBusinessDetailByNameForUrl2([FromBody] string id)
+        {
+            var culture = Request.Headers["Language"].ToString().IsNull("en");
+            var response = new ResponseModel<BusinessDetailResponseModel>();
+
+            if (!id.IsGuid())
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("id", Resource.Resource.IdErrorMessage));
+                response.Message = $"{Resource.Resource.ErrorMessage} {Resource.Resource.ErrorContactMessage}";
+                return Ok(response);
+            }
+
+            var businessDetail = await _businessService.GetBusinessDetailByIdAsync(id.ToGuid());
+
+            if (businessDetail == null)
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.BusinessNotFound;
+                return Ok(response);
+            }
+
+            businessDetail.isOpen = HelperMethods.GetBusinessOpen(businessDetail.businessWorkingInfo, businessDetail.officialDayAvailable);
+            businessDetail.averageRating = Math.Round(businessDetail.averageRating, 1);
+
+            var services = _memoryCache.TryGetValue("services", out var cachedServices)
+                ? (List<Services>)cachedServices
+                : await _servicesService.GetServicesAsync();
+
+            if (services != cachedServices)
+            {
+                _memoryCache.Set("services", services, new MemoryCacheEntryOptions
+                {
+                    Priority = CacheItemPriority.Normal
+                });
+            }
+
+            var discountMultiplier = 1.0;
+            var activeDiscounts = businessDetail.discounts?
+                .Where(x => x.type == DiscountType.AllDay
+                            || (x.type == DiscountType.WeekDay &&
+                                DateTime.Today.DayOfWeek >= DayOfWeek.Monday &&
+                                DateTime.Today.DayOfWeek <= DayOfWeek.Friday)
+                            || (x.type == DiscountType.WeekEnd &&
+                                (DateTime.Today.DayOfWeek == DayOfWeek.Saturday ||
+                                  DateTime.Today.DayOfWeek == DayOfWeek.Sunday)))
+                .OrderByDescending(x => x.rate)
+                .ToList();
+
+            var popularBusinessServices = new List<BusinessServiceModel>();
+            var groupedServices = businessDetail.businessServices.GroupBy(x => x.serviceId);
+
+            foreach (var items in groupedServices)
+            {
+                var businessServiceInfo = new BusinessServicesInfoResponseModel();
+                var service = services.FirstOrDefault(x => x.id == items.Key.Value);
+                businessServiceInfo.serviceName = service != null ? (culture == "tr" ? service.name : service.nameEn) : string.Empty;
+                businessServiceInfo.className = service?.className ?? string.Empty;
+                businessServiceInfo.sortOrder = service?.sortOrder ?? 0;
+
+                foreach (var item in items)
+                {
+                    var activeDiscount = (activeDiscounts?
+                        .Where(x => x.serviceIds.Contains(item.serviceId.Value.ToString()) || x.serviceIds.IsNullOrEmpty()))
+                        .MaxBy(x => x.rate);
+
+                    setDiscountTitle(activeDiscount);
+
+                    item.discountRate = activeDiscount?.rate ?? 0;
+                    item.discountPrice = item.price * (1 - (item.discountRate / 100));
+
+                    if (!culture.Equals("tr"))
+                        item.name = item.nameEn.IsNull(item.name);
+
+                    businessServiceInfo.businessServices.Add(item);
+
+                    if(item.isPopular) popularBusinessServices.Add(item);
+                }
+
+                businessDetail.businessServicesInfos.Add(businessServiceInfo);
+            }
+
+            if(popularBusinessServices.Any())
+            {
+                var businessServiceInfo = new BusinessServicesInfoResponseModel
+                {
+                    serviceName = Resource.Resource.PopularServices,
+                    className = "popular",
+                    businessServices = popularBusinessServices,
+                    sortOrder = 0,
+                };
+            }
+
+            businessDetail.businessServicesInfos = businessDetail.businessServicesInfos
+                .OrderBy(x => x.sortOrder)
+                .ToList();
+
             response.Data = businessDetail;
 
             return Ok(response);

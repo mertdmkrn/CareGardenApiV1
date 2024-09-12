@@ -233,6 +233,9 @@ namespace CareGardenApiV1.Helpers
                     return false;
                 }
 
+                hours[1] = hours[1] == "24:00" ? "23:59" : hours[1];
+
+
                 if (!TimeSpan.TryParse(hours[0], out var startTime) || !TimeSpan.TryParse(hours[1], out var endTime))
                 {
                     return false;
@@ -240,11 +243,6 @@ namespace CareGardenApiV1.Helpers
 
                 var businessStartDate = today.Date.Add(startTime);
                 var businessEndDate = today.Date.Add(endTime);
-
-                if (endTime.Hours >= 24)
-                {
-                    businessEndDate = today.Date.AddDays(1).AddHours(23).AddMinutes(59);
-                }
 
                 return now >= businessStartDate && now < businessEndDate;
             }

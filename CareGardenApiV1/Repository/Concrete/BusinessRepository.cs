@@ -223,7 +223,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     imageUrl = x.galleries
                         .Where(g => g.isProfilePhoto)
                         .Select(g => g.imageUrl)
-                        .FirstOrDefault(),
+                        .FirstOrDefault() ?? DefaultBusinessImage,
 
                     averageRating = x.comments
                     .Where(c => c.commentType == CommentType.User)
@@ -235,7 +235,7 @@ namespace CareGardenApiV1.Repository.Concrete
                         .Count(c => c.commentType == CommentType.User),
 
                     location = x.location,
-                    logoUrl = x.logoUrl,
+                    logoUrl = x.logoUrl ?? DefaultBusinessImage,
                     city = x.city,
                     isFeatured = x.isFeatured,
                     hasPromotion = x.hasPromotion,
@@ -313,7 +313,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     description = isTurkish ? x.description : (x.descriptionEn ?? x.description),
 
                     workingGenderType = x.workingGenderType,
-                    logoUrl = x.logoUrl,
+                    logoUrl = x.logoUrl?? DefaultBusinessImage,
                     latitude = x.latitude,
                     longitude = x.longitude,
 
@@ -378,7 +378,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     description = isTurkish ? x.description : (x.descriptionEn ?? x.description),
 
                     workingGenderType = x.workingGenderType,
-                    logoUrl = x.logoUrl,
+                    logoUrl = x.logoUrl?? DefaultBusinessImage,
                     latitude = x.latitude,
                     longitude = x.longitude,
 

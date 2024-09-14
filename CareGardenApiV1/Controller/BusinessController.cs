@@ -291,8 +291,10 @@ namespace CareGardenApiV1.Controller
                     serviceName = Resource.Resource.PopularServices,
                     className = "popular",
                     businessServices = popularBusinessServices,
-                    sortOrder = 0,
+                    sortOrder = -1,
                 };
+                
+                businessDetail.businessServicesInfos.Add(businessServiceInfo);
             }
 
             businessDetail.businessServicesInfos = businessDetail.businessServicesInfos
@@ -409,6 +411,8 @@ namespace CareGardenApiV1.Controller
                     businessServices = popularBusinessServices,
                     sortOrder = -1,
                 };
+                
+                businessDetail.businessServicesInfos.Add(businessServiceInfo);
             }
 
             businessDetail.businessServicesInfos = businessDetail.businessServicesInfos

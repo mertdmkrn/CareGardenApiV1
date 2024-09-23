@@ -10,7 +10,7 @@ namespace CareGardenApiV1.Helpers
 
         public static bool IsNullOrEmpty(this string value)
         {
-            return string.IsNullOrEmpty(value?.Trim());
+            return string.IsNullOrEmpty(value);
         }
 
         public static bool IsNotNullOrEmpty(this string value)
@@ -56,11 +56,11 @@ namespace CareGardenApiV1.Helpers
             return Convert.ToBase64String(hashedValue);
         }
 
-        public static bool IsNullOrEmpty<T>(this IEnumerable<T> target)
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> list)
         {
-            return !(target != null && target.Any());
+            return list == null || !list.Any();
         }
-
+        
         public static int ToInt(this string number, int defaultInt = 0)
         {
             if (int.TryParse(number, out int resultNum))

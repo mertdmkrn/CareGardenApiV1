@@ -51,6 +51,10 @@ internal class Program
             });
 
         builder.Services.AddMemoryCache();
+        builder.Services.AddResponseCompression(options =>
+        {
+            options.EnableForHttps = true;
+        });
 
         builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
         builder.Services.Configure<IpRateLimitPolicies>(builder.Configuration.GetSection("IpRateLimitPolicies"));
@@ -130,7 +134,8 @@ internal class Program
 
         var app = builder.Build();
         app.UseIpRateLimiting();
-
+        app.UseResponseCompression();
+        
         app.UseStaticFiles();
         app.UseMiddleware<ExceptionMiddleware>();
 

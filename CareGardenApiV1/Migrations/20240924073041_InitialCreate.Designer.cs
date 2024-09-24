@@ -13,15 +13,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CareGardenApiV1.Migrations
 {
     [DbContext(typeof(CareGardenApiDbContext))]
-    [Migration("20240820211659_MigrationV1")]
-    partial class MigrationV1
+    [Migration("20240924073041_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.7")
+                .HasAnnotation("ProductVersion", "8.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
@@ -125,6 +125,10 @@ namespace CareGardenApiV1.Migrations
                     b.HasIndex("appointmentId");
 
                     b.HasIndex("businessServiceId");
+
+                    b.HasIndex("date");
+
+                    b.HasIndex("id");
 
                     b.HasIndex("workerId");
 
@@ -236,11 +240,44 @@ namespace CareGardenApiV1.Migrations
 
                     b.HasIndex("email");
 
+                    b.HasIndex("id");
+
                     b.HasIndex("nameForUrl");
 
                     b.HasIndex("telephone");
 
                     b.ToTable("Business");
+                });
+
+            modelBuilder.Entity("CareGardenApiV1.Model.TableModel.BusinessCustomer", b =>
+                {
+                    b.Property<Guid>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("businessId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("email")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("fullName")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<int>("gender")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("telephone")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("businessId");
+
+                    b.ToTable("BusinessCustomer");
                 });
 
             modelBuilder.Entity("CareGardenApiV1.Model.TableModel.BusinessGallery", b =>
@@ -612,6 +649,8 @@ namespace CareGardenApiV1.Migrations
                     b.HasIndex("appointmentId");
 
                     b.HasIndex("businessId");
+
+                    b.HasIndex("commentType");
 
                     b.HasIndex("replyId");
 
@@ -1179,6 +1218,17 @@ namespace CareGardenApiV1.Migrations
                     b.Navigation("worker");
                 });
 
+            modelBuilder.Entity("CareGardenApiV1.Model.TableModel.BusinessCustomer", b =>
+                {
+                    b.HasOne("CareGardenApiV1.Model.TableModel.Business", "business")
+                        .WithMany("customers")
+                        .HasForeignKey("businessId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("FK_BusinessCustomers_Business_businessId");
+
+                    b.Navigation("business");
+                });
+
             modelBuilder.Entity("CareGardenApiV1.Model.TableModel.BusinessGallery", b =>
                 {
                     b.HasOne("CareGardenApiV1.Model.TableModel.Business", "business")
@@ -1444,6 +1494,8 @@ namespace CareGardenApiV1.Migrations
                     b.Navigation("comments");
 
                     b.Navigation("complains");
+
+                    b.Navigation("customers");
 
                     b.Navigation("discounts");
 

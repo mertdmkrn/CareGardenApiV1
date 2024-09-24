@@ -1133,6 +1133,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.DefinitionController.SetBusinesses">
+            <summary>
+            Get Privacy Policy
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.DiscountController.GetByBusinessId(CareGardenApiV1.Model.TableModel.Discount)">
              <summary>
              Get Discount By Business Id
@@ -1928,54 +1934,6 @@
             <inheritdoc />
         </member>
         <member name="M:CareGardenApiV1.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:CareGardenApiV1.Migrations.MigrationV1">
-            <inheritdoc />
-        </member>
-        <member name="M:CareGardenApiV1.Migrations.MigrationV1.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:CareGardenApiV1.Migrations.MigrationV1.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:CareGardenApiV1.Migrations.MigrationV1.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:CareGardenApiV1.Migrations.MigrationV2">
-            <inheritdoc />
-        </member>
-        <member name="M:CareGardenApiV1.Migrations.MigrationV2.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:CareGardenApiV1.Migrations.MigrationV2.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:CareGardenApiV1.Migrations.MigrationV2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:CareGardenApiV1.Migrations.MigrationV3">
-            <inheritdoc />
-        </member>
-        <member name="M:CareGardenApiV1.Migrations.MigrationV3.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:CareGardenApiV1.Migrations.MigrationV3.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:CareGardenApiV1.Migrations.MigrationV3.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:CareGardenApiV1.Migrations.MigrationV4">
-            <inheritdoc />
-        </member>
-        <member name="M:CareGardenApiV1.Migrations.MigrationV4.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:CareGardenApiV1.Migrations.MigrationV4.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:CareGardenApiV1.Migrations.MigrationV4.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:CareGardenApiV1.Resource.Resource">

@@ -148,11 +148,11 @@ namespace CareGardenApiV1.Repository.Concrete
 
         public async Task<List<BusinessAdminCustomerResponseModel>> GetCustomersAsync(Guid businessId)
         {
-            var appointmentCustomersTask = _context.Appointments
+            var appointmentCustomers = await _context.Appointments
                 .AsNoTracking()
                 .Where(x => x.businessId == businessId)
                 .Where(x => x.status != AppointmentStatus.Cancelled && x.status != AppointmentStatus.Pending)
-                .GroupBy(x => new { x.userId, x.userTelephone, x.userEmail, x.user.imageUrl })
+                .GroupBy(x => new { x.userId, x.userTelephone, x.userEmail })
                 .Select(g => new BusinessAdminCustomerResponseModel
                 {
                     name = g.Key.userId != null ? g.FirstOrDefault().user.telephone : g.Key.userTelephone,
@@ -165,7 +165,7 @@ namespace CareGardenApiV1.Repository.Concrete
                 })
                 .ToListAsync();
 
-            var businessCustomersTask = _context.BusinessCustomers
+            var businessCustomers = await _context.BusinessCustomers
                 .AsNoTracking()
                 .Where(x => x.businessId == businessId)
                 .Select(x => new BusinessAdminCustomerResponseModel
@@ -177,11 +177,6 @@ namespace CareGardenApiV1.Repository.Concrete
                     isBusinessCustomer = true
                 })
                 .ToListAsync();
-
-            await Task.WhenAll(appointmentCustomersTask, businessCustomersTask);
-
-            var appointmentCustomers = await appointmentCustomersTask;
-            var businessCustomers = await businessCustomersTask;
 
             var combinedCustomers = appointmentCustomers
                 .Union(businessCustomers.Where(x => !appointmentCustomers.Any(a => a.email == x.email)))

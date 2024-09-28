@@ -152,10 +152,10 @@ namespace CareGardenApiV1.Repository.Concrete
                 .AsNoTracking()
                 .Where(x => x.businessId == businessId)
                 .Where(x => x.status != AppointmentStatus.Cancelled && x.status != AppointmentStatus.Pending)
-                .GroupBy(x => new { x.userId, x.userTelephone, x.userEmail })
+                .GroupBy(x => new { x.userId, x.userTelephone, x.userEmail, x.userName })
                 .Select(g => new BusinessAdminCustomerResponseModel
                 {
-                    name = g.Key.userId != null ? g.FirstOrDefault().user.telephone : g.Key.userTelephone,
+                    name = g.Key.userId != null ? g.FirstOrDefault().user.fullName : g.Key.userName,
                     email = g.Key.userId != null ? g.FirstOrDefault().user.email : g.Key.userEmail,
                     imageUrl = g.Key.userId != null ? g.FirstOrDefault().user.imageUrl : null,
                     createDate = g.Key.userId != null ? g.FirstOrDefault().user.createDate : g.Min(x => x.createDate),

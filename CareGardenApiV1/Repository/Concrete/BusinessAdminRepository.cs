@@ -148,6 +148,8 @@ namespace CareGardenApiV1.Repository.Concrete
 
         public async Task<List<BusinessAdminCustomerResponseModel>> GetCustomersAsync(Guid businessId)
         {
+            var culture = Resource.Resource.Culture;
+
             var appointmentCustomers = await _context.Appointments
                 .AsNoTracking()
                 .Where(x => x.businessId == businessId)
@@ -158,8 +160,10 @@ namespace CareGardenApiV1.Repository.Concrete
                     name = g.Key.userId != null ? g.FirstOrDefault().user.fullName : g.Key.userName,
                     email = g.Key.userId != null ? g.FirstOrDefault().user.email : g.Key.userEmail,
                     imageUrl = g.Key.userId != null ? g.FirstOrDefault().user.imageUrl : null,
-                    createDate = g.Key.userId != null ? g.FirstOrDefault().user.createDate : g.Min(x => x.createDate),
-                    lastAppointmentDate = g.Max(x => x.startDate),
+                    createDate = g.Key.userId != null
+                        ? g.Select(u => u.user.createDate.Value).FirstOrDefault().ToString("dd MMM yyyy", culture)
+                        : g.Min(x => x.createDate.Value).ToString("dd MMM yyyy", culture),
+                    lastAppointmentDate = g.Max(x => x.startDate.Value).ToString("dd MMM yyyy", culture),
                     totalSpent = Math.Round(g.Sum(x => x.totalDiscountPrice), 2),
                     appointmentCount = g.Count(),
                 })
@@ -173,7 +177,7 @@ namespace CareGardenApiV1.Repository.Concrete
                     name = x.fullName,
                     email = x.email,
                     imageUrl = x.imageUrl,
-                    createDate = x.createDate,
+                    createDate = x.createDate.Value.ToString("dd MMM yyyy", culture),
                     isBusinessCustomer = true
                 })
                 .ToListAsync();

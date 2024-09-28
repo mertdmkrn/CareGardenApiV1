@@ -178,5 +178,19 @@ namespace CareGardenApiV1.Controller
 
             return Ok(response);
         }
+
+        /// <summary>
+        /// Get Customers
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("getcustomers")]
+        public async Task<IActionResult> GetCustomers()
+        {
+            ResponseModel<List<BusinessAdminCustomerResponseModel>> response = new ResponseModel<List<BusinessAdminCustomerResponseModel>>();
+            var businessId = HelperMethods.GetClaimInfo(Request, CustomClaimTypes.BusinessId).ToGuid();
+
+            response.Data = await _businessAdminService.GetCustomersAsync(businessId);
+            return Ok(response);
+        }
     }
 }

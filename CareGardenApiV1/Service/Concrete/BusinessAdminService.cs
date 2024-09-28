@@ -113,5 +113,10 @@ namespace CareGardenApiV1.Service.Concrete
         {
             return await _businessAdminRepository.GetAppointmentReportAsync(requestModel);
         }
+
+        public async Task<List<BusinessAdminCustomerResponseModel>> GetCustomersAsync(Guid businessId)
+        {
+            return await _businessAdminRepository.GetCustomersAsync(businessId);
+        }
     }
 }

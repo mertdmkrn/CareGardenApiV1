@@ -1,9 +1,6 @@
 ﻿using CareGardenApiV1.Repository.Abstract;
 using Microsoft.EntityFrameworkCore;
 using CareGardenApiV1.Model.TableModel;
-using CareGardenApiV1.Model.RequestModel;
-using CareGardenApiV1.Helpers;
-
 namespace CareGardenApiV1.Repository.Concrete
 {
     public class BusinessCustomerRepository : IBusinessCustomerRepository
@@ -31,6 +28,7 @@ namespace CareGardenApiV1.Repository.Concrete
 
         public async Task<BusinessCustomer> SaveBusinessCustomerAsync(BusinessCustomer businessCustomer)
         {
+            businessCustomer.createDate = DateTime.Now;
             await _context.BusinessCustomers.AddAsync(businessCustomer);
             await _context.SaveChangesAsync();
             return businessCustomer;

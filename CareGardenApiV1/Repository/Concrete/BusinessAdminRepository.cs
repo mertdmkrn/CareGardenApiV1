@@ -3,8 +3,6 @@ using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Repository.Abstract;
 using Microsoft.EntityFrameworkCore;
 using CareGardenApiV1.Model.ResponseModel;
-using CareGardenApiV1.Model.TableModel;
-using System.Security.AccessControl;
 
 namespace CareGardenApiV1.Repository.Concrete
 {
@@ -146,6 +144,51 @@ namespace CareGardenApiV1.Repository.Concrete
                 reportInfos = appointments,
                 itemCount = totalItems
             };
+        }
+
+        public async Task<List<BusinessAdminCustomerResponseModel>> GetCustomersAsync(Guid businessId)
+        {
+            var appointmentCustomersTask = _context.Appointments
+                .AsNoTracking()
+                .Where(x => x.businessId == businessId)
+                .Where(x => x.status != AppointmentStatus.Cancelled && x.status != AppointmentStatus.Pending)
+                .GroupBy(x => new { x.userId, x.userTelephone, x.userEmail, x.user.imageUrl })
+                .Select(g => new BusinessAdminCustomerResponseModel
+                {
+                    name = g.Key.userId != null ? g.FirstOrDefault().user.telephone : g.Key.userTelephone,
+                    email = g.Key.userId != null ? g.FirstOrDefault().user.email : g.Key.userEmail,
+                    imageUrl = g.Key.userId != null ? g.FirstOrDefault().user.imageUrl : null,
+                    createDate = g.Key.userId != null ? g.FirstOrDefault().user.createDate : g.Min(x => x.createDate),
+                    lastAppointmentDate = g.Max(x => x.startDate),
+                    totalSpent = Math.Round(g.Sum(x => x.totalDiscountPrice), 2),
+                    appointmentCount = g.Count(),
+                })
+                .ToListAsync();
+
+            var businessCustomersTask = _context.BusinessCustomers
+                .AsNoTracking()
+                .Where(x => x.businessId == businessId)
+                .Select(x => new BusinessAdminCustomerResponseModel
+                {
+                    name = x.fullName,
+                    email = x.email,
+                    imageUrl = x.imageUrl,
+                    createDate = x.createDate,
+                    isBusinessCustomer = true
+                })
+                .ToListAsync();
+
+            await Task.WhenAll(appointmentCustomersTask, businessCustomersTask);
+
+            var appointmentCustomers = await appointmentCustomersTask;
+            var businessCustomers = await businessCustomersTask;
+
+            var combinedCustomers = appointmentCustomers
+                .Union(businessCustomers.Where(x => !appointmentCustomers.Any(a => a.email == x.email)))
+                .OrderBy(x => x.appointmentCount)
+                .ToList();
+
+            return combinedCustomers;
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using CareGardenApiV1.Helpers;
-using CareGardenApiV1.Model.RequestModel;
+﻿using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
 
 namespace CareGardenApiV1.Repository.Abstract
@@ -11,5 +10,6 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<List<BusinessAdminWorkerReportResponseModel>> GetWorkerReportAsync(BusinessAdminReportRequestModel requestModel);
         Task<BusinessAdminServiceReportResponseModel> GetServiceReportAsync(BusinessAdminReportRequestModel requestModel);
         Task<BusinessAdminAppointmentReportResponseModel> GetAppointmentReportAsync(BusinessAdminReportRequestModel requestModel);
+        Task<List<BusinessAdminCustomerResponseModel>> GetCustomersAsync(Guid businessId);
     }
 }

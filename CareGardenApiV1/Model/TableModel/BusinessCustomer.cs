@@ -23,7 +23,9 @@ namespace CareGardenApiV1.Model.TableModel
 
         [MaxLength(20)]
         public string? telephone { get; set; }
-        
+        public string? imageUrl { get; set; }
+        public DateTime? createDate { get; set; }
+
         public Guid? businessId { get; set; }
 
         [JsonIgnore]

@@ -38,14 +38,14 @@ namespace CareGardenApiV1.Repository.Concrete
         {
             return await _context.Businesses
                 .AsNoTracking()
+                .AsSplitQuery()
                 .Include(x => x.workingInfos)
                 .Include(x => x.services)
                 .Include(x => x.galleries)
                 .Include(x => x.workers)
                 .Include(x => x.properties)
                 .Include(x => x.discounts)
-                .Where(x => x.id == id)
-                .FirstOrDefaultAsync();
+                .SingleOrDefaultAsync(x => x.id == id);
         }
 
         public async Task<IList<BusinessListResponseModel>> GetBusinessByPopularAsync(BusinessSearchRequestModel businessSearchModel)

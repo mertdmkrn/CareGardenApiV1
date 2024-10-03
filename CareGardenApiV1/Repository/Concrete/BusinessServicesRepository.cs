@@ -42,7 +42,7 @@ namespace CareGardenApiV1.Repository.Concrete
 
             return await _context.BusinessServices
                 .AsNoTracking()
-                .Where(x => ids.Contains(x.id))
+                .Where(x => ids.Any(y => y == x.id))
                 .Select(x => new WorkerDetailServiceInfo
                 {
                     className = x.service.className,

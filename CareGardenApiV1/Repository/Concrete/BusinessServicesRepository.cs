@@ -42,14 +42,14 @@ namespace CareGardenApiV1.Repository.Concrete
 
             return await _context.BusinessServices
                 .AsNoTracking()
-                .Where(x => ids.Contains(x.serviceId.Value))
+                .Where(x => ids.Contains(x.id))
                 .Select(x => new WorkerDetailServiceInfo
                 {
                     className = x.service.className,
                     name = isTurkish ? x.service.name : x.service.nameEn ?? x.service.name
                 })
+                .Distinct() 
                 .OrderBy(x => x.name)
-                .Distinct()
                 .ToListAsync();
         }
 

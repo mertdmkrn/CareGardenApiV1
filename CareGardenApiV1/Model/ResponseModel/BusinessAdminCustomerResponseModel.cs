@@ -10,4 +10,6 @@ public class BusinessAdminCustomerResponseModel
     public int appointmentCount { get; set; }
     public double totalSpent { get; set; }
     public bool isBusinessCustomer { get; set; }
+    public bool isSelected { get; set; }
+
 }

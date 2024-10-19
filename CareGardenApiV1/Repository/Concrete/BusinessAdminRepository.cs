@@ -189,5 +189,42 @@ namespace CareGardenApiV1.Repository.Concrete
 
             return combinedCustomers;
         }
+
+        public async Task<List<BusinessAdminCalendarResponseModel>> GetCalendarInfosAsync(Guid businessId)
+        {
+            var startDate = DateTime.Today.AddMonths(-6);
+            var endDate = DateTime.Today.AddMonths(6);
+            var isTurkish = Resource.Resource.Culture.ToString().Contains("tr");
+
+            return await _context.Appointments
+                .AsNoTracking()
+                .Where(x => x.businessId == businessId && x.startDate >= startDate && x.endDate <= endDate)
+                .Select(x => new BusinessAdminCalendarResponseModel
+                {
+                    id = x.id,
+                    startDate = x.startDate,
+                    endDate = x.endDate,
+                    status = x.status,
+                    workers = x.details
+                        .Select(d => new BusinessAdminCalendarWorkerInfo
+                        {
+                            id = d.workerId,
+                            name = d.worker != null ? d.worker.name : "",
+                            imageUrl = d.worker != null ? d.worker.path : "",
+                            businessServiceId = d.businessServiceId,
+                            businessServiceName = d.businessService != null ? isTurkish ? d.businessService.name : d.businessService.nameEn : ""
+                        })
+                        .ToList(),
+                    user = new BusinessAdminCalendarUserInfo
+                    {
+                        id = x.userId,
+                        telephone = x.user != null ? x.user.telephone : x.userTelephone,
+                        name = x.user != null ? x.user.fullName : x.userName,
+                        imageUrl = x.user != null ? x.user.imageUrl : null
+                    }
+                })
+                .ToListAsync();
+        }
+
     }
 }

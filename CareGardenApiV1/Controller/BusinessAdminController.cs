@@ -192,5 +192,20 @@ namespace CareGardenApiV1.Controller
             response.Data = await _businessAdminService.GetCustomersAsync(businessId);
             return Ok(response);
         }
+
+
+        /// <summary>
+        /// Get Calendar Infos
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("getcalendarinfos")]
+        public async Task<IActionResult> GetCalendarInfos()
+        {
+            ResponseModel<List<BusinessAdminCalendarResponseModel>> response = new ResponseModel<List<BusinessAdminCalendarResponseModel>>();
+            var businessId = HelperMethods.GetClaimInfo(Request, CustomClaimTypes.BusinessId).ToGuid();
+
+            response.Data = await _businessAdminService.GetCalendarInfosAsync(businessId);
+            return Ok(response);
+        }
     }
 }

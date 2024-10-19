@@ -10,6 +10,7 @@ namespace CareGardenApiV1.Repository.Abstract
         Task<List<BusinessAdminWorkerReportResponseModel>> GetWorkerReportAsync(BusinessAdminReportRequestModel requestModel);
         Task<BusinessAdminServiceReportResponseModel> GetServiceReportAsync(BusinessAdminReportRequestModel requestModel);
         Task<BusinessAdminAppointmentReportResponseModel> GetAppointmentReportAsync(BusinessAdminReportRequestModel requestModel);
+        Task<List<BusinessAdminCalendarResponseModel>> GetCalendarInfosAsync(Guid businessId);
         Task<List<BusinessAdminCustomerResponseModel>> GetCustomersAsync(Guid businessId);
     }
 }

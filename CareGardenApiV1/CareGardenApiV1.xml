@@ -349,6 +349,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.BusinessAdminController.GetCalendarInfos">
+            <summary>
+            Get Calendar Infos
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.BusinessController.GetInfoById(System.String)">
              <summary>
              Get Business Info By Id (Brings only its own information)

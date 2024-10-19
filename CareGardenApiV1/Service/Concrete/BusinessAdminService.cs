@@ -1,9 +1,7 @@
 ﻿using CareGardenApiV1.Helpers;
 using CareGardenApiV1.Model.RequestModel;
 using CareGardenApiV1.Model.ResponseModel;
-using CareGardenApiV1.Model.TableModel;
 using CareGardenApiV1.Repository.Abstract;
-using CareGardenApiV1.Service.Abstract;
 
 namespace CareGardenApiV1.Service.Concrete
 {
@@ -15,7 +13,6 @@ namespace CareGardenApiV1.Service.Concrete
         {
             _businessAdminRepository = businessAdminRepository;
         }
-
 
         public async Task<BusinessAdminEarningReportResponseModel> GetBusinessAdminEarningReportDataAsync(Guid businessId)
         {
@@ -117,6 +114,11 @@ namespace CareGardenApiV1.Service.Concrete
         public async Task<List<BusinessAdminCustomerResponseModel>> GetCustomersAsync(Guid businessId)
         {
             return await _businessAdminRepository.GetCustomersAsync(businessId);
+        }
+
+        public async Task<List<BusinessAdminCalendarResponseModel>> GetCalendarInfosAsync(Guid businessId)
+        {
+            return await _businessAdminRepository.GetCalendarInfosAsync(businessId);
         }
     }
 }

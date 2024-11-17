@@ -195,5 +195,23 @@ namespace CareGardenApiV1.Repository.Concrete
 
             return true;
         }
+
+        public async Task<int> GetOpenAIRequestCountAsync(Guid id)
+        {
+            return await _context.Users
+                .Where(x => x.id == id)
+                .Select(x => x.openAIRequestCount)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> UpdateOpenAIRequestCountAsync(Guid id, int count)
+        {
+            await _context.Users
+                .Where(x => x.id == id)
+                .ExecuteUpdateAsync(x => x
+                .SetProperty(p => p.openAIRequestCount, count));
+
+            return true;
+        }
     }
 }

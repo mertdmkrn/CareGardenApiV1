@@ -357,4 +357,13 @@
   <data name="DateMaxRangeError" xml:space="preserve">
     <value>Tarih aralağı maximum bir ay olmalıdır.</value>
   </data>
+  <data name="OpenAIRequestNotSend" xml:space="preserve">
+    <value>AI isteği gönderilemedi.</value>
+  </data>
+  <data name="OpenAIRequestSend" xml:space="preserve">
+    <value>AI isteği gönderildi.</value>
+  </data>
+  <data name="OpenAIRequestLimitMessage" xml:space="preserve">
+    <value>Cilt analizi için belirlenen maksimum istek sınırına ulaştınız. Daha fazla analiz yapabilmek için bize ulaşın.</value>
+  </data>
 </root>

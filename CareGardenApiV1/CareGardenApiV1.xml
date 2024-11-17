@@ -1622,6 +1622,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CareGardenApiV1.Controller.UserController.AICompletions(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            User Send AI Completions
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CareGardenApiV1.Controller.UserLoginController.SendTelephoneConfirmationCode(System.String)">
             <summary>
             Send Telephone Confirmation Code
@@ -1960,6 +1966,18 @@
         <member name="M:CareGardenApiV1.Migrations.CareGardenV1.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:CareGardenApiV1.Migrations.CareGardenV2">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV2.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV2.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CareGardenApiV1.Migrations.CareGardenV2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="T:CareGardenApiV1.Resource.Resource">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -2179,6 +2197,21 @@
         <member name="P:CareGardenApiV1.Resource.Resource.NotPermission">
             <summary>
               Looks up a localized string similar to Bu işlemi gerçekleştirmek için yetkiniz yok. Lütfen gerekli izinler için sistem yöneticinizle iletişime geçiniz..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.OpenAIRequestLimitMessage">
+            <summary>
+              Looks up a localized string similar to Cilt analizi için belirlenen maksimum istek sınırına ulaştınız. Daha fazla analiz yapabilmek için bize ulaşın..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.OpenAIRequestNotSend">
+            <summary>
+              Looks up a localized string similar to AI isteği gönderilemedi..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.OpenAIRequestSend">
+            <summary>
+              Looks up a localized string similar to AI isteği gönderildi..
             </summary>
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.PasswordMustBeEightCharacters">

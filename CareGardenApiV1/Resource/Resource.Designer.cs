@@ -430,6 +430,33 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cilt analizi için belirlenen maksimum istek sınırına ulaştınız. Daha fazla analiz yapabilmek için bize ulaşın..
+        /// </summary>
+        public static string OpenAIRequestLimitMessage {
+            get {
+                return ResourceManager.GetString("OpenAIRequestLimitMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AI isteği gönderilemedi..
+        /// </summary>
+        public static string OpenAIRequestNotSend {
+            get {
+                return ResourceManager.GetString("OpenAIRequestNotSend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AI isteği gönderildi..
+        /// </summary>
+        public static string OpenAIRequestSend {
+            get {
+                return ResourceManager.GetString("OpenAIRequestSend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Şifre en az 8 karakter olmalı..
         /// </summary>
         public static string PasswordMustBeEightCharacters {

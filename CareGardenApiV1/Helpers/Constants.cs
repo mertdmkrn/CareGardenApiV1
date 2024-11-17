@@ -6,6 +6,7 @@ namespace CareGardenApiV1.Helpers
     {
         public static bool IsTurkish = Resource.Resource.Culture.ToString().Equals("tr");
         public static string BusinessAdminPanelUrl = "https://mertdmkrn.github.io/cg-business/#/";
+        public static string BaseUrl = "https://localhost:44389";
         public static string DefaultBusinessImage = "https://iili.io/dSIQNYQ.jpg";
 
         public static class CacheKeys

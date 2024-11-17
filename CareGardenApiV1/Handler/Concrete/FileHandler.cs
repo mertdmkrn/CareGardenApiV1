@@ -3,18 +3,19 @@ using CareGardenApiV1.Helpers;
 using RestSharp;
 using System.Text.Json.Nodes;
 using System.Text.Json;
+using System.IO;
 
 namespace CareGardenApiV1.Handler.Concrete
 {
     public class FileHandler : IFileHandler
     {
-        public async Task<bool> UploadFile(IFormFile file, string pathName = "", string fileName = "")
+        public async Task<string> UploadFile(IFormFile file, string pathName = "", string fileName = "")
         {
             string path = "";
 
             if (file.Length > 0)
             {
-                path = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, pathName.IsNullOrEmpty() ? "StaticFiles/UploadedFiles" : "StaticFiles/UploadedFiles\\" + pathName));
+                path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, pathName.IsNullOrEmpty() ? "StaticFiles/UploadedFiles" : $"StaticFiles/UploadedFiles/{pathName}"));
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
@@ -23,11 +24,12 @@ namespace CareGardenApiV1.Handler.Concrete
                 {
                     await file.CopyToAsync(fileStream);
                 }
-                return true;
+                string fileUrl = $"{Constants.BaseUrl}/StaticFiles/UploadedFiles{(pathName.IsNullOrEmpty() ? "" : $"/{pathName}")}/{fileName}";
+                return fileUrl;
             }
             else
             {
-                return false;
+                return string.Empty;
             }
         }
 
@@ -61,6 +63,22 @@ namespace CareGardenApiV1.Handler.Concrete
             }
 
             return null;
+        }
+
+        public bool DeleteFile(string pathName = "", string fileName = "")
+        {
+            string path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, pathName.IsNullOrEmpty() ? "StaticFiles/UploadedFiles/{fileName}" : $"StaticFiles/UploadedFiles/{pathName}/{fileName}"));
+
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("Dosya bulunamadı.");
+                return false;
+            }
         }
     }
 }

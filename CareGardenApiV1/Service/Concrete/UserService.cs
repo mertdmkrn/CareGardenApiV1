@@ -3,7 +3,6 @@ using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Model.TableModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
-using Newtonsoft.Json.Linq;
 
 namespace CareGardenApiV1.Service.Concrete
 {
@@ -93,6 +92,16 @@ namespace CareGardenApiV1.Service.Concrete
         public async Task<bool> GetUserExistsByTelephoneNumberAsync(string telephoneNumber)
         {
             return await _userRepository.GetUserExistsByTelephoneNumberAsync(telephoneNumber);
+        }
+
+        public async Task<int> GetOpenAIRequestCountAsync(Guid id)
+        {
+            return await _userRepository.GetOpenAIRequestCountAsync(id);
+        }
+
+        public async Task<bool> UpdateOpenAIRequestCountAsync(Guid id, int count)
+        {
+            return await _userRepository.UpdateOpenAIRequestCountAsync(id, count);
         }
     }
 }

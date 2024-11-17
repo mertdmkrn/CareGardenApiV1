@@ -65,6 +65,9 @@ namespace CareGardenApiV1.Model.TableModel
         public double? latitude { get; set; }
         public double? longitude { get; set; }
 
+        public int openAIRequestCount { get; set; }
+
+
         [JsonIgnore]
         [Column(TypeName = "geometry (point)")]
         public Point? location { get; set; }

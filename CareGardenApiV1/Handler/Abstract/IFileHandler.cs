@@ -2,7 +2,8 @@
 {
     public interface IFileHandler
     {
-        Task<bool> UploadFile(IFormFile file, string pathName = "", string fileName = "");
+        Task<string> UploadFile(IFormFile file, string pathName = "", string fileName = "");
         Task<string> UploadFreeImageServer(IFormFile file);
+        bool DeleteFile(string pathName = "", string fileName = "");
     }
 }

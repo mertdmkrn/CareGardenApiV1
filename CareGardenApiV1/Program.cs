@@ -97,8 +97,8 @@ internal class Program
                         Id = "Bearer"
                     }
                 },
-                    new string[] { }
-                }
+                new string[] { }
+            }
             });
         });
 
@@ -133,28 +133,29 @@ internal class Program
         builder.Services.AddHttpClient();
 
         var app = builder.Build();
+
+        app.UseSwagger();
         app.UseIpRateLimiting();
         app.UseResponseCompression();
-        
+
         app.UseStaticFiles();
         app.UseMiddleware<ExceptionMiddleware>();
 
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.UseSwagger();
         app.UseCors("corsapp");
         app.UseSwaggerUI();
 
         app.UseHangfireDashboard("/hangfire", new DashboardOptions()
         {
             DashboardTitle = "Hangfire Dashboard",
-            Authorization = new[]{
-            new HangfireCustomBasicAuthenticationFilter{
-                User = builder.Configuration["HangfireSettings:UserName"],
-                Pass = builder.Configuration["HangfireSettings:Password"]
-            },
-        }
+            Authorization = new[] {
+                new HangfireCustomBasicAuthenticationFilter {
+                    User = builder.Configuration["HangfireSettings:UserName"],
+                    Pass = builder.Configuration["HangfireSettings:Password"]
+                },
+            }
         });
 
         app.UseHangfireServer(new BackgroundJobServerOptions());
@@ -167,7 +168,6 @@ internal class Program
         }
 
         app.MapControllers();
-
         app.Run();
     }
 
@@ -177,6 +177,7 @@ internal class Program
         builder.Services.AddSingleton<IMailHandler, MailHandler>();
         builder.Services.AddSingleton<ISmsHandler, SmsHandler>();
         builder.Services.AddSingleton<IFileHandler, FileHandler>();
+        builder.Services.AddSingleton<IOpenAIHandler, OpenAIHandler>();
         builder.Services.AddSingleton<INominatimWebInterface, NominatimWebInterface>();
 
         builder.Services.AddScoped<ILoggerHandler, LoggerHandler>();

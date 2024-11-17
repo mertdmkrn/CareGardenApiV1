@@ -7,6 +7,7 @@ using CareGardenApiV1.Model.ResponseModel;
 using CareGardenApiV1.Model.TableModel;
 using CareGardenApiV1.Repository.Abstract;
 using CareGardenApiV1.Service.Abstract;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -24,6 +25,7 @@ namespace CareGardenApiV1.Controller
         private readonly IFileHandler _fileHandler;
         private readonly IMemoryCache _memoryCache;
         private readonly IMailHandler _mailHandler;
+        private readonly IOpenAIHandler _openAIHandler;
 
         public UserController(
             IUserService userService,
@@ -31,7 +33,8 @@ namespace CareGardenApiV1.Controller
             IFaqService faqService,
             IFileHandler fileHandler,
             IMemoryCache memoryCache,
-            IMailHandler mailHandler)
+            IMailHandler mailHandler,
+            IOpenAIHandler openAIHandler)
         {
             _userService = userService;
             _businessService = businessService;
@@ -39,6 +42,7 @@ namespace CareGardenApiV1.Controller
             _fileHandler = fileHandler;
             _memoryCache = memoryCache;
             _mailHandler = mailHandler;
+            _openAIHandler = openAIHandler;
         }
 
         /// <summary>
@@ -571,6 +575,56 @@ namespace CareGardenApiV1.Controller
             fagResponseModel.categories = fagResponseModel.faqs.Select(x => culture == "en" ? x.categoryEn : x.category).Distinct().ToList();
 
             response.Data = fagResponseModel;
+
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// User Send AI Completions
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("aicompletions")]
+        [Authorize]
+        public async Task<IActionResult> AICompletions(IFormFile imageFile)
+        {
+            ResponseModel<string> response = new ResponseModel<string>();
+
+            if (imageFile.Length == 0)
+            {
+                response.HasError = true;
+                response.ValidationErrors.Add(new ValidationError("imageFile", Resource.Resource.NotEmpty));
+                return Ok(response);
+            }
+
+            var userId = HelperMethods.GetClaimInfo(Request, ClaimTypes.PrimarySid).ToGuid();
+            var userName = HelperMethods.GetClaimInfo(Request, ClaimTypes.Name).GenerateUrlFriendlyName();
+
+
+            var openAIRequestCount = await _userService.GetOpenAIRequestCountAsync(userId);
+
+            if (openAIRequestCount >= 2)
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.OpenAIRequestLimitMessage;
+                return Ok(response);
+            }
+
+            string imageUrl = await _fileHandler.UploadFile(imageFile, "OpenAIImages", $"{userName}.jpg");
+            imageUrl = await _fileHandler.UploadFreeImageServer(imageFile);
+
+            var responseMessage = await _openAIHandler.SendOpenAIRequestAsync(imageUrl);
+
+            if (responseMessage.IsNullOrEmpty())
+            {
+                response.HasError = true;
+                response.Message = Resource.Resource.OpenAIRequestNotSend;
+            }
+
+            response.Message = Resource.Resource.OpenAIRequestSend;
+            response.Data = responseMessage;
+
+            BackgroundJob.Enqueue(() => _userService.UpdateOpenAIRequestCountAsync(userId, openAIRequestCount + 1));
+            BackgroundJob.Enqueue(() => _fileHandler.DeleteFile("OpenAIImages", $"{userName}.jpg"));
 
             return Ok(response);
         }

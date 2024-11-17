@@ -22,6 +22,7 @@ namespace CareGardenApiV1.Service.Abstract
         Task<List<Guid?>> GetUserFavoriteBusinessIds(Guid id);
         Task<List<Guid>> GetUserIds();
         Task<bool> UpdateHasNotificationAsync(List<Guid> userIds, bool value);
-
+        Task<int> GetOpenAIRequestCountAsync(Guid id);
+        Task<bool> UpdateOpenAIRequestCountAsync(Guid id, int count);
     }
 }

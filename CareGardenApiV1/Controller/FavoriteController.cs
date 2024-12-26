@@ -65,7 +65,7 @@ namespace CareGardenApiV1.Controller
             await _favoriteService.SaveFavoriteAsync(favorite);
 
             response.Data = true;
-            response.Message = Resource.Resource.RegistrationSuccess;
+            response.Message = Resource.Resource.AddFavorite;
 
             return Ok(response);
         }
@@ -94,7 +94,7 @@ namespace CareGardenApiV1.Controller
             await _favoriteService.DeleteFavoriteByBusinessIdAndUserIdAsync(userId.ToGuid(), businessId);
 
             response.Data = true;
-            response.Message = Resource.Resource.RecordDeleted;
+            response.Message = Resource.Resource.DeleteFavorite;
 
             return Ok(response);
         }

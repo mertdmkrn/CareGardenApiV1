@@ -61,6 +61,15 @@ namespace CareGardenApiV1.Resource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Favorilere eklendi..
+        /// </summary>
+        public static string AddFavorite {
+            get {
+                return ResourceManager.GetString("AddFavorite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tüm mesajlar okundu olarak işaretlendi..
         /// </summary>
         public static string AllMessagesRead {
@@ -291,6 +300,15 @@ namespace CareGardenApiV1.Resource {
         public static string DateMaxRangeError {
             get {
                 return ResourceManager.GetString("DateMaxRangeError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Favorilerden kaldırıldı..
+        /// </summary>
+        public static string DeleteFavorite {
+            get {
+                return ResourceManager.GetString("DeleteFavorite", resourceCulture);
             }
         }
         

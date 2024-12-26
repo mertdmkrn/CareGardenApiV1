@@ -123,6 +123,9 @@
   <data name="NotEmpty" xml:space="preserve">
     <value>Do not leave this field blank.</value>
   </data>
+  <data name="ElasticIndexlemeIslemiBasladi" xml:space="preserve">
+    <value>Started process.</value>
+  </data>
   <data name="ValidNameMessage" xml:space="preserve">
     <value>Please enter a valid fullname.</value>
   </data>
@@ -354,13 +357,19 @@
   <data name="DateMaxRangeError" xml:space="preserve">
     <value>The date range must not exceed one month.</value>
   </data>
-  <data name="OpenAIRequestLimitMessage" xml:space="preserve">
-    <value>You have reached the maximum request limit for skin analysis. Please contact us for further analysis</value>
-  </data>
   <data name="OpenAIRequestNotSend" xml:space="preserve">
     <value>AI request could not be sent.</value>
   </data>
   <data name="OpenAIRequestSend" xml:space="preserve">
     <value>AI request sent.</value>
+  </data>
+  <data name="OpenAIRequestLimitMessage" xml:space="preserve">
+    <value>You have reached the maximum request limit for skin analysis. Please contact us for further analysis</value>
+  </data>
+  <data name="AddFavorite" xml:space="preserve">
+    <value>Added to favorites</value>
+  </data>
+  <data name="DeleteFavorite" xml:space="preserve">
+    <value>Deleted to favorites.</value>
   </data>
 </root>

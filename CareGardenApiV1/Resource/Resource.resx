@@ -366,4 +366,10 @@
   <data name="OpenAIRequestLimitMessage" xml:space="preserve">
     <value>Cilt analizi için belirlenen maksimum istek sınırına ulaştınız. Daha fazla analiz yapabilmek için bize ulaşın.</value>
   </data>
+  <data name="AddFavorite" xml:space="preserve">
+    <value>Favorilere eklendi.</value>
+  </data>
+  <data name="DeleteFavorite" xml:space="preserve">
+    <value>Favorilerden kaldırıldı.</value>
+  </data>
 </root>

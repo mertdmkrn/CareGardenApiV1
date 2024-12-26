@@ -151,6 +151,7 @@ namespace CareGardenApiV1.Migrations
                     isBan = table.Column<bool>(type: "boolean", nullable: false),
                     latitude = table.Column<double>(type: "double precision", nullable: true),
                     longitude = table.Column<double>(type: "double precision", nullable: true),
+                    openAIRequestCount = table.Column<int>(type: "integer", nullable: false),
                     location = table.Column<Point>(type: "geometry (point)", nullable: true),
                     hasNotification = table.Column<bool>(type: "boolean", nullable: false)
                 },
@@ -168,6 +169,8 @@ namespace CareGardenApiV1.Migrations
                     gender = table.Column<int>(type: "integer", nullable: false),
                     email = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
                     telephone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    imageUrl = table.Column<string>(type: "text", nullable: true),
+                    createDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     businessId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>

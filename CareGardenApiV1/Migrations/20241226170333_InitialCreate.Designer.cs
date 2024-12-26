@@ -13,15 +13,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CareGardenApiV1.Migrations
 {
     [DbContext(typeof(CareGardenApiDbContext))]
-    [Migration("20240928201125_CareGardenV1")]
-    partial class CareGardenV1
+    [Migration("20241226170333_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "9.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
@@ -259,7 +259,6 @@ namespace CareGardenApiV1.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("createDate")
-                        .HasMaxLength(150)
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("email")
@@ -1047,6 +1046,9 @@ namespace CareGardenApiV1.Migrations
 
                     b.Property<double?>("longitude")
                         .HasColumnType("double precision");
+
+                    b.Property<int>("openAIRequestCount")
+                        .HasColumnType("integer");
 
                     b.Property<string>("password")
                         .HasMaxLength(50)

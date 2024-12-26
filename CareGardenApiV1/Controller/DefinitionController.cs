@@ -345,72 +345,40 @@ namespace CareGardenApiV1.Controller
 
         public static Guid getServiceId(string link, string name)
         {
-            if (name.ToLowerInvariant().Contains("boyama"))
+            var services = new Dictionary<Guid, List<string>>
             {
-                return new Guid("c2343025-15a8-4676-af1f-fb970a309c1b");
+                { new Guid("c2343025-15a8-4676-af1f-fb970a309c1b"), new List<string> { "boyama", "renklendirme", "saç rengi", "saç boyama" } },
+                { new Guid("430210f7-0fa6-453b-a752-c2fb28d65814"), new List<string> { "yıkama", "temizleme", "şampuan", "saç yıkama" } },
+                { new Guid("b4306e08-47e9-4992-950c-f2f8249d878a"), new List<string> { "kesim", "tıraş", "saç kesim", "şekillendirme", "saç tıraşı" } },
+                { new Guid("9356f8a9-094e-4c7d-afad-90d1345ab752"), new List<string> { "sakal", "sakallı", "sakalı" } },
+                { new Guid("a69b3dfa-ba9c-42c3-a09d-42cd28f0bb6a"), new List<string> { "kaş", "kirpik", "kaş alma", "kirpik uzatma", "kaş boyama", "kaş düzeltme" } },
+                { new Guid("cdbb94ab-3ccb-4e59-aac3-7272a27e880f"), new List<string> { "manikür", "el bakımı", "tırnak bakımı", "tırnak kesimi" } },
+                { new Guid("4094adc7-93f7-40ea-bdcb-6a7b75539edf"), new List<string> { "pedikür", "ayak bakımı", "tırnak kesimi", "ayak masajı" } },
+                { new Guid("4753fd7f-5e76-4d10-982b-5d2bca1b6f1a"), new List<string> { "oje", "tırnak boyama", "tırnak cilası", "nail art", "nail polish" } },
+                { new Guid("fc959581-f0de-4bda-926f-0555d9bc877f"), new List<string> { "cilt", "dudak", "bakım", "yüz bakımı", "cilt temizleme", "güzellik bakımı", "nemlendirme" } },
+                { new Guid("015d8548-ae3c-409b-9690-d7db2a70b4e2"), new List<string> { "makyaj", "göz makyajı", "gece makyajı", "günlük makyaj", "düğün makyajı" } },
+                { new Guid("835f2ea7-ce97-410a-a4b2-240d99a93d38"), new List<string> { "diş", "ağız bakımı", "beyazlatma", "diş temizleme" } },
+                { new Guid("29bd5ef1-c9e7-4354-bc54-048ac31e4fca"), new List<string> { "spa", "masaj", "relax", "spa hizmeti", "masaj terapi", "rahatlama" } },
+                { new Guid("42903897-54c4-4f89-a9fd-28d6696fc95b"), new List<string> { "epilas", "ağda", "tüy", "lazer", "kıl temizliği", "lazer epilasyon" } }
+            };
+
+            // Adı küçük harfe çeviriyoruz.
+            var lowerName = name.ToLowerInvariant();
+            foreach (var service in services)
+            {
+                if (service.Value.Any(keyword => lowerName.Contains(keyword)))
+                {
+                    return service.Key;
+                }
             }
 
-            if(name.ToLowerInvariant().Contains("yıkama"))
-            {
-                return new Guid("430210f7-0fa6-453b-a752-c2fb28d65814");
-            }
-
-            if (name.ToLowerInvariant().Contains("kesim") || name.ToLowerInvariant().Contains("tıraş"))
-            {
-                return new Guid("b4306e08-47e9-4992-950c-f2f8249d878a");
-            }
-
-            if (name.ToLowerInvariant().Contains("sakal"))
-            {
-                return new Guid("9356f8a9-094e-4c7d-afad-90d1345ab752");
-            }
-
-            if (name.ToLowerInvariant().Contains("kaş") || name.ToLowerInvariant().Contains("kirpik"))
-            {
-                return new Guid("a69b3dfa-ba9c-42c3-a09d-42cd28f0bb6a");
-            }
-
-            if (name.ToLowerInvariant().Contains("mani"))
-            {
-                return new Guid("cdbb94ab-3ccb-4e59-aac3-7272a27e880f");
-            }
-
-            if (name.ToLowerInvariant().Contains("pedi"))
-            {
-                return new Guid("4094adc7-93f7-40ea-bdcb-6a7b75539edf");
-            }
-
-            if (name.ToLowerInvariant().Contains("oje") || name.ToLowerInvariant().Contains("el"))
-            {
-                return new Guid("4753fd7f-5e76-4d10-982b-5d2bca1b6f1a");
-            }
-
-            if (name.ToLowerInvariant().Contains("cilt") || name.ToLowerInvariant().Contains("dudak") || name.ToLowerInvariant().Contains("bakım"))
-            {
-                return new Guid("fc959581-f0de-4bda-926f-0555d9bc877f");
-            }
-
-            if (name.ToLowerInvariant().Contains("makyaj"))
-            {
-                return new Guid("015d8548-ae3c-409b-9690-d7db2a70b4e2");
-            }
-
-            if (name.ToLowerInvariant().Contains("diş"))
-            {
-                return new Guid("835f2ea7-ce97-410a-a4b2-240d99a93d38");
-            }
-
-            if (name.ToLowerInvariant().Contains("spa") || link.Contains("spalar"))
-            {
-                return new Guid("29bd5ef1-c9e7-4354-bc54-048ac31e4fca");
-            }
-
-            if (name.ToLowerInvariant().Contains("epilas") || name.ToLowerInvariant().Contains("ağda"))
+            if (link.Contains("spalar", StringComparison.OrdinalIgnoreCase))
             {
                 return new Guid("29bd5ef1-c9e7-4354-bc54-048ac31e4fca");
             }
 
             return new Guid("42903897-54c4-4f89-a9fd-28d6696fc95b");
         }
+
     }
 }

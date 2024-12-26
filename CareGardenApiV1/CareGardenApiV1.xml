@@ -1954,30 +1954,6 @@
         <member name="M:CareGardenApiV1.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
-        <member name="T:CareGardenApiV1.Migrations.CareGardenV1">
-            <inheritdoc />
-        </member>
-        <member name="M:CareGardenApiV1.Migrations.CareGardenV1.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:CareGardenApiV1.Migrations.CareGardenV1.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:CareGardenApiV1.Migrations.CareGardenV1.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:CareGardenApiV1.Migrations.CareGardenV2">
-            <inheritdoc />
-        </member>
-        <member name="M:CareGardenApiV1.Migrations.CareGardenV2.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:CareGardenApiV1.Migrations.CareGardenV2.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:CareGardenApiV1.Migrations.CareGardenV2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
         <member name="T:CareGardenApiV1.Resource.Resource">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.

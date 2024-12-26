@@ -46,9 +46,9 @@ namespace CareGardenApiV1.Controller
                 });
             }
 
-            if (!Constants.IsTurkish)
+            if (!Resource.Resource.Culture.ToString().Equals("tr"))
             {
-                response.Data.ForEach(x => x.name = string.IsNullOrEmpty(x.nameEn) ? x.name : x.nameEn);
+                response.Data.ConvertAll(x => x.name = string.IsNullOrEmpty(x.nameEn) ? x.name : x.nameEn);
             }
 
             return Ok(response);

@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using CareGardenApiV1.Helpers;
 using System.Security.Claims;
 using CareGardenApiV1.Model.TableModel;
-using System.Collections.Concurrent;
 
 namespace CareGardenApiV1.Controller
 {
@@ -578,17 +577,40 @@ namespace CareGardenApiV1.Controller
 
             if (business == null) return;
 
-            var businessService = await _businessServicesService.GetBusinessServicePriceByIdAsync(appointmentInfo.businessServiceId.Value);
 
+            var nowDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now.AddMinutes(business.appointmentTimeInterval.IsNull(30)), "Turkey Standard Time");
+
+            var pastAppointmentsTask = _appointmentDetailService.GetAppointmentDetailsByWorkerIdsAndDateAsync(
+                new AppointmentSearchRequestModel
+                {
+                    startDate = nowDate,
+                    workerIds = workers.Select(x => x.id).ToHashSet()
+                }
+            );
+
+            var workerServicePricesTask = _workerServicePriceService.GetWorkerServicePricesSearchAsync(
+                businessServiceId: appointmentInfo.businessServiceId.Value
+            );
+
+            var businessServiceTask = _businessServicesService.GetBusinessServicePriceByIdAsync(
+                appointmentInfo.businessServiceId.Value
+            );
+
+            var pointListTask = _commentService.GetCommentPointListForCache(
+                businessId: appointmentInfo.businessId
+            );
+
+            await Task.WhenAll(pastAppointmentsTask, workerServicePricesTask, businessServiceTask, pointListTask);
+
+            var businessService = await businessServiceTask;
             if (businessService == null) return;
+
+            var pastAppointments = await pastAppointmentsTask;
+            var workerServicePrices = await workerServicePricesTask;
+            var pointList = await pointListTask;
 
             var discounts = business.discounts?
                 .Where(x => x.serviceIds.IsNullOrEmpty() || x.serviceIds.Contains(businessService.serviceId.Value.ToString()));
-
-            var nowDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now.AddMinutes(business.appointmentTimeInterval.IsNull(30)), "Turkey Standard Time");
-            var pastAppointments = await _appointmentDetailService.GetAppointmentDetailsByWorkerIdsAndDateAsync(new AppointmentSearchRequestModel { startDate = nowDate, workerIds = workers.Select(x => x.id).ToHashSet() });
-            var workerServicePrices = await _workerServicePriceService.GetWorkerServicePricesSearchAsync(businessServiceId: appointmentInfo.businessServiceId.Value);
-            var pointList = await _commentService.GetCommentPointListForCache(businessId: appointmentInfo.businessId);
             bool isTurkish = Resource.Resource.Culture.ToString().Equals("tr");
 
             var workerServicePricesDict = workerServicePrices?.ToDictionary(x => x.workerId, x => x.price);

@@ -1,21 +1,23 @@
-# 1. Base image olarak .NET 9 SDK kullanıyoruz
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+USER $APP_UID
+WORKDIR /app
+EXPOSE 8080
+EXPOSE 8081
+
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["CareGardenApiV1/CareGardenApiV1.csproj", "CareGardenApiV1/"]
+RUN dotnet restore "CareGardenApiV1/CareGardenApiV1.csproj"
+COPY . .
+WORKDIR "/src/CareGardenApiV1"
+RUN dotnet build "./CareGardenApiV1.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# Çalışma dizinini ayarla
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./CareGardenApiV1.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
 WORKDIR /app
-
-# csproj dosyalarını kopyala ve restore et
-COPY *.csproj ./
-RUN dotnet restore
-
-# Tüm proje dosyalarını kopyala ve publish et
-COPY . ./
-RUN dotnet publish -c Release -o out
-
-# 2. Runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
-WORKDIR /app
-COPY --from=build /app/out ./
-
-# Uygulamayı başlat
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "CareGardenApiV1.dll"]

@@ -1942,16 +1942,16 @@
              </remarks>
              <returns></returns>
         </member>
-        <member name="T:CareGardenApiV1.Migrations.InitialCreate">
+        <member name="T:CareGardenApiV1.Migrations.Initial_Create">
             <inheritdoc />
         </member>
-        <member name="M:CareGardenApiV1.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:CareGardenApiV1.Migrations.Initial_Create.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:CareGardenApiV1.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+        <member name="M:CareGardenApiV1.Migrations.Initial_Create.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
             <inheritdoc />
         </member>
-        <member name="M:CareGardenApiV1.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+        <member name="M:CareGardenApiV1.Migrations.Initial_Create.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:CareGardenApiV1.Resource.Resource">
@@ -1968,6 +1968,11 @@
             <summary>
               Overrides the current thread's CurrentUICulture property for all
               resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.AddFavorite">
+            <summary>
+              Looks up a localized string similar to Favorilere eklendi..
             </summary>
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.AllMessagesRead">
@@ -2098,6 +2103,11 @@
         <member name="P:CareGardenApiV1.Resource.Resource.DateMaxRangeError">
             <summary>
               Looks up a localized string similar to Tarih aralağı maximum bir ay olmalıdır..
+            </summary>
+        </member>
+        <member name="P:CareGardenApiV1.Resource.Resource.DeleteFavorite">
+            <summary>
+              Looks up a localized string similar to Favorilerden kaldırıldı..
             </summary>
         </member>
         <member name="P:CareGardenApiV1.Resource.Resource.ElasticIndexlemeIslemiBasladi">

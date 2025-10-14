@@ -64,7 +64,7 @@ namespace CareGardenApiV1.Controller
         [Route("definition/setbusinesses")]
         public async Task<IActionResult> SetBusinesses()
         {
-            List<string> cityList = new List<string>() { "istanbul", "ankara", "izmir", "bursa", "adana", "antalya", "kocaeli", "sakarya", "konya", "kastamonu" };
+            List<string> cityList = new List<string>() { "ankara", "izmir", "bursa", "adana", "antalya", "kocaeli", "sakarya", "konya", "kastamonu"};
             List<string> categoryList = new List<string>() { "sac-kesimi", "sac-boyama", "manikur", "spalar", "saglikli-yasam", "dovme-tattoo-merkezleri" };
             string baseUrl = "https://www.kolayrandevu.com/{0}/{1}/{2}";
             List<string> additionalLinks = new List<string>();

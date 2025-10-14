@@ -276,7 +276,7 @@ namespace CareGardenApiV1.Controller
                 response.ValidationErrors.Add(new ValidationError("birthDate", Resource.Resource.NotEmpty));
             }
 
-            if (!updateBusinessUser.fullName.IsValidFullName())
+            if (!updateBusinessUser.fullName.IsValidBusinessName())
             {
                 response.HasError = true;
                 response.ValidationErrors.Add(new ValidationError("fullName", Resource.Resource.ValidNameMessage));
@@ -492,7 +492,7 @@ namespace CareGardenApiV1.Controller
                 response.ValidationErrors.Add(new ValidationError("fullName", Resource.Resource.NotEmpty));
             }
 
-            if (!businessUser.fullName.IsNullOrEmpty() && !businessUser.fullName.IsValidFullName())
+            if (!businessUser.fullName.IsNullOrEmpty() && !businessUser.fullName.IsValidBusinessName())
             {
                 response.HasError = true;
                 response.ValidationErrors.Add(new ValidationError("fullName", Resource.Resource.ValidNameMessage));
@@ -607,7 +607,7 @@ namespace CareGardenApiV1.Controller
                 response.ValidationErrors.Add(new ValidationError("fullName", Resource.Resource.NotEmpty));
             }
 
-            if (!businessUser.fullName.IsNullOrEmpty() && !businessUser.fullName.IsValidFullName())
+            if (!businessUser.fullName.IsNullOrEmpty() && !businessUser.fullName.IsValidBusinessName())
             {
                 response.HasError = true;
                 response.ValidationErrors.Add(new ValidationError("fullName", Resource.Resource.ValidNameMessage));

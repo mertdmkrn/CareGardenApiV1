@@ -7,7 +7,7 @@ using NetTopologySuite.Geometries;
 namespace CareGardenApiV1.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial_Create : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

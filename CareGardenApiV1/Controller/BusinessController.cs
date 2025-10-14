@@ -537,7 +537,7 @@ namespace CareGardenApiV1.Controller
                 response.ValidationErrors.Add(new ValidationError("name", Resource.Resource.NotEmpty));
             }
 
-            if (!requestModel.name.IsNullOrEmpty() && !requestModel.name.IsValidFullName())
+            if (!requestModel.name.IsNullOrEmpty() && !requestModel.name.IsValidBusinessName())
             {
                 response.HasError = true;
                 response.ValidationErrors.Add(new ValidationError("name", Resource.Resource.ValidNameMessage));

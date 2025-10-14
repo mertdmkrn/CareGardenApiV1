@@ -149,6 +149,29 @@ namespace CareGardenApiV1.Helpers
             return true;
         }
 
+        public static bool IsValidBusinessName(this string businessName)
+        {
+            if (businessName.IsNullOrEmpty())
+                return false;
+
+            businessName = businessName.Trim();
+
+            if (businessName.Length < 3)
+                return false;
+
+            if (!businessName.Any(char.IsLetterOrDigit))
+                return false;
+
+            if (businessName.Contains("  "))
+                return false;
+
+            if (businessName.All(char.IsDigit))
+                return false;
+
+            return true;
+        }
+
+
         public static Guid ToGuid(this string target, Guid? defaultValue = null)
         {
             if (string.IsNullOrEmpty(target)) return defaultValue.GetValueOrDefault(Guid.Empty);

@@ -7,6 +7,7 @@ using CareGardenApiV1.Service.Abstract;
 using CareGardenApiV1.Model.ResponseModel;
 using HtmlAgilityPack;
 using CareGardenApiV1.Model.TableModel;
+using Microsoft.EntityFrameworkCore;
 
 namespace CareGardenApiV1.Controller
 {
@@ -58,13 +59,14 @@ namespace CareGardenApiV1.Controller
 
         /// <summary>
         /// Get Privacy Policy
-        /// </summary>
+        /// </summary>6a
         /// <returns></returns>
         [HttpPost]
         [Route("definition/setbusinesses")]
         public async Task<IActionResult> SetBusinesses()
         {
-            List<string> cityList = new List<string>() { "ankara", "izmir", "bursa", "adana", "antalya", "kocaeli", "sakarya", "konya", "kastamonu"};
+            const string ExternalSourceUrlKey = "externalSourceUrl";
+            List<string> cityList = new List<string>() { "istanbul", "ankara", "izmir", "bursa", "adana", "antalya", "kocaeli", "sakarya", "konya", "kastamonu", "trabzon" };
             List<string> categoryList = new List<string>() { "sac-kesimi", "sac-boyama", "manikur", "spalar", "saglikli-yasam", "dovme-tattoo-merkezleri" };
             string baseUrl = "https://www.kolayrandevu.com/{0}/{1}/{2}";
             List<string> additionalLinks = new List<string>();
@@ -72,6 +74,18 @@ namespace CareGardenApiV1.Controller
             Dictionary<string, List<string>> urlDict = new Dictionary<string, List<string>>();
 
             var businesses = await _businessService.GetBusinessListForCache(false);
+            var existingBusinessNames = new HashSet<string>(
+                businesses
+                    .Where(x => !string.IsNullOrWhiteSpace(x.name))
+                    .Select(x => x.name!.Trim()),
+                StringComparer.OrdinalIgnoreCase);
+            var existingSourceUrls = new HashSet<string>(
+                await _context.BusinessProperties
+                    .AsNoTracking()
+                    .Where(x => x.key == ExternalSourceUrlKey && x.value != null)
+                    .Select(x => x.value!)
+                    .ToListAsync(),
+                StringComparer.OrdinalIgnoreCase);
 
             foreach (string city in cityList)
             {
@@ -123,9 +137,19 @@ namespace CareGardenApiV1.Controller
 
                     business.name = htmlDoc.DocumentNode.SelectSingleNode("//h1[@itemprop='name']")?.InnerText.Replace("&amp;", " ").Replace("  ", " ").Replace("&#039;", "'");
 
-                    if (business.name.IsNullOrEmpty() || businesses.Any(x => x.name.Equals(business.name))) continue;
+                    if (business.name.IsNullOrEmpty() || existingBusinessNames.Contains(business.name))
+                    {
+                        continue;
+                    }
 
                     business.nameForUrl = business.name.GenerateUrlFriendlyName();
+
+                    if (await _context.Businesses.AsNoTracking().AnyAsync(x => x.nameForUrl == business.nameForUrl))
+                    {
+                        existingBusinessNames.Add(business.name);
+                        continue;
+                    }
+
                     var telephone = htmlDoc.DocumentNode.SelectSingleNode("//a[@id='mobil-callcenter-number']")?.Attributes["href"]?.Value.Replace("tel://", "") ?? "05000000000";
                     business.telephone = telephone.Contains("0212") || telephone.Contains("0850") ? telephone : $"+9{telephone}";
                     business.description = htmlDoc.DocumentNode.SelectSingleNode("//*[@id=\"single_tour_desc\"]/div/div[@class=\"col-md-9\"]/p")?.InnerText.Replace("&amp;", " ").Replace("  ", " ").Replace("&#039;", "'");
@@ -151,28 +175,31 @@ namespace CareGardenApiV1.Controller
                     business.officialHolidayAvailable = true;
                     business.appointmentTimeInterval = 30;
 
-
-                    await _context.Businesses.AddAsync(business);
-                    await _context.SaveChangesAsync();
-
-                    var hours = htmlDoc.DocumentNode.SelectNodes("//meta[@itemprop='openingHours']");
-
-                    BusinessWorkingInfo businessWorkingInfo = new BusinessWorkingInfo();
-
-                    if (hours != null && hours.Count() > 0)
+                    await using var transaction = await _context.Database.BeginTransactionAsync();
+                    try
                     {
-                        businessWorkingInfo.mondayWorkHours = hours[0].Attributes["content"]?.Value?.Substring(3);
-                        businessWorkingInfo.tuesdayWorkHours = hours.Count > 1 ? hours[1].Attributes["content"]?.Value?.Substring(3) : null;
-                        businessWorkingInfo.wednesdayWorkHours = hours.Count > 2 ? hours[2].Attributes["content"]?.Value?.Substring(3) : null;
-                        businessWorkingInfo.thursdayWorkHours = hours.Count > 3 ? hours[3].Attributes["content"]?.Value?.Substring(3) : null;
-                        businessWorkingInfo.fridayWorkHours = hours.Count > 4 ? hours[4].Attributes["content"]?.Value?.Substring(3) : null;
-                        businessWorkingInfo.saturdayWorkHours = hours.Count > 5 ? hours[5].Attributes["content"]?.Value?.Substring(3) : null;
-                        businessWorkingInfo.sundayWorkHours = hours.Count > 6 ? hours[6].Attributes["content"]?.Value?.Substring(3) : null;
-                        businessWorkingInfo.businessId = business.id;
 
-                        await _context.BusinessWorkingInfos.AddAsync(businessWorkingInfo);
+                        await _context.Businesses.AddAsync(business);
                         await _context.SaveChangesAsync();
-                    }
+
+                        var hours = htmlDoc.DocumentNode.SelectNodes("//meta[@itemprop='openingHours']");
+
+                        BusinessWorkingInfo businessWorkingInfo = new BusinessWorkingInfo();
+
+                        if (hours != null && hours.Count() > 0)
+                        {
+                            businessWorkingInfo.mondayWorkHours = hours[0].Attributes["content"]?.Value?.Substring(3);
+                            businessWorkingInfo.tuesdayWorkHours = hours.Count > 1 ? hours[1].Attributes["content"]?.Value?.Substring(3) : null;
+                            businessWorkingInfo.wednesdayWorkHours = hours.Count > 2 ? hours[2].Attributes["content"]?.Value?.Substring(3) : null;
+                            businessWorkingInfo.thursdayWorkHours = hours.Count > 3 ? hours[3].Attributes["content"]?.Value?.Substring(3) : null;
+                            businessWorkingInfo.fridayWorkHours = hours.Count > 4 ? hours[4].Attributes["content"]?.Value?.Substring(3) : null;
+                            businessWorkingInfo.saturdayWorkHours = hours.Count > 5 ? hours[5].Attributes["content"]?.Value?.Substring(3) : null;
+                            businessWorkingInfo.sundayWorkHours = hours.Count > 6 ? hours[6].Attributes["content"]?.Value?.Substring(3) : null;
+                            businessWorkingInfo.businessId = business.id;
+
+                            await _context.BusinessWorkingInfos.AddAsync(businessWorkingInfo);
+                            await _context.SaveChangesAsync();
+                        }
 
                     var serviceNameNodes = htmlDoc.DocumentNode.SelectNodes("//tr[@class='hizmet-liste-select click_service']");
                     List<BusinessServiceModel> businessServiceModels = new List<BusinessServiceModel>();
@@ -245,7 +272,7 @@ namespace CareGardenApiV1.Controller
                         }
                     }
 
-                    await _context.BusinessGalleries.AddRangeAsync(businessGalleries);
+                        await _context.BusinessGalleries.AddRangeAsync(businessGalleries);
 
                     var workerNodes = htmlDoc.DocumentNode.SelectNodes("//div[@itemprop='employee']");
                     var serviceIdList = businessServiceModels.Select(x => x.id).ToList();
@@ -330,10 +357,28 @@ namespace CareGardenApiV1.Controller
                         await _context.Comments.AddRangeAsync(comments);
                     }
 
-                    await _context.SaveChangesAsync();
-                    await _businessPropertiesService.SaveStaticBusinessPropertiesAsync(business.id);
+                        await _context.BusinessProperties.AddAsync(new BusinessProperties
+                        {
+                            businessId = business.id,
+                            key = ExternalSourceUrlKey,
+                            value = link
+                        });
 
-                    Console.WriteLine(business.name + " eklendi.");
+                        await _context.SaveChangesAsync();
+                        await _businessPropertiesService.SaveStaticBusinessPropertiesAsync(business.id);
+                        await transaction.CommitAsync();
+
+                        existingBusinessNames.Add(business.name);
+                        existingSourceUrls.Add(link);
+
+                        Console.WriteLine(business.name + " eklendi.");
+                    }
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        Console.WriteLine($"Business import atlandi ({link}): {ex.Message}");
+                    }
+
                 }
             }
 

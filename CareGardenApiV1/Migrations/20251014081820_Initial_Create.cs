@@ -703,6 +703,47 @@ namespace CareGardenApiV1.Migrations
                         onDelete: ReferentialAction.SetNull);
                 });
 
+            migrationBuilder.Sql("""
+                INSERT INTO "Services" ("id", "name", "nameEn", "className", "colorCode", "sortOrder")
+                VALUES
+                ('b4306e08-47e9-4992-950c-f2f8249d878a', 'Saç Kesimi', 'Hair Cut', 'haircut', '#91c8f7', 1),
+                ('9356f8a9-094e-4c7d-afad-90d1345ab752', 'Sakal', 'Beard', 'beard', '#E0EAFF', 2),
+                ('c392b38b-ea25-4494-9aae-350625fa2735', 'Saç Stili', 'Hair Styling', 'hairstyling', '#CCFBEF', 3),
+                ('c2343025-15a8-4676-af1f-fb970a309c1b', 'Saç Boyama', 'Hair Coloring', 'haircoloring', '#EEB95D', 4),
+                ('a69b3dfa-ba9c-42c3-a09d-42cd28f0bb6a', 'Kaş - Kirpik', 'Eyelash - Eyebrow', 'eyelash', '#CCFBEF', 5),
+                ('cdbb94ab-3ccb-4e59-aac3-7272a27e880f', 'Manikür', 'Manicure', 'manicure', '#29e0a3', 6),
+                ('4094adc7-93f7-40ea-bdcb-6a7b75539edf', 'Pedikür', 'Pedicure', 'pedicure', '#358541', 7),
+                ('4753fd7f-5e76-4d10-982b-5d2bca1b6f1a', 'Oje', 'Nail Varnish', 'oje', '#8c2826', 8),
+                ('fc959581-f0de-4bda-926f-0555d9bc877f', 'Cilt Bakımı', 'Skin Care', 'skincare', '#ad8fbd', 9),
+                ('430210f7-0fa6-453b-a752-c2fb28d65814', 'Şaç Bakımı', 'Hair Care', 'haircare', '#6ce4c0', 10),
+                ('015d8548-ae3c-409b-9690-d7db2a70b4e2', 'Makyaj', 'Make Up', 'makeup', '#84e6b8', 11),
+                ('835f2ea7-ce97-410a-a4b2-240d99a93d38', 'Diş', 'Dental', 'dental', '#8191a7', 12),
+                ('29bd5ef1-c9e7-4354-bc54-048ac31e4fca', 'Masaj - Spa', 'Message - Spa', 'spa', '#f9da6c', 13),
+                ('42903897-54c4-4f89-a9fd-28d6696fc95b', 'Epilasyon', 'Epilation', 'epilation', '#c92c2c', 14);
+                """);
+
+            migrationBuilder.Sql("""
+                INSERT INTO "User" ("id", "fullName", "gender", "email", "telephone", "password", "city", "createDate", "updateDate", "birthDate", "services", "role", "imageUrl", "isBan", "latitude", "longitude", "location", "hasNotification", "openAIRequestCount")
+                VALUES
+                ('4ffb3bb4-8390-4a5a-ace1-048b79e4d0e0', 'Tolgahan Özcan', 2, 'ozcantolgahan34@gmail.com', '+905542829066', '73l8gRjwLftklgfdXT+MdiMEjJwGPVMsyVxe16iYpk8=', NULL, '2024-07-22 01:49:12.821401', '2024-07-22 01:49:12.821401', NULL, NULL, 'Admin', NULL, false, NULL, NULL, NULL, false, 0),
+                ('44c09c38-9c15-4692-a4f1-3d16f5b536de', 'Mert Can Bakır', 2, 'mertcanbakir94@gmail.com', '+905444018140', '73l8gRjwLftklgfdXT+MdiMEjJwGPVMsyVxe16iYpk8=', NULL, '2024-07-22 01:50:16.134982', '2024-07-22 01:50:16.134982', NULL, NULL, 'Admin', NULL, false, NULL, NULL, NULL, false, 0),
+                ('5fe296fa-117c-428d-a34c-ac92081323e6', 'Mert Demirkıran', 2, 'mertdmkrn37@gmail.com', '+905467335939', 'XcNn+wR9BF4hWcMQFQ89eiO5Odqa6Rk2Mbpa0q1weZk=', 'İstanbul', '2024-07-22 00:00:00', '2024-10-02 12:10:10.349177', '1998-08-01 00:00:00', NULL, 'Admin', 'https://iili.io/dnbNgtI.jpg', false, 41.0688945, 28.9927958, ST_GeomFromText('POINT(28.9927958 41.0688945)', 4326), false, 0);
+                """);
+
+            migrationBuilder.Sql("""
+                INSERT INTO "Campaign" ("id", "path", "pathEn", "url", "title", "titleEn", "about", "aboutEn", "condition", "conditionEn", "isActive", "createDate", "updateDate", "expireDate", "sortOrder", "businessId")
+                VALUES
+                ('fe90c4c3-e44c-428b-a28a-9b257f1ca6de', 'https://iili.io/dsioxna.jpg', NULL, NULL, 'Kampanya', 'Campaign', 'Kampanya', 'Campaign', 'Kampanya', 'Campaign', true, '2024-09-24 08:51:32.255138', '2024-09-24 08:51:32.255138', NULL, 1, NULL);
+                """);
+
+            migrationBuilder.Sql("""
+                INSERT INTO "Setting" ("id", "name", "description", "type", "value")
+                VALUES
+                ('677d6d51-f1d1-4494-9ee8-04243428207e', 'FeedbackSubjects', 'Kullanıcılardan alınacak feedback''lerin konuları.', 1, 'Hata|Bug~Randevu|Appointment~Şikayet|Complain'),
+                ('b5cca12c-4a84-4b07-a747-f1991ec0a145', 'TopSearch', 'Aramada en çok aranan kelimeler bölümü.', 1, 'Güzellik Salonu|Beauty Saloon~Estetik|Esthetic~Diş|Dental'),
+                ('2cee4c2c-3cda-4c47-86fb-5e4e222fa34d', 'PrivacyPolicy', 'Gizlilik Politikası için html.', 0, 'ŞU 5 VERİYİ İLK İNİTAİL MİGRATİON DA POSTGRE DES EKLEMEK istiyorum nasıl yaparilir yardımcı ol');
+                """);
+
             migrationBuilder.CreateIndex(
                 name: "IX_Appointment_businessId",
                 table: "Appointment",
@@ -766,7 +807,14 @@ namespace CareGardenApiV1.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Business_nameForUrl",
                 table: "Business",
-                column: "nameForUrl");
+                column: "nameForUrl",
+                unique: true);
+
+            migrationBuilder.Sql("""
+                CREATE UNIQUE INDEX "IX_BusinessProperties_externalSourceUrl_unique"
+                ON "BusinessProperties" ("value")
+                WHERE "key" = 'externalSourceUrl' AND "value" IS NOT NULL;
+                """);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Business_telephone",
@@ -980,6 +1028,40 @@ namespace CareGardenApiV1.Migrations
         {
             migrationBuilder.DropTable(
                 name: "AppointmentDetail");
+
+            migrationBuilder.Sql("""
+                DELETE FROM "Campaign" WHERE "id" = 'fe90c4c3-e44c-428b-a28a-9b257f1ca6de';
+                DELETE FROM "User" WHERE "id" IN (
+                    '4ffb3bb4-8390-4a5a-ace1-048b79e4d0e0',
+                    '44c09c38-9c15-4692-a4f1-3d16f5b536de',
+                    '5fe296fa-117c-428d-a34c-ac92081323e6'
+                );
+                DELETE FROM "Setting" WHERE "id" IN (
+                    '677d6d51-f1d1-4494-9ee8-04243428207e',
+                    'b5cca12c-4a84-4b07-a747-f1991ec0a145',
+                    '2cee4c2c-3cda-4c47-86fb-5e4e222fa34d'
+                );
+                DELETE FROM "Services" WHERE "id" IN (
+                    'b4306e08-47e9-4992-950c-f2f8249d878a',
+                    '9356f8a9-094e-4c7d-afad-90d1345ab752',
+                    'c392b38b-ea25-4494-9aae-350625fa2735',
+                    'c2343025-15a8-4676-af1f-fb970a309c1b',
+                    'a69b3dfa-ba9c-42c3-a09d-42cd28f0bb6a',
+                    'cdbb94ab-3ccb-4e59-aac3-7272a27e880f',
+                    '4094adc7-93f7-40ea-bdcb-6a7b75539edf',
+                    '4753fd7f-5e76-4d10-982b-5d2bca1b6f1a',
+                    'fc959581-f0de-4bda-926f-0555d9bc877f',
+                    '430210f7-0fa6-453b-a752-c2fb28d65814',
+                    '015d8548-ae3c-409b-9690-d7db2a70b4e2',
+                    '835f2ea7-ce97-410a-a4b2-240d99a93d38',
+                    '29bd5ef1-c9e7-4354-bc54-048ac31e4fca',
+                    '42903897-54c4-4f89-a9fd-28d6696fc95b'
+                );
+                """);
+
+            migrationBuilder.Sql("""
+                DROP INDEX IF EXISTS "IX_BusinessProperties_externalSourceUrl_unique";
+                """);
 
             migrationBuilder.DropTable(
                 name: "BusinessCustomer");

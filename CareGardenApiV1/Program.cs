@@ -125,10 +125,10 @@ internal class Program
 
         builder.Services.AddDbContext<CareGardenApiDbContext>(options =>
         {
-            options.UseNpgsql(builder.Configuration["ConnectionStrings:AWSPostgreSQL"], x => x.UseNetTopologySuite());
+            options.UseNpgsql(builder.Configuration["ConnectionStrings:NeonPostgreSQL"], x => x.UseNetTopologySuite());
         });
 
-        builder.Services.AddHangfire(x => x.UsePostgreSqlStorage(builder.Configuration["ConnectionStrings:AWSHangfirePostgreSQL"]));
+        builder.Services.AddHangfire(x => x.UsePostgreSqlStorage(builder.Configuration["ConnectionStrings:NeonHangfirePostgreSQL"]));
         builder.Services.AddHangfireServer();
         builder.Services.AddHttpClient();
 
